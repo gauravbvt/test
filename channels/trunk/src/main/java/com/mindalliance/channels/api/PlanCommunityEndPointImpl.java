@@ -337,7 +337,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             AllProtocolsData allProtocolsData = new AllProtocolsData();
             for ( ChannelsUser channelsUser : userRecordService.getUsers( communityUri ) ) {
                 channelsUser.setCommunityService( communityService );
-                List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
+                List<UserParticipation> participationList = participationManager.getActiveUserParticipations(
                         channelsUser,
                         communityService
                 );
@@ -365,7 +365,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+            List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                     user,
                     communityService );
             return new ProtocolsData(
@@ -391,7 +391,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+            List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                     user,
                     communityService );
             return new ProtocolsData(
@@ -463,7 +463,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+            List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                     user,
                     communityService );
             if ( participations.isEmpty() ) {
@@ -565,12 +565,12 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             if ( actor == null || registeredOrganization == null )
                 throw new IllegalArgumentException();
             Agent agent = new Agent( actor, registeredOrganization, communityService );
-            UserParticipation userParticipation = userParticipationService.getParticipation(
+            UserParticipation userParticipation = participationManager.getParticipation(
                     user,
                     agent,
                     communityService
             );
-            if ( userParticipation != null ) {
+            if ( userParticipation != null && !userParticipation.isLinked() ) {
                 userParticipationService.refuse( userParticipation, communityService );
             } else {
                 throw new Exception( "Participation was not refused" );

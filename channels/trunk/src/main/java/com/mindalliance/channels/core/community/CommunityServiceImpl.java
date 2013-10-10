@@ -424,7 +424,7 @@ public class CommunityServiceImpl implements CommunityService {
         final Actor custodian = placeholder.getCustodian();
         return custodian != null
                 && CollectionUtils.exists(
-                getUserParticipationService().listAgentsUserParticipatesAs( user, this ),
+                getParticipationManager().listAgentsUserParticipatesAs( user, this ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

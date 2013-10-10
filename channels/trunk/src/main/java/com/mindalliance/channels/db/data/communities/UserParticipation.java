@@ -40,6 +40,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     private boolean accepted;
     private Date whenAccepted;
     private boolean requestNotified;
+    private boolean linked = false;
 
     public UserParticipation() {
     }
@@ -72,10 +73,13 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         return registeredOrganizationUid;
     }
 
-    /*public String getOrganizationParticipationUid() {
-        return organizationParticipationUid;
-    }*/
+    public boolean isLinked() {
+        return linked;
+    }
 
+    public void setLinked( boolean linked ) {
+        this.linked = linked;
+    }
 
     public UserRecord getParticipant( CommunityService communityService ) {
         ChannelsUser participant = communityService.getUserRecordService().getUserWithIdentity( participantUsername );
@@ -83,7 +87,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     }
 
     public boolean isAccepted() {
-        return accepted;
+        return isLinked() || accepted;
     }
 
     public void setAccepted( boolean accepted ) {
@@ -102,15 +106,6 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         return registeredOrganization != null
                 ? new Agent( actor, registeredOrganizationUid, communityService )
                 : null;
-        /*if ( registeredOrganizationUid == null )  {
-            return new Agent( actor );
-        } else {
-            OrganizationParticipation organizationParticipation =
-                    getOrganizationParticipation( communityService );
-            return organizationParticipation != null
-                    ? new Agent( actor, organizationParticipation, communityService )
-                    : null;
-        }*/
     }
 
     public String getSupervisorsNotified() {
@@ -146,6 +141,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     }
 
     public boolean isSupervised( CommunityService communityService ) {
+        if ( isLinked() ) return false;
         Actor actor = getActor( communityService );
         return actor != null && actor.isSupervisedParticipation();
     }
@@ -226,7 +222,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     @Override
     public List<String> getToUserNames( String topic, CommunityService communityService ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return communityService.getUserParticipationService()
+            return communityService.getParticipationManager()
                     .listSupervisorsToNotify( this, communityService );
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             List<String> usernames = new ArrayList<String>();

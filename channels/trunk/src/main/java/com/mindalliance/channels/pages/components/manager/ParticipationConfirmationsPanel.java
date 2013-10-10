@@ -96,7 +96,7 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
             wrappers.add( new ParticipationConfirmationWrapper( userConfirmation, true ) );
         }
         // Find all plan participation confirmations user needs to confirm as supervisor
-        List<UserParticipation> userParticipationAwaitingUserConfirmation = userParticipationService.
+        List<UserParticipation> userParticipationAwaitingUserConfirmation = participationManager.
                 listUserParticipationsAwaitingConfirmationBy( getUser(), communityService );
         for ( UserParticipation participationToBeValidated : userParticipationAwaitingUserConfirmation ) {
             UserParticipationConfirmation confirmationToBe = new UserParticipationConfirmation(
@@ -138,7 +138,7 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
             CommunityService communityService = getCommunityService();
             UserParticipationConfirmationService userParticipationConfirmationService =
                     communityService.getUserParticipationConfirmationService();
-            for ( Agent supervisor : communityService.getUserParticipationService().listSupervisorsUserParticipatesAs(
+            for ( Agent supervisor : communityService.getParticipationManager().listSupervisorsUserParticipatesAs(
                     participationConfirmation.getUserParticipation( communityService ),
                     getUser(),
                     communityService

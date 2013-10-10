@@ -102,7 +102,7 @@ public class CommunitySummaryData implements Serializable {
     private void initUserParticipation( String serverUrl, CommunityService communityService ) {
         userParticipationList = new ArrayList<UserParticipationData>(  );
         for ( UserParticipation userParticipation :
-                communityService.getUserParticipationService().getAllParticipations( communityService )) {
+                communityService.getParticipationManager().getAllParticipations( communityService )) {
                 userParticipationList.add( new UserParticipationData(  serverUrl, userParticipation, communityService ) );
         }
     }

@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -155,6 +156,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @SpringBean
     private UserParticipationService userParticipationService;
+
+    @SpringBean
+    private ParticipationManager participationManager;
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
@@ -411,7 +415,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     protected List<UserParticipation> getUserParticipations( PlanCommunity planCommunity, ChannelsUser user ) {
-        return userParticipationService.getActiveUserParticipations(
+        return participationManager.getActiveUserParticipations(
                 user,
                 getCommunityService() );
     }

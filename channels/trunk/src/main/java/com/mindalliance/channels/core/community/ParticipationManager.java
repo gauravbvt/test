@@ -22,6 +22,48 @@ import java.util.List;
  */
 public interface ParticipationManager {
 
+    List<UserParticipation> getUserParticipations( ChannelsUser user,
+                                                   CommunityService communityService );
+
+    List<UserParticipation> getActiveUserParticipations( ChannelsUser user,
+                                                         CommunityService communityService );
+
+    Boolean isActive( UserParticipation userParticipation, CommunityService communityService );
+
+    List<UserParticipation> getActiveUserSupervisedParticipations( ChannelsUser user,
+                                                                   final CommunityService communityService );
+
+    List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService );
+
+    UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
+
+    List<UserParticipation> getAllParticipations( CommunityService communityService );
+
+    List<UserParticipation> getAllActiveParticipations( CommunityService communityService );
+
+    List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService );
+
+    Boolean isUserActivelyParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
+
+    List<Agent> listSupervisorsUserParticipatesAs(
+            UserParticipation userParticipation,
+            ChannelsUser user,
+            CommunityService communityService );
+
+    List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
+            ChannelsUser user,
+            final CommunityService communityService );
+
+    List<UserParticipation> getParticipationsSupervisedByUser(
+            final ChannelsUser user,
+            final CommunityService communityService );
+
+    List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService );
+
+    List<UserRecord> findUsersActivelyParticipatingAs( Agent agent, CommunityService communityService );
+
+    List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService );
+
     /**
      * Get participation analyst;
      *
@@ -210,7 +252,7 @@ public interface ParticipationManager {
      * @param user               a user whose authority is queried
      * @param participantInfo    a participant's user info
      * @param participationAgent the agent the participant participates as or would
-     * @return
+     * @return a boolean
      */
     boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
@@ -318,8 +360,8 @@ public interface ParticipationManager {
     /**
      * Whether users can directly participate as a given agent in a given agency.
      *
-     * @param agent   an agent
-     * @param agency   an agency
+     * @param agent            an agent
+     * @param agency           an agency
      * @param communityService a community service
      * @return a boolean
      */
@@ -330,7 +372,7 @@ public interface ParticipationManager {
     /**
      * Find the position to participate as to indirectly participate as a given agent in an agency
      *
-     * @param agent   an agent
+     * @param agent            an agent
      * @param communityService a community service
      * @return a community employment
      */
@@ -339,7 +381,8 @@ public interface ParticipationManager {
 
     /**
      * Find all users participating as a given agent.
-     * @param agent an agent
+     *
+     * @param agent            an agent
      * @param communityService a community service
      * @return a list of users
      */
@@ -347,7 +390,8 @@ public interface ParticipationManager {
 
     /**
      * Whether a given user has joined a given plan community.
-     * @param user a channels user
+     *
+     * @param user             a channels user
      * @param communityService a community service
      * @return a boolean
      */
@@ -355,7 +399,8 @@ public interface ParticipationManager {
 
     /**
      * Have a given user join a given community.
-     * @param user a channels user
+     *
+     * @param user             a channels user
      * @param communityService a community service
      * @return whether successful
      */
@@ -363,7 +408,8 @@ public interface ParticipationManager {
 
     /**
      * Have a given user leave a given community (if not participating yet).
-     * @param user a channels user
+     *
+     * @param user             a channels user
      * @param communityService a community service
      * @return whether successful
      */
@@ -371,7 +417,8 @@ public interface ParticipationManager {
 
     /**
      * Whether a given user is participating in a community as one or more agents.
-     * @param user a channels user
+     *
+     * @param user             a channels user
      * @param communityService a community service
      * @return a boolean
      */

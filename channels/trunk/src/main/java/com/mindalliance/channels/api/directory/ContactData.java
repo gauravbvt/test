@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
@@ -12,7 +13,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.users.UserRecord;
-import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -232,7 +232,7 @@ public class ContactData implements Serializable {
     }
 
     private void initSupervisorContacts( String serverUrl, CommunityService communityService ) {
-        UserParticipationService userParticipationService = communityService.getUserParticipationService();
+        ParticipationManager participationManager = communityService.getParticipationManager();
         supervisorContacts = new ArrayList<ContactData>();
         if ( includeSupervisor && getSupervisor() != null ) {
             Agent supervisor = getSupervisor();
@@ -263,7 +263,7 @@ public class ContactData implements Serializable {
                             false,
                             communityService ) );
                 } else {
-                    List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
+                    List<UserParticipation> participations = participationManager.getParticipationsAsAgent(
                             supervisor,
                             communityService );
                     for ( UserParticipation participation : participations ) {
@@ -327,8 +327,8 @@ public class ContactData implements Serializable {
     static private List<UserParticipation> getParticipations(
             Agent agent,
             CommunityService communityService ) {
-        UserParticipationService userParticipationService = communityService.getUserParticipationService();
-        return userParticipationService.getParticipationsAsAgent(
+        ParticipationManager participationManager = communityService.getParticipationManager();
+        return participationManager.getParticipationsAsAgent(
                 agent,
                 communityService );
      }
@@ -338,10 +338,10 @@ public class ContactData implements Serializable {
             Agent agent,
             CommunityService communityService,
             UserRecord userInfo ) {
-        UserParticipationService userParticipationService = communityService.getUserParticipationService();
+        ParticipationManager participationManager = communityService.getParticipationManager();
         String username = userInfo == null ? null : userInfo.getUsername();
         List<UserParticipation> otherParticipations = new ArrayList<UserParticipation>();
-        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
+        List<UserParticipation> participations = participationManager.getParticipationsAsAgent(
                 agent,
                 communityService );
         for ( UserParticipation participation : participations ) {

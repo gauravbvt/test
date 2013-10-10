@@ -265,7 +265,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         if ( !acceptable ) {
             sb.append( "Adding a participation would exceed the maximum allowed. ");
         }
-        boolean usersParticipate = areUsersParticipatingIn( agency );
+        boolean usersParticipate = areUsersParticipatingDirectlyIn( agency );
         if ( usersParticipate ) {
             sb.append( "Participation can not be changed because users already participate in " )
                     .append( agency.getName() );
@@ -304,7 +304,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         } else {
             boolean authorized = isParticipationChangeAuthorized();
             boolean acceptable = isParticipationChangeWithinConstraints( agency );
-            boolean usersParticipate = areUsersParticipatingIn( agency );
+            boolean usersParticipate = areUsersParticipatingDirectlyIn( agency );
             return authorized && acceptable && !usersParticipate;
         }
     }
@@ -320,8 +320,8 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 || !selectedPlaceholder.isSingleParticipation();
     }
 
-    private boolean areUsersParticipatingIn( Agency agency ) {
-        return organizationParticipationService.isUsersParticipatingInOrganizationParticipation(
+    private boolean areUsersParticipatingDirectlyIn( Agency agency ) {
+        return organizationParticipationService.isUsersParticipatingDirectlyInOrganizationParticipation(
                 agency.getRegisteredOrganization(),
                 selectedPlaceholder,
                 getCommunityService()

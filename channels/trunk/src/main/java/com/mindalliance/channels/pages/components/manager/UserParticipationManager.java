@@ -560,7 +560,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     private boolean isAcceptedParticipation( ChannelsUser user ) {
         if ( selectedAgent != null ) {
-            UserParticipation userParticipation = userParticipationService.getParticipation(
+            UserParticipation userParticipation = participationManager.getParticipation(
                     user,
                     selectedAgent,
                     getCommunityService() );
@@ -572,7 +572,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     private boolean isConfirmedParticipation( ChannelsUser user ) {
         if ( selectedAgent == null ) return false;
-        UserParticipation userParticipation = userParticipationService.getParticipation(
+        UserParticipation userParticipation = participationManager.getParticipation(
                 user,
                 selectedAgent,
                 getCommunityService() );
@@ -583,7 +583,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     private String confirmationStatus( ChannelsUser user ) {
         if ( selectedAgent == null ) return "?";
-        UserParticipation userParticipation = userParticipationService.getParticipation(
+        UserParticipation userParticipation = participationManager.getParticipation(
                 user,
                 selectedAgent,
                 getCommunityService() );

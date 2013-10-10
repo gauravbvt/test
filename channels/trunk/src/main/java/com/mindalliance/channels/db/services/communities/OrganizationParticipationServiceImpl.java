@@ -2,6 +2,7 @@ package com.mindalliance.channels.db.services.communities;
 
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
@@ -37,6 +38,9 @@ public class OrganizationParticipationServiceImpl
 
     @Autowired
     private RegisteredOrganizationService registeredOrganizationService;
+
+    @Autowired
+    private ParticipationManager participationManager;
 
 
     public OrganizationParticipationServiceImpl() {
@@ -184,9 +188,9 @@ public class OrganizationParticipationServiceImpl
         }
     }
 
-    public Boolean isUsersParticipatingInOrganizationParticipation(RegisteredOrganization registeredOrg,
-                                                                   Organization placeholder,
-                                                                   CommunityService communityService ) {
+    public Boolean isUsersParticipatingDirectlyInOrganizationParticipation( RegisteredOrganization registeredOrg,
+                                                                            Organization placeholder,
+                                                                            CommunityService communityService ) {
         if ( registeredOrg == null ) return false;
         OrganizationParticipation organizationParticipation = findOrganizationParticipation(
                 registeredOrg.getName( communityService ),

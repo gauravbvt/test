@@ -82,10 +82,10 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         QueryService queryService = getQueryService();
         boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
         if ( isPlanner ) {
-            visibleParticipations = userParticipationService.getAllActiveParticipations( communityService );
+            visibleParticipations = participationManager.getAllActiveParticipations( communityService );
         } else {
-            visibleParticipations = userParticipationService.getActiveUserParticipations( getUser(), communityService );
-            visibleParticipations.addAll( userParticipationService.getActiveSupervisedParticipations( getUser(), communityService ) );
+            visibleParticipations = participationManager.getActiveUserParticipations( getUser(), communityService );
+            visibleParticipations.addAll( participationManager.getActiveUserSupervisedParticipations( getUser(), communityService ) );
         }
         knownAgents = findAssignedAgents();
         initComponents( queryService, communityService );

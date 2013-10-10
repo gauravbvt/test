@@ -11,9 +11,11 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.communities.UserParticipationConfirmation;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,6 +50,9 @@ public class ParticipationManagerImpl implements ParticipationManager {
     private OrganizationParticipationService organizationParticipationService;
 
     @Autowired
+    private UserParticipationConfirmationService userParticipationConfirmationService;
+
+    @Autowired
     private PlanManager planManager;
 
     @Autowired
@@ -60,9 +67,11 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Autowired
     private UserRecordService userRecordService;
 
-    private List<Agency> allAgencies;
+    private Map<String, List<Agency>> allAgencies;
 
-    private List<Agent> allAgents;
+    private Map<String, List<Agent>> allAgents;
+
+    private Map<String, List<UserParticipation>> allLinkedUserParticipations;
 
 
     public ParticipationManagerImpl() {
@@ -71,6 +80,374 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public void clearCache() {
         allAgencies = null;
         allAgents = null;
+        allLinkedUserParticipations = null;
+    }
+
+    @Override
+    public List<UserParticipation> getUserParticipations( ChannelsUser user, CommunityService communityService ) {
+        Set<UserParticipation> allUserParticipations = new HashSet<UserParticipation>();
+        allUserParticipations.addAll( userParticipationService.getUserParticipations( user, communityService ) );
+        allUserParticipations.addAll( findAllLinkedUserParticipations( user, communityService ) ); // always active
+        return new ArrayList<UserParticipation>( allUserParticipations );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> getActiveUserParticipations( ChannelsUser user,
+                                                                final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                getUserParticipations( user, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isActive( (UserParticipation) object, communityService );
+                    }
+                }
+        );
+    }
+
+    @Override
+    public Boolean isActive( UserParticipation userParticipation, CommunityService communityService ) {
+        if ( userParticipation.isLinked() ) return true;
+        Agent agent = userParticipation.getAgent( communityService );
+        if ( agent == null || !userParticipation.isAccepted() ) return false;
+        if ( userParticipation.isSupervised( communityService ) ) {
+            return userParticipationConfirmationService.isConfirmedByAllSupervisors( userParticipation, communityService );
+        } else
+            return !( agent.isParticipationRestrictedToEmployed()
+                    && !isValidatedByEmployment( userParticipation, communityService ) );
+    }
+
+    // User already participates as an agent that has an employer in common with the agent of given participation of his/hers.
+    private boolean isValidatedByEmployment(
+            final UserParticipation userParticipation,
+            final CommunityService communityService ) {
+        final Agent agent = userParticipation.getAgent( communityService );
+        if ( agent == null ) return false;
+        final List<Agency> employers = findAllEmployersOfAgent( agent, communityService );
+        return CollectionUtils.exists(
+                getUserParticipations( new ChannelsUser( userParticipation.getParticipant( communityService ) ), communityService ),  // assuming, perhaps wrongly, they are all valid to avoid infinite loops from isValid(...)
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation otherParticipation = (UserParticipation) object;
+                        if ( otherParticipation.equals( userParticipation ) ) {
+                            return false;
+                        } else {
+                            Agent otherAgent = otherParticipation.getAgent( communityService );
+                            if ( otherAgent == null || agent.equals( otherAgent ) ) return false;
+                            List<Agency> otherEmployers =
+                                    findAllEmployersOfAgent( otherAgent, communityService );
+                            return !CollectionUtils.intersection( employers, otherEmployers ).isEmpty();
+                        }
+                    }
+                }
+        );
+    }
+
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> getActiveUserSupervisedParticipations( ChannelsUser user,
+                                                                          final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                getParticipationsSupervisedByUser( user, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isActive( (UserParticipation) object, communityService );
+                    }
+                }
+        );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> getParticipationsSupervisedByUser(
+            final ChannelsUser user,
+            final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                getAllParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation userParticipation = (UserParticipation) object;
+                        Agent participationAgent = userParticipation.getAgent( communityService );
+                        if ( participationAgent == null
+                                || !participationAgent.isSupervisedParticipation() ) return false;
+                        List<Agent> supervisors = findAllSupervisorsOf(
+                                participationAgent,
+                                communityService );
+                        if ( supervisors.isEmpty() ) return false;
+                        List<Agent> userAgents = listAgentsUserParticipatesAs( user, communityService );
+                        return !Collections.disjoint( supervisors, userAgents );
+                    }
+                } );
+    }
+
+
+    @Override
+    public List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService ) {
+        Set<UserParticipation> allUserParticipations = new HashSet<UserParticipation>();
+        allUserParticipations.addAll( userParticipationService.getParticipationsAsAgent( agent, communityService ) );
+        allUserParticipations.addAll( findAllLinkedUserParticipationsAsAgent( agent, communityService ) );  // always active
+        return new ArrayList<UserParticipation>( allUserParticipations );
+    }
+
+    @Override
+    public UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService ) {
+        UserParticipation userParticipation = userParticipationService.getParticipation( user, agent, communityService );
+        return userParticipation != null
+                ? userParticipation
+                : getLinkedParticipation( user, agent, communityService );
+    }
+
+    @Override
+    public List<UserParticipation> getAllParticipations( CommunityService communityService ) {
+        Set<UserParticipation> allUserParticipations = new HashSet<UserParticipation>();
+        allUserParticipations.addAll( userParticipationService.getAllParticipations( communityService ) );
+        allUserParticipations.addAll( findAllLinkedParticipations( communityService ) );  // always active
+        return new ArrayList<UserParticipation>( allUserParticipations );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> getAllActiveParticipations( final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                getAllParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation userParticipation = (UserParticipation) object;
+                        return isActive( userParticipation, communityService );
+                    }
+                }
+        );
+    }
+
+    @Override
+    public List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService ) {
+        Set<Agent> agents = new HashSet<Agent>();
+        List<UserParticipation> participationList = getActiveUserParticipations( user, communityService );
+        for ( UserParticipation participation : participationList ) {
+            agents.add( participation.getAgent( communityService ) );
+        }
+        return new ArrayList<Agent>( agents );
+    }
+
+    @Override
+    public Boolean isUserActivelyParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService ) {
+        return listAgentsUserParticipatesAs( user, communityService ).contains( agent );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Agent> listSupervisorsUserParticipatesAs(
+            UserParticipation userParticipation,
+            ChannelsUser user,
+            CommunityService communityService ) {
+        List<Agent> supervisorsUserParticipatesAs = new ArrayList<Agent>();
+        List<Agent> agentsUserParticipatesAs = listAgentsUserParticipatesAs( user, communityService );
+        Agent participationAgent = userParticipation.getAgent( communityService );
+        if ( participationAgent != null ) {
+            List<Agent> allSupervisorsOfAgent =
+                    findAllSupervisorsOf( participationAgent, communityService );
+            supervisorsUserParticipatesAs.addAll( CollectionUtils.intersection(
+                    agentsUserParticipatesAs,
+                    allSupervisorsOfAgent ) );
+        }
+        return supervisorsUserParticipatesAs;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
+            ChannelsUser user,
+            final CommunityService communityService ) {
+        final List<UserParticipationConfirmation> allConfirmations =
+                communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
+        final List<Agent> userAgents = listAgentsUserParticipatesAs(
+                user,
+                communityService );
+        return (List<UserParticipation>) CollectionUtils.select(
+                getParticipationsSupervisedByUser( user, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final UserParticipation supervisedParticipation = (UserParticipation) object;
+                        return !CollectionUtils.exists(
+                                allConfirmations,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
+                                        Agent supervisor = confirmation.getSupervisor( communityService );
+                                        return confirmation.getUserParticipation( communityService )
+                                                .equals( supervisedParticipation )
+                                                && supervisor != null
+                                                && userAgents.contains( supervisor );
+                                    }
+                                }
+                        );
+                    }
+                } );
+
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserRecord> findUsersActivelyParticipatingAs( Agent agent, CommunityService communityService ) {
+        List<UserParticipation> participationList = getParticipationsAsAgent( agent, communityService );
+        Set<UserRecord> userInfos = new HashSet<UserRecord>();
+        for ( UserParticipation participation : participationList ) {
+            if ( isActive( participation, communityService ) ) {
+                userInfos.add( participation.getParticipant( communityService ) );
+            }
+        }
+        return new ArrayList<UserRecord>( userInfos );
+    }
+
+    @Override
+    public List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService ) {
+        List<String> usernames = new ArrayList<String>();
+        if ( userParticipation.isSupervised( communityService ) ) {
+            Agent agent = userParticipation.getAgent( communityService );
+            if ( agent != null ) {
+                List<String> usernamesNotified = userParticipation.usersNotifiedToValidate();
+                for ( Agent supervisor : findAllSupervisorsOf( agent, communityService ) ) {
+                    if ( !userParticipationConfirmationService.isConfirmedBy( userParticipation, supervisor ) ) {
+                        for ( UserRecord supervisorUser : findUsersActivelyParticipatingAs( supervisor, communityService ) ) {
+                            String supervisorUsername = supervisorUser.getUsername();
+                            if ( !usernamesNotified.contains( supervisorUsername ) ) {
+                                usernames.add( supervisorUsername );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return usernames;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService ) {
+        List<UserParticipation> participationList = getParticipationsAsAgent( agent, communityService );
+        Set<UserRecord> userInfos = new HashSet<UserRecord>();
+        for ( UserParticipation participation : participationList ) {
+            userInfos.add( participation.getParticipant( communityService ) );
+        }
+        return new ArrayList<UserRecord>( userInfos );
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private synchronized List<UserParticipation> findAllLinkedParticipations( final CommunityService communityService ) {
+        String uri = communityService.getPlanCommunity().getUri();
+        if ( allLinkedUserParticipations == null ) {
+            allLinkedUserParticipations = new HashMap<String, List<UserParticipation>>();
+        }
+        if ( allLinkedUserParticipations.get( uri ) == null ) {
+            List<UserParticipation> linkedUserParticipationList = new ArrayList<UserParticipation>();
+            allLinkedUserParticipations.put( uri, linkedUserParticipationList );
+            // Find all active, primary user participations
+            List<UserParticipation> primaryActiveUserParticipations = findAllActivePrimaryUserParticipations( communityService );
+            userParticipationService.getAllParticipations( communityService );
+            PlanCommunity planCommunity = communityService.getPlanCommunity();
+            for ( Agency agency : getAllKnownAgencies( communityService ) ) {
+                for ( Job job : agency.getAllJobs( communityService ) ) {
+                    if ( job.isLinked() ) {
+                        Agent agent = new Agent( job.getActor(), agency.getRegisteredOrganization(), communityService );
+                        for ( UserParticipation primaryActive : primaryActiveUserParticipations ) {
+                            if ( primaryActive.getActorId() == agent.getActorId() ) {
+                                UserParticipation linkedUserParticipation = new UserParticipation(
+                                        ChannelsUser.ANONYMOUS_USERNAME,
+                                        new ChannelsUser( primaryActive.getParticipant( communityService ) ),
+                                        agent,
+                                        planCommunity
+                                );
+                                linkedUserParticipation.setLinked( true );
+                                if ( !linkedUserParticipationList.contains( linkedUserParticipation ) ) {
+                                    linkedUserParticipationList.add( linkedUserParticipation );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        return allLinkedUserParticipations.get( uri );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> findAllActivePrimaryUserParticipations( final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                userParticipationService.getAllParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isActive( (UserParticipation) object, communityService );
+                    }
+                }
+        );
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> findAllLinkedUserParticipations( ChannelsUser user,
+                                                                     CommunityService communityService ) {
+        final String username = user.getUsername();
+        return (List<UserParticipation>) CollectionUtils.select(
+                findAllLinkedParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation linkedUserParticipation = (UserParticipation) object;
+                        return linkedUserParticipation.getParticipantUsername().equals( username );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> findAllLinkedUserParticipationsAsAgent( Agent agent,
+                                                                            CommunityService communityService ) {
+        final long actorId = agent.getActorId();
+        final String registereOrganizationUid = agent.getRegisteredOrganizationUid();
+        return (List<UserParticipation>) CollectionUtils.select(
+                findAllLinkedParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation linkedUserParticipation = (UserParticipation) object;
+                        return linkedUserParticipation.getActorId() == actorId
+                                && linkedUserParticipation.getRegisteredOrganizationUid().equals( registereOrganizationUid );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private UserParticipation getLinkedParticipation( ChannelsUser user, Agent agent, CommunityService communityService ) {
+        final String username = user.getUsername();
+        final long actorId = agent.getActorId();
+        final String registereOrganizationUid = agent.getRegisteredOrganizationUid();
+        List<UserParticipation> results = (List<UserParticipation>) CollectionUtils.select(
+                findAllLinkedParticipations( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipation linkedUserParticipation = (UserParticipation) object;
+                        return linkedUserParticipation.getActorId() == actorId
+                                && linkedUserParticipation.getRegisteredOrganizationUid().equals( registereOrganizationUid )
+                                && linkedUserParticipation.getParticipantUsername().equals( username );
+                    }
+                }
+        );
+        return results.isEmpty()
+                ? null
+                : results.get( 0 );
     }
 
     public ParticipationAnalyst getParticipationAnalyst() {
@@ -82,20 +459,24 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public List<Agency> getAllKnownAgencies( CommunityService communityService ) {
+    public synchronized List<Agency> getAllKnownAgencies( CommunityService communityService ) {
+        String uri = communityService.getPlanCommunity().getUri();
         if ( allAgencies == null ) {
+            allAgencies = new HashMap<String, List<Agency>>();
+        }
+        if ( allAgencies.get( uri ) == null ) {
             Set<Agency> agencies = new HashSet<Agency>();
             for ( RegisteredOrganization registeredOrganization
                     : registeredOrganizationService.getAllRegisteredOrganizations( communityService ) ) {
                 agencies.add( new Agency( registeredOrganization, communityService ) );
             }
-            allAgencies = new ArrayList<Agency>( agencies );
+            allAgencies.put( uri, new ArrayList<Agency>( agencies ) );
         }
-        return allAgencies;
+        return allAgencies.get( uri );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agency> findAgenciesParticipatingAs( final Organization placeholder, final CommunityService communityService ) {
         return (List<Agency>) CollectionUtils.select(
                 getAllKnownAgencies( communityService ),
@@ -122,15 +503,19 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public List<Agent> getAllKnownAgents( CommunityService communityService ) {
+    public synchronized List<Agent> getAllKnownAgents( CommunityService communityService ) {
+        String uri = communityService.getPlanCommunity().getUri();
         if ( allAgents == null ) {
+            allAgents = new HashMap<String, List<Agent>>();
+        }
+        if ( allAgents.get( uri ) == null ) {
             Set<Agent> agents = new HashSet<Agent>();
             for ( Agency agency : getAllKnownAgencies( communityService ) ) {
                 agents.addAll( agency.getAgents( communityService ) );
             }
-            allAgents = new ArrayList<Agent>( agents );
+            allAgents.put( uri, new ArrayList<Agent>( agents ) );
         }
-        return allAgents;
+        return allAgents.get( uri );
     }
 
     @Override
@@ -147,7 +532,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> findSelfAssignableOpenAgents( final CommunityService communityService, final ChannelsUser user ) {
         return (List<Agent>) CollectionUtils.select(
                 getAllKnownAgents( communityService ),
@@ -165,10 +550,10 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public boolean isParticipationAvailable( Agent agent, ChannelsUser user, CommunityService communityService ) {
-        List<UserParticipation> currentParticipations = userParticipationService.getUserParticipations(
+        List<UserParticipation> currentParticipations = getUserParticipations(
                 user,
                 communityService );
-        List<UserParticipation> activeParticipations = userParticipationService.getActiveUserParticipations(
+        List<UserParticipation> activeParticipations = getActiveUserParticipations(
                 user,
                 communityService );
         return agent.isValid( communityService )
@@ -200,7 +585,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> findAllSupervisorsOf( Agent agent, CommunityService communityService ) {
         List<Agent> allOtherAgents = new ArrayList<Agent>( getAllKnownAgents( communityService ) );
         allOtherAgents.remove( agent );
@@ -222,7 +607,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agency> findAllEmployersOfAgent( final Agent agent, final CommunityService communityService ) {
         return (List<Agency>) CollectionUtils.select(
                 getAllKnownAgencies( communityService ),
@@ -248,7 +633,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<CommunityEmployment> findAllEmploymentsBy( Agency agency, CommunityService communityService ) {
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
         List<Job> allJobs = agency.getAllJobs( communityService );
@@ -299,8 +684,8 @@ public class ParticipationManagerImpl implements ParticipationManager {
             final CommunityService communityService,
             ChannelsUser user,
             ChannelsUser otherUser ) {
-        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs( user, communityService );
-        final List<Agent> otherUserAgents = userParticipationService.listAgentsUserParticipatesAs( otherUser, communityService );
+        final List<Agent> userAgents = listAgentsUserParticipatesAs( user, communityService );
+        final List<Agent> otherUserAgents = listAgentsUserParticipatesAs( otherUser, communityService );
         return CollectionUtils.exists(
                 otherUserAgents,
                 new Predicate() {
@@ -327,8 +712,8 @@ public class ParticipationManagerImpl implements ParticipationManager {
                                     CommunityService communityService,
                                     ChannelsUser user,
                                     ChannelsUser otherUser ) {
-        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs( user, communityService );
-        final List<Agent> otherUserAgents = userParticipationService.listAgentsUserParticipatesAs( otherUser, communityService );
+        final List<Agent> userAgents = listAgentsUserParticipatesAs( user, communityService );
+        final List<Agent> otherUserAgents = listAgentsUserParticipatesAs( otherUser, communityService );
         Set<Agency> userEmployers = new HashSet<Agency>();
         for ( Agent userAgent : userAgents ) {
             userEmployers.addAll( findAllEmployersOfAgent( userAgent, communityService ) );
@@ -362,7 +747,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // A user can unilaterally terminate his/her own participation.
         if ( user.getUserRecord().equals( participantInfo ) ) return true;
         // else, does the user participate as one of the agents supervising the participation agent?
-        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs( user, communityService );
+        final List<Agent> userAgents = listAgentsUserParticipatesAs( user, communityService );
         List<Agent> supervisorAgents = findAllSupervisorsOf( participationAgent, communityService );
         return !CollectionUtils.intersection( userAgents, supervisorAgents ).isEmpty();
     }
@@ -370,11 +755,11 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public Plan getPlan( String communityUri, int planVersion ) {
-        return planManager.getPlan( communityUri, planVersion ); // todo - change when single planCommunity is not implied by plan
+        return planManager.getPlan( communityUri, planVersion );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> findAllUnassignedAgents( final CommunityService communityService ) {
         return (List<Agent>) CollectionUtils.select(
                 getAllKnownAgents( communityService ),
@@ -383,7 +768,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                     public boolean evaluate( Object object ) {
                         final Agent agent = (Agent) object;
                         return !CollectionUtils.exists(
-                                userParticipationService.getAllParticipations( communityService ),
+                                getAllParticipations( communityService ),
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate( Object object ) {
@@ -396,7 +781,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Organization> findAllPlaceholders( CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
                 communityService.getPlanService().listActualEntities( Organization.class, true ),
@@ -409,7 +794,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Organization> findAllUnassignedPlaceholders( final CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
                 findAllPlaceholders( communityService ),
@@ -543,7 +928,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Override
     public List<ChannelsUser> findAllUsersParticipatingAs( Agent agent, CommunityService communityService ) {
         List<ChannelsUser> participants = new ArrayList<ChannelsUser>();
-        for ( UserRecord userRecord : userParticipationService.findUsersParticipatingAs( agent, communityService ) ) {
+        for ( UserRecord userRecord : findUsersParticipatingAs( agent, communityService ) ) {
             participants.add( new ChannelsUser( userRecord ) );
         }
         return participants;
@@ -570,7 +955,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public boolean leaveCommunity( ChannelsUser user, CommunityService communityService ) {
-        if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() ) {
+        if ( !getUserParticipations( user, communityService ).isEmpty() ) {
             return false;
         } else {
             userRecordService.leaveCommunity( user, communityService.getPlanCommunity() );
@@ -580,7 +965,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public Boolean isUserParticipatingAsAgents( ChannelsUser user, CommunityService communityService ) {
-        return !userParticipationService.getUserParticipations( user, communityService ).isEmpty();
+        return !getUserParticipations( user, communityService ).isEmpty();
     }
 
     public void registerAllFixedOrganizations() {

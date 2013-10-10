@@ -242,7 +242,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         if ( !planCommunity.isDomainCommunity() ) {
             for ( Agent agent : participationManager.findSelfAssignableOpenAgents( getCommunityService(), getUser() ) ) {
                 if ( agent.isUnconstrainedParticipation() ) {
-                    if ( !getCommunityService().getUserParticipationService().isUserActivelyParticipatingAs(
+                    if ( !getCommunityService().getParticipationManager().isUserActivelyParticipatingAs(
                             getUser(),
                             agent,
                             getCommunityService() ) )
@@ -256,7 +256,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unsupervisedParticipations() {
         return (List<UserParticipation>) CollectionUtils.select(
-                getCommunityService().getUserParticipationService().getUserParticipations(
+                getCommunityService().getParticipationManager().getUserParticipations(
                         getUser(),
                         getCommunityService() ),
                 new Predicate() {
@@ -272,7 +272,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         final UserParticipationConfirmationService userParticipationConfirmationService
                 = getCommunityService().getUserParticipationConfirmationService();
         return (List<UserParticipation>) CollectionUtils.select(
-                getCommunityService().getUserParticipationService().getUserParticipations(
+                getCommunityService().getParticipationManager().getUserParticipations(
                         getUser(),
                         getCommunityService() ),
                 new Predicate() {
@@ -518,7 +518,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<UserParticipation> unconfirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService =
                 getCommunityService().getUserParticipationConfirmationService();
-        return (List<UserParticipation>) CollectionUtils.select( getCommunityService().getUserParticipationService()
+        return (List<UserParticipation>) CollectionUtils.select( getCommunityService().getParticipationManager()
                 .getUserParticipations(
                         getUser(),
                         getCommunityService() ),

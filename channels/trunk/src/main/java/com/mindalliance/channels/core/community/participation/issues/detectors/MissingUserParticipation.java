@@ -42,7 +42,7 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
         final Actor actor = (Actor) identifiable;
         if ( isEmployedByFixedOrganization( actor, communityService ) ) {
             int count = CollectionUtils.select(
-                    communityService.getUserParticipationService().getAllParticipations( communityService ),
+                    communityService.getParticipationManager().getAllParticipations( communityService ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {

@@ -2,6 +2,7 @@ package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -310,8 +311,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
             CommunityService communityService = getCommunityService( planCommunity );
+            ParticipationManager participationManager = communityService.getParticipationManager();
             UserParticipationService userParticipationService = communityService.getUserParticipationService();
-            for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( communityService ) ) {
+            for ( UserParticipation userParticipation : participationManager.getAllParticipations( communityService ) ) {
                 if ( userParticipation.isSupervised( communityService ) ) {
                     List<String> successes = sendMessages(
                             userParticipation,
@@ -341,7 +343,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             CommunityService communityService = getCommunityService( planCommunity );
             UserParticipationService userParticipationService = communityService.getUserParticipationService();
             synchronized ( planCommunity ) {
-                for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( communityService ) ) {
+                for ( UserParticipation userParticipation : communityService.getParticipationManager().getAllParticipations( communityService ) ) {
                     if ( userParticipation.isRequested()
                             && !userParticipation.isAccepted()
                             && !userParticipation.isRequestNotified() ) {

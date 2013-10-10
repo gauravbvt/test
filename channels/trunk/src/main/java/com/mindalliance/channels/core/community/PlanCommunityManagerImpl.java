@@ -64,6 +64,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private UserParticipationService userParticipationService;
 
     @Autowired
+    private ParticipationManager participationManager;
+
+    @Autowired
     private UserRecordService userRecordService;
 
     @Autowired
@@ -380,7 +383,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             if ( planCommunity.getPlanUri().equals( planUri ) ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 for ( UserParticipation userParticipation :
-                        userParticipationService.getAllParticipations( communityService ) ) {
+                        participationManager.getAllParticipations( communityService ) ) {
                     adopters.add( userParticipation.getParticipant( communityService ).getUsername() );
                 }
                 for ( ChannelsUser communityPlanner : userRecordService.getCommunityPlanners( communityService.getPlanCommunity().getUri() ) ) {
@@ -399,7 +402,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             if ( !planCommunity.isDomainCommunity()
                     && planCommunity.getPlanUri().equals( plan.getUri() ) ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
-                if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() )
+                if ( !participationManager.getUserParticipations( user, communityService ).isEmpty() )
                     return planCommunity;
                 if ( user.isCommunityPlanner( planCommunity.getUri() ) )
                     return planCommunity;

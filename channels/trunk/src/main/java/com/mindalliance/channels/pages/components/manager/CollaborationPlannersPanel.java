@@ -232,12 +232,12 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
 
         public String getAuthorizedBy() {
             if ( collaborationPlanner.isAdmin() )
-                return "(Administrator)";
+                return "(Is administrator)";
               else {
                 ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
                 return authorizedBy != null
                         ? authorizedBy.getUserRecord().equals( collaborationPlanner )
-                        ? "(Founder)"
+                        ? "(Is founder)"
                         : authorizedBy.getNormalizedFullName()
                         : null;
             }

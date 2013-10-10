@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.pages.Updatable;
@@ -34,6 +35,9 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private ParticipationAnalyst participationAnalyst;
+
+    @SpringBean
+    private ParticipationManager participationManager;
 
     private AjaxTabbedPanel<ITab> tabbedPanel;
 
@@ -84,6 +88,13 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new ParticipationIssuesPanel( id );
             }
         } );
+        tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
+            @Override
+            public Panel getPanel( String id ) {
+                return new UsersParticipationPanel( id );
+            }
+        } );
+
         tabs.add( new AbstractTab( new Model<String>( "Planners" ) ) {
                 @Override
                 public Panel getPanel( String id ) {
@@ -94,7 +105,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     }
 
     public String getToConfirmTitle() {
-        int toConfirmCount = userParticipationService
+        int toConfirmCount = participationManager
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
         return "Confirmations (" + toConfirmCount + " pending)";
     }

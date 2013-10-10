@@ -210,7 +210,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     public String getJobTitles() {
         StringBuilder sb = new StringBuilder(  );
         CommunityService communityService = getCommunityService();
-        List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+        List<UserParticipation> participations = communityService.getParticipationManager().getActiveUserParticipations(
                 getUser(),
                 communityService
         );

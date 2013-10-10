@@ -249,7 +249,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         UserRecordService userDao = communityService.getUserRecordService();
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
-            List<UserParticipation> participations = userParticipationService.getUserParticipations(
+            List<UserParticipation> participations = participationManager.getUserParticipations(
                      channelsUser, communityService );
             for ( UserParticipation participation : participations ) {
                 userParticipationService.refresh( participation );
@@ -471,7 +471,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             if ( participation == null ) {
                 return "";
             } else {
-                return getCommunityService().getUserParticipationService().isActive(
+                return getCommunityService().getParticipationManager().isActive(
                         participation,
                         getCommunityService()
                 ) ? "Yes" : "Not yet";

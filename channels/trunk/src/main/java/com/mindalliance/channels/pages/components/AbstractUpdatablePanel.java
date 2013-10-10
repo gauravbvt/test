@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -100,6 +101,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
+
+    @SpringBean
+    private ParticipationManager participationManager;
 
     /**
      * Simple date format.
@@ -609,7 +613,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SuppressWarnings("unchecked")
     protected Actor findActor( ChannelsUser user ) {
-        List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+        List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                 getUser(),
                 getCommunityService() );
         List<Actor> actors = (List<Actor>) CollectionUtils.collect(

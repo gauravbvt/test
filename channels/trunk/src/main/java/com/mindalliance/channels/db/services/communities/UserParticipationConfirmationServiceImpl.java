@@ -179,6 +179,7 @@ public class UserParticipationConfirmationServiceImpl
     public Boolean isConfirmedByAllSupervisors(
             UserParticipation userParticipation,
             final CommunityService communityService ) {
+        if ( userParticipation.isLinked() ) return true;
         // Find all supervisors for participation's agent
         Agent agent = userParticipation.getAgent( communityService );
         if ( agent == null ) return false;
@@ -212,7 +213,7 @@ public class UserParticipationConfirmationServiceImpl
         if ( !userParticipation.isSupervised( communityService ) ) return false;
         // Find all supervisors user is assigned to that supervise the participation.
         if ( userParticipation.getAgent( communityService ) == null ) return false;
-        List<Agent> supervisors = userParticipationService.listSupervisorsUserParticipatesAs(
+        List<Agent> supervisors = participationManager.listSupervisorsUserParticipatesAs(
                 userParticipation,
                 user,
                 communityService );
@@ -236,7 +237,7 @@ public class UserParticipationConfirmationServiceImpl
             final CommunityService communityService ) {
         final List<UserParticipationConfirmation> allConfirmations =
                 communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
-        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs(
+        final List<Agent> userAgents = participationManager.listAgentsUserParticipatesAs(
                 user,
                 communityService );
         // Find all plan participation confirmations made by a supervisor user participates as (= confirmed)

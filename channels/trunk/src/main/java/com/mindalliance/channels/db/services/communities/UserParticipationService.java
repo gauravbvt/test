@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
-import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.DataService;
 
 import java.util.List;
@@ -26,11 +25,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<UserParticipation> getUserParticipations( ChannelsUser user, CommunityService communityService );
 
-    List<UserParticipation> getActiveUserParticipations( ChannelsUser user, CommunityService communityService );
-
-    List<UserParticipation> getActiveSupervisedParticipations( ChannelsUser user, CommunityService communityService );
-
-    List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService );
+     List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService );
 
     UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
@@ -40,9 +35,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<UserParticipation> getAllParticipations( CommunityService communityService );
 
-    List<UserParticipation> getAllActiveParticipations( CommunityService communityService );
-
-    Boolean isActive( UserParticipation userParticipation, CommunityService communityService );
+    List<UserParticipation> findAllUserParticipationsAs( Agent agent, CommunityService communityService );
 
     /**
      * Delete all participations by a user.
@@ -52,21 +45,6 @@ public interface UserParticipationService extends DataService<UserParticipation>
      */
     void deleteAllParticipations( ChannelsUser user, String username );
 
-     List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService );
-
-    List<UserParticipation> getParticipationsSupervisedByUser( ChannelsUser user, CommunityService communityService );
-
-    List<Agent> listSupervisorsUserParticipatesAs(
-            UserParticipation userParticipation,
-            ChannelsUser user,
-            CommunityService communityService );
-
-    List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService );
-
-    List<UserRecord> findUsersActivelyParticipatingAs( Agent agent, CommunityService communityService );
-
-    List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService );
-
     Boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
 
@@ -74,15 +52,8 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     void refuse( UserParticipation participation, CommunityService communityService );
 
-    // accepted and confirmed (i.e. active)
-    Boolean isUserActivelyParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
-
     List<UserParticipation> listUserParticipationIn(
             OrganizationParticipation organizationParticipation,
-            CommunityService communityService );
-
-    List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
-            ChannelsUser user,
             CommunityService communityService );
 
     Boolean isValid( UserParticipation userParticipation, CommunityService communityService );

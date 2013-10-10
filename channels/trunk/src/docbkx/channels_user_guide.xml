@@ -10195,6 +10195,23 @@
                     <entry><para>Yes</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Agent has a supervisor from outside own organization</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Change to a different supervisor, one that employs the agent</para>
+                        </listitem>
+                        <listitem>
+                            <para>or have the supervisor be employed by an employer of the agent.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>

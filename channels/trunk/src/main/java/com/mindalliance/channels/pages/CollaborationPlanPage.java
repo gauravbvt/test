@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -81,6 +82,9 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
+
+    @SpringBean
+    private ParticipationManager participationManager;
 
     private SocialPanel socialPanel;
     private WebMarkupContainer gotoIconsContainer;
@@ -319,7 +323,7 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
                 PlanParticipationPage.class,
                 null,
                 planCommunity );
-        int toConfirmCount = userParticipationService
+        int toConfirmCount = participationManager
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
         int issueCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
         addTipTitle(
