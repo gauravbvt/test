@@ -34,6 +34,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private UserMessageService userMessageService;
 
     public static final String ABOUT_ME = "About me";
+    public static final String PASSWORD = "My password";
     public static final String WHAT_I_DO = "What I do";
     public static final String PRESENCE = "Presence";
     public static final String ACTIVITIES = "Activities";
@@ -52,6 +53,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private CalendarPanel calendarPanel;
     private UserInfoPanel userProfilePanel;
     private UserParticipationPanel userParticipationPanel;
+    private NewPasswordPanel newPasswordPanel;
 
     /**
      * When last refreshed.
@@ -110,6 +112,16 @@ public class SocialPanel extends AbstractUpdatablePanel {
             };
             tabs.add( tab );
         }
+        if ( showTabs.contains( PASSWORD ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( PASSWORD ) ) {
+                public Panel getPanel( String id ) {
+                    newPasswordPanel = new NewPasswordPanel( id, SocialPanel.this, collapsible );
+                    return newPasswordPanel;
+                }
+            };
+            tabs.add( tab );
+        }
+
         if ( showTabs.contains( PARTICIPATION ) ) {
             AbstractTab tab = new AbstractTab( new Model<String>( WHAT_I_DO ) ) {
                 public Panel getPanel( String id ) {

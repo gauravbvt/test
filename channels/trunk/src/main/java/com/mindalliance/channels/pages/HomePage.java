@@ -125,7 +125,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private void addSocial() {
-        String[] tabsShown = {SocialPanel.USER};
+        String[] tabsShown = {SocialPanel.USER, SocialPanel.PASSWORD};
         socialPanel = new SocialPanel( "social", false, tabsShown, false );
         getContainer().add( socialPanel );
     }

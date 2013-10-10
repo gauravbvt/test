@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -22,7 +23,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -70,12 +70,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
 
     private Pattern emailPattern;
-    private String passwordHash;
-    private boolean passwordOk = false;
-    private String newPassword = "";
-    private String repeatNewPassword = "";
-    private TextField<String> newPasswordText;
-    private TextField<String> repeatNewPasswordText;
     private List<String> errors;
     private WebMarkupContainer errorsContainer;
     private WebMarkupContainer photoImg;
@@ -83,7 +77,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private WebMarkupContainer uploadContainer;
     private FileUploadField uploadPhotoField;
     private AjaxSubmitLink uploadButton;
-    private WebMarkupContainer userPasswordContainer;
+    private WebMarkupContainer updatedContactContainer;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
@@ -112,7 +106,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         addUserInfoContainer();
         addIdentity();
         addUserContactInfo();
-        addPassword();
         addErrors();
         addButtons();
     }
@@ -121,8 +114,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         ChannelsUser user = getUser();
         UserRecord tempUserInfo = new UserRecord( user.getUserRecord() );
         temp = new ChannelsUser( tempUserInfo );
-        newPassword = "";
-        repeatNewPassword = "";
     }
 
     private void addUserInfoContainer() {
@@ -277,8 +268,21 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         return matcher.matches();
     }
 
+    @SuppressWarnings( "unchecked" )
+    private List<ContactInfo>findInvalidContactInfos() {
+        return (List<ContactInfo>)CollectionUtils.select(
+                temp.getUserRecord().getContactInfoList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !( (ContactInfo) object ).isValid( getCommunityService() );
+                    }
+                }
+        );
+    }
+
     private void addUserContactInfo() {
-        WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "userContact" );
+        updatedContactContainer = new WebMarkupContainer( "userContact" );
         updatedContactContainer.add(
                 new ChannelListPanel(
                         "contactInfo",
@@ -291,47 +295,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         userInfoContainer.add( updatedContactContainer );
     }
 
-    private void addPassword() {
-        userPasswordContainer = new WebMarkupContainer( "userPassword" );
-        addPasswordFields();
-        userPasswordContainer.add( makeHelpIcon( "helpPassword", "about-me", "my-password", "images/help_guide_gray.png" ) );
-        userInfoContainer.add( userPasswordContainer );
-     }
-
-    private void addPasswordFields() {
-        PasswordTextField passwordText = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
-        passwordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields( target );
-            }
-        } );
-        userPasswordContainer.add( passwordText );
-        newPasswordText = new TextField<String>( "newPassword", new PropertyModel<String>( this, "newPassword" ) );
-        newPasswordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields( target );
-            }
-        } );
-        newPasswordText.setEnabled( false );
-        userPasswordContainer.add( newPasswordText );
-        repeatNewPasswordText = new TextField<String>( "repeatNewPassword", new PropertyModel<String>( this, "repeatNewPassword" ) );
-        repeatNewPasswordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields( target );
-            }
-        } );
-        repeatNewPasswordText.setEnabled( false );
-        userPasswordContainer.add( repeatNewPasswordText );
-
-    }
 
     private void addErrors() {
         errorsContainer = new WebMarkupContainer( "errorsContainer" );
         errorsContainer.setOutputMarkupId( true );
-        userPasswordContainer.addOrReplace( errorsContainer );
         ListView<String> errorsList = new ListView<String>(
                 "errors",
                 errors ) {
@@ -342,6 +309,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         };
         errorsContainer.add( errorsList );
         makeVisible( errorsContainer, !errors.isEmpty() );
+        userInfoContainer.addOrReplace( errorsContainer );
     }
 
     private void addButtons() {
@@ -353,14 +321,15 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         };
         userInfoContainer.add( reset );
-        AjaxLink<String> otherReset = new AjaxLink<String>( "reset2" ) {
+        AjaxLink<String> yetAnotherReset = new AjaxLink<String>( "reset2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetAll();
                 target.add( UserInfoPanel.this );
             }
         };
-        userPasswordContainer.add( otherReset );
+        updatedContactContainer.add( yetAnotherReset );
+
         AjaxLink<String> applyButton = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -368,27 +337,23 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         };
         userInfoContainer.add( applyButton );
-        AjaxLink<String> otherApplyButton = new AjaxLink<String>( "apply2" ) {
+        AjaxLink<String> yetAnotherApplyButton = new AjaxLink<String>( "apply2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 applyChanges( target );
             }
         };
-        userPasswordContainer.add( otherApplyButton );
+        updatedContactContainer.add( yetAnotherApplyButton );
+
     }
 
     private void applyChanges( AjaxRequestTarget target ) {
         try {
+            adjustFields( target );
             if ( save() ) {
                 Change change = new Change( Change.Type.Updated, getPlan() );
                 change.setProperty( "user" );
-                if ( !newPassword.isEmpty() ) {
-                    change.setMessage( isValidNewPassword()
-                            ? "Your password is changed."
-                            : "Your password was NOT changed (new password not confirmed)." );
-                } else {
-                    change.setMessage( "Changes were applied." );
-                }
+                change.setMessage( "Changes were applied." );
                 resetAll();
                 target.add( UserInfoPanel.this );
                 update( target, change );
@@ -408,12 +373,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         resetErrors();
         addErrors();
         target.add( errorsContainer );
-        //       passwordText.setEnabled( newPassword.isEmpty() && repeatNewPassword.isEmpty() );
-        newPasswordText.setEnabled( passwordOk );
-        repeatNewPasswordText.setEnabled( passwordOk );
-        //       target.add( passwordText );
-        target.add( newPasswordText );
-        target.add( repeatNewPasswordText );
         makeVisible( removePhotoButton, hasPhoto() );
         target.add( removePhotoButton );
         makeVisible( uploadContainer, !hasPhoto() );
@@ -428,32 +387,19 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             errors.add( "An email address is required" );
         else if ( !isValidEmail( temp.getEmail() ) )
             errors.add( "The email address is invalid" );
-        if ( !newPassword.isEmpty() && !repeatNewPassword.isEmpty() && !isValidNewPassword() ) {
-            if ( !newPassword.equals( repeatNewPassword ) )
-                errors.add( "The new password is not correctly repeated" );
-            else
-                errors.add( "The new password must have at least 6 characters" );
-        }/* else {
-            errors.add( "Provide a new password and confirm it" );
-        }*/
-    }
-
-    private boolean isRobustPassword( String val ) {
-        return val.length() > 5;
+        for ( ContactInfo contactInfo : findInvalidContactInfos() ) {
+            errors.add( contactInfo.asChannel( getCommunityService() ).getLabel() + " is not valid");
+        }
     }
 
     private boolean canSave() {
         return !temp.getFullName().isEmpty()
-                //      && ( newPassword.isEmpty() || isValidNewPassword() )
-                && isValidEmail( getEmail() );
+                && isValidEmail( getEmail() )
+                && findInvalidContactInfos().isEmpty();
     }
 
     private boolean save() throws IOException {
-        boolean changed =  !getUser().getUserRecord().sameAs( temp.getUserRecord() );
-        if ( passwordOk && !newPassword.isEmpty() && isValidNewPassword() ) {
-            temp.getUserRecord().setPassword( newPassword );
-            changed = true;
-        }
+        boolean changed = !getUser().getUserRecord().sameAs( temp.getUserRecord() );
         if ( changed && canSave() ) {
             return userInfoService.updateUserRecord(
                     getUser().getUserRecord(),
@@ -464,11 +410,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         }
     }
 
-    private boolean isValidNewPassword() {
-        return passwordOk &&
-                isRobustPassword( newPassword )
-                && repeatNewPassword.equals( newPassword );
-    }
 
     public String getFullName() {
         return temp.getFullName();
@@ -485,38 +426,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     public void setEmail( String val ) {
         temp.getUserRecord().setEmail( val == null ? "" : val );
-    }
-
-    public String getPassword() {
-        return "";
-    }
-
-    public void setPassword( String val ) {
-        passwordHash = val == null ? "" : UserRecord.digestPassword( val.trim() );
-        passwordOk = isValidPassword();
-        newPassword = "";
-        repeatNewPassword = "";
-    }
-
-    private boolean isValidPassword() {
-        return passwordHash.equals( getUser().getPassword() );
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword( String val ) {
-        newPassword = val == null ? "" : val;
-        repeatNewPassword = "";
-    }
-
-    public String getRepeatNewPassword() {
-        return repeatNewPassword;
-    }
-
-    public void setRepeatNewPassword( String val ) {
-        repeatNewPassword = val == null ? "" : val;
     }
 
 
