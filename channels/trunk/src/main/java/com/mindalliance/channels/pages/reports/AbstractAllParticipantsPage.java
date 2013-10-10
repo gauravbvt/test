@@ -20,6 +20,8 @@ import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -87,7 +89,23 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
             visibleParticipations = participationManager.getActiveUserParticipations( getUser(), communityService );
             visibleParticipations.addAll( participationManager.getActiveUserSupervisedParticipations( getUser(), communityService ) );
         }
+        Collections.sort(
+                visibleParticipations,
+                new Comparator<UserParticipation>() {
+                    @Override
+                    public int compare( UserParticipation up1, UserParticipation up2 ) {
+                        return up1.getAgent( getCommunityService() ).getName()
+                                .compareTo( up2.getAgent( getCommunityService() ).getName() );
+                    }
+                }
+        );
         knownAgents = findAssignedAgents();
+        Collections.sort( knownAgents, new Comparator<Agent>() {
+            @Override
+            public int compare( Agent a1, Agent a2 ) {
+                return a1.getName().compareTo( a2.getName() );
+            }
+        } );
         initComponents( queryService, communityService );
     }
 

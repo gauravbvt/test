@@ -23,6 +23,7 @@ public class Agent implements Nameable, Identifiable {
     private Actor actor;
     private Agency agency;
     private String name;
+    private boolean linked = false;
 
     // if is an actor in plan organization participating as placeholder from template
     public Agent( Actor actor,
@@ -31,6 +32,7 @@ public class Agent implements Nameable, Identifiable {
         this.actor = actor;
         agency = new Agency( registeredOrganization, communityService );
         name = agency.getJobTitleOf( this, true, communityService );
+        linked = agency.isLinked( this, communityService );
     }
 
     public Agent( Actor actor, String registeredOrganizationUid, CommunityService communityService ) {
@@ -54,6 +56,14 @@ public class Agent implements Nameable, Identifiable {
     @Override
     public String getName() {
         return name;
+    }
+
+    public boolean isLinked() {
+        return linked;
+    }
+
+    public void setLinked( boolean linked ) {
+        this.linked = linked;
     }
 
     @Override
@@ -182,7 +192,7 @@ public class Agent implements Nameable, Identifiable {
                         } );
             }
             if ( job == null )
-                    job =  actorJobs.get( 0 );
+                job = actorJobs.get( 0 );
             return job;
         }
     }

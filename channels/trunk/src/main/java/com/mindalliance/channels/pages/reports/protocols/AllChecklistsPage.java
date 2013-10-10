@@ -91,10 +91,11 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
                             }
                         }
                 ).setVisible( !getVisibleParticipations().isEmpty() ),
-
                 new WebMarkupContainer( "agentsDiv" ).add(
                         isPlanner() ?
-                                new ListView<Agent>( "agents", getKnownAgents() ) {
+                                new ListView<Agent>(
+                                        "agents",
+                                        getKnownAgents() ) {
                                     @Override
                                     protected void populateItem( ListItem<Agent> item ) {
                                         final Agent agent = item.getModelObject();

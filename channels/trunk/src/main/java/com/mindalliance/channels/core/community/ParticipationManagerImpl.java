@@ -986,5 +986,18 @@ public class ParticipationManagerImpl implements ParticipationManager {
         }
     }
 
+    @Override
+    public boolean isLinked( Agent agent, CommunityService communityService ) {
+        return !CollectionUtils.exists(
+               findAllEmploymentsForAgent( agent, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((CommunityEmployment)object).getJob().isPrimary();
+                    }
+                }
+        );
+    }
+
 
 }

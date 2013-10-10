@@ -433,4 +433,12 @@ public interface ParticipationManager {
      * Register if needed the fixed organizations in all plan communities.
      */
     void registerAllFixedOrganizations();
+
+    /**
+     * Whether users participate as this agent via participation as another agent.
+     * @param agent an agent
+     * @param communityService a community service
+     * @return a boolean
+     */
+    boolean isLinked( Agent agent, CommunityService communityService );
 }

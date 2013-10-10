@@ -140,6 +140,19 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private void addOpenAndConfirmedParticipation() {
         List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
+        Collections.sort(
+                participationWrappers,
+                new Comparator<ParticipationWrapper>() {
+                    @Override
+                    public int compare( ParticipationWrapper pw1, ParticipationWrapper pw2 ) {
+                        return ( pw1.isLinked() && !pw2.isLinked() )
+                                ? 1
+                                : ( pw2.isLinked() && !pw1.isLinked() )
+                                ? -1
+                                : pw1.getAgent( getCommunityService() ).getName().compareTo(
+                                pw1.getAgent( getCommunityService() ).getName() );
+                    }
+                } );
         WebMarkupContainer openAndConfirmedParticipationContainer = new WebMarkupContainer( "openAndConfirmedParticipation" );
         // openAndConfirmedParticipationContainer.setVisible( !participationWrappers.isEmpty() );
         userParticipationContainer.add( openAndConfirmedParticipationContainer );
@@ -173,8 +186,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                         "requester",
                         participationWrapper.isRequested()
                                 ? ( " - Requested by " + participationWrapper.getRequesterFullName() )
-                                : participationWrapper.isLinked()
-                                ? "(indirectly)"
                                 : ""
                 ) ) );
             }
