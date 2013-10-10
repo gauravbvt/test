@@ -413,7 +413,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return isFixedOrganization() || !getRegisteredOrganization().isLocal();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Job> getAllJobsFor( Agent agent, CommunityService communityService ) {
         final Actor actor = agent.getActor();
         return (List<Job>) CollectionUtils.select(
@@ -428,12 +428,40 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public String getJobTitleOf( Agent agent, boolean includeEmployer, CommunityService communityService ) { // Assumes agent works for the agency
-        String jobTitle = Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
-        return jobTitle.isEmpty()
-                ? agent.getActor().getName()
-                : includeEmployer
-                ? ( jobTitle + " at " + getName() )
-                : jobTitle;
+        Job namingJob = Agent.selectNamingJob( getAllJobsFor( agent, communityService ) );
+        if ( namingJob == null ) {
+            return agent.getActor().getName();
+        } else if ( includeEmployer ) {
+            if ( namingJob.isPrimary() ) {
+                return namingJob.getTitle() + " at " + getName();
+            } else {
+                Job primaryJob = findPrimaryJob( namingJob, communityService );
+                if ( primaryJob == null )
+                    return namingJob.getTitle()
+                            + " at "
+                            + getName();
+                else
+                    return primaryJob.getTitle()
+                            + " as "
+                            + namingJob.getTitle()
+                            + " at "
+                            + getName();
+            }
+        } else {
+            return namingJob.getTitle();
+        }
+    }
+
+    private Job findPrimaryJob( final Job linkedJob, CommunityService communityService ) {
+        return (Job) CollectionUtils.find(
+                communityService.getPlanService().findAllConfirmedJobs( linkedJob.getActor() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Job job = (Job) object;
+                        return job.isPrimary() && job.getActor().equals( linkedJob.getActor() );
+                    }
+                } );
     }
 
     public String getRegisteredOrganizationUid() {
@@ -447,14 +475,14 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public Organization findParticipatedAsOrganizationWithJob( final Job job ) {
-        return (Organization)CollectionUtils.find(
+        return (Organization) CollectionUtils.find(
                 getPlanOrganizations(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Organization)object).getJobs().contains( job );
+                        return ( (Organization) object ).getJobs().contains( job );
                     }
-                });
+                } );
     }
 }
 

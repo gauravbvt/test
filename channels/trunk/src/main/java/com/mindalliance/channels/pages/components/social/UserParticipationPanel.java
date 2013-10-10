@@ -165,6 +165,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                         update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
                     }
                 };
+                acceptedCheckBox.setEnabled( !participationWrapper.isLinked() );
                 item.add( acceptedCheckBox );
                 item.add( new Label( "participation", assignation ) );
                 addTipTitle( item, participationWrapper.getRequirementsDescription( getCommunityService() ) );
@@ -172,6 +173,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                         "requester",
                         participationWrapper.isRequested()
                                 ? ( " - Requested by " + participationWrapper.getRequesterFullName() )
+                                : participationWrapper.isLinked()
+                                ? "(indirectly)"
                                 : ""
                 ) ) );
             }
@@ -624,7 +627,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
         public boolean isRequested() {
-            return !participation.getUsername().equals( getUser().getUsername() );
+            return !participation.isLinked() && !participation.getUsername().equals( getUser().getUsername() );
         }
 
         public String getRequesterFullName() {
@@ -643,6 +646,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         public String getRequirementsDescription( CommunityService communityService ) {
             Agent agent = getAgent( communityService );
             return agent == null ? "" : agent.getRequirementsDescription( communityService );
+        }
+
+        public boolean isLinked() {
+            return participation.isLinked();
         }
     }
 

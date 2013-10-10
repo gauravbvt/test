@@ -428,7 +428,7 @@ public class CommunityServiceImpl implements CommunityService {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Agent)object).getActor().equals( custodian );
+                        return ( (Agent) object ).getActor().equals( custodian );
                     }
                 } );
     }
@@ -486,7 +486,8 @@ public class CommunityServiceImpl implements CommunityService {
     private boolean allowsCommitment( final CommunityAssignment committer,
                                       final CommunityAssignment beneficiary,
                                       final List<Flow.Restriction> restrictions ) {
-        return !CollectionUtils.exists(
+        return restrictions.isEmpty()
+                || !CollectionUtils.exists(
                 restrictions,
                 new Predicate() {
                     @Override

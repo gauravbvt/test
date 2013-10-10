@@ -158,9 +158,9 @@ public class Agent implements Nameable, Identifiable {
         return actor != null && actor.isAnyNumberOfParticipants();
     }
 
-    public static String selectJobTitleFrom( List<Job> actorJobs ) {
+    public static Job selectNamingJob( List<Job> actorJobs ) {
         if ( actorJobs.isEmpty() ) {
-            return "";
+            return null;
         } else {
             Job job = (Job) CollectionUtils.find(
                     actorJobs,
@@ -171,7 +171,7 @@ public class Agent implements Nameable, Identifiable {
                         }
                     } // pick the primary job, if any, to provide the title
             );
-            if ( job == null ) { // pick first job with an explicit job title
+            if ( job == null ) { // no primary job - pick first job with an explicit job title
                 job = (Job) CollectionUtils.find(
                         actorJobs,
                         new Predicate() {
@@ -181,9 +181,9 @@ public class Agent implements Nameable, Identifiable {
                             }
                         } );
             }
-            return job == null
-                    ? actorJobs.get( 0 ).getTitle() // last resort: pick role-as-tile from first job (all linked)
-                    : job.getTitle();
+            if ( job == null )
+                    job =  actorJobs.get( 0 );
+            return job;
         }
     }
 

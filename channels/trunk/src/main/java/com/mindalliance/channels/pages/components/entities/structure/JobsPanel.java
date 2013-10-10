@@ -116,7 +116,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Whether copying the jobs.
      */
-     private boolean copying = false;
+    private boolean copying = false;
     /**
      * Do transfer button.
      */
@@ -229,13 +229,13 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         CheckBox copyingCheckBox = new CheckBox(
                 "copying",
                 new PropertyModel<Boolean>( this, "copying" )
-                );
+        );
         copyingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
-        });
+        } );
         jobTransferDiv.add( copyingCheckBox );
         // do transfer button
         doTransfer = new AjaxLink<String>(
@@ -412,13 +412,15 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         item.add( aCheckBox );
         aCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                jobsDiv.addOrReplace( makeJobsTable() );
-                target.add( jobsDiv );
-                update( target, new Change(
-                        Change.Type.Updated,
-                        getOrganization(),
-                        "jobs"
-                ) );
+                if ( !jobWrapper.isMarkedForCreation() && jobWrapper.isConfirmed() ) {
+                    jobsDiv.addOrReplace( makeJobsTable() );
+                    target.add( jobsDiv );
+                    update( target, new Change(
+                            Change.Type.Updated,
+                            getOrganization(),
+                            "jobs"
+                    ) );
+                }
             }
         } );
         Organization org = getOrganization();
@@ -655,19 +657,19 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 job.setLinked( val );
             } else {
                 int index = getOrganization().getJobs().indexOf( job );
-                    if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getUser().getUsername(),
-                                getOrganization(),
-                                "jobs[" + index + "].linked",
-                                val,
-                                UpdateObject.Action.Set ) );
-                    }
+                if ( index >= 0 ) {
+                    doCommand( new UpdatePlanObject(
+                            getUser().getUsername(),
+                            getOrganization(),
+                            "jobs[" + index + "].linked",
+                            val,
+                            UpdateObject.Action.Set ) );
+                }
             }
         }
 
         public String getTitle() {
-            return job.getTitle();
+            return job.getRawTitle();
         }
 
         public void setTitle( String title ) {
@@ -813,7 +815,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 return null;
         }
 
-         /**
+        /**
          * Get jurisdiction place from its name.
          * Returns null if name is empty.
          *
@@ -826,7 +828,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 return null;
         }
     }
-
 
 
     /**
@@ -880,7 +881,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             : Actor.class;
             final List<String> choices;
             if ( property.equals( "supervisor" ) ) {
-               choices = findNamesOfAllActorsEmployedBy( getOrganization() );
+                choices = findNamesOfAllActorsEmployedBy( getOrganization() );
             } else {
                 choices = getQueryService().findAllEntityNames(
                         moClass,
@@ -897,8 +898,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
                         if ( property.equals( "role" ) ) {
-                             if ( getQueryService().likelyRelated( s, choice ) )
-                            candidates.add( choice );
+                            if ( getQueryService().likelyRelated( s, choice ) )
+                                candidates.add( choice );
                         } else if ( Matcher.matches( s, choice ) )
                             candidates.add( choice );
                     }
@@ -926,7 +927,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             ? "A role"
                             : property.equals( "actor" )
                             ? "An actual agent"
-                            : property.equals( "jurisdiction")
+                            : property.equals( "jurisdiction" )
                             ? "An actual place"
                             : "An actual agent" // supervisor
                     )
@@ -937,14 +938,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> findNamesOfAllActorsEmployedBy( Organization organization ) {
-        List<String> names = (List<String>)CollectionUtils.collect(
+        List<String> names = (List<String>) CollectionUtils.collect(
                 getQueryService().findAllActorsEmployedBy( organization ),
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return ((Actor)input).getName();
+                        return ( (Actor) input ).getName();
                     }
                 }
         );
@@ -1023,7 +1024,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             initialize();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initialize() {
             jobTransfers = (List<JobTransfer>) CollectionUtils.collect(
                     getFromOrganization().getJobs(),
@@ -1089,7 +1090,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          *
          * @return a list of agreement wrappers.
          */
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         public List<JobTransfer> getFilteredTransfers() {
             return (List<JobTransfer>) CollectionUtils.select(
                     jobTransfers,
