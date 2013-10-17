@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>
+		<span>Involvement of</span>
+        <select wicket:id="entityClassChoice">
+            <option>Organizations</option>
+        </select>
+        <span>in tasks or flows</span>
+		<div>&nbsp;</div>
+	</h3>
+	<div class="filters">
+    Show only <span wicket:id="entityClassPlural">organizations</span> that
+    &nbsp;&nbsp;<input wicket:id="expected" type="checkbox"/> are expected to be involved
+    &nbsp;&nbsp;<input wicket:id="involved" type="checkbox"/> are involved
+    &nbsp;&nbsp;<input wicket:id="uninvolved" type="checkbox"/> are not involved
+	</div>
+    <div wicket:id="scopeIndex">[index panel]</div>
+	<fieldset wicket:id="newInvolvedContainer">
+    	<legend>Other <span wicket:id="entityClassSingular">organization</span> that should be involved in this collaboration template</legend>
+    	<input wicket:id="newInvolved" type="text"/>
+	</fieldset>
+    <span wicket:id="entityContainer">
+        <h3>
+			<span>About <span wicket:id="nameInTitle">ACME</span></span>
+			<div>&nbsp;</div>
+		</h3>
+        <span wicket:id="name">[organization name]</span>
+        <span wicket:id="involvement">is involved as expected</span>
+        &nbsp;<a wicket:id="expectationActionLink" href="#">
+        <span wicket:id="expectationAction">Add expectation</span></a>
+        &nbsp;<span wicket:id="detailsLink" href="#">See details...</span>
+        <div wicket:id="involvementsContainer">
+            <br/>
+            <h4>Involvements</h4>
+            <span wicket:id="involvementIndex">[involvement index panel]</span>
+        </div>
+    </span>
+    <br/>
+</wicket:panel>
+</body>
+</html>

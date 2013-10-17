@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Expected sharing commitment missing between tasks assigned to organizations based on task categories and flow
+ * Expected communication commitment missing between tasks assigned to organizations based on task categories and flow
  * intents. given their respective categories.
  */
 public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector {
@@ -36,7 +36,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
     private static final Object[][] Expectations = {
             {
                     // If agents of an organization are assigned an operations management task,
-                    // they are expected to have at least one sharing commitment
+                    // they are expected to have at least one communication commitment
                     // with agents of the same organization or a child organization
                     // assigned to an operations task
                     // where the intent of the flow is a command
@@ -47,7 +47,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
                     Intent.Command     // alternate expected sharing flow intents. None = any.
             }, {
             // If agents of an organization are assigned an operations task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of the same organization or a parent organization
             // assigned to an operations management task
             // where the intent of the info flow is a report
@@ -55,7 +55,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
             Intent.Report
     }, {
             // If agents of an organization are assigned a coordination task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of the same organization
             // assigned to an operations management task
             // where the intent of the info flow is an announcement or a report
@@ -63,7 +63,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
             Intent.Announcement, Intent.Report
     }, {
             // If agents of an organization are assigned a coordination task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of a sibling organization
             // assigned to another coordination task
             // where the intent of the info flow is an announcement or a report
@@ -71,28 +71,28 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
             FamilyRelationship.Cousin, Intent.Announcement, Intent.Report
     }, {
             // If agents of an organization are assigned a direction task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of a descendant organization
             // assigned to an operations management task
             // where the intent of the info flow is a command
             Category.Direction, Category.OperationsManagement, FamilyRelationship.Descendant, Intent.Command
     }, {
             // If agents of an organization are assigned a operations management task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of an ancestor organization
             // assigned to a direction task
             // where the intent of the info flow is a command
             Category.OperationsManagement, Category.Direction, FamilyRelationship.Ancestor, Intent.Report
     }, {
             // If agents of an organization are assigned an operations task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of an ancestor organization
             // assigned to an audit task
             // where the intent of the info flow is a report
             Category.Operations, Category.Audit, FamilyRelationship.Parent, FamilyRelationship.Ancestor, Intent.Report
     }, {
             // If agents of an organization are assigned an analysis task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of an ancestor, sibling or same organization
             // assigned to a planning/preparing task
             // where the intent of the info flow is a report
@@ -100,7 +100,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
             FamilyRelationship.Sibling, Intent.Report
     }, {
             // If agents of an organization are assigned a policy setting task,
-            // they are expected to have at least one sharing commitment
+            // they are expected to have at least one communication commitment
             // with agents of the same organization or of an organization they are an ancestor of
             // assigned to a direction task
             // where the intent of the info flow is a feedback
@@ -258,7 +258,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
 
     @Override
     protected String getKindLabel() {
-        return "Expected information sharing commitments is missing";
+        return "Expected information communication commitments are missing";
     }
 
     @Override

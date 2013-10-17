@@ -165,7 +165,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private void initData() throws Exception {
         CommunityService communityService = getCommunityService();
         PlanCommunity planCommunity = communityService.getPlanCommunity();
-        planSummaryData = planCommunityEndPoint.getPlan(
+        planSummaryData = planCommunityEndPoint.getTemplate(
                 planCommunity.getPlanUri(),
                 Integer.toString( planCommunity.getPlanVersion() ) );
         if ( agentId != null ) {
@@ -175,7 +175,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                         = registeredOrganizationService.load( registeredOrganizationId );
                 if ( registeredOrganization == null ) throw new NotFoundException();
                 agent = new Agent( actor, registeredOrganization, getCommunityService() );
-                protocolsData = planCommunityEndPoint.getAgentProtocols(
+                protocolsData = planCommunityEndPoint.getAgentChecklists(
                         planCommunity.getUri(),
                         Long.toString( agentId ),
                         registeredOrganizationId );
@@ -188,11 +188,11 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 throw new Exception( "Failed to retrieve protocols" );
             else {
                 if ( protocolsUser.isPlannerOrAdmin( communityService.getPlan().getUri() ) ) {
-                    protocolsData = planCommunityEndPoint.getUserProtocols(
+                    protocolsData = planCommunityEndPoint.getUserChecklists(
                             planCommunity.getUri(),
                             username );
                 } else if ( getUser().getUsername().equals( username ) ) {
-                    protocolsData = planCommunityEndPoint.getMyProtocols( planCommunity.getUri() );
+                    protocolsData = planCommunityEndPoint.getMyChecklists( planCommunity.getUri() );
                 } else {
                     throw new Exception( "Failed to retrieve protocols" );
                 }

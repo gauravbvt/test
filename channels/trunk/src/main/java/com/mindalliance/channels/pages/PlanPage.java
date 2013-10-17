@@ -49,7 +49,7 @@ import com.mindalliance.channels.pages.components.plan.floating.ChecklistsMapFlo
 import com.mindalliance.channels.pages.components.plan.floating.PlanClassificationsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEventsAndPhasesFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanInvolvementsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
@@ -1073,16 +1073,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
 
     private void addAllOrganizationsPanel( Change change ) {
-        if ( !getExpansions().contains( Channels.ALL_ORGANIZATIONS ) ) {
+        if ( !getExpansions().contains( Channels.ALL_INVOLVEMENTS ) ) {
             allOrganizationsPanel = new Label( "allOrganizations", "" );
             allOrganizationsPanel.setOutputMarkupId( true );
             makeVisible( allOrganizationsPanel, false );
         } else {
             allOrganizationsPanel = change == null
-                    ? new PlanOrganizationsPanel(
+                    ? new PlanInvolvementsFloatingPanel(
                     "allOrganizations",
                     new Model<Organization>( Organization.UNKNOWN ) )
-                    : new PlanOrganizationsPanel(
+                    : new PlanInvolvementsFloatingPanel(
                     "allOrganizations",
                     new Model<Organization>( Organization.UNKNOWN ),
                     change.getProperty() );
@@ -2294,7 +2294,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshModelObjectSurveysPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_EVENTS ) {
             refreshAllEventsPanel( target, change, updated );
-        } else if ( change.getId() == Channels.ALL_ORGANIZATIONS ) {
+        } else if ( change.getId() == Channels.ALL_INVOLVEMENTS ) {
             refreshAllOrganizationsPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_SEGMENTS ) {
             refreshAllSegmentsPanel( target, change, updated );
@@ -2751,12 +2751,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshAllOrganizationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( id == Channels.ALL_ORGANIZATIONS
+        if ( id == Channels.ALL_INVOLVEMENTS
                 && change.isDisplay() ) {
             addAllOrganizationsPanel( change );
             target.add( allOrganizationsPanel );
-        } else if ( allOrganizationsPanel instanceof PlanOrganizationsPanel ) {
-            ( (PlanOrganizationsPanel) allOrganizationsPanel ).refresh( target,
+        } else if ( allOrganizationsPanel instanceof PlanInvolvementsFloatingPanel ) {
+            ( (PlanInvolvementsFloatingPanel) allOrganizationsPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Organization.UNKNOWN ) );

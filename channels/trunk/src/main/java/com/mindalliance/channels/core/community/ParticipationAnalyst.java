@@ -129,7 +129,7 @@ public interface ParticipationAnalyst {
      * Diagnostic about whether a commitment can be realized or is conceptual.
      * Analysis based entirely on plan definition.
      *
-     * @param communityCommitment    an info sharing commitment in a plan community
+     * @param communityCommitment    a communication commitment in a plan community
      * @param communityService a plan community service
      * @return a string
      */

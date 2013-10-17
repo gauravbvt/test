@@ -2244,7 +2244,7 @@ td.late span {
     padding: 2px 0;
 }
 
-.aspect h3 > span {
+.aspect h3 > span, .aspect h3 > select {
     background: #F6F6F6;
     display: block;
     float: left;
@@ -2254,6 +2254,10 @@ td.late span {
     position: relative;
     text-transform: uppercase;
     z-index: 2;
+}
+
+.aspect h3 > select {
+    margin-right: 5px;
 }
 
 .aspect h3 > span.link {

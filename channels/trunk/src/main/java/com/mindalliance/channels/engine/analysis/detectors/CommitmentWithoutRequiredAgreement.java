@@ -11,15 +11,15 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Sharing commitment without a required sharing agreement.
+ * Communication commitment without a required sharing agreement.
  */
 public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
 
@@ -65,7 +65,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Sharing commitment without required agreement";
+        return "Communication commitment without required agreement";
     }
 
     @Override

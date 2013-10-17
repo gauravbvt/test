@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -40,7 +42,7 @@ public class Organization extends AbstractUnicastChannelable
      */
     private boolean actorsRequired;    // todo - obsolete
     /**
-     * Whether each sharing commitments from this organization requires an agreement.
+     * Whether each communication commitments from this organization requires an agreement.
      */
     private boolean agreementsRequired;                           // todo - obsolete
     /**
@@ -86,6 +88,11 @@ public class Organization extends AbstractUnicastChannelable
      */
     public Organization( String name ) {
         super( name );
+    }
+
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return !allAssignments.with( this ).isEmpty();
     }
 
     public static String classLabel() {

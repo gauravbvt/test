@@ -315,7 +315,9 @@ public class PlanDao extends AbstractModelObjectDao {
                 results.addAll( (Set<T>) ( getPlan().getSegments() ) );
             } else if ( SegmentObject.class.isAssignableFrom( clazz ) ) {
                 results.addAll( listSegmentObjects( clazz ) );
-            } else {
+            } else if ( Plan.class.isAssignableFrom( clazz ) ) {
+                results.add( (T)getPlan() );
+            }else {
                 for ( Object mo : getIndexMap().values() ) {
                     if ( clazz.isAssignableFrom( mo.getClass() ) ) {
                         results.add( (T) mo );

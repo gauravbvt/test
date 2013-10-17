@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -99,6 +101,11 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     public Place( String name ) {
         super( name );
+    }
+
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return !allAssignments.with( this ).isEmpty();
     }
 
     public static String classLabel() {

@@ -439,6 +439,22 @@ public abstract class AbstractModelObjectDao {
         );
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz, Boolean mustBeReferenced ) {
+        return mustBeReferenced
+                ? (List<T>) CollectionUtils.select(
+                listReferencedEntities( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (T) object ).isType();
+                    }
+                } )
+                : listTypeEntities( clazz );
+
+    }
+
+
     public <T extends ModelEntity> T retrieveEntity(
             Class<T> entityClass, Map<String, Object> state, String key ) {
         Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();

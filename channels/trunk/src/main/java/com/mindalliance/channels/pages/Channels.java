@@ -76,7 +76,7 @@ public class Channels extends WebApplication
      */
     public static final long GUIDE_ID = -2;
     public static final long ALL_EVENTS = -3;
-    public static final long ALL_ORGANIZATIONS = -4;
+    public static final long ALL_INVOLVEMENTS = -4;
     public static final long ALL_SEGMENTS = -5;
     public static final long ALL_CLASSIFICATIONS = -6;
     public static final long TASK_MOVER = -7;

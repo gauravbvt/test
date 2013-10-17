@@ -795,27 +795,27 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 List<Commitment> commitments =
                         queryService.findAllCommitments( flow, false, queryService.getAssignments( false ) );
                 if ( commitments.isEmpty() ) {
-                    causes.add( "there are no sharing commitments between any pair of agents" );
+                    causes.add( "there are no communication commitments between any pair of agents" );
                 } else {
                     StringBuilder sb = new StringBuilder();
                     Plan plan = queryService.getPlan();
                     Place locale = queryService.getPlanLocale();
                     List<Commitment> agreedTo = agreedToFilter( commitments, queryService );
                     if ( agreedTo.isEmpty() ) {
-                        sb.append( "none of the sharing commitments are agreed to as required " );
+                        sb.append( "none of the communication commitments are agreed to as required " );
                     } else {
                         List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                         List<Commitment> availabilitiesCoincideIfRequired =
                                 availabilitiesCoincideIfRequiredFilter( agreedTo, mediaUsed, locale );
                         if ( availabilitiesCoincideIfRequired.isEmpty() ) {
-                            sb.append( "in all sharing commitments, " );
+                            sb.append( "in all communication commitments, " );
                             sb.append( "agents are never available at the same time as they must to communicate" );
                         } /*else {
                             List<Commitment> mediaDeployed =
                                     someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                             if ( mediaDeployed.isEmpty() ) {
                                 if ( sb.length() == 0 )
-                                    sb.append( "in all sharing commitments, " );
+                                    sb.append( "in all communication commitments, " );
                                 else
                                     sb.append( ", or " );
                                 sb.append( "agents do not have access to required transmission media" );
@@ -824,7 +824,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                             if ( reachable.isEmpty() ) {
                                 if ( sb.length() == 0 )
-                                    sb.append( "in all sharing commitments, " );
+                                    sb.append( "in all communication commitments, " );
                                 else
                                     sb.append( ", or " );
                                 sb.append( "the agent to be contacted is not reachable (no contact info)" );
@@ -833,7 +833,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                         agentsQualifiedFilter( reachable, mediaUsed, locale );
                                 if ( agentsQualified.isEmpty() ) {
                                     if ( sb.length() == 0 )
-                                        sb.append( "in all sharing commitments, " );
+                                        sb.append( "in all communication commitments, " );
                                     else
                                         sb.append( ", or " );
                                     sb.append( "both agents are not qualified to use a transmission medium" );
@@ -841,7 +841,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
                                     if ( languageOverlap.isEmpty() ) {
                                         if ( sb.length() == 0 )
-                                            sb.append( "in all sharing commitments, " );
+                                            sb.append( "in all communication commitments, " );
                                         else
                                             sb.append( ", or " );
                                         sb.append( "agents do not speak a common language" );

@@ -11075,8 +11075,22 @@
                 
                 <entry><para>Yes</para></entry>
               </row>
-              
-              
+
+                <row>
+                    <entry><para>Entity not involved while expected to be</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Involve the entity in a task or flow, or remove the expectation.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
+
+
             </tbody>
           </tgroup>
         </informaltable>

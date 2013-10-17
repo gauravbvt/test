@@ -51,9 +51,9 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
             {
                 Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "Agents executing task \"" + part.getTitle()
-                                      + "\" would have sharing commitments with too many different agents (" + n
+                                      + "\" would have communication commitments with too many different agents (" + n
                                       + ")." );
-                issue.setRemediation( "Remove \"send\" sharing flows"
+                issue.setRemediation( "Remove \"send\" flows"
                                       + "\nor add intermediates to spread the outgoing communication load." );
                 issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
                 issues.add( issue );
@@ -123,7 +123,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Agents assigned to task have too many sharing commitments";
+        return "Agents assigned to task have too many communication commitments";
     }
 
     @Override

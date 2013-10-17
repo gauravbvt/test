@@ -1,6 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
  * Date: 4/1/13
  * Time: 2:44 PM
  */
+@XmlRootElement(name = "allProtocols", namespace = "http://mind-alliance.com/api/isp/v1/")
+@XmlType
 public class AllProtocolsData implements Serializable {
 
     private List<ProtocolsData> allProtocols = new ArrayList<ProtocolsData>();

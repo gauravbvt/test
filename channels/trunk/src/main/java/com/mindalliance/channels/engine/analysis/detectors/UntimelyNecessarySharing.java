@@ -55,7 +55,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
                         issue.setRemediation(
                                 "Ease the time constraint for \""
                                         + criticalNeed.getReceiveTitle()
-                                        + "\"\nor obtain a more timely sharing commitment for "
+                                        + "\"\nor obtain a more timely communication commitment for "
                                         + "\"" + criticalNeed.getName() + "\""
                         );
                         issue.setSeverity( queryService.computePartPriority( target ) );

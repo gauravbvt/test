@@ -85,6 +85,6 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
 
     @Override
     protected String getKindLabel() {
-        return "Sharing commitment without contact info";
+        return "Communication commitment without contact info";
     }
 }

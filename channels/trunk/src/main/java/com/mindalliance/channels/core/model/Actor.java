@@ -2,6 +2,8 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,7 +61,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     private boolean anonymousParticipation = false;
 
-   /**
+    /**
      * The actor's time-based availability.
      * Null means 24/7.
      */
@@ -76,7 +78,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     private List<String> languages = new ArrayList<String>();
 
 
-
     public Actor() {
     }
 
@@ -89,6 +90,11 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         super( name );
     }
 
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return !allAssignments.with( this ).isEmpty();
+    }
+
     public static String classLabel() {
         return "agents";
     }
@@ -97,7 +103,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public String getClassLabel() {
         return classLabel();
     }
-
 
 
     @Override
@@ -267,7 +272,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
             effective.addAll( ( (Actor) type ).getLanguages() );
         }
         if ( effective.isEmpty() ) {
-           effective.add( plan.getDefaultLanguage() );
+            effective.add( plan.getDefaultLanguage() );
         }
         return new ArrayList<String>( effective );
     }
@@ -436,16 +441,16 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                 : ChannelsUtils.listToString( getClearances(), ", ", " and " ) );
         sb.append( "</p><br/>" );
         sb.append( "<b>" ).append( "Other requirements: " ).append( "</b>" );
-        List<String> qualifications = new ArrayList<String>(  );
+        List<String> qualifications = new ArrayList<String>();
         for ( ModelEntity type : getAllTypes() ) {
             if ( !type.getDescription().isEmpty() ) {
-                qualifications.add(  type.getDescription() );
+                qualifications.add( type.getDescription() );
             }
         }
         if ( qualifications.isEmpty() )
             sb.append( "None" );
         else {
-            for (String qualification : qualifications ) {
+            for ( String qualification : qualifications ) {
                 sb.append( qualification ).append( "<br/>" );
             }
         }

@@ -320,6 +320,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithMultiParticipationHasLinkedJobs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationGivesActorMultipleTitles"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasSupervisorOutsideOwnOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.EntityNotInvolvedAgainstExpectation"/>
             </list>
         </property>
     </bean>

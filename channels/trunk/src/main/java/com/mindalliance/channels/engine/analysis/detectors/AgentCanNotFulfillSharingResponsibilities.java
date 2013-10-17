@@ -124,6 +124,6 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
 
     @Override
     protected String getKindLabel() {
-        return "Agent can not fulfill sharing commitments";
+        return "Agent can not fulfill communication commitments";
     }
 }

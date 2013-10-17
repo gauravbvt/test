@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Issue;
@@ -14,6 +13,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class UselessActor extends AbstractIssueDetector {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
                 issue.setDescription( actor.getName()
                         + " is not assigned any task "
-                        + "nor is it the beneficiary of any sharing commitment" );
+                        + "nor is it the beneficiary of any communication commitment" );
                 issue.setRemediation( "Explicitly assign agent " + actor.getName() + " to a task"
                         + "\nor define a task that matches the agent's profile"
                         + "\nor modify the agent's profile so that it matches one or more task specifications"

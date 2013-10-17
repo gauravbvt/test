@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
@@ -22,6 +24,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     public static final int MAX_NAME_SIZE = 100;
     public static final String NEW_NAME = "UNNAMED";
+
 
     /**
      * Actual or Type.
@@ -151,6 +154,90 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         super( name );
     }
 
+    /**
+     * Whether this entity is involved in any assignment or commitment.
+     * @param allAssignments all assignments
+     * @param allCommitments all commitments
+     * @return a boolean
+     */
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return false; // DEFAULT
+    }
+
+    public static String getPluralClassLabelOf( Class<? extends ModelEntity> entityClass ) {
+        return entityClass == Actor.class
+                ? Actor.classLabel()
+                : entityClass == Event.class
+                ? Event.classLabel()
+                : entityClass == Organization.class
+                ? Organization.classLabel()
+                : entityClass == Place.class
+                ? Place.classLabel()
+                : entityClass == Role.class
+                ? Role.classLabel()
+                : entityClass == Phase.class
+                ? Phase.classLabel()
+                : entityClass == TransmissionMedium.class
+                ? TransmissionMedium.classLabel()
+                : entityClass == InfoProduct.class
+                ? InfoProduct.classLabel()
+                : entityClass == InfoFormat.class
+                ? InfoFormat.classLabel()
+                : entityClass == Function.class
+                ? Function.classLabel()
+                : "UNKNOWN";
+    }
+
+    public static String getSingularClassLabelOf( Class<? extends ModelEntity> entityClass ) {
+        return entityClass == Actor.class
+                ? new Actor().getTypeName()
+                : entityClass == Event.class
+                ? new Event().getTypeName()
+                : entityClass == Organization.class
+                ? new Organization().getTypeName()
+                : entityClass == Place.class
+                ? new Place(  ).getTypeName()
+                : entityClass == Role.class
+                ? new Role().getTypeName()
+                : entityClass == Phase.class
+                ? new Phase().getTypeName()
+                : entityClass == TransmissionMedium.class
+                ? new TransmissionMedium().getTypeName()
+                : entityClass == InfoProduct.class
+                ? new InfoProduct().getTypeName()
+                : entityClass == InfoFormat.class
+                ? new InfoFormat().getTypeName()
+                : entityClass == Function.class
+                ? new Function().getTypeName()
+                : "UNKNOWN";
+    }
+
+    public static Class<? extends ModelEntity> classFromLabel( String val ) {
+        String label = val.toLowerCase();
+        return label.equals( Actor.classLabel().toLowerCase() )
+                ? Actor.class
+                : label.equals( Event.classLabel().toLowerCase() )
+                ? Event.class
+                : label.equals( Organization.classLabel().toLowerCase() )
+                ? Organization.class
+                : label.equals( Place.classLabel().toLowerCase() )
+                ? Place.class
+                : label.equals( Role.classLabel().toLowerCase() )
+                ? Role.class
+                : label.equals( Phase.classLabel().toLowerCase() )
+                ? Phase.class
+                : label.equals( TransmissionMedium.classLabel().toLowerCase() )
+                ? TransmissionMedium.class
+                : label.equals( InfoProduct.classLabel().toLowerCase() )
+                ? InfoProduct.class
+                : label.equals( InfoFormat.classLabel().toLowerCase() )
+                ? InfoFormat.class
+                : label.equals( Function.classLabel().toLowerCase() )
+                ? Function.class
+                : null;
+    }
+
+
     public static List<String> classLabels() {
         List<String> classLabels = new ArrayList<String>();
         classLabels.add( Actor.classLabel() );
@@ -202,6 +289,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                         || Role.class.isAssignableFrom( entityClass )
                         || TransmissionMedium.class.isAssignableFrom( entityClass )
                         || Function.class.isAssignableFrom( entityClass )
+                        || InfoProduct.class.isAssignableFrom( entityClass )
+                        || InfoFormat.class.isAssignableFrom( entityClass )
                 // || Phase.class.isAssignableFrom( entityClass )
         );
     }

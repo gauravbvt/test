@@ -897,10 +897,10 @@
                 </item>
             </topic>
             <topic id="commitment">
-                <name>Information sharing commitment</name>
+                <name>Communication commitment</name>
                 <item>
-                    <description>The commitment by one agent to share information acquired doing a task with another
-                        agent who needs it to successfully do some other task.
+                    <description>The commitment by one agent to communicate based on information acquired doing a task with another
+                        agent who needs information to initiate, terminate or successfully execute some other task.
                     </description>
                 </item>
             </topic>
@@ -1311,7 +1311,7 @@
                     <description>The options are
                         * All Events and Phases - Open the panel with the editable list of all events event phases in the scope of this template
                         * All Goals - Open the panel showing all goals defined in this template
-                        * Organizations involved - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this template
+                        * All involvements - Open the panel used to name the organizations (real or placeholders), the places (actual), information products, formats, roles and transmission media that are expected to be involved in tasks or communication commitments in this template
                         * Classification Systems - Open the panel used to define the security classifications used in this template
                     </description>
                 </item>
@@ -1397,7 +1397,7 @@
                         * Details / Hide details - Open or close the definition form
                         * Info product - Open the profile panel for the referenced info product (hidden if N/A)
                         * Elements - Open the elements of information edit panel (hidden if definition form is closed)
-                        * Commitments - Open a panel with all computed info sharing commitments (hidden if N/A)
+                        * Commitments - Open a panel with all computed info communication commitments (hidden if N/A)
                         * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A)
                         * Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
                         * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
@@ -1570,6 +1570,7 @@
                 <next section="concepts" topic="plan-element"/>
                 <next section="concepts" topic="event"/>
                 <next section="scoping" topic="phases"/>
+                <next section="scoping" topic="involvements"/>
                 <next section="profiling" topic="profiling-event"/>
             </topic>
             <topic id="phases">
@@ -1588,25 +1589,26 @@ The list is part of the template's ''details''.]]></description>
                 </item>
                 <next section="concepts" topic="phase"/>
                 <next section="scoping" topic="add-define-segment"/>
-                <next section="scoping" topic="organizations"/>
+                <next section="scoping" topic="involvements"/>
+                <next section="scoping" topic="involvements"/>
                 <next section="profiling" topic="profiling-phase"/>
             </topic>
-            <topic id="organizations">
-                <name>All organizations involved</name>
+            <topic id="involvements">
+                <name>All involvements</name>
                 <item>
                     <description>
-                        <![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents they employ assigned to tasks</small>. &ndash; .]]></description>
+                        Name all the (actual) organizations, places, roles, transmission media, information products and formats that are
+                        within the scope of this template and indicate which ones are expected to be involved in tasks (via assignments)
+                        or in flows (via communication commitments).</description>
                     <script>
-                        <action>Edit the list of participating organizations</action>
+                        <action>Edit the list of involved entities</action>
                         <change>
                             <subjectId>-4</subjectId>
                             <type>Expanded</type>
-                            <property>All organizations</property>
+                            <property>All involvements</property>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="organization"/>
-                <next section="profiling" topic="profiling-organization"/>
             </topic>
             <topic id="all-segments">
                 <name>All segments</name>
@@ -2434,15 +2436,15 @@ Note that all profile attributes are optional.]]>
         <section id="analyzing">
             <name>Analyzing the template</name>
             <topic id="entity-network">
-                <name>Info sharing commitment networks</name>
+                <name>Communication commitment networks</name>
                 <item>
                     <description>A collaboration template determines how agents must commit to share information with
                         one another.
 
-                        Commitment networks depict these info sharing commitment relationships between agents either
+                        Commitment networks depict these communication commitment relationships between agents either
                         directly or aggregated by role or organization.
 
-                        You can drill down on each commitment relationship to see the info sharing commitments it
+                        You can drill down on each commitment relationship to see the communicationg commitments it
                         summarizes.
                     </description>
                 </item>
@@ -2453,7 +2455,7 @@ Note that all profile attributes are optional.]]>
                 <name>Organizations in a segment</name>
                 <item>
                     <description>You can see what organizations have agents assigned to a segment's task and how these
-                        organizations are linked by info sharing commitments.
+                        organizations are linked by communication commitments.
                     </description>
                 </item>
                 <next section="concepts" topic="segment"/>
@@ -2629,11 +2631,11 @@ Note that all profile attributes are optional.]]>
                 <name>Adjust assignments and commitments</name>
                 <item>
                     <description>Collaboration checklists are computed by assigning agents to tasks and by deriving
-                        information sharing commitments from the flows connecting assigned tasks.
+                        communication commitments from the flows connecting assigned tasks.
 
                         A key concern is making sure that the right agents get assigned to the right tasks, and that
                         only the right agents that are assigned to the tasks on each side of a flow become parties to
-                        sharing commitments.
+                        communication commitments.
 
                         Which agents are assigned to a task is determined by
                         * how a task specifies the agents assignable to it
@@ -2651,13 +2653,13 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <item>
-                    <description>Exactly what sharing commitments are generated for a flow depends on
+                    <description>Exactly what communication commitments are generated for a flow depends on
                         * what agents are assigned to the producing task and consuming task connected by the flow
                         * what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
                         * whether an overriding flow prohibits a pairing of agents
                     </description>
                     <script>
-                        <action>See a flow's sharing commitments</action>
+                        <action>See communication commitments derived from a flow</action>
                         <change>
                             <subjectPath>guide.anySharingFlow</subjectPath>
                             <type>AspectViewed</type>
@@ -2679,7 +2681,7 @@ Note that all profile attributes are optional.]]>
                         How entities are categorized largely determine the meaning of the tasks, flows, employments etc.
                         that are defined in terms of these entities.
 
-                        The meaning of a template boils down to the task assignments and consequent sharing commitments
+                        The meaning of a template boils down to the task assignments and consequent communication commitments
                         (checklists) that are implied by the collaboration template.
 
                         Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause
@@ -2704,7 +2706,7 @@ Note that all profile attributes are optional.]]>
                 <name>Checklists map</name>
                 <item>
                     <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially
-                        large number of sharing commitments. The ''checklists map'' makes it easy to see if the sharing
+                        large number of communication commitments. The ''checklists map'' makes it easy to see if the sharing
                         commitments generated from the template are the intended ones.
 
                         The map is focused on one agent or one organization (as an aggregate of agents). It shows the

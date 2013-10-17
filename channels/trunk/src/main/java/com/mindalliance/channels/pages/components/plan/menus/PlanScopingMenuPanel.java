@@ -34,7 +34,7 @@ public class PlanScopingMenuPanel extends MenuPanel {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
             menuItems.add( collapsible( Channels.ALL_EVENTS, "Hide all events and phases", "All events and phases" ) );
             menuItems.add( collapsible( Channels.ALL_GOALS, "Hide all goals", "All goals" ) );
-            menuItems.add( collapsible( Channels.ALL_ORGANIZATIONS, "Hide organizations involved", "Organizations involved" ) );
+            menuItems.add( collapsible( Channels.ALL_INVOLVEMENTS, "Hide all involvements", "All involvements" ) );
             menuItems.add( collapsible( Channels.ALL_CLASSIFICATIONS, "Hide classification systems", "Classification systems" ) );
             return menuItems;
         }

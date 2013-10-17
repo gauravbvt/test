@@ -151,13 +151,14 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
 
-        // All organizations to be involved
-        for ( Organization organization : plan.getOrganizations() ) {
-            writer.startNode( "organization-involved" );
-            writer.addAttribute( "id", Long.toString( organization.getId() ) );
-            writer.setValue( organization.getName() );
+        // All entities to be involved
+        writer.startNode( "entities-involved" );
+        for ( ModelEntity involvedEntity : plan.getInvolvements() ) {
+            writer.startNode( involvedEntity.getTypeName().toLowerCase() );
+            context.convertAnother( involvedEntity );
             writer.endNode();
         }
+        writer.endNode();
 
         // All segments
         for ( Segment segment : plan.getSegments() ) {
@@ -235,7 +236,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
                 plan.setCommunityCalendarPrivateTicket( reader.getValue() );
             } else if ( nodeName.equals( "surveyApiKey" ) ) {
-               // do nothing - obsolete
+                // do nothing - obsolete
             } else if ( nodeName.equals( "surveyUserKey" ) ) {
                 // do nothing - obsolete
             } else if ( nodeName.equals( "surveyTemplate" ) ) {
@@ -281,11 +282,31 @@ public class PlanConverter extends AbstractChannelsConverter {
                 Phase phase = findOrCreate( Phase.class, name, phaseId );
                 plan.addPhase( phase );
                 // Organizations involved
-            } else if ( nodeName.equals( "organization-involved" ) ) {
+            } else if ( nodeName.equals( "organization-involved" ) ) { //OBSOLETE
                 String orgId = reader.getAttribute( "id" );
                 Organization organization = findOrCreate( Organization.class, reader.getValue(), orgId );
-                plan.addOrganization( organization );
-                // Producers
+                plan.addEntityInvolved( organization );
+            } else if ( nodeName.equals( "entities-involved" ) ) {
+                while ( reader.hasMoreChildren() ) {
+                    reader.moveDown();
+                    String involvedName = reader.getNodeName();
+                    if ( involvedName.equals( "organization" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, Organization.class ) );
+                    } else if ( involvedName.equals( "role" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, Role.class ) );
+                    } else if ( involvedName.equals( "place" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, Place.class ) );
+                    } else if ( nodeName.equals( "medium" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, TransmissionMedium.class ) );
+                    } else if ( nodeName.equals( "infoproduct" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, InfoProduct.class ) );
+                    } else if ( nodeName.equals( "format" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, InfoFormat.class ) );
+                    } else if ( nodeName.equals( "function" ) ) {
+                        plan.addEntityInvolved( (ModelEntity) context.convertAnother( plan, Function.class ) );
+                    }
+                    reader.moveUp();
+                }
             } else if ( nodeName.equals( "producer" ) ) {
                 plan.addProducer( reader.getValue() );
                 // Segments

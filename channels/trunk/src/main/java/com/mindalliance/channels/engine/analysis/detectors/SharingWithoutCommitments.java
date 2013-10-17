@@ -37,9 +37,9 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             Part source = (Part) flow.getSource();
             Part target = (Part) flow.getTarget();
-            String description = "No sharing commitment is implied by this information flow";
+            String description = "No communication commitment is implied by this information flow";
             if ( flow.isProhibited() ) {
-                description += " because sharing is prohibited";
+                description += " because communication is prohibited";
                 issue.setRemediation( "Remove all prohibiting policies\nor remove the flow" );
             } else {
                 description += " because";
@@ -109,7 +109,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Information flow specifies no sharing commitments between agents";
+        return "Information flow specifies no communication commitments between agents";
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -38,6 +40,21 @@ public class InfoProduct extends ModelEntity implements EOIsHolder {
 
     public InfoProduct( String name ) {
         super( name );
+    }
+
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return CollectionUtils.exists(
+                allCommitments.toList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        InfoProduct infoProduct = ( (Commitment) object ).getSharing().getInfoProduct();
+                        return infoProduct != null && infoProduct.narrowsOrEquals( InfoProduct.this );
+                    }
+                }
+        );
+
     }
 
     @Override

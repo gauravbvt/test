@@ -96,7 +96,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
      * @return plan summaries
      */
 
-    public PlanSummariesData getPlans() {
+    public PlanSummariesData getTemplates() {
         LOG.info( "Getting summaries for all visible communities" );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
@@ -114,7 +114,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public PlanSummaryData getPlan( String uri, String version ) {
+    public PlanSummaryData getTemplate( String uri, String version ) {
         LOG.info( "Getting summary for community " + uri + " and plan version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
@@ -134,7 +134,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public PlanReleaseData getPlanRelease( String uri ) {
+    public PlanReleaseData getTemplateRelease( String uri ) {
         LOG.info( "Getting release info for community " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
@@ -157,7 +157,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
      * @return plan summaries
      */
 
-    public PlanSummariesData getProductionPlans() {
+    public PlanSummariesData getProductionTemplates() {
         LOG.info( "Getting summaries for all user-visible communities" );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
@@ -183,11 +183,11 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
      * @param version a plan version
      * @return a plan's scope
      */
-    public PlanScopeData getPlanScope( String uri, String version ) {
-        return planScope( uri, version, true );
+    public PlanScopeData getTemplateScope( String uri, String version ) {
+        return templateScope( uri, version, true );
     }
 
-    public PlanScopeData planScope( String uri, String version, boolean plannerOnly ) {
+    public PlanScopeData templateScope( String uri, String version, boolean plannerOnly ) {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
@@ -272,7 +272,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
 
     @Override
-    public CommunitySummariesData getAllCommunities() {
+    public CommunitySummariesData getAllPlans() {
         LOG.info( "Getting all community summaries" );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
@@ -296,7 +296,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public CommunitySummaryData getCommunity( String communityUri ) {
+    public CommunitySummaryData getPlan( String communityUri ) {
         LOG.info( "Getting community summary for " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
@@ -328,9 +328,9 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 */
 
     @Override
-    public AllProtocolsData getAllProtocols( String communityUri ) {
+    public AllProtocolsData getAllChecklists( String communityUri ) {
         ChannelsUser user = ChannelsUser.current( userRecordService );
-        LOG.info( "Getting all user protocols for all participants in community " + communityUri );
+        LOG.info( "Getting all user checklists for all participants in community " + communityUri );
         try {
             PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -342,7 +342,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                         communityService
                 );
                 if ( !participationList.isEmpty() ) {
-                    ProtocolsData protocolsData = getUserProtocols( communityUri, channelsUser.getUsername() );
+                    ProtocolsData protocolsData = getUserChecklists( communityUri, channelsUser.getUsername() );
                     allProtocolsData.addProtocolsData( protocolsData );
                 }
             }
@@ -352,15 +352,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + communityUri )
+                            .entity( "No checklists available for community " + communityUri )
                             .build() );
         }
     }
 
 
     @Override
-    public ProtocolsData getMyProtocols( String communityUri ) {
-        LOG.info( "Getting user protocols for community " + communityUri );
+    public ProtocolsData getMyChecklists( String communityUri ) {
+        LOG.info( "Getting user checklists for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
@@ -378,15 +378,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + communityUri )
+                            .entity( "No checklists available for community " + communityUri )
                             .build() );
         }
     }
 
     @Override
-    public ProtocolsData getUserProtocols( String communityUri,
-                                           String username ) {
-        LOG.info( "Getting user protocols for community " + communityUri );
+    public ProtocolsData getUserChecklists( String communityUri,
+                                            String username ) {
+        LOG.info( "Getting user checklists for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
@@ -404,17 +404,17 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + communityUri )
+                            .entity( "No checklists available for community " + communityUri )
                             .build() );
         }
     }
 
     @Override
-    public ProtocolsData getAgentProtocols( String communityUri,
-                                            String actorId,
-                                            String registeredOrganizationId ) {
+    public ProtocolsData getAgentChecklists( String communityUri,
+                                             String actorId,
+                                             String registeredOrganizationId ) {
         ChannelsUser user = ChannelsUser.current( userRecordService );
-        LOG.info( "Getting protocols of agent " + actorId
+        LOG.info( "Getting checklists of agent " + actorId
                 + " for organization participation" + registeredOrganizationId
                 + " in community " + communityUri );
         try {
@@ -430,11 +430,11 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     new Agent( actor, registeredOrganization, communityService ),
                     user );
         } catch ( Exception e ) {
-            LOG.warn( "No protocols available for agent " + actorId, e );
+            LOG.warn( "No checklists available for agent " + actorId, e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + communityUri )
+                            .entity( "No checklists available for community " + communityUri )
                             .build() );
         }
     }
@@ -444,14 +444,14 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             String communityUri,
             String username ) {
         try {
-            ProtocolsData protocolsData = getUserProtocols( communityUri, username );
+            ProtocolsData protocolsData = getUserChecklists( communityUri, username );
             return new DirectoryData( protocolsData );
         } catch ( Exception e ) {
             LOG.warn( "Failed to retrieve directory", e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + communityUri )
+                            .entity( "No checklists available for community " + communityUri )
                             .build() );
         }
     }
@@ -469,7 +469,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in community " + communityUri );
             }
-            ProtocolsData protocolsData = getMyProtocols( communityUri );
+            ProtocolsData protocolsData = getMyChecklists( communityUri );
             return new DirectoryData( protocolsData );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );

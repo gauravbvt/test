@@ -74,6 +74,7 @@ public interface QueryService {
 
     /**
      * Get default locale.
+     *
      * @return a place
      */
     Place getPlanLocale();
@@ -123,6 +124,15 @@ public interface QueryService {
     <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz );
 
     /**
+     * Find all type entities of a given class.
+     *
+     * @param clazz            a class of entities
+     * @param mustBeReferenced whether the entities must be referenced
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz, Boolean mustBeReferenced );
+
+    /**
      * Find all actual entities of a given class.
      *
      * @param clazz a class of entities
@@ -133,10 +143,11 @@ public interface QueryService {
     /**
      * Find all actual entities of a given class.
      *
-     * @param clazz a class of entities
+     * @param clazz            a class of entities
+     * @param mustBeReferenced whether the entities must be referenced
      * @return a list of entities
      */
-    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced );
+    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, Boolean mustBeReferenced );
 
 
     /**
@@ -150,10 +161,11 @@ public interface QueryService {
 
     /**
      * List all known entities, possibly restricted to those referenced by other entities.
-     * @param entityClass an entity class
-     * @param mustBeReferenced whether it must be referenced to be listed
+     *
+     * @param entityClass       an entity class
+     * @param mustBeReferenced  whether it must be referenced to be listed
      * @param includeImmutables as always referenced
-     * @param <T> a model entity class
+     * @param <T>               a model entity class
      * @return a list of model entities
      */
     <T extends ModelEntity> List<T> listKnownEntities(
@@ -603,8 +615,9 @@ public interface QueryService {
 
     /**
      * Find direct and indirect employers given employments.
-     * @param employments  a list of employments
-     * @return  a list of organziations
+     *
+     * @param employments a list of employments
+     * @return a list of organziations
      */
     List<Organization> findDirectAndIndirectEmployers( List<Employment> employments );
 
@@ -1051,28 +1064,38 @@ public interface QueryService {
     List<? extends ModelEntity> findAllNarrowingOrEqualTo( ModelEntity entity );
 
     /**
-     * Whether an organization plays at least on part in the plan.
+     * Whether a model entity is involved in at least one assignment or commitment.
      *
-     * @param organization an organization
+     * @param modelEntity an organization
+     * @param assignments assignments where to look for involvement
+     * @param commitments commitments where to look for involvement
      * @return a boolean
      */
-    Boolean isInvolved( Organization organization );
+    Boolean isInvolved( ModelEntity modelEntity, Assignments assignments, Commitments commitments );
 
     /**
-     * Whether an organization is expected to play at least one part in the plan.
+     * Whether a model entity is expected to be involved in at least one  assignment or commitment.
      *
-     * @param organization an organization
+     * @param modelEntity an organization
      * @return a boolean
      */
-    Boolean isInvolvementExpected( Organization organization );
+    Boolean isInvolvementExpected( ModelEntity modelEntity );
 
     /**
-     * Find all parts played by an organization or one of its children.
+     * Find all parts played by a specable.
      *
-     * @param organization an organization
+     * @param specable a specable
      * @return a list of parts
      */
-    List<Part> findAllPartsPlayedBy( Organization organization );
+    List<Part> findAllPartsPlayedBy( Specable specable );
+
+    /**
+     * Find all flows that involve a given model entity.
+     *
+     * @param modelEntity a model entity
+     * @return a list of flows
+     */
+    List<Flow> findAllFlowsInvolving( ModelEntity modelEntity );
 
     /**
      * Find all assignments that match a part.
@@ -1219,9 +1242,9 @@ public interface QueryService {
             List<Flow> allFLows );
 
     /**
-     * Find all confirmed agreements that cover an information sharing commitment.
+     * Find all confirmed agreements that cover a communication commitment.
      *
-     * @param commitment an information sharing commitment
+     * @param commitment a communication commitment
      * @return a list of agreements
      */
     List<Agreement> findAllConfirmedAgreementsCovering( Commitment commitment );
@@ -1274,7 +1297,7 @@ public interface QueryService {
     /**
      * Whether a commitment is covered by an agreement.
      *
-     * @param commitment a sharing commitment
+     * @param commitment a communication commitment
      * @return a boolean
      */
     Boolean isCoveredByAgreement( Commitment commitment );
@@ -1282,13 +1305,13 @@ public interface QueryService {
     /**
      * Whether a commitment requires an agreement.
      *
-     * @param commitment a sharing commitment
+     * @param commitment a communication commitment
      * @return a boolean
      */
     Boolean isAgreementRequired( Commitment commitment );
 
     /**
-     * Whether an agreement covers a sharing commitment.
+     * Whether an agreement covers a communication commitment.
      *
      * @param agreement  the agreement
      * @param commitment a commitment
@@ -1589,6 +1612,7 @@ public interface QueryService {
 
     /**
      * Find all supervisor actors of a given actor.
+     *
      * @param actor an actor
      * @return a list of supervising actors
      */
@@ -1596,6 +1620,7 @@ public interface QueryService {
 
     /**
      * Find all supervisor actors of a given actor in non-placeholder organizations.
+     *
      * @param actor an actor
      * @return a list of supervising actors
      */
@@ -1604,6 +1629,7 @@ public interface QueryService {
 
     /**
      * Make a name for a new entity.
+     *
      * @param entityClass an entity class
      * @return a string
      */
@@ -1611,20 +1637,23 @@ public interface QueryService {
 
     /**
      * Find all referenced placeholder organizations.
+     *
      * @return a list of organizations.
      */
     List<Organization> listPlaceholderOrganizations();
 
     /**
      * Find all referenced non-placeholder organizations.
+     *
      * @return a list of organizations.
      */
     List<Organization> listFixedOrganizations();
 
     /**
      * Whether a  model object exists of a given kind that had a given id at a certain date.
-     * @param clazz a model object class
-     * @param id the model object id
+     *
+     * @param clazz        a model object class
+     * @param id           the model object id
      * @param dateOfRecord the date the model object had that id
      * @return a boolean
      */
@@ -1632,6 +1661,7 @@ public interface QueryService {
 
     /**
      * Is an event caused by some task.
+     *
      * @param event an event
      * @return whether caused by a task
      */
@@ -1639,6 +1669,7 @@ public interface QueryService {
 
     /**
      * Find all actors employed by a given organziation.
+     *
      * @param organization an organization
      * @return a list of actors
      */

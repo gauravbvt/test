@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A collection of info sharing commitments within a plan community.
+ * A collection of communication commitments within a plan community.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

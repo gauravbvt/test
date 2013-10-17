@@ -22,17 +22,17 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     private ChannelsUser user;
     private Plan plan;
 
-    protected AbstractProcedureElementData() {
+    public AbstractProcedureElementData() {
     }
 
-    protected AbstractProcedureElementData(
+    public AbstractProcedureElementData(
             CommunityService communityService,
             ChannelsUser user ) {
         this.user = user;
         initData( communityService );
     }
 
-    protected AbstractProcedureElementData(
+    public AbstractProcedureElementData(
             CommunityService communityService,
             CommunityAssignment assignment,
             ChannelsUser user ) {

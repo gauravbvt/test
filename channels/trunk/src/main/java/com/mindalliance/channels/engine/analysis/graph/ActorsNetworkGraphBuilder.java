@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A graph of all actors in a plan linked by the existence of sharing commitments between them.
+ * A graph of all actors in a plan linked by the existence of communication commitments between them.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

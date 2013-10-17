@@ -69,12 +69,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private Intent intent;
     /**
-     * Restriction on implied sharing commitments. // todo - OBSOLETE
+     * Restriction on implied communication commitments. // todo - OBSOLETE
      */
     private Restriction restriction;
 
     /**
-     * restrictions on implied sharing commitments.
+     * restrictions on implied communication commitments.
      */
     private List<Restriction> restrictions = new ArrayList<Restriction>();
     /**
@@ -1739,7 +1739,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-
     /**
      * The significance of a flow.
      */
@@ -1863,7 +1862,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Restriction on implied sharing commitments set only by the source of the information.
+     * Restriction on implied communication commitments set only by the source of the information.
      */
     public enum Restriction {
 

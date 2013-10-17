@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A sharing commitment's impact (triggering, terminating, critical)
+ * A communication commitment's impact (triggering, terminating, critical)
  * on a target part is different from that of a similar need.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.

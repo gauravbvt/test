@@ -458,7 +458,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, Boolean mustBeReferenced ) {
         return getDao().listActualEntities( clazz, mustBeReferenced );
     }
 
@@ -534,6 +534,11 @@ public abstract class DefaultQueryService implements QueryService {
     @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
         return getDao().listTypeEntities( clazz );
+    }
+
+    @Override
+    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz, Boolean mustBeReferenced ) {
+        return getDao().listTypeEntities( clazz, mustBeReferenced );
     }
 
     @Override
@@ -1849,8 +1854,18 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<Part> findAllPartsPlayedBy( Organization organization ) {
-        return getAssignments().with( organization ).getParts();
+    public List<Part> findAllPartsPlayedBy( Specable specable ) {
+        return getAssignments().with( specable ).getParts();
+    }
+
+    @Override
+    public List<Flow> findAllFlowsInvolving( ModelEntity modelEntity ) {
+        List<Flow> flows = new ArrayList<Flow>(  );
+        for ( Flow flow : findAllFlows() ) {
+            if ( flow.references( modelEntity ) )
+                flows.add( flow );
+        }
+        return flows;
     }
 
     @Override
@@ -3183,13 +3198,13 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public Boolean isInvolved( Organization organization ) {
-        return !getAssignments().with( organization ).isEmpty();
+    public Boolean isInvolved( ModelEntity modelEntity, Assignments assignments, Commitments commitments ) {
+        return modelEntity.isInvolvedIn( assignments, commitments );
     }
 
     @Override
-    public Boolean isInvolvementExpected( Organization organization ) {
-        return getPlan().getOrganizations().contains( organization );
+    public Boolean isInvolvementExpected( ModelEntity modelEntity ) {
+        return getPlan().getInvolvements().contains( modelEntity );
     }
 
     @Override

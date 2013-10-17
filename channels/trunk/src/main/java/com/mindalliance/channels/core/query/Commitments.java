@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Filterable sharing commitments.
+ * Filterable communication commitments.
  */
 public class Commitments implements Serializable, Iterable<Commitment> {
 

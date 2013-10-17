@@ -25,7 +25,7 @@ abstract public class ModelObjectData  implements Serializable {
     private DocumentationData documentation;
     private String serverUrl;
 
-    protected ModelObjectData(  ) {
+    public ModelObjectData(  ) {
         // required
     }
 

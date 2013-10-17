@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -47,6 +49,20 @@ public class Function extends ModelEntity {
         super( name );
     }
 
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return CollectionUtils.exists(
+                allAssignments.getAssignments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Function function = ( (Assignment) object ).getPart().getFunction();
+                        return function != null && function.narrowsOrEquals( Function.this );
+                    }
+                }
+        );
+    }
+
     public static String classLabel() {
         return "functions";
     }
@@ -79,7 +95,7 @@ public class Function extends ModelEntity {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> getInfoAcquiredNames() {
         return (List<String>) CollectionUtils.collect(
                 getInfoAcquired(),
@@ -110,7 +126,7 @@ public class Function extends ModelEntity {
         this.infoNeeded = infoNeeded;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> getInfoNeedNames() {
         return (List<String>) CollectionUtils.collect(
                 getInfoNeeded(),
@@ -178,7 +194,7 @@ public class Function extends ModelEntity {
                 && allInfoAcquiredNotImplementedBy( part ).isEmpty();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Objective> allObjectivesNotImplementedBy( final Part part, final QueryService queryService ) {
         return (List<Objective>) CollectionUtils.select(
                 getEffectiveObjectives(),
@@ -191,7 +207,7 @@ public class Function extends ModelEntity {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Information> allInfoNeedsNotImplementedBy( final Part part ) {
         return (List<Information>) CollectionUtils.select(
                 getEffectiveInfoNeeded(),
@@ -205,7 +221,7 @@ public class Function extends ModelEntity {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Information> allInfoAcquiredNotImplementedBy( final Part part ) {
         return (List<Information>) CollectionUtils.select(
                 getEffectiveInfoAcquired(),

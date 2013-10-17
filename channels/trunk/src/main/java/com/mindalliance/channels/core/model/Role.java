@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,11 @@ public class Role extends ModelEntity implements Specable {
      */
     public Role( String name ) {
         super( name );
+    }
+
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return !allAssignments.with( this ).isEmpty();
     }
 
     public static String classLabel() {

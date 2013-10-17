@@ -57,13 +57,13 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     private boolean viewableByAll;
 
     /**
-     * Whether an organization is expected to have agents with assigned tasks.
+     * Whether an entity is expected to be involved in tasks or flows.
      *
-     * @param organization an organization
+     * @param entity a model entity
      * @return a boolean
      */
-    public boolean isInScope( Organization organization ) {
-        return getOrganizations().contains( organization );
+    public boolean isInScope( ModelEntity entity ) {
+        return getInvolvements().contains( entity );
     }
 
     public static String classLabel() {
@@ -141,9 +141,9 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     private List<Phase> phases = new ArrayList<Phase>();
 
     /**
-     * Organization whose involvement is expected.
+     * Entities whose involvement is expected.
      */
-    private List<Organization> organizations = new ArrayList<Organization>();
+    private List<ModelEntity> involvements = new ArrayList<ModelEntity>();
 
     /**
      * Classifications supported.
@@ -363,12 +363,12 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
         this.incidents = new ArrayList<Event>( incidents );
     }
 
-    public List<Organization> getOrganizations() {
-        return organizations;
+    public List<ModelEntity> getInvolvements() {
+        return involvements;
     }
 
-    public void setOrganizations( List<Organization> organizations ) {
-        this.organizations = new ArrayList<Organization>( organizations );
+    public void setInvolvements( List<ModelEntity> involvements ) {
+        this.involvements = new ArrayList<ModelEntity>( involvements );
     }
 
     public String getClient() {
@@ -454,14 +454,14 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     }
 
     /**
-     * Add an organization expected to be involved.
+     * Add an entity expected to be involved.
      *
-     * @param organization an organization
+     * @param entity an organization
      */
-    public void addOrganization( Organization organization ) {
-        assert organization.isActual();
-        if ( !organizations.contains( organization ) )
-            organizations.add( organization );
+    public void addEntityInvolved( ModelEntity entity ) {
+        assert entity.isActual();
+        if ( !involvements.contains( entity ) )
+            involvements.add( entity );
     }
 
     public List<Classification> getClassifications() {
@@ -609,7 +609,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
                 return ModelObject.areIdentical( (ModelObject) object, mo );
             }
         } )
-                || CollectionUtils.exists( organizations, new Predicate() {
+                || CollectionUtils.exists( involvements, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 return ModelObject.areIdentical( (ModelObject) object, mo );

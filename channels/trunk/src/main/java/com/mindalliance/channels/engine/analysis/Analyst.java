@@ -180,7 +180,7 @@ public interface Analyst extends CommandListener {
      * Find problem impeding realization of a commitment.
      *
      * @param plan       a plan
-     * @param commitment an info sharing commitment
+     * @param commitment a communication commitment
      * @param queryService a query service
      * @return a boolean
      */
@@ -307,7 +307,7 @@ public interface Analyst extends CommandListener {
     /**
      * Whether a commitment could be met based on agent qualified to use medium..
      *
-     * @param commitment an info sharing commitment
+     * @param commitment a communication commitment
      * @param mediaUsed  media used in commitment
      * @param planLocale a plan locale
      * @return a boolean
@@ -317,7 +317,7 @@ public interface Analyst extends CommandListener {
     /**
      * Whether a commitment could be met based on availability.
      *
-     * @param commitment an info sharing commitment
+     * @param commitment a communication commitment
      * @param mediaUsed  media used in commitment
      * @param planLocale a plan locale
      * @return a boolean
@@ -355,7 +355,7 @@ public interface Analyst extends CommandListener {
     /**
      * Whether a commitment could be met based on known contact info.
      *
-     * @param commitment an info sharing commitment
+     * @param commitment a communication commitment
      * @param mediaUsed  media used in commitment
      * @param planLocale a plan locale
      * @return a boolean
@@ -504,7 +504,7 @@ public interface Analyst extends CommandListener {
     /**
      * Diagnostic about whether a commitment can be realized or is conceptual.
      *
-     * @param commitment   an info sharing commitment
+     * @param commitment   a communication commitment
      * @param communityService a community service
      * @return a string
      */

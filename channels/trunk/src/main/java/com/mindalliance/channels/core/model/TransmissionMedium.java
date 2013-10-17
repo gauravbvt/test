@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -90,6 +92,28 @@ public class TransmissionMedium extends ModelEntity {
         setType();
     }
 
+    @Override
+    public boolean isInvolvedIn( Assignments allAssignments, Commitments allCommitments ) {
+        return CollectionUtils.exists(
+                allCommitments.toList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Flow sharing = ( (Commitment) object ).getSharing();
+                        return CollectionUtils.exists(
+                                sharing.getChannels(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return ( (Channel) object ).getMedium().narrowsOrEquals( TransmissionMedium.this );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
     public static String classLabel() {
         return "transmission media";
     }
@@ -98,7 +122,6 @@ public class TransmissionMedium extends ModelEntity {
     public String getClassLabel() {
         return classLabel();
     }
-
 
 
     private void compilePattern( String addressPattern ) {
@@ -173,7 +196,7 @@ public class TransmissionMedium extends ModelEntity {
      *
      * @return a  compiled pattern
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Pattern getEffectiveCompiledAddressPattern() {
         if ( compiledPattern != null || getTypes().isEmpty() ) {
             return compiledPattern;
@@ -185,7 +208,7 @@ public class TransmissionMedium extends ModelEntity {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Pattern findEffectiveCompiledAddressPattern( List<ModelEntity> media, Set<ModelEntity> visited ) {
         if ( media.isEmpty() ) {
             return null;

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The information need is not fully satisfied by sharing commitments
+ * The information need is not fully satisfied by communication commitments
  */
 public class UnsatisfiedNeed extends AbstractIssueDetector {
 
