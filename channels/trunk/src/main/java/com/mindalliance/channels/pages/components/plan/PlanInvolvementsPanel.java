@@ -14,7 +14,6 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.Assignments;
@@ -60,12 +59,12 @@ import java.util.Set;
 public class PlanInvolvementsPanel extends AbstractCommandablePanel implements Guidable {
 
     private static String[] ENTITY_CLASSES = {
+            Actor.classLabel(),
             Function.classLabel(),
             InfoFormat.classLabel(),
             InfoProduct.classLabel(),
             Organization.classLabel(),
             Place.classLabel(),
-            Role.classLabel(),
             TransmissionMedium.classLabel()
     };
 
@@ -391,7 +390,11 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
 
     private void involveNewEntity() {
         if ( newInvolvedName != null && !newInvolvedName.trim().isEmpty() ) {
-            ModelEntity entity = getQueryService().safeFindOrCreate( // creates actual if supported, else type
+            ModelEntity entity = isActualEntityInvolvement()
+                    ? getQueryService().safeFindOrCreateActual( // creates actual if new name
+                    getSelectedEntityClass(),
+                    newInvolvedName )
+                    : getQueryService().safeFindOrCreateType( // creates type if new name
                     getSelectedEntityClass(),
                     newInvolvedName );
             selectedEntity = entity;
@@ -401,6 +404,12 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
                             entity,
                             UpdateObject.Action.AddUnique ) );
         }
+    }
+
+    private boolean isActualEntityInvolvement() {
+        return selectedEntityClass == Actor.class
+                || selectedEntityClass == Organization.class
+                || selectedEntityClass == Place.class;
     }
 
     private String getInvolvementTitle() {
@@ -542,7 +551,9 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
 
     private List<? extends ModelEntity> listEntities( Class<? extends ModelEntity> modelEntityClass,
                                                       boolean mustBeReferenced ) {
-        if ( modelEntityClass == Organization.class || modelEntityClass == Place.class )
+        if ( modelEntityClass == Organization.class
+                || modelEntityClass == Place.class
+                || modelEntityClass == Actor.class )
             return getQueryService().listActualEntities( modelEntityClass, mustBeReferenced );
         else
             return getQueryService().listTypeEntities( modelEntityClass, mustBeReferenced );
@@ -613,11 +624,11 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
 
         @Override
         @SuppressWarnings( "unchecked" )
-        protected List<Role> findIndexedRoles() {
-            if ( getSelectedEntityClass() == Role.class )
-                return (List<Role>) getIndexedEntities( Role.class, isMustBeReferenced() );
+        protected List<Actor> findIndexedActors() {
+            if ( getSelectedEntityClass() == Actor.class )
+                return (List<Actor>) getIndexedEntities( Actor.class, isMustBeReferenced() );
             else
-                return new ArrayList<Role>();
+                return new ArrayList<Actor>();
         }
     }
 

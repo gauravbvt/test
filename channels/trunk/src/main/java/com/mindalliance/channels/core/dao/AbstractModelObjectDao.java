@@ -904,6 +904,35 @@ public abstract class AbstractModelObjectDao {
     }
 
 
+    public <T extends ModelEntity> T safeFindOrCreateActual( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
+        T actualEntity = null;
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of actual " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
+            boolean success = false;
+            int i = 0;
+            while ( !success ) {
+                try {
+                    actualEntity = findOrCreateActual( clazz, candidateName, id );
+                    success = true;
+                } catch ( InvalidEntityKindException ignored ) {
+                    LOG.warn( "Entity name conflict creating actual {}", candidateName );
+                    candidateName = root.trim() + " type";
+                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
+                    i++;
+                }
+            }
+        }
+        return actualEntity;
+    }
+
+
     private String sanitizeEntityName( String name ) {
         return StringUtils.abbreviate( ChannelsUtils.cleanUpName( name ), ModelEntity.MAX_NAME_SIZE );
     }

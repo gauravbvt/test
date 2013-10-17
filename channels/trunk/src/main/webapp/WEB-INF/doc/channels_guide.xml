@@ -1597,9 +1597,9 @@ The list is part of the template's ''details''.]]></description>
                 <name>All involvements</name>
                 <item>
                     <description>
-                        Name all the (actual) organizations, places, roles, transmission media, information products and formats that are
+                        Name all the (actual) organizations, places, agents, transmission media, information products and formats that are
                         within the scope of this template and indicate which ones are expected to be involved in tasks (via assignments)
-                        or in flows (via communication commitments).</description>
+                        or in flows (via communication commitments), and thus be referenced in checklists.</description>
                     <script>
                         <action>Edit the list of involved entities</action>
                         <change>

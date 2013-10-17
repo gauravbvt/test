@@ -580,6 +580,17 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
+    public <T extends ModelEntity> T safeFindOrCreateActual( Class<T> clazz, String name ) {
+        return safeFindOrCreateActual( clazz, name, null );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreateActual( Class<T> clazz, String name, Long id ) {
+        return getDao().safeFindOrCreateActual( clazz, name, id );
+    }
+
+
+    @Override
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
         return getDao().safeFindOrCreateType( clazz, name, id );
     }
