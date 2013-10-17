@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
-import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
 import org.apache.wicket.AttributeModifier;
@@ -85,9 +83,7 @@ public abstract class AbstractDataPanel extends Panel {
     }
 
     protected Component addTipTitle( Component component, IModel<String> titleModel, boolean keepAlive ) {
-        TipTipOptions options = new TipTipOptions().maxWidth( "400px" ).keepAlive( keepAlive );
         component.add( new AttributeModifier( "title", titleModel ) );
-        component.add( new TipTipBehavior( options ) );
         return component;
     }
 

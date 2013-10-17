@@ -6,8 +6,6 @@
 
 package com.mindalliance.channels.pages.components;
 
-import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
-import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
@@ -704,9 +702,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected Component addTipTitle( Component component, IModel<String> titleModel, boolean keepAlive ) {
-        TipTipOptions options = new TipTipOptions().maxWidth( "400px" ).keepAlive( keepAlive );
         component.add( new AttributeModifier( "title", titleModel ) );
-        component.add( new TipTipBehavior( options ) );
         return component;
     }
 

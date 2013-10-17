@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages;
 
-import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
-import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -89,8 +87,6 @@ public class PagePathItem implements Serializable {
 
     private Component addTipTitle( Component component, IModel<String> titleModel ) {
         component.add( new AttributeModifier( "title", titleModel ) );
-        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
-//        component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
         return component;
     }
 
