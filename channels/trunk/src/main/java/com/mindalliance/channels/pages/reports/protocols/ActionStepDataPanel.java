@@ -24,9 +24,10 @@ public class ActionStepDataPanel extends AbstractDataPanel {
     private void init() {
         addRequired();
         addDo();
+        addInstructions();
     }
 
-    private void addRequired() {
+     private void addRequired() {
         Label requiredLabel = new Label( "required", getStep().isRequired() ? " - Required" : " - Optional" );
         requiredLabel.setVisible( getStep().isRequired() );
         add( requiredLabel );
@@ -34,6 +35,13 @@ public class ActionStepDataPanel extends AbstractDataPanel {
 
     private void addDo() {
         add( new Label( "do", getStep().getAction() ) );
+    }
+
+    private void addInstructions() {
+        String instructions = getStep().getInstructions();
+        Label instructionsLabel = new Label( "instructions", instructions );
+        instructionsLabel.setVisible( !instructions.isEmpty() );
+        add( instructionsLabel );
     }
 
     private ActionStep getStep() {

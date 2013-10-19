@@ -3025,7 +3025,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
         if ( part.getOrganization() != null ) {
             if ( !label.isEmpty() )
-                label += sep + "at ";
+                label += sep + "in ";
             label += part.getOrganization().getName();
         }
         if ( !label.isEmpty() )

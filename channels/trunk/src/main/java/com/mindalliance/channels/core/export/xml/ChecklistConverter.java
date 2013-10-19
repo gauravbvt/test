@@ -46,7 +46,12 @@ public class ChecklistConverter extends AbstractChannelsConverter {
         for ( ActionStep actionStep : checklist.getActionSteps() ) {
             writer.startNode( "actionStep" );
             writer.addAttribute( "required", Boolean.toString( actionStep.isRequired() ) );
+            writer.startNode( "action" );
             writer.setValue( actionStep.getAction() );
+            writer.endNode();
+            writer.startNode( "instructions" );
+            writer.setValue( actionStep.getInstructions() );
+            writer.endNode();
             writer.endNode();
         }
         for ( Condition condition : checklist.listEffectiveConditions() ) {
@@ -104,8 +109,25 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actionStep" ) ) {
                 boolean required = Boolean.parseBoolean( reader.getAttribute( "required" ) );
-                ActionStep actionStep = new ActionStep( reader.getValue() );
+                String action = "";
+                String instructions = "";
+                if ( reader.hasMoreChildren() ) {
+                    while( reader.hasMoreChildren() ) {
+                        reader.moveDown();
+                        String name = reader.getNodeName();
+                        if ( name.equals( "action") ) {
+                            action = reader.getValue();
+                        } else if ( name.equals( "instructions" ) ) {
+                            instructions = reader.getValue();
+                        }
+                        reader.moveUp();
+                    }
+                } else { // obsolete
+                   action = reader.getValue();
+                }
+                ActionStep actionStep = new ActionStep( action );
                 actionStep.setRequired( required );
+                actionStep.setInstructions( instructions );
                 checklist.addActionStep( actionStep );
             } else if ( nodeName.equals( "localCondition" ) ) {
                 LocalCondition localCondition = new LocalCondition( reader.getValue() );

@@ -3962,6 +3962,10 @@ ul.attach li.controls {
     margin-left: 5px;
 }
 
+.checklist .instructions {
+    padding-left: 25px;
+}
+
 .checklist .confirm {
     float:right;
     margin: 20px 10px 5px 0;

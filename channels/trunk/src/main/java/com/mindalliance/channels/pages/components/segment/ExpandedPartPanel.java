@@ -315,7 +315,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addTagsPanel() {
         tagsContainer = new WebMarkupContainer( "tagsContainer" );
         tagsContainer.setOutputMarkupId( true );
-        makeVisible( tagsContainer, !isShowSimpleForm() );
+        // makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
         tagsContainer.add( tagsPanel );
@@ -362,8 +362,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
         boolean showSimpleForm = isShowSimpleForm();
-        makeVisible( tagsContainer, !showSimpleForm );
-        target.add( tagsContainer );
+        // makeVisible( tagsContainer, !showSimpleForm );
+        // target.add( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
         target.add( classificationContainer );
         makeVisible( executionContainer, !showSimpleForm );

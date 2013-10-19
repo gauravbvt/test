@@ -18,6 +18,7 @@ public class ActionStep extends Step implements Mappable {
 
     private String action = "";
     private boolean required = true;
+    private String instructions;
 
     public ActionStep() {
     }
@@ -40,6 +41,14 @@ public class ActionStep extends Step implements Mappable {
 
     public void setRequired( boolean required ) {
         this.required = required;
+    }
+
+    public String getInstructions() {
+        return instructions == null ? "" : instructions;
+    }
+
+    public void setInstructions( String instructions ) {
+        this.instructions = instructions;
     }
 
     public String getRef() {

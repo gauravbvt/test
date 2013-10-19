@@ -339,7 +339,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addTagsPanel() {
         tagsContainer = new WebMarkupContainer( "tagsContainer" );
         tagsContainer.setOutputMarkupId( true );
-        makeVisible( tagsContainer, !isShowSimpleForm() );
+        // makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
@@ -1045,8 +1045,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
         Flow f = getFlow();
         boolean showSimpleForm = isShowSimpleForm();
-        makeVisible( tagsContainer, !showSimpleForm );
-        target.add( tagsContainer );
+        /*makeVisible( tagsContainer, !showSimpleForm );
+        target.add( tagsContainer );*/
         makeVisible( classificationContainer, !showSimpleForm );
         target.add( classificationContainer );
         makeVisible( restrictionsContainer, !showSimpleForm );

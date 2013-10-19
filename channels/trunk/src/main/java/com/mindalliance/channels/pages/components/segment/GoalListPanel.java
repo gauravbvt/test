@@ -226,7 +226,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                         }
                     }
                 } );
-        levelDropDownChoice.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
+        levelDropDownChoice.setEnabled( /*wrapper.isMarkedForCreation() &&*/ isLockedByUser( getSegment() ) );
         item.add( levelDropDownChoice );
     }
 
