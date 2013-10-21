@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 4/1/13
  * Time: 9:25 PM
  */
-@XmlType( name = "actionStep", propOrder = {"label", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
+@XmlType( name = "actionStep", propOrder = {"label", "uid", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
 public class ActionStepData extends AbstractStepData {
 
     public ActionStepData() {
@@ -35,6 +35,11 @@ public class ActionStepData extends AbstractStepData {
     @XmlElement
     public String getLabel() {
         return super.getLabel();
+    }
+
+    @XmlElement
+    public String getUid() {
+        return getActionStep().getUid();
     }
 
     @XmlElement

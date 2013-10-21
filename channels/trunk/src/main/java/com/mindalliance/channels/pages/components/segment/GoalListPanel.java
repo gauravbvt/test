@@ -197,7 +197,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                         target.add( item );
                     }
                 } );
-        kindDropDownChoice.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
+        kindDropDownChoice.setEnabled( /*wrapper.isMarkedForCreation() &&*/ isLockedByUser( getSegment() ) );
         item.add( kindDropDownChoice );
     }
 
@@ -258,7 +258,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
 
                     }
                 } );
-        categoryChoices.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
+        categoryChoices.setEnabled( /*wrapper.isMarkedForCreation() &&*/ isLockedByUser( getSegment() ) );
         categoryChoices.setOutputMarkupId( true );
         item.addOrReplace( categoryChoices );
     }

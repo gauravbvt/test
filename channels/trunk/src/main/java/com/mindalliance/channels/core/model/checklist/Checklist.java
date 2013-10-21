@@ -391,7 +391,7 @@ public class Checklist implements Serializable, Mappable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (ActionStep) object ).getRef().equals( stepRef );
+                        return ( (ActionStep) object ).getRef().equals( stepRef ); // todo - remove after conversion
                     }
                 }
         );

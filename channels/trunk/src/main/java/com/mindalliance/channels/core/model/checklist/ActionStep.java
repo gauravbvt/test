@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.model.checklist;
 import com.mindalliance.channels.core.model.Mappable;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -15,16 +16,21 @@ public class ActionStep extends Step implements Mappable {
 
     public static final String REF_PREFIX = "action|";
 
-
+    private String uid ="";
     private String action = "";
     private boolean required = true;
     private String instructions;
 
     public ActionStep() {
+        setUid( UUID.randomUUID().toString() );
     }
 
-    public ActionStep( String action ) {
-        this.action = action;
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid( String uid ) {
+        this.uid = uid;
     }
 
     public String getAction() {
@@ -52,7 +58,8 @@ public class ActionStep extends Step implements Mappable {
     }
 
     public String getRef() {
-        return REF_PREFIX + action;
+        assert !uid.isEmpty();
+        return REF_PREFIX + uid;
     }
 
     @Override
@@ -96,6 +103,7 @@ public class ActionStep extends Step implements Mappable {
 
     @Override
     public void map( Map<String, Object> map ) {
+        map.put( "uid", uid );
         map.put( "required", required );
         map.put( "action", action );
     }
@@ -104,6 +112,7 @@ public class ActionStep extends Step implements Mappable {
     public int hashCode() {
         int hash = 1;
         if ( required ) hash = hash + 31;
+        hash = hash + 31 * uid.hashCode();
         hash = hash + 31 * action.hashCode();
         return hash;
     }
@@ -111,6 +120,7 @@ public class ActionStep extends Step implements Mappable {
     @Override
     public boolean equals( Object object ) {
         return object instanceof ActionStep
+                && uid.equals( ((ActionStep)object).getUid() )
                 && required == ( (ActionStep) object ).isRequired()
                 && action.equals( ( (ActionStep) object ).getAction() );
     }

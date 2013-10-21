@@ -46,6 +46,9 @@ public class ChecklistConverter extends AbstractChannelsConverter {
         for ( ActionStep actionStep : checklist.getActionSteps() ) {
             writer.startNode( "actionStep" );
             writer.addAttribute( "required", Boolean.toString( actionStep.isRequired() ) );
+            writer.startNode( "uid" );
+            writer.setValue( actionStep.getUid() );
+            writer.endNode();
             writer.startNode( "action" );
             writer.setValue( actionStep.getAction() );
             writer.endNode();
@@ -111,11 +114,14 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 boolean required = Boolean.parseBoolean( reader.getAttribute( "required" ) );
                 String action = "";
                 String instructions = "";
+                String uid = "";
                 if ( reader.hasMoreChildren() ) {
                     while( reader.hasMoreChildren() ) {
                         reader.moveDown();
                         String name = reader.getNodeName();
-                        if ( name.equals( "action") ) {
+                        if ( name.equals( "uid") ) {
+                           uid = reader.getValue();
+                        } else if ( name.equals( "action") ) {
                             action = reader.getValue();
                         } else if ( name.equals( "instructions" ) ) {
                             instructions = reader.getValue();
@@ -125,7 +131,9 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 } else { // obsolete
                    action = reader.getValue();
                 }
-                ActionStep actionStep = new ActionStep( action );
+                ActionStep actionStep = new ActionStep(  );
+                actionStep.setUid( uid );
+                actionStep.setAction( action );
                 actionStep.setRequired( required );
                 actionStep.setInstructions( instructions );
                 checklist.addActionStep( actionStep );

@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
@@ -76,6 +77,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         stepContainer.add( new AttributeModifier( "class", cssClasses ) );
         add( stepContainer );
         addStepLabel();
+        addActionStepNameInput();
         addStepInstructionsTextArea();
         addDeleteStep();
         addEditDoneButton();
@@ -123,6 +125,29 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         }
     }
 
+    public String getAction() {
+        return step.isActionStep() ? ( (ActionStep) step ).getAction() : "";
+    }
+
+    public void setAction( String val ) {
+        if ( val != null && !val.isEmpty() && step.isActionStep() ) {
+            ActionStep actionStep = (ActionStep) step;
+            int index = getChecklist().getActionSteps().indexOf( actionStep );
+            if ( index >= 0 ) {
+                Command command = new UpdateSegmentObject(
+                        getUsername(),
+                        part,
+                        "checklist.actionSteps[" + index + "].action",
+                        val,
+                        UpdateObject.Action.Set
+                );
+                command.makeUndoable( false );
+                doCommand( command );
+            }
+        }
+    }
+
+
     public String getInstructions() {
         return step.isActionStep() ? ( (ActionStep) step ).getInstructions() : "";
     }
@@ -149,6 +174,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     private void addStepLabel() {
         Label actLabel = new Label( "act", step.getLabel() );
         actLabel.add( new AttributeModifier( "class", stepCSSClasses( step ) ) );
+        actLabel.setVisible( !edited || !step.isActionStep() );
         stepContainer.add( actLabel );
         String instructions = step.isActionStep()
                 ? ( (ActionStep) step ).getInstructions()
@@ -158,6 +184,23 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         Label instructionsLabel = new Label( "instructions", instructions );
         instructionsLabel.setVisible( ( step.isCommunicationStep() || ( step.isActionStep() && !edited ) ) && !instructions.isEmpty() );
         stepContainer.add( instructionsLabel );
+    }
+
+    private void addActionStepNameInput() {
+        TextField<String> actionStepInputField = new TextField<String>(
+                "actEdit",
+                new PropertyModel<String>( this, "action" ) );
+        actionStepInputField.setVisible( edited && step.isActionStep() );
+        actionStepInputField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Updated, part );
+                change.setProperty( "checklist" );
+                update( target, change );
+            }
+        } );
+        addInputHint( actionStepInputField, "The action to be taken" );
+        stepContainer.add( actionStepInputField );
     }
 
 
@@ -175,6 +218,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
             }
         } );
         instructionsTextArea.setVisible( edited && step.isActionStep() );
+        addInputHint( instructionsTextArea, "Instructions on how to carry out this step" );
         stepContainer.add( instructionsTextArea );
     }
 
@@ -337,7 +381,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         ifsContainer.add( addIfContainer );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getIfGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().listEffectiveStepGuardsFor( step, true ),
@@ -408,7 +452,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         unlessesContainer.add( addUnlessContainer );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getUnlessGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().listEffectiveStepGuardsFor( step, false ),
@@ -502,7 +546,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addAfterContainer.add( prereqStepChoice );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Step> getPrerequisiteChoices() {
         List<Step> choices = getChecklist().listEffectiveSteps();
         choices.remove( step );
@@ -646,7 +690,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         return null;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepOutcome> getStepOutcomes() {
         return getChecklist().listEffectiveStepOutcomesFor( step );
     }

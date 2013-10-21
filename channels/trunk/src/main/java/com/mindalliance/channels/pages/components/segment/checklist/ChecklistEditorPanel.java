@@ -113,7 +113,8 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         if ( val != null ) {
             String action = ChannelsUtils.cleanUpPhrase( val );
             if ( !action.isEmpty() ) {
-                ActionStep actionStep = new ActionStep( action );
+                ActionStep actionStep = new ActionStep( );
+                actionStep.setAction( action );
                 Command command = new UpdateSegmentObject( getUsername(),
                         getPart(),
                         "checklist.actionSteps",
