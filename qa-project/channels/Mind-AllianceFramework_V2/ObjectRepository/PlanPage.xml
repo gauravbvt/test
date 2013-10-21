@@ -2257,11 +2257,11 @@
 	<Element>
 		<GivenName>Textbox of Task</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr/td/input</Xpath>
-		<Name></Name>
-		<Id></Id>
+		<Name>segment:part:task</Name>
+		<Id>task</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<ClassName>task</ClassName>
 	</Element>
 	
 	<Element>
@@ -2965,7 +2965,7 @@
 		<GivenName>From Task Name In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
 	    <Name></Name>
-		<ClassName></ClassName>
+		<ClassName>node-secondchoice</ClassName>
 		<Id></Id>
 	</Element>
 	
