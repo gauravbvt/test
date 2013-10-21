@@ -1817,7 +1817,6 @@ public class PlanPage {
 		UIActions.click(fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.enterValueInTextBox(informationName,fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.enterKey(Keys.TAB);
-		
 		try{
 			Thread.sleep(2000);
 		}
@@ -1868,6 +1867,7 @@ public class PlanPage {
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
 		UIActions.selectByTextAndClick(Other);
+		UIActions.enterKey(Keys.TAB);
 	}
 	
 	/*public void enterOrganizationName(String organizationName) throws UIAutomationException{
@@ -1922,6 +1922,7 @@ public class PlanPage {
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
 		UIActions.selectByTextAndClick(Other);
+		UIActions.enterKey(Keys.TAB);
 	}
 	/**
 	 * Select segment from dropdown list in task mover
@@ -2023,7 +2024,7 @@ public class PlanPage {
 		for (int i = 0; i <= 17; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
 		}
-		UIActions.enterValueInTextBox(FromTaskNameInRecevesPanel,fileName,"From Task Name In Receves Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receves Panel");
+		UIActions.enterValueInTextBox(FromTaskNameInRecevesPanel,fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receves Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
 	
