@@ -89,7 +89,7 @@ public class CL0001_LoginPage extends TestCase{
 	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0001_viewLoginPage() throws UIAutomationException, IOException{	
+	public void testCL0001_LoginPage() throws UIAutomationException, IOException{	
 		// Enter URL	
 		stepNo++;
 		description="URL Entered";

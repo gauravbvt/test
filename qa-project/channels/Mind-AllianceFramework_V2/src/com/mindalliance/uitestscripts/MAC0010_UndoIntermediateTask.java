@@ -171,7 +171,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("From Task Name In Sends Panel"));
+			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
 			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log

@@ -155,7 +155,7 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFrom(testData.get("OtherTaskName"));
 			// Enter From Task name
-			planPage.enterFromTaskNameInReceives(testData.get("FromTaskNameInRecevesPanel"));
+			planPage.enterFromTaskNameInReceives(testData.get("FromTaskNameInReceivesPanel"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -260,7 +260,7 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
 	        this.testData.put("ChannelsURL",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("InformationInRecievesPanel",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("informationInRecievesPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("FromTaskNameInRecevesPanel",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("fromTaskNameInRecevesPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("FromTaskNameInReceivesPanel",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("fromTaskNameInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("OtherTaskName",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("otherTaskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInReceivesPanel",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("actionsInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveFlowInReceivesPanel",oXmlEleMAC0025_UndoRemoveFlow.getElementsByTagName("removeFlowInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
