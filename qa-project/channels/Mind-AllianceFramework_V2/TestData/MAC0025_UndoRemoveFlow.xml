@@ -3,7 +3,7 @@
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <informationInRecievesPanel>Receiver</informationInRecievesPanel>
-<fromTaskNameInRecevesPanel>Sender</fromTaskNameInRecevesPanel>
+<fromTaskNameInReceivesPanel>Sender</fromTaskNameInReceivesPanel>
 <otherTaskName>Other...</otherTaskName>
 <actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
 <removeFlowInReceivesPanel>Remove Flow In Receives Panel</removeFlowInReceivesPanel>
