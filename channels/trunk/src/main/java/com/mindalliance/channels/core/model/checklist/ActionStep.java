@@ -16,7 +16,7 @@ public class ActionStep extends Step implements Mappable {
 
     public static final String REF_PREFIX = "action|";
 
-    private String uid ="";
+    private String uid = "";
     private String action = "";
     private boolean required = true;
     private String instructions;
@@ -26,11 +26,14 @@ public class ActionStep extends Step implements Mappable {
     }
 
     public String getUid() {
+        if ( uid == null || uid.isEmpty() )
+            uid = UUID.randomUUID().toString(); // should never happen
         return uid;
     }
 
     public void setUid( String uid ) {
-        this.uid = uid;
+        if ( uid != null && !uid.isEmpty() )
+            this.uid = uid;
     }
 
     public String getAction() {
@@ -120,7 +123,7 @@ public class ActionStep extends Step implements Mappable {
     @Override
     public boolean equals( Object object ) {
         return object instanceof ActionStep
-                && uid.equals( ((ActionStep)object).getUid() )
+                && uid.equals( ( (ActionStep) object ).getUid() )
                 && required == ( (ActionStep) object ).isRequired()
                 && action.equals( ( (ActionStep) object ).getAction() );
     }
@@ -131,4 +134,4 @@ public class ActionStep extends Step implements Mappable {
     }
 
 
- }
+}
