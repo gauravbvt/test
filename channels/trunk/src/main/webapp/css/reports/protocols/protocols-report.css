@@ -664,6 +664,7 @@ a.checklist-flowmap:hover {
 .checklist a.more {
 	background: none repeat scroll 0 0 #4a89dc;
 	margin: 0;
+	padding: 3px 5px 4px;
 }
 
 .checklist a.more:hover {
@@ -713,7 +714,11 @@ span.task-failure-severity {
 }
 
 .checklist .step-act {
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
     padding-left: 25px;
+    text-transform: uppercase;
 }
 
 

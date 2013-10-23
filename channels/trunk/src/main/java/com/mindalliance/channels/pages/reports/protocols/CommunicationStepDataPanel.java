@@ -114,7 +114,7 @@ public class CommunicationStepDataPanel extends AbstractDataPanel {
             }
         };
         moreLessButton.setOutputMarkupId( true );
-        moreLessButton.add( new Label( "moreLess", showingMore ? "Less" : "More" ) );
+        moreLessButton.add( new Label( "moreLess", showingMore ? "- Less" : "+ More" ) );
         moreLessButton.add( new AttributeModifier( "class", "more" ) );
         addOrReplace( moreLessButton );
     }
