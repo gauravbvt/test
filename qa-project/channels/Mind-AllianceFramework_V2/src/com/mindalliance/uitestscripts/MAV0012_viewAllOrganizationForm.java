@@ -132,15 +132,6 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
-						
-//			// Close Plan Map window
-//			stepNo++;
-//			description="Plan Map window closed";
-//			PlanPage planPage=new PlanPage();
-//			planPage.closePlanMap();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
 			
 			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
 			stepNo++;
@@ -151,7 +142,6 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
-						
 			
 			// Close Organization Window
 			stepNo++;
