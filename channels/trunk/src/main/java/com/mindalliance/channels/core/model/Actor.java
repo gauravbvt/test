@@ -426,6 +426,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
 
     public String getRequirementsDescription( Plan plan ) {
         StringBuilder sb = new StringBuilder();
+/*
         sb.append( "<p><b>" ).append( isSystem() ? "A system" : "A person" ).append( "</p><br/>" );
         if ( !getDescription().isEmpty() ) {
             sb.append( "<p>" ).append( getDescription() ).append( "</p><br/>" );
@@ -441,6 +442,21 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                 : ChannelsUtils.listToString( getClearances(), ", ", " and " ) );
         sb.append( "</p><br/>" );
         sb.append( "<b>" ).append( "Other requirements: " ).append( "</b>" );
+*/
+        sb.append( isSystem() ? "A system" : "A person" ).append( "\n\n" );
+        if ( !getDescription().isEmpty() ) {
+            sb.append( getDescription() ).append( "\n\n" );
+        }
+        sb.append( "Availability: " );
+        sb.append( getAvailability() ).append( "\n\n" );
+        sb.append( "Languages: " );
+        sb.append( ChannelsUtils.listToString( getEffectiveLanguages( plan ), ", ", " and " ) )
+                .append( "\n\n" );
+        sb.append( "Clearances: " );
+        sb.append( getClearances().isEmpty()
+                ? "None"
+                : ChannelsUtils.listToString( getClearances(), ", ", " and " ) );
+        sb.append( "\n\nOther requirements: " );
         List<String> qualifications = new ArrayList<String>();
         for ( ModelEntity type : getAllTypes() ) {
             if ( !type.getDescription().isEmpty() ) {
@@ -451,7 +467,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
             sb.append( "None" );
         else {
             for ( String qualification : qualifications ) {
-                sb.append( qualification ).append( "<br/>" );
+                sb.append( qualification ).append( "\n\n" );
             }
         }
         return sb.toString();
