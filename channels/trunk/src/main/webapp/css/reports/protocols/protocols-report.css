@@ -49,9 +49,10 @@ div.protocols-contents h3 {
     color: #333333;
     display: block;
     font-family: Arial;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: bold;
-    padding: 10px 0;
+    padding: 0 0 5px;
+    text-transform: uppercase;
 }
 
 div.protocols-content div.communications-toc h3 {
@@ -79,7 +80,8 @@ div.protocols-contents div.documentation-top label {
     color: #333333;
 }
 
-div.protocols-contents h4.taskName {
+div.protocols-contents h4.taskName,
+div.checklist h4.checklist-title {
     border-bottom: 5px solid #CCCCCC;
     font-size: 22px;
     font-weight: normal;
@@ -369,9 +371,9 @@ div.protocols-contents div.ongoingProcedures {
 }
 
 div.protocols-contents div.triggered div.trigger {
-    background: none repeat scroll 0 0 #C3D9FF;
-    border-left: 5px solid #6B8ABE;
-    padding: 0 0 0 25px;
+    background: none repeat scroll 0 0 #D4E3F5;
+    border-left: 5px solid #A1C1E6;
+    padding: 15px 0 10px 25px;
 }
 
 div.protocols-contents div.triggered div.trigger h3 {
@@ -518,9 +520,15 @@ div.protocols-contents div.contactsContainer {
 }
 
 div.protocols-contents div.eois-contacts-cont {
-    font-size: 12px;
-    padding: 0 0 12px;	
+    color: #666666;
+    font-size: 11px;
+    padding: 0 0 5px;
     text-transform: capitalize;
+}
+
+div.protocols-contents div.eois-contacts-cont a {
+    color: #666666;
+    border: none;
 }
 
 div.protocols-contents div.eoisContainer-direct,
@@ -600,6 +608,74 @@ div.documentation-top label {
 /* Checklist */
 
 
+.checklist .data-table {
+	font-size: 13px;
+}
+
+div.checklist-steps {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #929498;
+    font-style: normal;
+    margin: 15px 0 10px;
+    padding: 10px;
+}
+
+table.checklist-step-constraints,
+table.checklist-step-outcomes {
+	border-collapse: collapse;
+}
+
+.checklist span.checklist-confirmed,
+.checklist a.checklist-flowmap,
+.checklist a.more,
+span.task-failure-severity {
+    color: #FFFFFF;
+    float: right;
+    font-size: 10px;
+    line-height: 100%;
+    margin: 10px 10px 0 0;
+    padding: 3px 5px 4px;
+    text-transform: uppercase;
+    font-weight: normal;
+    border: none;
+    cursor: pointer;
+}
+
+span.checklist-confirmed {
+    background: none repeat scroll 0 0 #E9573F;
+}
+
+span.checklist-confirmed:hover {
+	color: #ffffff;
+	border: 0;
+    background: none repeat scroll 0 0 #fc6e51;
+}
+
+a.checklist-flowmap {
+    background: none repeat scroll 0 0 #967adc;
+}
+
+a.checklist-flowmap:hover {
+	color: #ffffff;
+	border: 0;
+    background: none repeat scroll 0 0 #ac92ec;
+}
+
+.checklist a.more {
+	background: none repeat scroll 0 0 #4a89dc;
+	margin: 0;
+}
+
+.checklist a.more:hover {
+	color: #ffffff;
+	border: 0;
+	background: none repeat scroll 0 0 #5d9cec;
+}
+
+span.task-failure-severity {
+    background: none repeat scroll 0 0 #FF8C73;	
+}
+
 .checklist ul {
     list-style-type: none;
     margin: 0;
@@ -607,11 +683,12 @@ div.documentation-top label {
 }
 
 .checklist .step {
-    margin-bottom: 6px;
+    margin-bottom: 0;
+    border-top: none;
 }
 
 .checklist .even-step {
-    background: #e8e8e8;
+    background: none;
 }
 
 .checklist .step th {
@@ -626,20 +703,19 @@ div.documentation-top label {
 }
 
 .checklist .step .optional {
-    background: transparent url('../../../images/checkbox_optional.png') no-repeat 0 -1px;
+    background: transparent url('../../../images/checkbox_optional.png') no-repeat 0 0;
+    display: block;
 }
 
 .checklist .step .required {
-    background: transparent url('../../../images/checkbox_required.png') no-repeat 0 -1px;
+    background: transparent url('../../../images/checkbox_required.png') no-repeat 0 0;
+    display: block;
 }
 
 .checklist .step-act {
-    padding-left: 20px;
+    padding-left: 25px;
 }
 
-.checklist .more  {
-    float: right;
-}
 
 /* queries */
 
