@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Checklist Report</title>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
+</head>
+<body>
+<wicket:panel>
+    <table wicket:id="constraintsContainer">
+        <tr >
+            <td>
+                <table class="checklist-step-constraints">
+                    <tr class="step-constraint" wicket:id="aftersContainer">
+                        <th align="right">After</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="afters">
+                                    <td><span wicket:id="after">other step</span> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="step-constraint" wicket:id="ifsContainer">
+                        <th align="right">If</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="ifs">
+                                    <td><span wicket:id="if">condition</span> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="step-constraint" wicket:id="unlessesContainer">
+                        <th align="right">Unless</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="unlesses">
+                                    <td><span wicket:id="unless">condition</span> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr wicket:id="outcomesContainer">
+            <td>
+                <table class="checklist-step-outcomes">
+                    <tr class="step-constraint">
+                        <th align="right">Expected outcomes:</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="outcomes">
+                                    <td>
+                                        <span wicket:id="outcome">outcome</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table></wicket:panel>
+</body>
+</html>

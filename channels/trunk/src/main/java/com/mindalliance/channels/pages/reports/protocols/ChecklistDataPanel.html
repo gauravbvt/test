@@ -14,7 +14,6 @@
 
     <h4 class="taskName">
         <span wicket:id="taskName">I do task X</span>
-        <span class="task-failure-severity">Extreme</span>
     </h4>
     <div class="failureImpact-small" wicket:id="failureImpact">Failure to carry out this task could have
         <span wicket:id="severity">extreme</span>
@@ -62,11 +61,8 @@
         <h4 class="checklist-title">
         	My checklist
         	<span class="checklist-confirmed" wicket:id="confirmed">Confirmed</span>
-        	<a href="#" class="checklist-flowmap">+ Show Flowmap</a>
+        	<a wicket:id="checklist-flow-link" href="#" class="checklist-flowmap">+ Show Flowmap</a>
 		</h4>
-		<!--
-        <img wicket:id="checklist-flow-icon" class="checklist-flow-icon" src="images/checklistFlow.png"/>
-        -->
         <div class="checklist-flow" wicket:id="checklistFlow">
             <span wicket:id="flowDiagram"> [checklist flow panel]</span>  <!-- class set by code -->
         </div>

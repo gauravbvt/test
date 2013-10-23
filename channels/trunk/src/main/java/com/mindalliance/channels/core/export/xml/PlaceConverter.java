@@ -1,6 +1,10 @@
 package com.mindalliance.channels.core.export.xml;
 
-import com.mindalliance.channels.core.model.*;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.GeoLocation;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.PlaceReference;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -62,6 +66,11 @@ public class PlaceConverter extends EntityConverter {
             context.convertAnother( place.getGeoLocation() );
             writer.endNode();
         }
+        if ( place.isPlaceholder() ) {
+            writer.startNode( "placeholder" );
+            writer.setValue( Boolean.toString( true ));
+            writer.endNode();
+        }
         Place locale = getPlan().getLocale();
         if ( place.getMustBeContainedIn().isSet( locale ) ) {
             writer.startNode( "mustBeContainedIn" );
@@ -121,6 +130,8 @@ public class PlaceConverter extends EntityConverter {
             place.setGeoLocation( (GeoLocation) context.convertAnother( place, GeoLocation.class ) );
         } else if ( nodeName.equals( "alternateGeoLocation" ) ) {
             place.addGeoLocation( (GeoLocation) context.convertAnother( place, GeoLocation.class ) );
+        } else if ( nodeName.equals( "placeholder" ) ) {
+            place.setPlaceholder( Boolean.parseBoolean( reader.getValue() ) );
         }
     }
 

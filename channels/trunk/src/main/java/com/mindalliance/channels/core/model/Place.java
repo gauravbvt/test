@@ -71,15 +71,17 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public static final String UnknownPlaceName = "(unknown)";
 
-    private String streetAddress = "";
+    private String streetAddress = ""; // meaningful only if not a placeholder
 
-    private String postalCode = "";
+    private String postalCode = "";  // meaningful only if not a placeholder
 
     private String geoname;
 
     private GeoLocation geoLocation;
 
     private List<GeoLocation> geoLocations;
+
+    private boolean placeholder; // meaningful only if actual
 
     /**
      * The actual place, if any, this place is directly in.
@@ -117,7 +119,13 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return classLabel();
     }
 
+    public boolean isPlaceholder() {
+        return placeholder;
+    }
 
+    public void setPlaceholder( boolean placeholder ) {
+        this.placeholder = placeholder;
+    }
 
     @Override
     protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
@@ -153,7 +161,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return the address
      */
     public String getStreetAddress() {
-        return streetAddress;
+        return isPlaceholder() ? "" : streetAddress;
     }
 
     public void setStreetAddress( String address ) {
@@ -187,7 +195,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return the postal code
      */
     public String getPostalCode() {
-        return postalCode == null ? "" : postalCode;
+        return postalCode == null || isPlaceholder() ? "" : postalCode;
     }
 
     public void setPostalCode( String code ) {
@@ -252,8 +260,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
                 && mustContain == null
                 && mustBeContainedIn == null
                 && within == null
-                && streetAddress.isEmpty()
-                && postalCode.isEmpty();
+                && getStreetAddress().isEmpty()
+                && getPostalCode().isEmpty();
     }
 
     private boolean isCircular( Place locale ) {
@@ -442,7 +450,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return a string
      */
     public String getActualStreetAddress() {
-        String street = streetAddress;
+        String street = getStreetAddress();
         if ( street == null || street.isEmpty() ) {
             Iterator<Place> containers = containment().iterator();
             while ( street == null && containers.hasNext() )
@@ -488,8 +496,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     public boolean hasAddress() {
-        boolean hasStreetAddress = !( streetAddress == null || streetAddress.isEmpty() );
-        boolean hasPostalCode = !( postalCode == null || postalCode.isEmpty() );
+        boolean hasStreetAddress = !getStreetAddress().isEmpty();
+        boolean hasPostalCode = !getPostalCode().isEmpty();
         return getGeoLocation() != null && ( hasStreetAddress || hasPostalCode );
     }
 

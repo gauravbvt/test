@@ -20,5 +20,4 @@ public class SelfTriggerDataPanel extends AbstractSelfTriggerPanel {
         addEois();
     }
 
-
 }

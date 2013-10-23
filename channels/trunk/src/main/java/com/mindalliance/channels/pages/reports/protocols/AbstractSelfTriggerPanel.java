@@ -5,8 +5,6 @@ import com.mindalliance.channels.api.procedures.SharedInformationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
         add( new Label( "information", getInformationData().getName() ) );
     }
 
-    protected void addEois() {
+  /*  protected void addEois() {
         WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
         eoisContainer.setVisible( !getEois().isEmpty() );
         add( eoisContainer );
@@ -48,7 +46,16 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
             }
         };
         eoisContainer.add( eoisListView );
+    }*/
+
+    protected void addEois() {
+        int count = getEois().size();
+        WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
+        eoisContainer.setVisible( count > 0 );
+        add( eoisContainer );
+        eoisContainer.add( new Label( "eois", asCSVs( getEois() ) ));
     }
+
 
     protected SharedInformationData getInformationData() {
         return getTriggerData().isOnFollowingUp()

@@ -27,6 +27,7 @@ public abstract class AbstractDataPanel extends Panel {
 
     protected AbstractDataPanel( String id, ProtocolsFinder finder ) {
         super( id );
+        setOutputMarkupId( true );
         this.finder = finder;
     }
 

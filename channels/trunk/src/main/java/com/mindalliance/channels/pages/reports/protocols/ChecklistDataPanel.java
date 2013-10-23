@@ -9,12 +9,13 @@ import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.pages.components.diagrams.ChecklistFlowDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -178,7 +179,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
             @Override
             protected void populateItem( ListItem<ChecklistStepData> item ) {
                 ChecklistStepData stepData = item.getModelObject();
-                item.add( new ChecklistStepDataPanel(
+                item.add( makeChecklistStepDataPanel(
                         "step",
                         checklistData.getAssignment().getPart(),
                         stepData,
@@ -189,19 +190,34 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         checklistContainer.add( stepListView );
     }
 
+    private ChecklistStepDataPanel makeChecklistStepDataPanel( String step,
+                                                           Part part,
+                                                           ChecklistStepData stepData,
+                                                           int index,
+                                                           ProtocolsFinder finder ) {
+        Step aStep = stepData.getStep();
+        return aStep.isActionStep()
+                ? new ActionStepDataPanel( "step", part, stepData, index, finder )
+                : aStep.isCommunicationStep()
+                ? new CommunicationStepDataPanel( "step", part, stepData, index, finder )
+                : aStep.isReceiptConfirmation()
+                ? new ReceiptConfirmationDataPanel( "step", part, stepData, index, finder )
+                : new SubTaskStepDataPanel( "step", part, stepData, index, finder );
+    }
+
+
     private void addChecklistFlowIcon() {
-        WebMarkupContainer checklistFlowIcon = new WebMarkupContainer( "checklist-flow-icon" );
-        checklistContainer.add( checklistFlowIcon );
-        checklistFlowIcon.add( new AjaxEventBehavior( "onclick" ) {
+        AjaxLink<String> checklistFlowLink = new AjaxLink<String>( "checklist-flow-link") {
             @Override
-            protected void onEvent( AjaxRequestTarget target ) {
+            public void onClick( AjaxRequestTarget target ) {
                 showingChecklistFlow = !showingChecklistFlow;
                 addChecklistFlowDiagram();
                 target.add( checklistFlowContainer );
             }
-        } );
+        };
+        checklistContainer.add( checklistFlowLink );
         addTipTitle(
-                checklistFlowIcon,
+                checklistFlowLink,
                 "Open/close the checklist flow diagram" );
     }
 

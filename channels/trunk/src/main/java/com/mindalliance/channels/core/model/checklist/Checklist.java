@@ -887,4 +887,11 @@ public class Checklist implements Serializable, Mappable {
                 }
         );
     }
+
+    public boolean hasLogic( Step step ) {
+        return hasGuards( step, true )
+                || hasGuards( step, false )
+                || hasPrerequisites( step )
+                || hasOutcomes( step );
+    }
 }

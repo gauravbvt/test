@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -74,15 +73,6 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         eoisContainer.add( new Label( "eois", asCSVs( getEois() ) ));
     }
 
-    private String asCSVs( List<ElementOfInformationData> eois ) {
-        StringBuilder sb = new StringBuilder(  );
-        Iterator<ElementOfInformationData> iter = eois.iterator();
-        while( iter.hasNext() ) {
-            sb.append( ChannelsUtils.smartUncapitalize( iter.next().getName() ) );
-            if ( iter.hasNext() ) sb.append( ", " );
-        }
-        return sb.toString();
-    }
 
     private void addContacts() {
         List<ContactData> contacts = getContacts();

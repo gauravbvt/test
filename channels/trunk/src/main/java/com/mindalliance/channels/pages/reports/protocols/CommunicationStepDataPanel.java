@@ -1,21 +1,12 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
 import com.mindalliance.channels.api.procedures.checklist.CommunicationStepData;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.wicket.Component;
 
 /**
  * Communication step data panel.
@@ -25,114 +16,51 @@ import java.util.List;
  * Date: 4/9/13
  * Time: 6:27 PM
  */
-public class CommunicationStepDataPanel extends AbstractDataPanel {
+public class CommunicationStepDataPanel extends ChecklistStepDataPanel {
 
-    private final ChecklistStepData stepData;
-    private boolean showingMore = false;
-    private AjaxLink<String> moreLessButton;
-    private CommitmentDataPanel commitmentDataPanel;
-
-    public CommunicationStepDataPanel( String id, ChecklistStepData stepData, ProtocolsFinder finder ) {
-        super( id, finder );
-        this.stepData = stepData;
-        init();
+   public CommunicationStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
+        super( id, part, stepData, index, finder );
     }
 
-    private void init() {
-        addRequired();
-        addCommunication();
-        addToTBD();
-        addContacts();
-        addMoreLessButton();
-        addCommitment();
-    }
-
-    private void addRequired() {
-        Label requiredLabel = new Label( "required", getStep().isRequired() ? " - Required" : " - Optional" );
-        add( requiredLabel );
-    }
-
-    private void addCommunication() {
-        Flow.Intent intent = getStep().getSharing().getIntent();
-        String message = getStep().getSharing().getName();
+    @Override
+    protected String getStepAct() {
+        Flow.Intent intent = getCommunicationStep().getSharing().getIntent();
+        String message = getCommunicationStep().getSharing().getName();
         if ( message == null ) message = "something";
-        String label = getStep().isNotification()
+        String label = getCommunicationStep().isNotification()
                 ? "Send "
-                : getStep().isRequest()
+                : getCommunicationStep().isRequest()
                 ? "Ask for "
                 : "Answer with ";
         label += intent == null
                 ? "information"
                 : intent.getLabel().toLowerCase();
         label += " \"" + message + "\"";
-        label += getStep().isRequest()
-                ? " from "
-                : " to ";
-        add( new Label( "comm", label ) );
+        return label;
     }
 
-    private void addToTBD() {
-        Label tbd = new Label( "tbd", "(TBD)" );
-        tbd.setVisible( getContacts().isEmpty() );
-        add( tbd );
+    @Override
+    protected String getInstructions() {
+        return getFlowData().getInstructions();
     }
 
-    private void addContacts() {
-        List<ContactData> contacts = getContacts();
-        final int lastIndex = contacts.size() - 1;
-        WebMarkupContainer contactsContainer = new WebMarkupContainer( "contactsContainer" );
-        contactsContainer.setVisible( !contacts.isEmpty() );
-        add( contactsContainer );
-        String anyOf = contacts.size() > 1 ? "any of" : "";
-        contactsContainer.add( new Label( "anyOf", anyOf ) );
-        ListView<ContactData> contactsListView = new ListView<ContactData>(
-                "contacts",
-                contacts
-        ) {
-            @Override
-            protected void populateItem( ListItem<ContactData> item ) {
-                item.add( new ContactLinkPanel( "contact", item.getModelObject(), getFinder(), false ) );
-                item.add( new Label( "sep", ( item.getIndex() != lastIndex ) ? "," : "" ) );
-            }
-        };
-        contactsContainer.add( contactsListView );
+    @Override
+    protected boolean hasMore() {
+        return true;
     }
 
-    private List<ContactData> getContacts() {
-        return new ArrayList<ContactData>( stepData.allContacts() );
-    }
-
-    private void addMoreLessButton() {
-        moreLessButton = new AjaxLink<String>( "moreLessButton" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                showingMore = !showingMore;
-                addMoreLessButton();
-                target.add( moreLessButton );
-                addCommitment();
-                target.add( commitmentDataPanel );
-            }
-        };
-        moreLessButton.setOutputMarkupId( true );
-        moreLessButton.add( new Label( "moreLess", showingMore ? "- Less" : "+ More" ) );
-        moreLessButton.add( new AttributeModifier( "class", "more" ) );
-        addOrReplace( moreLessButton );
-    }
-
-    private void addCommitment() {
-        commitmentDataPanel = new CommitmentDataPanel(
-                "commitment",
+    @Override
+    protected Component makeStepDetailsPanel( String id ) {
+        return new CommitmentDataPanel(
+                id,
                 getFlowData(),
                 !isReceived(),
                 getFinder()
         );
-        commitmentDataPanel.setOutputMarkupId( true );
-        makeVisible( commitmentDataPanel, showingMore );
-        addOrReplace( commitmentDataPanel );
     }
 
     private boolean isReceived() {
-        return !getStep().isRequest();
+        return !getCommunicationStep().isRequest();
     }
 
     private AbstractFlowData getFlowData() {
@@ -140,15 +68,15 @@ public class CommunicationStepDataPanel extends AbstractDataPanel {
     }
 
     private CommunicationStepData getCommunicationStepData() {
-        return getStep().isRequest()
-                ? stepData.getRequestStep()
-                : getStep().isNotification()
-                ? stepData.getNotificationStep()
-                : stepData.getAnswerStep();
+        return getCommunicationStep().isRequest()
+                ? getStepData().getRequestStep()
+                : getCommunicationStep().isNotification()
+                ? getStepData().getNotificationStep()
+                : getStepData().getAnswerStep();
     }
 
-    private CommunicationStep getStep() {
-        return (CommunicationStep) stepData.getStep();
+    private CommunicationStep getCommunicationStep() {
+        return (CommunicationStep) getStep();
     }
 
 }

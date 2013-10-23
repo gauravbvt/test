@@ -10,64 +10,16 @@
     <table wicket:id="stepContainer"> <!-- CSS class: "data-table step"  + "even-step" or "odd-step" -->
         <tr>
             <td>
-                <span wicket:id="act">[step act panel]</span>  <!-- CSS classes: "step-act" + "required" or "optional"   -->
-             </td>
-        </tr>
-        <tr wicket:id="constraintsContainer">
-            <td>
-                <table class="checklist-step-constraints">
-                    <tr class="step-constraint" wicket:id="aftersContainer">
-                        <th align="right">After</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="afters">
-                                    <td><span wicket:id="after">other step</span> </td>
-                                </tr>
-                             </table>
-                        </td>
-                    </tr>
-                    <tr class="step-constraint" wicket:id="ifsContainer">
-                        <th align="right">If</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="ifs">
-                                    <td><span wicket:id="if">condition</span> </td>
-                                </tr>
-                             </table>
-                        </td>
-                    </tr>
-                    <tr class="step-constraint" wicket:id="unlessesContainer">
-                        <th align="right">Unless</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="unlesses">
-                                    <td><span wicket:id="unless">condition</span> </td>
-                                 </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                <span wicket:id="act">[do something]</span>  <!-- CSS classes: "step-act" + "required" or "optional"   -->
+                <div wicket:id="instructions" class="instructions">Instructions</div>
+                <a class="more" wicket:id="moreLessButton" href="#"><span wicket:id="moreLess">More/Less</span> </a>
             </td>
-         </tr>
-        <tr wicket:id="outcomesContainer">
-           <td>
-               <table class="checklist-step-outcomes">
-                   <tr class="step-constraint">
-                       <th align="right">Expected outcomes:</th>
-                       <td>
-                           <table>
-                               <tr wicket:id="outcomes">
-                                   <td>
-                                       <span wicket:id="outcome">outcome</span>
-                                   </td>
-                               </tr>
-                           </table>
-                       </td>
-                   </tr>
-               </table>
-           </td>
         </tr>
-    </table>
+     </table>
+    <div wicket:id="moreContainer">
+        <span wicket:id="stepLogic">[step constraints etc.]</span>
+        <span wicket:id="stepDetails">[step details]</span>
+    </div>
 </wicket:panel>
 </body>
 </html>

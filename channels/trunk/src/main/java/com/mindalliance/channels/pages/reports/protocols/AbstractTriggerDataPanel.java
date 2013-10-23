@@ -1,6 +1,11 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Abstract trigger data panel.
@@ -22,5 +27,16 @@ public abstract class AbstractTriggerDataPanel extends AbstractDataPanel {
     protected TriggerData getTriggerData() {
         return triggerData;
     }
+
+    protected String asCSVs( List<ElementOfInformationData> eois ) {
+        StringBuilder sb = new StringBuilder(  );
+        Iterator<ElementOfInformationData> iter = eois.iterator();
+        while( iter.hasNext() ) {
+            sb.append( ChannelsUtils.smartUncapitalize( iter.next().getName() ) );
+            if ( iter.hasNext() ) sb.append( ", " );
+        }
+        return sb.toString();
+    }
+
 
 }

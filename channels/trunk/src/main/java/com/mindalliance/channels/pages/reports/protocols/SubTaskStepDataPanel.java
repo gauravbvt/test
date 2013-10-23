@@ -1,14 +1,9 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.AssignmentData;
-import com.mindalliance.channels.api.procedures.FollowUpData;
-import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
-import com.mindalliance.channels.api.procedures.checklist.FollowUpStepData;
-import com.mindalliance.channels.api.procedures.checklist.ResearchStepData;
-import com.mindalliance.channels.api.procedures.checklist.SubTaskStepData;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.Component;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -17,62 +12,38 @@ import org.apache.wicket.markup.html.basic.Label;
  * Date: 4/9/13
  * Time: 6:28 PM
  */
-public class SubTaskStepDataPanel extends AbstractDataPanel {
+public class SubTaskStepDataPanel extends ChecklistStepDataPanel {
 
-    private final ChecklistStepData stepData;
-
-    public SubTaskStepDataPanel( String id, ChecklistStepData stepData, ProtocolsFinder finder ) {
-        super( id, finder );
-        this.stepData = stepData;
-        init();
+    public SubTaskStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
+        super( id, part, stepData, index, finder );
     }
 
-    private void init() {
-        addRequired();
-        addDo();
-        addChecklistLink();
+    @Override
+    protected String getInstructions() {
+        return "";
     }
 
-    private void addRequired() {
-        Label requiredLabel = new Label( "required", getStep().isRequired() ? " - Required" : " - Optional" );
-        requiredLabel.setVisible( getStep().isRequired() );
-        add( requiredLabel );
-    }
-
-    private void addDo() {
-        String label = getStep().isResearch() ? "Research \"" : "Follow up with \"";
-        label += getStep().getSharing().getName();
+    @Override
+    protected String getStepAct() {
+        String label = getSubTaskStep().isResearch() ? "Research \"" : "Follow up with \"";
+        label += getSubTaskStep().getSharing().getName();
         label += "\"";
-        add( new Label( "do", label ) );
+        return label;
     }
 
-    private void addChecklistLink() {
-        add( new ChecklistDataLinkPanel( "checklistLink", getSubTaskAssignmentData(), getFinder() ) );
+    @Override
+    protected boolean hasMore() {
+        return true;
     }
 
-    private AssignmentData getSubTaskAssignmentData() {
-        return getStep().isFollowUp()
-                ? getFollowUpData().getFollowUpAssignment()
-                : getResearchData().getResearchAssignment();
+    @Override
+    protected Component makeStepDetailsPanel( String id ) {
+        return new SubTaskPanel( id, getStepData(), getFinder() );
     }
 
-    private SubTaskStepData getSubTaskStepData() {
-        return getStep().isResearch()
-                ? stepData.getResearchStep()
-                : stepData.getFollowUpStep();
-    }
 
-    private SubTaskStep getStep() {
-        return (SubTaskStep)stepData.getStep();
+    private SubTaskStep getSubTaskStep() {
+        return (SubTaskStep)getStep();
     }
-
-    private FollowUpData getFollowUpData() {
-        return ((FollowUpStepData)getSubTaskStepData()).getFollowUp();
-    }
-
-    private ResearchData getResearchData() {
-        return ((ResearchStepData)getSubTaskStepData()).getResearch();
-    }
-
 
 }
