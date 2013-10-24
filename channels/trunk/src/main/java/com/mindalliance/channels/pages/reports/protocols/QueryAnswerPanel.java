@@ -50,7 +50,7 @@ public class QueryAnswerPanel extends AbstractDataPanel {
         Flow.Intent intent =getSharing().getIntent();
         String message = getSharing().getName();
         if ( message == null ) message = "something";
-        String label = "I respond with ";
+        String label = "I give ";
         label += intent == null
                 ? "information"
                 : intent.getLabel().toLowerCase();
@@ -74,7 +74,7 @@ public class QueryAnswerPanel extends AbstractDataPanel {
             }
         };
         moreLessButton.setOutputMarkupId( true );
-        moreLessButton.add( new Label( "moreLess", showingMore ? "Less" : "More" ) );
+        moreLessButton.add( new Label( "moreLess", showingMore ? "- Less" : "+ More" ) );
         moreLessButton.add( new AttributeModifier( "class", "more" ) );
         queryContainer.addOrReplace( moreLessButton );
     }
