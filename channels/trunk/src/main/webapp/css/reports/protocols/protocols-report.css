@@ -8,7 +8,7 @@ div.plandetails-cont {
     background: #f6f6f6;
     clear: right;
     float: right;
-    margin: 110px 0 0 10px;
+    margin: 143px 0 0 10px;
     position: relative;
     width: 250px;
     border-top: none;
@@ -31,18 +31,19 @@ div.protocols-contents h1 {
 }
 
 div.protocols-contents h1 span {
-    text-decoration: underline;
+
 }
 
 div.protocols-contents h2 {
-    border-bottom: 2px solid #666666;
-    color: #333333;
-    font-size: 24px;
+    border-bottom: 10px solid #4A89DC;
+    color: #4A89DC;
+    font-size: 36px;
     font-weight: normal;
-    letter-spacing: 0;
+    letter-spacing: -0.02em;
     margin: 50px 0 40px;
+    padding: 0 0 10px;
     text-align: left;
-    text-transform: capitalize;
+    text-transform: lowercase;
 }
 
 div.protocols-contents h3 {
@@ -301,7 +302,6 @@ div.protocols-contents div.ongoing-toc ul li {
 div.protocols-contents ul.askedYou li ul,
 div.protocols-contents ul.notifiedYou li ul {
     list-style: none outside none;
-    border-top: 1px solid #333333;
     margin: 10px 0 0;
     padding: 5px 0 0;
 }
@@ -316,7 +316,6 @@ div.protocols-contents ul.askedYou li ul li,
 div.protocols-contents ul.notifiedYou li ul li,
 div.protocols-contents div.observations-toc ul li ul li,
 div.protocols-contents div.ongoing-toc ul li {
-    border-bottom: 1px solid #CCCCCC;
     line-height: 150%;
     margin: 5px 0 10px 25px;
     padding: 0 0 10px;
@@ -324,8 +323,7 @@ div.protocols-contents div.ongoing-toc ul li {
 }
 
 div.protocols-contents span.task-name {
-    text-transform: uppercase;
-    color: #000000;
+    color: #666666;
 }
 
 div.protocols-contents div.interlocutors {
@@ -335,7 +333,7 @@ div.protocols-contents div.interlocutors {
 div.protocols-contents div.interlocutors ul li,
 div.protocols-contents div.observations-toc ul li {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 div.protocols-contents div.interlocutors ul li ul li a,
@@ -357,10 +355,12 @@ div.protocols-contents div.interlocutors h4 {
 div.protocols-contents div.ongoing-toc h3,
 div.protocols-contents div.observations-toc h3,
 div.protocols-contents div.communications-toc h3 {
-    background: none repeat scroll 0 0 #C3D9FF;
-    border-left: 5px solid #6B8ABE;
-    font-size: 16px;
-    margin: 30px 0 20px;
+    background: none repeat scroll 0 0 #D4E3F5;
+    border-left: 5px solid #A1C1E6;
+    color: #333333;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 30px 0 0;
     padding: 10px 0 10px 15px;
 }
 
@@ -380,7 +380,7 @@ div.protocols-contents div.ongoingProcedures {
 div.protocols-contents div.triggered div.trigger {
     background: none repeat scroll 0 0 #D4E3F5;
     border-left: 5px solid #A1C1E6;
-    padding: 15px 0 10px 25px;
+    padding: 15px 25px 10px;
 }
 
 div.protocols-contents div.triggered div.trigger h3 {
@@ -687,6 +687,7 @@ table.checklist-step-outcomes {
     color: #FFFFFF;
 }
 
+/* - Unknown - Start */
 
 .checklist ul {
     list-style-type: none;
@@ -704,6 +705,9 @@ table.checklist-step-outcomes {
 .checklist .step .step-constraint {
     height: 2em;
 }
+
+/* - Unknown - End */
+
 
 .checklist .checklist-step-title .step-act {
     display: block;
