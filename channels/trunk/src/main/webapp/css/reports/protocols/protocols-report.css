@@ -43,7 +43,6 @@ div.protocols-contents h2 {
     margin: 50px 0 40px;
     padding: 0 0 10px;
     text-align: left;
-    text-transform: lowercase;
 }
 
 div.protocols-contents h3 {
@@ -327,7 +326,8 @@ div.protocols-contents div.ongoing-toc ul li {
 }
 
 div.protocols-contents span.task-name {
-    color: #666666;
+    color: #363636;
+    font-size: 1.1em;
 }
 
 div.protocols-contents div.interlocutors {
