@@ -55,17 +55,18 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private void addProducerTask() {
         WebMarkupContainer producerTaskContainer = new WebMarkupContainer( "producerTaskContainer" );
         add( producerTaskContainer );
-        if ( flowData.isRequest() ) {
-            RequestData requestData = (RequestData)flowData;
+        boolean visible = flowData.isRequest() && !flowData.isInitiating();
+        if ( visible ) {
+            RequestData requestData = (RequestData) flowData;
             producerTaskContainer.add(
                     new ChecklistDataLinkPanel(
                             "producerTaskLink",
                             requestData.getAssignmentData(),
                             getFinder() ) );
         } else {
-            producerTaskContainer.add( new Label( "producerTaskLink", "") );
+            producerTaskContainer.add( new Label( "producerTaskLink", "" ) );
         }
-        producerTaskContainer.setVisible( flowData.isRequest() );
+        producerTaskContainer.setVisible( visible );
     }
 
     private void addImpact() {
