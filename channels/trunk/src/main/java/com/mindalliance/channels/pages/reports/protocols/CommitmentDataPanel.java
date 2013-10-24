@@ -86,7 +86,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
             if ( notificationData.getConsumingTask() != null ) {
                 String impactOnConsuming = notificationData.getImpactOnConsumingTask();
                 if ( impactOnConsuming != null ) {
-                    sb.append( "(it will " );
+                    sb.append( "it will " );
                     if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
                         sb.append( "trigger" );
                     else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
@@ -96,7 +96,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     else sb.append( "help the" );
                     sb.append( " execution of task \"" );
                     sb.append( notificationData.getConsumingTask().getLabel() );
-                    sb.append( "\")" );
+                    sb.append( "\"" );
                 }
             }
             return sb.toString();
@@ -299,7 +299,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Level severity = flowData.getFailureSeverity();
         String severityText = flowData.getFailureImpact().toLowerCase();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText ) );
+        impactContainer.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
         add( impactContainer );
         impactContainer.setVisible( !received && ( severity.ordinal() > Level.Low.ordinal() ) );
         Label severityLabel = new Label( "severity", severityText );

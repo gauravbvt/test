@@ -7,16 +7,14 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table wicket:id="stepContainer"> <!-- CSS class: "data-table step"  + "even-step" or "odd-step" -->
-        <tr>
-            <td>
-                <span wicket:id="act">[do something]</span>  <!-- CSS classes: "step-act" + "required" or "optional"   -->
-                <div wicket:id="instructions" class="instructions">Instructions</div>
-                <a class="more" wicket:id="moreLessButton" href="#"><span wicket:id="moreLess">More/Less</span> </a>
-            </td>
-        </tr>
-     </table>
-    <div wicket:id="moreContainer">
+    <div wicket:id="stepContainer"> <!-- CSS class: "data-table step"  + "even-step" or "odd-step" -->
+	    <span wicket:id="act">[do something]</span>  <!-- CSS classes: "step-act" + "required" or "optional"   -->
+		<!--
+        <div wicket:id="instructions" class="instructions">Instructions</div>
+        -->
+        <a class="more" wicket:id="moreLessButton" href="#"><span wicket:id="moreLess">More/Less</span> </a>
+    </div>
+    <div class="checklist-step-details" wicket:id="moreContainer">
         <span wicket:id="stepLogic">[step constraints etc.]</span>
         <span wicket:id="stepDetails">[step details]</span>
     </div>

@@ -53,7 +53,7 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
 
     private void init() {
         stepContainer = new WebMarkupContainer( "stepContainer" );
-        String cssClasses = index % 2 == 0 ? "data-table step even-step" : "data-table step odd-step";
+        String cssClasses = index % 2 == 0 ? "checklist-step-title" : "checklist-step-title";
         stepContainer.add( new AttributeModifier( "class", cssClasses ) );
         add( stepContainer );
         addStepAct();

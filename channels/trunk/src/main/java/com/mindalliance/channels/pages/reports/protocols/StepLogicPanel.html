@@ -10,61 +10,45 @@
 </head>
 <body>
 <wicket:panel>
-    <table wicket:id="constraintsContainer">
-        <tr >
-            <td>
-                <table class="checklist-step-constraints">
-                    <tr class="step-constraint" wicket:id="aftersContainer">
-                        <th align="right">After</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="afters">
-                                    <td><span wicket:id="after">other step</span> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="step-constraint" wicket:id="ifsContainer">
-                        <th align="right">If</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="ifs">
-                                    <td><span wicket:id="if">condition</span> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="step-constraint" wicket:id="unlessesContainer">
-                        <th align="right">Unless</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="unlesses">
-                                    <td><span wicket:id="unless">condition</span> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr wicket:id="outcomesContainer">
-            <td>
-                <table class="checklist-step-outcomes">
-                    <tr class="step-constraint">
-                        <th align="right">Expected outcomes:</th>
-                        <td>
-                            <table>
-                                <tr wicket:id="outcomes">
-                                    <td>
-                                        <span wicket:id="outcome">outcome</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table></wicket:panel>
+	<div wicket:id="constraintsContainer">
+		<div class="checklist-step-constraints">
+			<div class="step-constraint" wicket:id="aftersContainer">
+            	<label>After</label>
+                <ul>
+	        	    <li wicket:id="afters">
+	        	       	<span wicket:id="after">other step</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="step-constraint" wicket:id="ifsContainer">
+            	<label>If</label>
+                <ul>
+	        	    <li wicket:id="ifs">
+                	    <span wicket:id="if">condition</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="step-constraint" wicket:id="unlessesContainer">
+            	<label>Unless</label>
+                <ul>
+	        	    <li wicket:id="unlesses">
+	            	    <span wicket:id="unless">condition</span>
+                    </li>
+                </ul>
+            </div>
+		</div>
+    	<div wicket:id="outcomesContainer">
+			<div class="checklist-step-outcomes">
+    		    <div class="step-constraint">
+    		        <label>Expected outcomes:</label>
+    	            <ul>
+    	   		       	<li wicket:id="outcomes">
+		         	       <span wicket:id="outcome">outcome</span>
+    	                </li>
+    	            </ul>
+    	        </div>
+			</div>
+		</div>
+	</div></wicket:panel>
 </body>
 </html>

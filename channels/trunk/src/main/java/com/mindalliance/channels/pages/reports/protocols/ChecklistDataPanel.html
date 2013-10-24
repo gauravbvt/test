@@ -15,10 +15,13 @@
     <h4 class="taskName">
         <span wicket:id="taskName">I do task X</span>
     </h4>
-    <div class="failureImpact-small" wicket:id="failureImpact">Failure to carry out this task could have
-        <span wicket:id="severity">extreme</span>
-        consequences
-    </div>
+	<div class="failure-impact-container">
+		<label>Failure Impact</label>
+	    <div class="failure-impact" wicket:id="failureImpact">Failure to carry out this task could have
+	        <span wicket:id="severity">extreme</span>
+	        consequences
+	    </div>
+	</div>
     <div wicket:id="task">
         <div class="instructions" wicket:id="instructions">
             <label>Instructions</label>

@@ -85,7 +85,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         Level severity = getTask().getFailureSeverity();
         String severityText = getTask().getFailureImpact().toLowerCase();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText ) );
+        impactContainer.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
         add( impactContainer );
         impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
         Label severityLabel = new Label( "severity", severityText );
