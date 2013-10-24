@@ -10,45 +10,44 @@
 </head>
 <body>
 <wicket:panel>
-	<div wicket:id="constraintsContainer">
-		<div class="checklist-step-constraints">
-			<div class="step-constraint" wicket:id="aftersContainer">
-            	<label>After</label>
+    <div wicket:id="logicContainer">
+        <div class="checklist-step-constraints">
+            <div class="step-constraint" wicket:id="aftersContainer">
+                <label>After</label>
                 <ul>
-	        	    <li wicket:id="afters">
-	        	       	<span wicket:id="after">other step</span>
+                    <li wicket:id="afters">
+                        <span wicket:id="after">other step</span>
                     </li>
                 </ul>
             </div>
             <div class="step-constraint" wicket:id="ifsContainer">
-            	<label>If</label>
+                <label>If</label>
                 <ul>
-	        	    <li wicket:id="ifs">
-                	    <span wicket:id="if">condition</span>
+                    <li wicket:id="ifs">
+                        <span wicket:id="if">condition</span>
                     </li>
                 </ul>
             </div>
             <div class="step-constraint" wicket:id="unlessesContainer">
-            	<label>Unless</label>
+                <label>Unless</label>
                 <ul>
-	        	    <li wicket:id="unlesses">
-	            	    <span wicket:id="unless">condition</span>
+                    <li wicket:id="unlesses">
+                        <span wicket:id="unless">condition</span>
                     </li>
                 </ul>
             </div>
-		</div>
-    	<div wicket:id="outcomesContainer">
-			<div class="checklist-step-outcomes">
-    		    <div class="step-constraint">
-    		        <label>Expected outcomes:</label>
-    	            <ul>
-    	   		       	<li wicket:id="outcomes">
-		         	       <span wicket:id="outcome">outcome</span>
-    	                </li>
-    	            </ul>
-    	        </div>
-			</div>
-		</div>
-	</div></wicket:panel>
+            <div wicket:id="outcomesContainer" class="checklist-step-outcomes">
+                <div class="step-constraint">
+                    <label>Expected outcomes:</label>
+                    <ul>
+                        <li wicket:id="outcomes">
+                            <span wicket:id="outcome">outcome</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
 </body>
 </html>

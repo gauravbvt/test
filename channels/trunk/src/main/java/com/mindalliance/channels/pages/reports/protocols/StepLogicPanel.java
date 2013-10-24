@@ -34,7 +34,7 @@ public class StepLogicPanel extends AbstractDataPanel {
     private static final int MAX_SIZE = 65;
     private static final boolean POSITIVE = true;
 
-    WebMarkupContainer constraintsContainer;
+    WebMarkupContainer logicContainer;
     WebMarkupContainer outcomesContainer;
 
     public StepLogicPanel( String id, Part part, ChecklistStepData stepData, ProtocolsFinder finder ) {
@@ -50,24 +50,25 @@ public class StepLogicPanel extends AbstractDataPanel {
     }
 
     private void addConstraints() {
-        constraintsContainer = new WebMarkupContainer( "constraintsContainer" );
-        constraintsContainer.setVisible( isConstrained( getStep() ) );
-        add( constraintsContainer );
+        logicContainer = new WebMarkupContainer( "logicContainer" );
+        logicContainer.setVisible( hasLogic( getStep() ) );
+        add( logicContainer );
         addIfGuards();
         addUnlessGuards();
         addPrerequisiteSteps();
     }
 
-    private boolean isConstrained( Step step ) {
+    private boolean hasLogic( Step step ) {
         return getChecklist().hasGuards( step, POSITIVE )
                 || getChecklist().hasGuards( step, !POSITIVE )
-                || getChecklist().hasPrerequisites( step );
+                || getChecklist().hasPrerequisites( step )
+                || getChecklist().hasOutcomes( step );
     }
 
     private void addIfGuards() {
         WebMarkupContainer ifsContainer = new WebMarkupContainer( "ifsContainer" );
         ifsContainer.setVisible( getChecklist().hasGuards( getStep(), POSITIVE ) );
-        constraintsContainer.add( ifsContainer );
+        logicContainer.add( ifsContainer );
         List<StepGuard> ifGuards = getIfGuards();
         ListView<StepGuard> ifListView = new ListView<StepGuard>(
                 "ifs",
@@ -99,7 +100,7 @@ public class StepLogicPanel extends AbstractDataPanel {
         List<StepGuard> unlessGuards = getUnlessGuards();
         WebMarkupContainer unlessesContainer = new WebMarkupContainer( "unlessesContainer" );
         unlessesContainer.setVisible( getChecklist().hasGuards( getStep(), !POSITIVE ) );
-        constraintsContainer.add( unlessesContainer );
+        logicContainer.add( unlessesContainer );
         ListView<StepGuard> unlessListView = new ListView<StepGuard>(
                 "unlesses",
                 unlessGuards
@@ -130,7 +131,7 @@ public class StepLogicPanel extends AbstractDataPanel {
         List<StepOrder> stepOrders = getStepOrders();
         WebMarkupContainer aftersContainer = new WebMarkupContainer( "aftersContainer" );
         aftersContainer.setVisible( getChecklist().hasPrerequisites( getStep() ) );
-        constraintsContainer.add( aftersContainer );
+        logicContainer.add( aftersContainer );
         ListView<StepOrder> prerequisiteListView = new ListView<StepOrder>(
                 "afters",
                 stepOrders
@@ -153,7 +154,7 @@ public class StepLogicPanel extends AbstractDataPanel {
     private void addOutcomes() {
         outcomesContainer = new WebMarkupContainer( "outcomesContainer" );
         outcomesContainer.setVisible( getChecklist().hasOutcomes( getStep() ) );
-        constraintsContainer.add( outcomesContainer );
+        logicContainer.add( outcomesContainer );
         addStepOutcomes();
     }
 

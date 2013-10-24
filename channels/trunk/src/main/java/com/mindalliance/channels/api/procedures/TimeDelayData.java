@@ -46,7 +46,7 @@ public class TimeDelayData  implements Serializable {
     public String getLabel() {
         return delay.isImmediate()
                 ? delay.toString()
-                : ( "within " + delay.toString() );
+                : ( "Within " + delay.toString() );
     }
 
     public boolean isImmediate() {

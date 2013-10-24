@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.NotificationData;
+import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -39,6 +40,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private void init() {
+        addProducerTask();
         addImpact();
         addFailureImpact();
         addContacts();
@@ -48,6 +50,22 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addEois();
         addInstructions();
         addDocumentation();
+    }
+
+    private void addProducerTask() {
+        WebMarkupContainer producerTaskContainer = new WebMarkupContainer( "producerTaskContainer" );
+        add( producerTaskContainer );
+        if ( flowData.isRequest() ) {
+            RequestData requestData = (RequestData)flowData;
+            producerTaskContainer.add(
+                    new ChecklistDataLinkPanel(
+                            "producerTaskLink",
+                            requestData.getAssignmentData(),
+                            getFinder() ) );
+        } else {
+            producerTaskContainer.add( new Label( "producerTaskLink", "") );
+        }
+        producerTaskContainer.setVisible( flowData.isRequest() );
     }
 
     private void addImpact() {
@@ -131,14 +149,14 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         } else {
             if ( flowData.isNotification() ) {
                 if ( contacts.size() == 1 ) {
-                    return "I contact";
+                    return "Contact";
                 } else {
                     return flowData.getContactAll()
-                            ? "I contact all of"
-                            : "I contact one of";
+                            ? "Contact all of"
+                            : "Contact one of";
                 }
             } else {
-                return "To";
+                return "When asked by";
             }
         }
     }
@@ -180,8 +198,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         ? "I can expect to receive a notification"
                         : "I can expect an answer"
                         : flowData.isNotification()
-                        ? "I send notification"
-                        : "I answer" );
+                        ? "Send notification"
+                        : "Answer" );
         maxDelayContainer.add( whenLabel );
         Label delayLabel = new Label(
                 "maxDelay", makeDelayLabel( timeDelay ) );
@@ -193,8 +211,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         if ( timeDelay == null ) return "";
         if ( timeDelay.isImmediate() ) {
             return flowData.isNotification()
-                    ? "as soon as the information becomes available"
-                    : "immediately";
+                    ? "As soon as the information becomes available"
+                    : "Immediately";
         } else {
             return timeDelay.getLabel()
                     + ( flowData.isNotification() ? " of the information becoming available" : "" );
@@ -230,8 +248,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     : "I can request these elements";
         } else {
             return flowData.isNotification()
-                    ? "I must include these elements"
-                    : "I must answer with these elements";
+                    ? "Include these elements"
+                    : "Answer with these elements";
         }
     }
 
@@ -243,15 +261,15 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Label communicatedContextLabel = new Label(
                 "communicatedContext",
                 contextCommunicated
-                        ? ( "I must mention the context \"" + communicableContext + "\"" )
-                        : ( " I must NOT mention the context \"" + communicableContext + "\"" )
+                        ? ( "Mention the context \"" + communicableContext + "\"" )
+                        : ( " Do NOT mention the context \"" + communicableContext + "\"" )
         );
         instructionContainer.add( communicatedContextLabel );
         boolean receiptConfirmation = flowData.getReceiptConfirmationRequested();
         Label receiptLabel = new Label(
                 "receiptConfirmation",
                 receiptConfirmation
-                        ? "I need to request confirmation of receipt"
+                        ? "Request confirmation of receipt"
                         : ""
         );
         receiptLabel.setVisible( receiptConfirmation );

@@ -66,7 +66,7 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     }
 
     public String getTaskLabel() {
-        return "\"" + getAssignment().getPart().getTask() + "\"";
+        return getAssignment().getPart().getTask();
     }
 
 }

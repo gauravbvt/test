@@ -170,9 +170,6 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     private void addSteps() {
         checklistContainer = new WebMarkupContainer( "checklist" );
         add( checklistContainer );
-        checklistContainer.add( new Label(
-                "confirmed",
-                checklistData.getConfirmed() ? "Confirmed" : "Not confirmed" ) );
         addChecklistFlowIcon();
         ListView<ChecklistStepData> stepListView = new ListView<ChecklistStepData>(
                 "steps",
@@ -189,6 +186,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
                         getFinder() ) );
             }
         };
+        checklistContainer.setVisible( !checklistData.getSteps().isEmpty() );
         checklistContainer.add( stepListView );
     }
 
@@ -229,8 +227,8 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         hideShowLabel.setOutputMarkupId( true );
         addTipTitle(
                 hideShowLabel,
-                (showingChecklistFlow ? "Hide" : "Show" )
-                 + " the checklist flow diagram" );
+                ( showingChecklistFlow ? "Hide" : "Show" )
+                        + " the checklist flow diagram" );
         checklistFlowLink.addOrReplace( hideShowLabel );
     }
 

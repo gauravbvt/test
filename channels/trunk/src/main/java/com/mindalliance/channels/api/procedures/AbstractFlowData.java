@@ -294,4 +294,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return Long.toString( flow.getId() );
     }
 
+    public boolean isRequest() {
+        return flow.isAskedFor();
+    }
 }

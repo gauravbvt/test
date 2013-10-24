@@ -30,6 +30,7 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
     private boolean showingMore = false;
     private AjaxLink<String> moreLessButton;
     private WebMarkupContainer moreContainer;
+    private Label actLabel;
 
     public ChecklistStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
         super( id, finder );
@@ -52,24 +53,35 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
     }
 
     private void init() {
-        stepContainer = new WebMarkupContainer( "stepContainer" );
-        String cssClasses = index % 2 == 0 ? "checklist-step-title" : "checklist-step-title";
-        stepContainer.add( new AttributeModifier( "class", cssClasses ) );
-        add( stepContainer );
-        addStepAct();
-        addInstructions();
-        addMoreLessButton();
+        addStepContainer();
         addMoreContainer();
     }
 
+    private void addStepContainer() {
+        stepContainer = new WebMarkupContainer( "stepContainer" );
+        stepContainer.setOutputMarkupId( true );
+        addOrReplace( stepContainer );
+        updateStepCss();
+        addStepAct();
+        addInstructions();
+        addMoreLessButton();
+    }
+
     private void addStepAct() {
-        Label actLabel = new Label( "act", getStepAct());
+        actLabel = new Label( "act", getStepAct() );
+        actLabel.setOutputMarkupId( true );
         actLabel.add( new AttributeModifier( "class", getActCss() ) );
-        stepContainer.add( actLabel );
+        addTipTitle( actLabel, getStep().isRequired() ? "Required" : "Optional" );
+        stepContainer.addOrReplace( actLabel );
     }
 
     protected String getActCss() {
         return getStep().isRequired() ? "required step-act" : "optional step-act";
+    }
+
+    private void updateStepCss() {
+        String cssClasses = showingMore ? "checklist-step-title active" : "checklist-step-title";
+        stepContainer.add( new AttributeModifier( "class", cssClasses ) );
     }
 
 
@@ -86,9 +98,9 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingMore = !showingMore;
-                addMoreLessButton();
-                target.add( moreLessButton );
+                addStepContainer();
                 addMoreContainer();
+                target.add( stepContainer );
                 target.add( moreContainer );
             }
         };
@@ -99,7 +111,7 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
         stepContainer.addOrReplace( moreLessButton );
     }
 
-     private void addMoreContainer() {
+    private void addMoreContainer() {
         moreContainer = new WebMarkupContainer( "moreContainer" );
         moreContainer.setOutputMarkupId( true );
         makeVisible( moreContainer, showingMore && hasMore() );
@@ -127,7 +139,6 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
     protected ChecklistStepData getStepData() {
         return stepData;
     }
-
 
 
 }

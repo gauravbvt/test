@@ -10,12 +10,20 @@
 </head>
 <body>
 <wicket:panel>
+    <div wicket:id="producerTaskContainer" class="step-constraint">
+        <label>Acquired doing</label>
+        <ul>
+            <li>
+                <span wicket:id="producerTaskLink">[checklist data link]</span>
+            </li>
+        </ul>
+    </div>
     <div wicket:id="impactContainer" class="impact-container">
         <label>Because</label>
 	    <div wicket:id="impact">impact</div>
     </div>
     <div class="contacts-container" wicket:id="contactsContainer">
-        <label wicket:id="anyAll">I contact any of...</label>
+        <label wicket:id="anyAll">Contact any of...</label>
         <ul>
             <li wicket:id="contacts">  <!-- repeated -->
                 <span class="contact" wicket:id="contact">[contact link panel with channels]</span>
@@ -41,7 +49,7 @@
 	     <span wicket:id="eois">[eoi panel]</span>
     </div>
     <div wicket:id="failureImpactContainer" class="failure-impact-container">
-        <label>And if I don't</label>
+        <label>Or else</label>
         <div class="failure-impact" wicket:id="failureImpact">Failure to share this information could have
             <span wicket:id="severity">extreme</span>
             consequences
