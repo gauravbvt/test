@@ -184,6 +184,10 @@ div.protocols-contents h4 span.participationList span {
     border-bottom: 2px solid #333333;
 }
 
+span.participationList {
+    font-weight: bold;
+}
+
 div.protocols-contents div.org-contacts {
     float: left;
     margin: 0 0 40px;

@@ -10,16 +10,8 @@
 </head>
 <body>
 <wicket:panel>
-    <div class="notify-container">
-        <label>Notify</label>
-        <div>
-	        <span wicket:id="mode">To notify of</span>
-	        <span wicket:id="intent">alarm</span>
-	        <span class="information" wicket:id="information">information</span>
-	    </div>
-    </div>
-    <div class="impact-container">
-        <label>Impact</label>
+    <div wicket:id="impactContainer" class="impact-container">
+        <label>Because</label>
 	    <div wicket:id="impact">impact</div>
     </div>
     <div class="contacts-container" wicket:id="contactsContainer">
@@ -31,7 +23,7 @@
         </ul>
     </div>
     <div class="media-container" wicket:id="channelContainer">
-        <label wicket:id="via"> Via </label>
+        <label wicket:id="via"> By </label>
         <ul>
             <li wicket:id="channel">  <!-- repeated -->
                 <span wicket:id="mediumName">medium</span>
@@ -39,13 +31,6 @@
             </li>
         </ul>
     </div>
-	<div class="failure-impact-container">
-		<label>Failure Impact</label>
-	    <div class="failure-impact" wicket:id="failureImpact">Failure to share this information could have
-	        <span wicket:id="severity">extreme</span>
-	        consequences
-	    </div>
-	</div>
     <div class="maxDelayContainer" wicket:id="maxDelayContainer">
         <label wicket:id="when">When</label>
         <div wicket:id="maxDelay">Within 10 minutes</div>
@@ -54,6 +39,13 @@
     <div class="eoisContainer" wicket:id="eoisContainer">
         <label wicket:id="eoisLabel">Include elements</label>
 	     <span wicket:id="eois">[eoi panel]</span>
+    </div>
+    <div wicket:id="failureImpactContainer" class="failure-impact-container">
+        <label>And if I don't</label>
+        <div class="failure-impact" wicket:id="failureImpact">Failure to share this information could have
+            <span wicket:id="severity">extreme</span>
+            consequences
+        </div>
     </div>
     <div class="allInstructions" wicket:id="allInstructions">
         <label>Reminder</label>

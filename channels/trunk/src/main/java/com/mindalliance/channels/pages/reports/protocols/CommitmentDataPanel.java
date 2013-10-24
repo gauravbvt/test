@@ -39,7 +39,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private void init() {
-        addHeader();
+        addImpact();
         addFailureImpact();
         addContacts();
         addPreferredMedia();
@@ -50,20 +50,13 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addDocumentation();
     }
 
-    private void addHeader() {
-        add( new Label(
-                "mode",
-                getModeText() ) );
-        String intent = flowData.getIntentText();
-        add( new Label(
-                "intent", intent ) );
-        add( new Label(
-                "information",
-                "\"" + flowData.getInformation().getName() + "\"" ) );
+    private void addImpact() {
+        WebMarkupContainer impactContainer = new WebMarkupContainer( "impactContainer" );
+        add( impactContainer );
         String impact = getCommitmentImpact();
         Label impactLabel = new Label( "impact", impact );
-        add( impactLabel );
-        impactLabel.setVisible( !impact.isEmpty() );
+        impactContainer.add( impactLabel );
+        impactContainer.setVisible( !impact.isEmpty() );
     }
 
     private String getModeText() {
@@ -86,7 +79,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
             if ( notificationData.getConsumingTask() != null ) {
                 String impactOnConsuming = notificationData.getImpactOnConsumingTask();
                 if ( impactOnConsuming != null ) {
-                    sb.append( "it will " );
+                    sb.append( "It will " );
                     if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
                         sb.append( "trigger" );
                     else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
@@ -157,8 +150,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         channelsContainer.add( new Label(
                 "via",
                 channelDataList.size() > 1
-                        ? "via (in order of preference)"
-                        : "via"
+                        ? "by (in order of preference)"
+                        : "by"
         ) );
         ListView<ChannelData> channelListView = new ListView<ChannelData>( "channel", channelDataList ) {
             @Override
@@ -296,14 +289,16 @@ public class CommitmentDataPanel extends AbstractDataPanel {
 
 
     private void addFailureImpact() {
+        WebMarkupContainer failureImpactContainer = new WebMarkupContainer( "failureImpactContainer" );
+        add( failureImpactContainer );
         Level severity = flowData.getFailureSeverity();
         String severityText = flowData.getFailureImpact().toLowerCase();
-        WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
-        add( impactContainer );
-        impactContainer.setVisible( !received && ( severity.ordinal() > Level.Low.ordinal() ) );
+        WebMarkupContainer failureImpact = new WebMarkupContainer( "failureImpact" );
+        failureImpact.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
+        failureImpactContainer.add( failureImpact );
+        failureImpactContainer.setVisible( !received && ( severity.ordinal() > Level.Low.ordinal() ) );
         Label severityLabel = new Label( "severity", severityText );
-        impactContainer.add( severityLabel );
+        failureImpact.add( severityLabel );
     }
 
     @SuppressWarnings("unchecked")

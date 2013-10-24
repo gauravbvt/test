@@ -25,7 +25,7 @@ public class SubTaskStepDataPanel extends ChecklistStepDataPanel {
 
     @Override
     protected String getStepAct() {
-        String label = getSubTaskStep().isResearch() ? "Research \"" : "Follow up with \"";
+        String label = getSubTaskStep().isResearch() ? "Research \"" : "Follow up on \"";
         label += getSubTaskStep().getSharing().getName();
         label += "\"";
         return label;

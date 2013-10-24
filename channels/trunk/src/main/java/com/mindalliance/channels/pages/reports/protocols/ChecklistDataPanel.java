@@ -43,6 +43,8 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     private boolean showingChecklistFlow;
     private WebMarkupContainer checklistContainer;
     private WebMarkupContainer checklistFlowContainer;
+    private AjaxLink<String> checklistFlowLink;
+    private Label hideShowLabel;
 
     public ChecklistDataPanel( String id,
                                ChecklistData checklistData,
@@ -191,10 +193,10 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     }
 
     private ChecklistStepDataPanel makeChecklistStepDataPanel( String step,
-                                                           Part part,
-                                                           ChecklistStepData stepData,
-                                                           int index,
-                                                           ProtocolsFinder finder ) {
+                                                               Part part,
+                                                               ChecklistStepData stepData,
+                                                               int index,
+                                                               ProtocolsFinder finder ) {
         Step aStep = stepData.getStep();
         return aStep.isActionStep()
                 ? new ActionStepDataPanel( "step", part, stepData, index, finder )
@@ -207,18 +209,29 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
 
     private void addChecklistFlowIcon() {
-        AjaxLink<String> checklistFlowLink = new AjaxLink<String>( "checklist-flow-link") {
+        checklistFlowLink = new AjaxLink<String>( "checklistFlowLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingChecklistFlow = !showingChecklistFlow;
                 addChecklistFlowDiagram();
                 target.add( checklistFlowContainer );
+                addShowHideFlow();
+                target.add( checklistFlowLink );
             }
         };
+        checklistFlowLink.setOutputMarkupId( true );
         checklistContainer.add( checklistFlowLink );
+        addShowHideFlow();
+    }
+
+    private void addShowHideFlow() {
+        hideShowLabel = new Label( "showHideFlow", ( showingChecklistFlow ? "- Hide flow" : "+ Show flow" ) );
+        hideShowLabel.setOutputMarkupId( true );
         addTipTitle(
-                checklistFlowLink,
-                "Open/close the checklist flow diagram" );
+                hideShowLabel,
+                (showingChecklistFlow ? "Hide" : "Show" )
+                 + " the checklist flow diagram" );
+        checklistFlowLink.addOrReplace( hideShowLabel );
     }
 
     private void addChecklistFlowDiagram() {

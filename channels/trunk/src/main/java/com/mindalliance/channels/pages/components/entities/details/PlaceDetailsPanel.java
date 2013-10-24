@@ -17,6 +17,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -67,6 +68,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
      * Within field.
      */
     private TextField<String> withinField;
+    private TextField<String> streetAddressField;
+    private WebMarkupContainer streetContainer;
+    private WebMarkupContainer codeContainer;
+    private WebMarkupContainer geonameContainer;
+    private WebMarkupContainer withinContainer;
 
     public PlaceDetailsPanel(
             String id,
@@ -93,6 +99,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
+        addPlaceholder();
         addWithinField();
         addStreetAddressField();
         addPostalCodeField();
@@ -106,14 +113,42 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
         adjustFields();
     }
 
+    private void addPlaceholder() {
+        WebMarkupContainer placeholderContainer = new WebMarkupContainer( "placeholderContainer" );
+        placeholderContainer.setVisible( getPlace().isActual() );
+        moDetailsDiv.add( placeholderContainer );
+        AjaxCheckBox placeholderCheckbox = new AjaxCheckBox(
+                "placeholder",
+                new PropertyModel<Boolean>( this, "placeholder")
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                target.add( codeContainer, streetContainer, geonameContainer, withinContainer );
+            }
+        };
+        placeholderContainer.add( placeholderCheckbox );
+    }
+
     private void adjustFields() {
+        makeVisible( streetContainer, !isPlaceholder() );
+        makeVisible( codeContainer, !isPlaceholder() );
         postalCodeField.setEnabled( isLockedByUser( getPlace() ) );
         geonameField.setEnabled( isLockedByUser( getPlace() ) );
         withinField.setEnabled( isLockedByUser( getPlace() ) );
     }
 
+    public boolean isPlaceholder() {
+        return getPlace().isActual() && getPlace().isPlaceholder();
+    }
+
+    public void setPlaceholder( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getPlace(), "placeholder", val ) );
+    }
+
     private void addWithinField() {
-        WebMarkupContainer withinContainer = new WebMarkupContainer( "withinContainer" );
+        withinContainer = new WebMarkupContainer( "withinContainer" );
+        withinContainer.setOutputMarkupId( true );
         moDetailsDiv.add( withinContainer );
         withinContainer.add(
                 new ModelObjectLink( "within-link",
@@ -190,10 +225,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     }
 
     private void addStreetAddressField() {
-        WebMarkupContainer streetContainer = new WebMarkupContainer( "streetContainer" );
+        streetContainer = new WebMarkupContainer( "streetContainer" );
+        streetContainer.setOutputMarkupId( true );
         streetContainer.setVisible( getPlace().isActual() );
         moDetailsDiv.add( streetContainer );
-        final TextField<String> streetAddressField = new TextField<String>(
+        streetAddressField = new TextField<String>(
                 "streetAddress",
                 new PropertyModel<String>( this, "streetAddress" ) );
         streetAddressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
@@ -210,7 +246,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     }
 
     private void addPostalCodeField() {
-        WebMarkupContainer codeContainer = new WebMarkupContainer( "codeContainer" );
+        codeContainer = new WebMarkupContainer( "codeContainer" );
+        codeContainer.setOutputMarkupId( true );
         codeContainer.setVisible( getPlace().isActual() );
         moDetailsDiv.add( codeContainer );
         postalCodeField = new TextField<String>(
@@ -234,8 +271,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     }
 
     private void addGeonameField() {
-        WebMarkupContainer geonameContainer = new WebMarkupContainer( "geonameContainer" );
+        geonameContainer = new WebMarkupContainer( "geonameContainer" );
         geonameContainer.setVisible( getPlace().isActual() );
+        geonameContainer.setOutputMarkupId( true );
         moDetailsDiv.add( geonameContainer );
         final List<String> choices = getQueryService().findAllGeonames();
         geonameField = new AutoCompleteTextField<String>(
