@@ -111,6 +111,18 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Home Tab Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[2]/div/ul/li/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
  	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
  	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>

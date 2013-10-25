@@ -915,15 +915,7 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Usually Completes After Textbox</GivenName>
-		//<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-amount')]</Xpath>
-		//<Name>segment:part:timingContainer:completion-time:delay-amount</Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-	//	<ClassName></ClassName>
-	//</Element>
+	
 	
 	<Element>
 		<GivenName>Usually Completes After Dropdown</GivenName>
@@ -931,11 +923,7 @@
 		<Name></Name>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Usually Completes After Dropdown</GivenName>
-		//<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-unit')]</Xpath>
-		//<Name>segment:part:timingContainer:completion-time:delay-unit</Name>
-	//</Element>
+	
 	
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
@@ -960,15 +948,11 @@
 		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[4]/span/select</Xpath>
 		<Name></Name>
 	</Element>
-	//<Element>
-		//<GivenName>Repeats Every Dropdown</GivenName>
-		//<Xpath>//select[contains(@name,'segment:part:timingContainer:repeats-every:delay-unit')]</Xpath>
-		//<Name>segment:part:timingContainer:repeats-every:delay-unit</Name>
-	//</Element>
+	
 	
 	<Element>
 		<GivenName>Is ongoing In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[2]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -987,8 +971,8 @@
 	</Element>
 	<Element>
 		<GivenName>Can End Event In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[3]/input</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/input</Xpath>
+		<Name>segment:part:terminatesEventPhaseContainer:terminatesEventPhase</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -996,7 +980,7 @@
 	</Element>
 	<Element>
 		<GivenName>Goals Link In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/th/a</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/th/a</Xpath>
 		<Name></Name>
 		<Id>id242</Id>
 		<PartialLinkText></PartialLinkText>
@@ -1004,16 +988,12 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Goals Dropdown In Task Panel</GivenName>
-		//<Xpath>//select[contains(@name,'segment:part:goals:goals:0:goal:goalChoice')]</Xpath>
-		//<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
-	//</Element>
+	
 	
 	<Element>
 		<GivenName>Goals Dropdown In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td/span/select</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/span/table/tbody/tr/td/span/select</Xpath>
+		<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
 	</Element>
 	
 	<Element>
@@ -1022,23 +1002,11 @@
 		<Name></Name>
 	</Element>
 	
-   //<Element>
-	//	<GivenName>Task Attachment Link</GivenName>
-		//<Xpath>//div[contains(@class,'segment:part:attachments:container:controls:type')]</Xpath>
-		<Name>segment:part:attachments:container:controls:type</Name>
-	//</Element>
-	
 	<Element>
 		<GivenName>Attach Dropdown In Task Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
 		<Name></Name>
 	</Element>
-	
-	//<Element>
-		//<GivenName>Attach Dropdown In Task Panel</GivenName>
-		//<Xpath>//select[contains(@name,'segment:part:attachments:container:controls:type')]</Xpath>
-		//<Name>segment:part:attachments:container:controls:type</Name>
-	//</Element>
 	
 	<Element>
 		<GivenName>Attachment Panel In Sends Panel</GivenName>
@@ -1052,12 +1020,6 @@
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
 		<Name></Name>
 	</Element>
-	
-	//<Element>
-		//<GivenName>Attach Dropdown In Send Panel</GivenName>
-		//<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
-		//<Name>segment:sends:flows-div:flows:0:flow:attachments:container:controls:type</Name>
-	//</Element>
 	
 	<Element>
 		<GivenName>New Issue In Sends Panel</GivenName>
@@ -1100,11 +1062,7 @@
 		<Name></Name>
  	</Element>
 	
-	//<Element>
-		//<GivenName>Attach Dropdown In Receives Panel</GivenName>
-		//<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
-		//<Name>segment:receives:flows-div:flows:0:flow:attachments:container:controls:type</Name>
- 	//</Element>
+	
 	
 	<Element>
 		<GivenName>Verify Goal Added In Task Panel</GivenName>
@@ -1124,15 +1082,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	//<Element>
-		//<GivenName>Uncheck Checkbox Of Goal In Task Panel</GivenName>
-		//<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td[2]/input</Xpath>
-		//<Name>segment:part:goals:goals:0:confirmed</Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-		//<ClassName></ClassName>
-	//</Element>
+	
 	<Element>
 		<GivenName>Doing Unnamed Task</GivenName>
 		<Xpath>/html/body/form/span/div/div[2]/div/span/map/area</Xpath>
@@ -1144,7 +1094,7 @@
 	</Element>
 	<Element>
 		<GivenName>Can End Event Unnamed Link In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[3]/span/a[2]/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/span/a[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1270,16 +1220,6 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	//<Element>
-	//	<GivenName>Participations</GivenName>
-	//	<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
-	//	<Name></Name>
-	//	<Id></Id>
-	//	<PartialLinkText></PartialLinkText>
-	//	<LinkText>Participations</LinkText>
-	//	<ClassName></ClassName>
-	//</Element>
-	
 	<Element>
 		<GivenName>Improving</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
@@ -1374,7 +1314,7 @@
 	
 	<Element>
 		<GivenName>New Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2632,10 +2572,10 @@
 	<Element>
 		<GivenName>Actions In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/a/span</Xpath>
-		<Name></Name>
-		<Id></Id>
+		<Name>Actions</Name>
+		<Id>id112</Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>show</LinkText>
+		<LinkText>Actions</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -3055,21 +2995,6 @@
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/input</Xpath>
 		<Name></Name>
 	</Element>
-	
-	
-	//<Element>
-		//<GivenName>Event In About Plan Segment</GivenName>
-		//<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
-		//<Name></Name>
-	//</Element>
-	
-	
-	//<Element>
-		//<GivenName>Event In About Plan Segment</GivenName>
-		//<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:event')]</Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:event</Name>
-	//</Element>
-	
 	
    <Element>
 		<GivenName>Event Table In About Plan Segment</GivenName>
