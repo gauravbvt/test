@@ -51,6 +51,8 @@ public class BrowserController{
 	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
 	 	       driver=new ChromeDriver(capabilities);
 	 	       GlobalVariables.configuration.setWebDriver(driver);
+	 	    //Maximize the Browser
+		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
 	 	       break;
 			default:
 				break;
