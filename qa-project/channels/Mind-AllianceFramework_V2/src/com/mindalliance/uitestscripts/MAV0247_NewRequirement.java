@@ -28,8 +28,6 @@ import com.mindalliance.pages.CommunitiesPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
-import com.mindalliance.pages.PlanPage;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

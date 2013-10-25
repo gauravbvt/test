@@ -179,12 +179,25 @@ public class MAV0190_GoalsOption extends TestCase{
 			stepNo++;
 			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
+			System.out.println("Hi 1");
 			// Strench up form
 			planPage.clickStrenchUpForm();
+			System.out.println("Hi 2");
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			System.out.println("Hi 3");
 			
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Hi 4");
+			// Strench up form
+			planPage.clickStrenchUpForm();
+						
 			// Select goal from dropdown list
 			stepNo++;
 			description="Goal From Drop Down";
@@ -215,6 +228,12 @@ public class MAV0190_GoalsOption extends TestCase{
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			
+			if(GlobalVariables.configuration.getWebDriver().getTitle().equals("Internal Error")){
+				LogFunctions.writeResults(testCaseId,stepNo, description,failed,ue.getMessage(),GlobalVariables.configuration.getErrorLogSubDirectoryPath()+"\\"+testCaseId + ".logs" );
+				
+			}
+			
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);

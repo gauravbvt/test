@@ -149,7 +149,7 @@ public class MAV0189_GoalsLink extends TestCase{
 			
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
 			stepNo++;
-			description="Close About Plan Segment Window";
+			description="Details of Task Panel";
 			planPage.clickPopupMenu(testData.get("ShowInTask"));
 			planPage.clickSubmenu(testData.get("Details"));	
 			// Click on 'Show Advanced Form' link

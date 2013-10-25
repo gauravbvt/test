@@ -137,6 +137,8 @@ public class MAV0127_addNewIssue extends TestCase{
 			stepNo++;
 			description="Info sharing need is added";
 			PlanPage planPage = new PlanPage();
+			// Click on Stretch up form
+			planPage.clickStrenchUpForm();
 			planPage.clickAddInfoReceivesPanel();
 			// Write log
 			LogFunctions.writeLogs(description);
@@ -146,7 +148,7 @@ public class MAV0127_addNewIssue extends TestCase{
 			stepNo++;
 			description="New issue is added";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
-			planPage.clickSubmenu(testData.get("NewIssueInReceivesPanel"));	
+			planPage.clickSubmenu(testData.get("NewIssueInReceivesPanel"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   

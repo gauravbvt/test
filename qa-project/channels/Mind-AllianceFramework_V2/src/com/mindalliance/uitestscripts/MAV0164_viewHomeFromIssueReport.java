@@ -137,7 +137,7 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			stepNo++;
 			description="Navigated to home page";	
 			HeaderController headerController=new HeaderController();
-			headerController.clickHomeImageLink(testData.get("homePageTitle"));
+			headerController.clickHomeTab(testData.get("homePageTitle"));
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
