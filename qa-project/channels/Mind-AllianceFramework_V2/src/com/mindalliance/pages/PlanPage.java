@@ -2422,8 +2422,17 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickStrenchUpForm() throws UIAutomationException{
+		System.out.println("Test 1");
 		elementController.requireElementSmart(fileName,"Strench Up Forms", GlobalVariables.configuration.getAttrSearchList(), "Strench Up Forms");
 		UIActions.click(fileName,"Strench Up Forms", GlobalVariables.configuration.getAttrSearchList(), "Strench Up Forms");
+		System.out.println("Test 2");
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -3344,7 +3353,14 @@ public class PlanPage {
 	
 		elementController.requireElementSmart(fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
 		UIActions.enterValueInTextBox(goalName,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
+		UIActions.enterKey(Keys.TAB);
 		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Enter name in Goal text box
 		//elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		//UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");

@@ -159,4 +159,17 @@ public class HeaderController {
 		// Assertion : Check Heading of Page
 		UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}	
+	
+	/**
+	 * 'clickHomeTab' method clicks on 'Home drop down selector'
+	 * 
+	 */
+	
+	public void clickHomeTab(String title) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Home Tab Link",GlobalVariables.configuration.getAttrSearchList(), "Home Tab Link");
+		UIActions.click(fileName,"Home Tab Link",GlobalVariables.configuration.getAttrSearchList(), "Home Tab Link");
+		
+		// Assertion : Check Heading of Page
+		UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
 }
