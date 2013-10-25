@@ -732,7 +732,7 @@ table.checklist-step-outcomes {
 	margin: 0;
 }
 
-div.ongoingProcedures .checklist a.more {
+div.protocols-contents div.expected-queries a.more {
 	margin: 10px 10px 0 0;
 }
 
