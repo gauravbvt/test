@@ -5,7 +5,7 @@
   <ChannelsURL>http://192.168.4.126:8080/channels/login.html</ChannelsURL>
   <UserName>admin</UserName>
   <PassWord>admin</PassWord>
-  <Browser>Chrome</Browser>
+  <Browser>Mozilla Firefox</Browser>
  </Credentials>
  <TimeOutForFindingElementSeconds>20</TimeOutForFindingElementSeconds>
  <TimeOutForFindingElementSecondsForClick>60</TimeOutForFindingElementSecondsForClick>
