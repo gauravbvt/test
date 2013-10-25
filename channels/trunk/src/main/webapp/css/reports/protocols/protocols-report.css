@@ -22,16 +22,19 @@ div.protocols-contents a {
 }
 
 div.protocols-contents h1 {
-    color: #333333;
-    font-family: Arial;
-    font-size: 36px;
+    color: #656D78;
+    font-family: Georgia;
+    font-size: 48px;
+    font-style: italic;
     font-weight: normal;
-    letter-spacing: -1px;
-    padding: 25px 0 0;
+    letter-spacing: -0.05em;
+    padding: 50px 0;
+    text-align: center;
 }
 
 div.protocols-contents h1 span {
-
+    border-bottom: 5px solid #E8E8E8;
+    padding: 0 0 10px;
 }
 
 div.protocols-contents h2 {
@@ -86,9 +89,21 @@ div.checklist h4.checklist-title {
     font-size: 22px;
     font-weight: normal;
     line-height: 150%;
-    margin: 0 0 25px;
+    margin: 0 0 15px;
     padding: 15px 0 10px;
     text-transform: uppercase;
+}
+
+div.protocols-contents div.expected-queries h4.taskName {
+    border-bottom: none;
+    margin: 0;
+    padding: 15px 0 0 0px;
+}
+
+div.protocols-contents div.expected-queries div.triggered {
+    border-top: 5px solid #CCCCCC;
+    margin: 15px 0 0 0;
+    padding: 10px 0 0 0;
 }
 
 div.protocols-contents h5 {
@@ -286,12 +301,35 @@ div.protocols-contents ul li label {
     padding: 5px 0px;
 }
 
+div.protocols-contents ul.toc-cont,
+div.protocols-contents div.toc-cont {
+    border-left: 5px solid #CCCCCC;
+    padding: 15px 0 0 15px;
+}
+
+div.toc-trigger {
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+div.protocols-contents ul.toc-cont a,
+div.protocols-contents div.toc-cont a {
+	border: none;
+	color: #333333;
+}
+
 div.protocols-contents ul.askedYou,
 div.protocols-contents ul.notifiedYou,
 div.protocols-contents div.observations-toc ul,
 div.protocols-contents div.ongoing-toc ul {
     list-style: none outside none;
     margin: 0;
+}
+
+div.protocols-contents div.ongoing-toc ul {
+    padding-bottom: 5px;
 }
 
 div.protocols-contents ul.askedYou li,
@@ -305,29 +343,26 @@ div.protocols-contents div.ongoing-toc ul li {
 div.protocols-contents ul.askedYou li ul,
 div.protocols-contents ul.notifiedYou li ul {
     list-style: none outside none;
-    margin: 10px 0 0;
-    padding: 5px 0 0;
+    margin: 0;
+    padding: 10px 0 0;
 }
 
 div.protocols-contents div.observations-toc ul li ul {
-    border-top: 1px solid #333333;
-    margin: 10px 0 0;
-    padding: 5px 0 0;
+    padding: 10px 0 0;
 }
 
 div.protocols-contents ul.askedYou li ul li,
 div.protocols-contents ul.notifiedYou li ul li,
 div.protocols-contents div.observations-toc ul li ul li,
 div.protocols-contents div.ongoing-toc ul li {
-    line-height: 150%;
-    margin: 5px 0 10px 25px;
-    padding: 0 0 10px;
     font-size: 13px;
+    line-height: 150%;
+    margin: 5px 0 5px 20px;
+    padding: 0 0 5px;
 }
 
 div.protocols-contents span.task-name {
-    color: #363636;
-    font-size: 1.1em;
+
 }
 
 div.protocols-contents div.interlocutors {
@@ -343,6 +378,13 @@ div.protocols-contents div.observations-toc ul li {
 div.protocols-contents div.interlocutors ul li ul li a,
 div.protocols-contents div.observations-toc ul li ul li a,
 div.protocols-contents div.ongoing-toc ul li a {
+    font-weight: normal;
+    color: #333333;
+}
+
+div.protocols-contents div.interlocutors ul li ul li a:hover,
+div.protocols-contents div.observations-toc ul li ul li a:hover,
+div.protocols-contents div.ongoing-toc ul li a:hover {
     font-weight: normal;
     color: #666666;
 }
@@ -543,6 +585,7 @@ div.protocols-contents div.contactsContainer {
 div.protocols-contents div.eois-contacts-cont {
     color: #666666;
     font-size: 11px;
+    line-height: 150%;
     padding: 0 0 5px;
     text-transform: capitalize;
 }
@@ -640,11 +683,16 @@ div.documentation-top label {
 
 div.checklist-step-title {
     background: none repeat scroll 0 0 #E8E8E8;
-    border-left: 5px solid #929498;
+    border-left: 5px solid #E8E8E8;
     font-style: normal;
     margin: 15px 0 10px;
     padding: 10px;
     height: 19px;
+}
+
+div.checklist-step-title.active {
+	background: none repeat scroll 0 0 #D4E3F5;	
+	border-left: 5px solid #A1C1E6;
 }
 
 table.checklist-step-constraints,
@@ -682,6 +730,10 @@ table.checklist-step-outcomes {
 
 .checklist a.more {
 	margin: 0;
+}
+
+div.ongoingProcedures .checklist a.more {
+	margin: 10px 10px 0 0;
 }
 
 .checklist a.more:hover,
@@ -732,7 +784,7 @@ table.checklist-step-outcomes {
 }
 
 .checklist .checklist-step-details {
-    border-left: 5px solid #929498;
+    border-left: 5px solid #A1C1E6;
     margin: -10px 0 0 0;
     padding: 10px 15px 0;
     background: #eef0f9;

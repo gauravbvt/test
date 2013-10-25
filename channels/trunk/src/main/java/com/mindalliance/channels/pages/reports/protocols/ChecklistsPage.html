@@ -53,7 +53,7 @@
         <!-- Table of content -->
         <div class="ongoing-toc" wicket:id="ongoing-toc">
             <h3>My ongoing tasks</h3>
-            <ul>
+            <ul class="toc-cont">
                 <li wicket:id="ongoingLinks"> <!-- repeated -->
                     <span wicket:id="checklistLink">[a data link panel]</span>
                 </li>
@@ -61,7 +61,7 @@
         </div>
         <div class="observations-toc" wicket:id="observations-toc">
             <h3>Tasks I do when I notice certain things</h3>
-            <ul>
+            <ul class="toc-cont">
                 <li wicket:id="observations">  <!-- repeated -->
                     <div class="toc-trigger">
                         If I <span wicket:id="witness">witness</span> <span wicket:id="observation" class="info">an event phase in context</span>
@@ -77,7 +77,7 @@
         <div class="communications-toc" wicket:id="communications-toc">
             <h3>Tasks I do when I'm notified or asked for information</h3>
 
-            <div wicket:id="commSections">  <!-- repeated -->
+            <div class="toc-cont" wicket:id="commSections">  <!-- repeated -->
                 <h6 wicket:id="letter">A</h6>
 
                 <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
@@ -124,7 +124,7 @@
     </div>
 
     <div wicket:id="protocols">
-        <h2>My tasks</h2>
+        <h2>My Tasks</h2>
 
         <div wicket:id="ongoing">
             <div class="ongoingProcedures" wicket:id="ongoingProcedures"> <!-- repeated -->
@@ -177,7 +177,7 @@
     <div wicket:id="directory">
         <a name="directory"></a>
 
-        <h2>My contacts</h2>
+        <h2>My Contacts</h2>
 
         <div class="org-contacts" wicket:id="agencyContacts"> <!-- repeated -->
             <div class="orgContact" wicket:id="agencyContact">[org contact panel]</div>
