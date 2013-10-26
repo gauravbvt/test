@@ -11,24 +11,26 @@
 <body>
 <wicket:panel>
     <h3 wicket:id="name">ACME Sales</h3>
-    <div wicket:id="parent">
-        <label>Parent</label>
-        <div wicket:id="value">ACME Inc.</div>
-    </div>
-    <div wicket:id="streetAddress">
-        <label>Location</label>
-        <div wicket:id="value">street address</div>
-    </div>
-    <div wicket:id="mediaAddresses">
-        <label>Contact info</label>
-        <div wicket:id="addresses">contact addresses panel</div>
-    </div>
-    <div wicket:id="mission">
-        <label>Mission</label>
-        <div wicket:id="value">mission</div>
-    </div>
-    <div class="documentation" wicket:id="documentation">
-        [documentation panel]
+    <div class="org-contact-details">
+	    <span wicket:id="parent">
+    	    Parent - 
+    	    <span wicket:id="value">ACME Inc.</span>
+    	</span>
+    	<span wicket:id="streetAddress">
+    	    Location - 
+    	    <span wicket:id="value">street address</span>
+    	</span>
+    	<span wicket:id="mediaAddresses">
+    	    Contact info - 
+    	    <span wicket:id="addresses">contact addresses panel</span>
+    	</span>
+    	<span wicket:id="mission">
+    	    Mission - 
+    	    <span wicket:id="value">mission</span>
+    	</span>
+    	<span class="documentation" wicket:id="documentation">
+    	    [documentation panel]
+    	</span>
     </div>
 </wicket:panel>
 </body>

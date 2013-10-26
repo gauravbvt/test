@@ -23,7 +23,6 @@ div.protocols-contents a {
 
 div.protocols-contents h1 {
     color: #656D78;
-    font-family: Georgia;
     font-size: 48px;
     font-style: italic;
     font-weight: normal;
@@ -215,6 +214,8 @@ div.protocols-contents div.employeeContacts {
     width: 711px;
 }
 
+/*
+
 div.protocols-contents div.orgContact {
     background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
@@ -227,6 +228,8 @@ div.protocols-contents div.orgContact h3 {
     padding: 5px 0 10px;
     font-size: 16px;
 }
+
+*/
 
 div.protocols-contents div.directory-link {
     float: right;
@@ -423,14 +426,11 @@ div.protocols-contents div.ongoingProcedures {
     padding: 0 0 15px 25px;
 }
 
-div.protocols-contents div.triggered div.trigger {
+div.protocols-contents div.triggered div.trigger,
+div.protocols-contents div.orgContact {
     background: none repeat scroll 0 0 #D4E3F5;
     border-left: 5px solid #A1C1E6;
     padding: 15px 25px 10px;
-}
-
-div.protocols-contents div.triggered div.trigger h3 {
-
 }
 
 div.protocols-contents div.triggered h5.notify {
@@ -582,7 +582,8 @@ div.protocols-contents div.contactsContainer {
     padding: 15px 0 0 0;
 }
 
-div.protocols-contents div.eois-contacts-cont {
+div.protocols-contents div.eois-contacts-cont,
+div.protocols-contents div.org-contact-details {
     color: #666666;
     font-size: 11px;
     line-height: 150%;
