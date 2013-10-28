@@ -854,7 +854,6 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		
-		
 //		elementController.requireElementSmart(fileName, "New Issue Text", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text");
 //		newIssueTextInPage=UIActions.getText();
 //		newIssueTextInXML=dataController.getPageDataElements(fileName, "New Issue Actual Text", "Name");
@@ -862,6 +861,7 @@ public class PlanPage {
 //			throw new UIAutomationException("Issue with name '"+newIssueTextInXML+"' not found");
 //		}
 		break;	
+		
 	//'Undo Remove Issue' in Actions menu	
 	case "Undo Remove Issue":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -2851,7 +2851,10 @@ public class PlanPage {
 		if(!nameOfTabInPage.equals(nameOfTabInXML)){
 			throw new UIAutomationException("Tab with name '"+nameOfTabInXML+"' not found");
 		}
-	
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
 	}
 	/**
 	 * Click on 'doing unnamed task'
@@ -2862,6 +2865,10 @@ public class PlanPage {
 		UIActions.click(fileName,"Doing Unnamed Task",GlobalVariables.configuration.getAttrSearchList(), "Doing Unnamed Task");
 	}
 	
+	public void clickBack() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Click Back Link",GlobalVariables.configuration.getAttrSearchList(), "Click Back Link");
+		UIActions.click(fileName,"Click Back Link",GlobalVariables.configuration.getAttrSearchList(), "Click Back Link");
+	}
 	/**
 	 * Clicks on 'Show Advanced Form' in Task panel
 	 * @throws UIAutomationException
@@ -2871,11 +2878,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 		UIActions.click(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 		try{
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		}
 		catch(Exception e){}
-		if(flag.equals("False")){
-			// Assertion: Verify by clicking on 'Show Advanced Form' link chabges to 'Show Simple form'
+		
+		if(flag.equals("True")){
+			// Assertion: Verify by clicking on 'Show Advanced Form' link changes to 'Show Simple form'
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 			linkTextInPage=UIActions.getText(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 			if(!linkTextInPage.equals(showlinkTextInXML)){
@@ -2883,7 +2891,7 @@ public class PlanPage {
 			}
 		}
 		else {
-			// Assertion: Verify by clicking on 'Show Simple Form' link chabges to 'Show Advanced form'
+			// Assertion: Verify by clicking on 'Show Simple Form' link changes to 'Show Advanced form'
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 			UIActions.click(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Task Panel");
