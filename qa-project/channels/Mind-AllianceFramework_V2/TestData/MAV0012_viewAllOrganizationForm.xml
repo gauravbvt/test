@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <elements>
 <scoping>Scoping</scoping>
-<organizationsInScope>All involvements</organizationsInScope>
+<organizationsInScope>Organizations In Scope</organizationsInScope>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>
