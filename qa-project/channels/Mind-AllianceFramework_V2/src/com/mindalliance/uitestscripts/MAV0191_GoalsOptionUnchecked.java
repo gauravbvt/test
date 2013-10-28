@@ -194,6 +194,9 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			if(GlobalVariables.configuration.getWebDriver().getTitle().equals("Internal Error")){
+				LogFunctions.writeResults(testCaseId,stepNo, description,failed,ue.getMessage(),GlobalVariables.configuration.getErrorLogSubDirectoryPath()+"\\"+testCaseId + ".logs" );
+			}
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
