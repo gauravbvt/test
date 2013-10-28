@@ -112,7 +112,7 @@
 
 	<Element>
 		<GivenName>Organization In Scope Window Title</GivenName>
-		<Title>Organizations In Scope</Title>
+		<Title>All Involvements</Title>
 	</Element>
 	
 	<Element>
@@ -736,15 +736,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-//	<Element>
-//		<GivenName>Checkbox Of Agent  Organization In Scope</GivenName>
-//		<Xpath></Xpath>
-//		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed</Name>
-//		<Id></Id>
-//		<PartialLinkText></PartialLinkText>
-//		<LinkText></LinkText>
-//		<ClassName></ClassName>
-//	</Element>
+=
 	<Element>
 		<GivenName>Contact Info Drop Down For Agent</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[7]/td/ol/li/select</Xpath>
@@ -897,8 +889,18 @@
 	</Element>
 	<Element>
 		<GivenName>Usually Completes After In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/input</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[3]/input</Xpath>
+		<Name>segment:part:timingContainer:self-terminating</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Click Back Link</GivenName>
+		<Xpath>/html/body/div/div/p[3]/a</Xpath>
+		<Name>segment:part:timingContainer:self-terminating</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -907,7 +909,7 @@
 	
 	<Element>
 		<GivenName>Usually Completes After Textbox</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/span/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[3]/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -915,11 +917,9 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	
-	
 	<Element>
 		<GivenName>Usually Completes After Dropdown</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/span/select</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[3]/span/select</Xpath>
 		<Name></Name>
 	</Element>
 	
@@ -1314,7 +1314,7 @@
 	
 	<Element>
 		<GivenName>New Issue</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2329,7 +2329,7 @@
 	</Element>
 	<Element>
 		<GivenName>Show Advanced Simple Form In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span[2]</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/span[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText>Show advanced form</PartialLinkText>
@@ -2799,7 +2799,7 @@
 	</Element>
 	<Element>
 		<GivenName>Channels Dropdown In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/select</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[11]/td/ol/li/select</Xpath>
 		<Name>segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3309,7 +3309,7 @@
 		<Name></Name>
 		<Id>id185</Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>All involvements</LinkText>
 		<ClassName>fp-header</ClassName>
 	</Element>
 	
