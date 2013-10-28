@@ -9,7 +9,6 @@ import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
-import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.command.Change;
@@ -339,21 +338,50 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         WebMarkupContainer communicationsToc = new WebMarkupContainer( "communications-toc" );
         finderContainer.add( communicationsToc );
         communicationsToc.setVisible( !triggerRolodex.isEmpty() );
-        ListView<String> commSectionListView = new ListView<String>(
-                "commSections",
-                finder.getSortedTriggerRolodexTabs()
+        ListView<String> communicationsInContextListView = new ListView<String>(
+                "inContextCommunications",
+                getCommunicationContexts()
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
-                String letter = item.getModelObject();
-                item.add( new Label( "letter", letter ) );
-                item.add( makeInterlocutorListView( triggerRolodex.get( letter ) ) );
+                final String communicationContext = item.getModelObject();
+                // communication context
+                Label communicationContextLabel = new Label( "communicationContext", item.getModelObject() );
+                item.add( communicationContextLabel );
+                //
+                ListView<String> commSectionListView = new ListView<String>(
+                        "commSections",
+                        finder.getSortedTriggerRolodexTabs()
+                ) {
+                    @Override
+                    protected void populateItem( ListItem<String> item ) {
+                        String letter = item.getModelObject();
+                        item.add( new Label( "letter", letter ) );
+                        item.add( makeInterlocutorListView( communicationContext, triggerRolodex.get( letter ) ) );
+                    }
+                };
+                item.add( commSectionListView );
             }
         };
-        communicationsToc.add( commSectionListView );
+        communicationsToc.add( communicationsInContextListView );
+     }
+
+    private List<String> getCommunicationContexts() {
+        List<String> communicationContexts = new ArrayList<String>( finder.getCommunicationContexts() );
+        Collections.sort( communicationContexts, new Comparator<String>() {
+            @Override
+            public int compare( String cc1, String cc2 ) {
+                if ( cc1.equals( TriggerData.WHENEVER) )
+                    return -1;
+                else if ( cc2.equals( TriggerData.WHENEVER ) )
+                    return 1;
+                else return cc1.compareTo( cc2 );
+            }
+        });
+        return communicationContexts;
     }
 
-    private ListView<ContactData> makeInterlocutorListView( List<ContactData> contactDataList ) {
+    private ListView<ContactData> makeInterlocutorListView( final String communicationContext, List<ContactData> contactDataList ) {
         return new ListView<ContactData>(
                 "interlocutors",
                 contactDataList
@@ -363,14 +391,14 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 ContactData contactData = item.getModelObject();
                 // requests
                 Map<TriggerData, List<ChecklistData>> triggeringRequests =
-                        finder.getTriggeringRequestsFrom( contactData );
+                        finder.getTriggeringRequestsFrom( communicationContext, contactData );
                 WebMarkupContainer requestsFromInterlocutor = new WebMarkupContainer( "askedYou" );
                 item.add( requestsFromInterlocutor );
                 requestsFromInterlocutor.setVisible( !triggeringRequests.isEmpty() );
                 requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests, contactData ) );
                 // notifications
                 Map<TriggerData, List<ChecklistData>> triggeringNotifications =
-                        finder.getTriggeringNotificationsFrom( contactData );
+                        finder.getTriggeringNotificationsFrom( communicationContext, contactData );
                 WebMarkupContainer notificationsFromInterlocutor = new WebMarkupContainer( "notifiedYou" );
                 item.add( notificationsFromInterlocutor );
                 notificationsFromInterlocutor.setVisible( !triggeringNotifications.isEmpty() );
@@ -399,14 +427,6 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 TriggerData triggerData = item.getModelObject();
                 item.add( new Label( "request", triggerData.getLabel() ) );
-                SituationData communicatedContext = triggerData.getSituation();
-                Label commContextLabel = new Label(
-                        "communicatedContext",
-                        communicatedContext == null
-                                ? ""
-                                : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) );
-                commContextLabel.setVisible( communicatedContext != null );
-                item.add( commContextLabel );
                 item.add( makeChecklistLinks( "checklistLinks", triggeringRequests.get( triggerData ) ) );
             }
         };
@@ -433,14 +453,6 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 TriggerData triggerData = item.getModelObject();
                 item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 item.add( new Label( "notification", triggerData.getLabel() ) );
-                SituationData communicatedContext = triggerData.getSituation();
-                Label commContextLabel = new Label(
-                        "communicatedContext",
-                        communicatedContext == null
-                                ? ""
-                                : ( ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) ) );
-                commContextLabel.setVisible( communicatedContext != null );
-                item.add( commContextLabel );
                 item.add( makeChecklistLinks( "checklistLinks", triggeringNotifications.get( triggerData ) ) );
             }
         };

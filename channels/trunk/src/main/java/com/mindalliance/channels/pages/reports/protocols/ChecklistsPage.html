@@ -15,7 +15,7 @@
         <a href="#directory">Your contacts directory</a>
     </div>
     <h1>
-        My checklists for <br /><span wicket:id="communityName">Community name</span>
+        My checklists for <br/><span wicket:id="communityName">Community name</span>
     </h1>
 
     <div class="plandetails-cont">
@@ -77,42 +77,46 @@
         <div class="communications-toc" wicket:id="communications-toc">
             <h3>Tasks I do when I'm notified or asked for information</h3>
 
-            <div class="toc-cont" wicket:id="commSections">  <!-- repeated -->
-                <h6 wicket:id="letter">A</h6>
+            <div wicket:id="inContextCommunications"> <!-- repeated -->
+                <h5 wicket:id="communicationContext">During responding to bomb alert</h5>
 
-                <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
+                <div class="toc-cont" wicket:id="commSections">  <!-- repeated -->
+                    <h6 wicket:id="letter">A</h6>
 
-                    <ul class="askedYou" wicket:id="askedYou">
-                        <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
-                            <div class="toc-trigger">
-                                When <span wicket:id="contact">[contact link panel]</span>
-                                asks me for
-                                &quot;<span wicket:id="request" class="info">a request</span>&quot;
-                                <span wicket:id="communicatedContext">context</span>
-                            </div>
-                            <ul>
-                                <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                    <span wicket:id="checklistLink">a task name</span>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
 
-                    <ul class="notifiedYou" wicket:id="notifiedYou">
-                        <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
-                            <div class="toc-trigger">
-                                When <span wicket:id="contact">[contact link panel]</span>
-                                notifies me of
-                                &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
-                                <span class="communicatedContext" wicket:id="communicatedContext">context</span>
-                            </div>
-                            <ul>
-                                <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                    <span wicket:id="checklistLink">a task name</span>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                        <ul class="askedYou" wicket:id="askedYou">
+                            <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
+                                <div class="toc-trigger">
+                                    When asked for
+                                    &quot;<span wicket:id="request" class="info">a request</span>&quot;
+                                    by
+                                    <span wicket:id="contact">[contact link panel]</span>
+                                </div>
+                                <ul>
+                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                        <span wicket:id="checklistLink">a task name</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <ul class="notifiedYou" wicket:id="notifiedYou">
+                            <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
+                                <div class="toc-trigger">
+                                    When notified of
+                                    &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
+                                    by
+                                    <span wicket:id="contact">[contact link panel]</span>, I do
+                                </div>
+                                <ul>
+                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                        <span wicket:id="checklistLink">a task name</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,6 +124,7 @@
 
     <div class="expected-queries" wicket:id="expectedQueries">
         <h2>What I am expected to answer right away</h2>
+
         <div class="ongoingProcedures" wicket:id="queries">[queries panel]</div>
     </div>
 

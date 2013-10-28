@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ModelObjectData;
-import com.mindalliance.channels.api.directory.ContactData;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -10,8 +9,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-
-import java.util.List;
 
 /**
  * Abstract data panel.
@@ -40,11 +37,6 @@ public abstract class AbstractDataPanel extends Panel {
 
     protected <T extends ModelObjectData> T findInScope( Class<T>moDataClass, long moId ) {
         return finder.findInScope( moDataClass, moId );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    protected List<ContactData> findContacts( long actorId ) {
-        return finder.findContacts( actorId );
     }
 
     protected WebMarkupContainer makeAnchor( String id, String anchor ) {

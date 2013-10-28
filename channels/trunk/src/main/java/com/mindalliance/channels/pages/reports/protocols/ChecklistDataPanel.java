@@ -85,13 +85,15 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
     private void addFailureImpact() {
         Level severity = getTask().getFailureSeverity();
+        WebMarkupContainer failureImpactContainer = new WebMarkupContainer( "failureImpactContainer" );
+        failureImpactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
+        add( failureImpactContainer );
         String severityText = getTask().getFailureImpact().toLowerCase();
-        WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
-        add( impactContainer );
-        impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
+        WebMarkupContainer failureImpact = new WebMarkupContainer( "failureImpact" );
+        failureImpact.add( new AttributeModifier( "class", "failure-impact " + severityText ) );
+        failureImpactContainer.add( failureImpact );
         Label severityLabel = new Label( "severity", severityText );
-        impactContainer.add( severityLabel );
+        failureImpact.add( severityLabel );
     }
 
     private void addLocation() {

@@ -29,6 +29,7 @@ import java.util.Set;
 @XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "onFollowUp", "onResearch", "requestingTask", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
+    public static final String WHENEVER = "Whenever";
     private Flow notificationFromOther;
     private Flow requestFromOther;
     private EventPhase eventPhase;

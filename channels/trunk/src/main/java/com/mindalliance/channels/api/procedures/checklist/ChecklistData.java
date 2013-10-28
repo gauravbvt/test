@@ -492,11 +492,13 @@ public class ChecklistData implements Serializable {
 
     public String getTaskLabel() {
         StringBuilder sb = new StringBuilder();
+/*
         if ( isOngoing() ) {
             sb.append( "I constantly do task - " );
         }else {
             sb.append( "I do task - " );
         }
+*/
         sb.append( getTask().getName() );
         return sb.toString();
     }
