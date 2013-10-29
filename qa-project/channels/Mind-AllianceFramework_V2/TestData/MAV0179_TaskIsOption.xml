@@ -7,5 +7,5 @@
 <showSimpleFormText>SHOW SIMPLE FORM</showSimpleFormText>
 <showAdvancedFormText>SHOW ADVANCED FORM</showAdvancedFormText>
 <unspecified>Unspecified</unspecified>
-<flag>False</flag>
+<flag>True</flag>
 </elements>

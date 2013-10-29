@@ -4,7 +4,8 @@
 <aboutPlan>About Plan</aboutPlan>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
-
+<scoping>Scoping</scoping>
+<eventsInScope>All Events And Phases</eventsInScope>
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
 <segmentForAddPhaseDetails>Segment For Add Phase Details</segmentForAddPhaseDetails>

@@ -6,7 +6,7 @@
 <title>Channels - Sign in</title>
 <showSimpleFormText>SHOW SIMPLE FORM</showSimpleFormText>
 <showAdvancedFormText>SHOW ADVANCED FORM</showAdvancedFormText>
-<flag>False</flag>
+<flag>True</flag>
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
 <removeThisSegment>Remove This Segment</removeThisSegment>

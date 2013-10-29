@@ -6,6 +6,6 @@
 <title>Channels - Sign in</title>
 <showSimpleFormText>SHOW SIMPLE FORM</showSimpleFormText>
 <showAdvancedFormText>SHOW ADVANCED FORM</showAdvancedFormText>
-<flag>False</flag>
+<flag>True</flag>
 <tags>Tag</tags>
 </elements>
