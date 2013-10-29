@@ -132,29 +132,11 @@ public class MAP0011_addEventToPlan extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
- 			// Click on 'Add New Segment' under 'Actions' pop up menu
- 			stepNo++;
-			description="Add New Segment";
-			PlanPage planPage=new PlanPage();
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			planPage.enterSegmentName(testData.get("SegmentForAddEvent"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Close segment window
- 			stepNo++;
-			description="Closed Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
 			// Click on 'Events In Scope' under 'Scoping' pop up menu
  			stepNo++;
 			description="Event in Scope";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("EventsInScope"));
 			// Write log
@@ -165,6 +147,7 @@ public class MAP0011_addEventToPlan extends TestCase{
  			stepNo++;
 			description="Event Added";
 			planPage.enterValueInEventInEventInScope(testData.get("Event"));
+			planPage.deleteEvent(testData.get("Event"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -173,15 +156,6 @@ public class MAP0011_addEventToPlan extends TestCase{
  			stepNo++;
 			description="Close Event Window";
 			planPage.closeEventsWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
- 		   // Remove This segment
- 			stepNo++;
-			description="Remove This Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

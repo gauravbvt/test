@@ -158,7 +158,7 @@ public class MAP0030_AddQuestionnaireRFIAsThisPlan extends TestCase{
 			
 			// Select 'THIS PLAN' option from 'Questionnaire from surveys about'
  			stepNo++;
-			description="Questionnaire - This Plan";
+			description="Questionnaire - This Template";
 			planPage.selectOptionFromQuestionnaireFromSurveysAbout(testData.get("ThisPlan"));
 			// Write log
  			LogFunctions.writeLogs(description);

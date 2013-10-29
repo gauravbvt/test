@@ -128,19 +128,17 @@ public class MAP0001_AddPlan extends TestCase {
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
-			
 			channelsAdmin.clickSavePlanButton();
-		//	channelsAdmin.deletePlan(testData.get("PlanName"));
+			channelsAdmin.deletePlan(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-						
+
 			// Sign Out from 'Admin' page
 			stepNo++;
 			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
-		
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
