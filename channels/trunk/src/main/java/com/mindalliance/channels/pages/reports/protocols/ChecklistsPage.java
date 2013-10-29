@@ -29,6 +29,7 @@ import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.PagePathItem;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,8 +45,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A page with a user's (or agent's) protocols.
@@ -246,16 +249,16 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private void addParticipation() {
         Label employmentsList = new Label(
                 "participationList",
-                asString( protocolsData.getEmployments() ));
+                asString( protocolsData.getEmployments() ) );
         getContainer().add( employmentsList );
     }
 
     private String asString( List<EmploymentData> employments ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         int count = employments.size();
-        for ( int i=0; i<count; i++ ) {
+        for ( int i = 0; i < count; i++ ) {
             sb.append( employments.get( i ).getLabel() );
-            if ( i == count - 2  ) {
+            if ( i == count - 2 ) {
                 sb.append( " and " );
             } else if ( i != count - 1 && count > 1 ) {
                 sb.append( ", " );
@@ -334,10 +337,10 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     }
 
     private void addOnCommunicationFinder() {
-        final Map<String, List<ContactData>> triggerRolodex = finder.getAlphabetizedTriggerRolodex();
         WebMarkupContainer communicationsToc = new WebMarkupContainer( "communications-toc" );
         finderContainer.add( communicationsToc );
-        communicationsToc.setVisible( !triggerRolodex.isEmpty() );
+        List<String> communicationContexts = getCommunicationContexts();
+        communicationsToc.setVisible( !communicationContexts.isEmpty() );
         ListView<String> communicationsInContextListView = new ListView<String>(
                 "inContextCommunications",
                 getCommunicationContexts()
@@ -348,124 +351,95 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 // communication context
                 Label communicationContextLabel = new Label( "communicationContext", item.getModelObject() );
                 item.add( communicationContextLabel );
-                //
-                ListView<String> commSectionListView = new ListView<String>(
-                        "commSections",
-                        finder.getSortedTriggerRolodexTabs()
-                ) {
-                    @Override
-                    protected void populateItem( ListItem<String> item ) {
-                        String letter = item.getModelObject();
-                        item.add( new Label( "letter", letter ) );
-                        item.add( makeInterlocutorListView( communicationContext, triggerRolodex.get( letter ) ) );
-                    }
-                };
-                item.add( commSectionListView );
+                item.add( makeInterlocutorListView( communicationContext ) );
             }
         };
         communicationsToc.add( communicationsInContextListView );
-     }
+    }
 
     private List<String> getCommunicationContexts() {
         List<String> communicationContexts = new ArrayList<String>( finder.getCommunicationContexts() );
         Collections.sort( communicationContexts, new Comparator<String>() {
             @Override
             public int compare( String cc1, String cc2 ) {
-                if ( cc1.equals( TriggerData.WHENEVER) )
+                if ( cc1.equals( TriggerData.WHENEVER ) )
                     return -1;
                 else if ( cc2.equals( TriggerData.WHENEVER ) )
                     return 1;
                 else return cc1.compareTo( cc2 );
             }
-        });
+        } );
         return communicationContexts;
     }
 
-    private ListView<ContactData> makeInterlocutorListView( final String communicationContext, List<ContactData> contactDataList ) {
-        return new ListView<ContactData>(
-                "interlocutors",
-                contactDataList
+    private Component makeInterlocutorListView( final String communicationContext ) {
+        WebMarkupContainer interlocutors = new WebMarkupContainer( "interlocutors" );
+        interlocutors.add( makeRequestsInContext( finder.getRequestsInContext( communicationContext ) ) );
+        interlocutors.add( makeNotificationsInContext( finder.getNotificationsInContext( communicationContext ) ) );
+        return interlocutors;
+    }
+
+    private Component makeRequestsInContext( final Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> requestsInContext ) {
+        Set<String> infoList = requestsInContext == null ? new HashSet<String>() : requestsInContext.keySet();
+        ListView<String> askedInContextListView = new ListView<String>(
+                "tocRequests",
+                new ArrayList<String>( infoList)
+        ) {
+            @Override
+            protected void populateItem( ListItem<String> item ) {
+                String info = item.getModelObject();
+                item.add( new Label( "request", info ) );
+                item.add( makeTriggeringContactsListView( requestsInContext.get( info ) ) );
+            }
+        };
+        askedInContextListView.setVisible( !infoList.isEmpty() );
+        return askedInContextListView;
+    }
+
+    private Component makeNotificationsInContext( final Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> notificationsInContext ) {
+        Set<String> infoList = notificationsInContext == null ? new HashSet<String>() : notificationsInContext.keySet();
+        ListView<String> notifiedInContextListView = new ListView<String>(
+                "tocNotifications",
+                new ArrayList<String>( infoList )
+        ) {
+            @Override
+            protected void populateItem( ListItem<String> item ) {
+                String info = item.getModelObject();
+                item.add( new Label( "notification", info ) );
+                item.add( makeTriggeringContactsListView( notificationsInContext.get( info ) ) );
+            }
+        };
+        notifiedInContextListView.setVisible( !infoList.isEmpty() );
+        return notifiedInContextListView;
+    }
+
+    private Component makeTriggeringContactsListView(
+            final Map<ContactData, Map<TriggerData, List<ChecklistData>>> triggeringContacts ) {
+         ListView<ContactData> initiationsListView = new ListView<ContactData>(
+                "initiations",
+                 new ArrayList<ContactData>( triggeringContacts.keySet() )
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
-                // requests
-                Map<TriggerData, List<ChecklistData>> triggeringRequests =
-                        finder.getTriggeringRequestsFrom( communicationContext, contactData );
-                WebMarkupContainer requestsFromInterlocutor = new WebMarkupContainer( "askedYou" );
-                item.add( requestsFromInterlocutor );
-                requestsFromInterlocutor.setVisible( !triggeringRequests.isEmpty() );
-                requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests, contactData ) );
-                // notifications
-                Map<TriggerData, List<ChecklistData>> triggeringNotifications =
-                        finder.getTriggeringNotificationsFrom( communicationContext, contactData );
-                WebMarkupContainer notificationsFromInterlocutor = new WebMarkupContainer( "notifiedYou" );
-                item.add( notificationsFromInterlocutor );
-                notificationsFromInterlocutor.setVisible( !triggeringNotifications.isEmpty() );
-                notificationsFromInterlocutor.add( makeInterlocutorNotificationsListView( triggeringNotifications, contactData ) );
-            }
-        };
-    }
-
-    private ListView<TriggerData> makeInterlocutorRequestsListView(
-            final Map<TriggerData, List<ChecklistData>> triggeringRequests, final ContactData contactData ) {
-        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringRequests.keySet() );
-        Collections.sort(
-                sortedTriggers,
-                new Comparator<TriggerData>() {
-                    @Override
-                    public int compare( TriggerData td1, TriggerData td2 ) {
-                        return td1.getLabel().compareTo( td2.getLabel() );
-                    }
-                } );
-        ListView<TriggerData> interlocutorRequestsListView = new ListView<TriggerData>(
-                "tocRequests",
-                sortedTriggers
-        ) {
-            @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
                 item.add( new ContactLinkPanel( "contact", contactData, finder ) );
-                TriggerData triggerData = item.getModelObject();
-                item.add( new Label( "request", triggerData.getLabel() ) );
-                item.add( makeChecklistLinks( "checklistLinks", triggeringRequests.get( triggerData ) ) );
+                List<ChecklistData> checklistsDataSet = new ArrayList<ChecklistData>(  );
+                for ( TriggerData triggerData : triggeringContacts.get(contactData).keySet() ) {
+                    checklistsDataSet.addAll(triggeringContacts.get(contactData).get(triggerData) );
+                }
+                item.add( makeChecklistLinks( "checklistLinks", checklistsDataSet ) );
             }
         };
-        return interlocutorRequestsListView;
+        return initiationsListView;
     }
 
-    private ListView<TriggerData> makeInterlocutorNotificationsListView(
-            final Map<TriggerData, List<ChecklistData>> triggeringNotifications, final ContactData contactData ) {
-        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringNotifications.keySet() );
-        Collections.sort(
-                sortedTriggers,
-                new Comparator<TriggerData>() {
-                    @Override
-                    public int compare( TriggerData td1, TriggerData td2 ) {
-                        return td1.getLabel().compareTo( td2.getLabel() );
-                    }
-                } );
-        ListView<TriggerData> interlocutorNotificationsListView = new ListView<TriggerData>(
-                "tocNotifications",
-                sortedTriggers
-        ) {
-            @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
-                TriggerData triggerData = item.getModelObject();
-                item.add( new ContactLinkPanel( "contact", contactData, finder ) );
-                item.add( new Label( "notification", triggerData.getLabel() ) );
-                item.add( makeChecklistLinks( "checklistLinks", triggeringNotifications.get( triggerData ) ) );
-            }
-        };
-        return interlocutorNotificationsListView;
-    }
-
-    // Expected queries (non-triggering requests)
+     // Expected queries (non-triggering requests)
 
     private void addExpectedQueries() {
         queriesContainer = new WebMarkupContainer( "expectedQueries" );
         queriesContainer.setVisible( !finder.getExpectedQueries().isEmpty() );
         getContainer().add( queriesContainer );
-        queriesContainer.add(  new QueriesPanel( "queries", finder ) );
+        queriesContainer.add( new QueriesPanel( "queries", finder ) );
     }
 
     // PROTOCOLS
@@ -539,7 +513,6 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 "onResearches",
                 finder.getOnResearchChecklists() ) );
     }
-
 
 
     private WebMarkupContainer makeTriggeredChecklistContainer(
@@ -694,7 +667,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-          //Todo navigate to sub-task when applicable
+        //Todo navigate to sub-task when applicable
     }
 }
 

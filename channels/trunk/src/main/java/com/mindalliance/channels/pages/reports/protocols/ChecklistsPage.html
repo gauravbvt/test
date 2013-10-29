@@ -80,40 +80,41 @@
             <div wicket:id="inContextCommunications"> <!-- repeated -->
                 <h5 wicket:id="communicationContext">During responding to bomb alert</h5>
 
-                <div class="toc-cont" wicket:id="commSections">  <!-- repeated -->
-                    <h6 wicket:id="letter">A</h6>
+                <div class="toc-cont">
 
-                    <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
+                    <div wicket:id="interlocutors" class="interlocutors">
 
-                        <ul class="askedYou" wicket:id="askedYou">
+                        <ul class="askedYou">
                             <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
                                 <div class="toc-trigger">
                                     When asked for
                                     &quot;<span wicket:id="request" class="info">a request</span>&quot;
-                                    by
-                                    <span wicket:id="contact">[contact link panel]</span>
+                                    <div wicket:id="initiations"> <!-- repeated -->
+                                        By <span wicket:id="contact">[contact link panel]</span>, I do
+                                        <ul>
+                                            <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                                <span wicket:id="checklistLink">a task name</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <ul>
-                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                        <span wicket:id="checklistLink">a task name</span>
-                                    </li>
-                                </ul>
                             </li>
                         </ul>
 
-                        <ul class="notifiedYou" wicket:id="notifiedYou">
+                        <ul class="notifiedYou">
                             <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
                                 <div class="toc-trigger">
                                     When notified of
                                     &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
-                                    by
-                                    <span wicket:id="contact">[contact link panel]</span>
+                                    <div wicket:id="initiations"> <!-- repeated -->
+                                        By <span wicket:id="contact">[contact link panel]</span>, I do
+                                        <ul>
+                                            <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                                <span wicket:id="checklistLink">a task name</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <ul>
-                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                        <span wicket:id="checklistLink">a task name</span>
-                                    </li>
-                                </ul>
                             </li>
                         </ul>
                     </div>
