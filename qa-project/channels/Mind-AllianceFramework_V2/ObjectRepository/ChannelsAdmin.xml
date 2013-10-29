@@ -12,8 +12,8 @@
  	
  	<Element>
  		<GivenName>Plan Name</GivenName>
- 		<Xpath>//input[contains(@name,'newPlanUri')]</Xpath>
- 		<Name>newPlanUri</Name>
+ 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri')]</Xpath>
+ 		<Name>contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>

@@ -4,10 +4,12 @@
 		<GivenName>About Plan Window Title</GivenName>
 		<Title>About Template: </Title>
 	</Element>
+	
 	<Element>
 		<GivenName>Delete Phase Window Title</GivenName>
 		<Title>Delete phase?</Title>
 	</Element>
+	
 	<Element>
 		<GivenName>Presence Name</GivenName>
 		<Name>Presence</Name>
@@ -52,7 +54,7 @@
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Delete Event</GivenName>
-		<Title>Remove from segment context?</Title>
+		<Title>Delete event?</Title>
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Goal</GivenName>
@@ -267,6 +269,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Add Questionnaire</GivenName>
+		<Xpath>//input[contains(@class,'add-new-question')]</Xpath>
+		<Name>dataCollection:fp-content:mo:aspect:questionnaire:questionnaireManager:about</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>add-new-question</ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Questionnaire Table</GivenName>
 		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[2]/table</Xpath>
 		<Name></Name>
@@ -286,13 +298,14 @@
 	</Element>
 	<Element>
 		<GivenName>Actual Phase In About Plan</GivenName>
-		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/div/ul/li/span/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Close Actual Phase Window</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
@@ -568,7 +581,6 @@
 		<ClassName>indices-table</ClassName>
 	</Element>
 	
-	
 	<Element>
 		<GivenName>Network Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[2]/a/span</Xpath>
@@ -577,6 +589,26 @@
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Event Phases</GivenName>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All event phases in the collaboration template</GivenName>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/h3/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>tab-panel</ClassName>
 	</Element>
 	
 	<Element>
@@ -3081,7 +3113,7 @@
 	
 	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table/tbody/tr/td[2]/a/img</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/span/div/table/tbody/tr/td[3]/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3233,40 +3265,42 @@
 	
 	<Element>
 		<GivenName>Event In Event In Scope Text</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td/input</Xpath>
+		<Xpath>//input[contains(@name,'allEvents:content:tabs:panel:incidents:eventsDiv:event:1:name-container:name-input')]</Xpath>
 		<Name></Name>
-		
-		
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>allEvents:content:tabs:panel:incidents:eventsDiv:event:1:name-container:name-input</ClassName>
 	</Element>
-	
-	//<Element>
-		//<GivenName>Event In Event In Scope Text</GivenName>
-		//<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input')]</Xpath>
-		//<Name>allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input</Name>
-	//</Element>
 	
 	<Element>
 		<GivenName>Checkbox Of Event In Event In Scope</GivenName>
 		<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:confirmed')]</Xpath>
 		<Name>allEvents:content:events:incidents:eventsDiv:event:1:confirmed</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>Phase In About Plan</GivenName>
-		<Xpath>//input[contains(@name,'plan:fp-content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input')]</Xpath>
-		<Name>plan:fp-content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input</Name>
+		<Xpath>//input[contains(@name,'allEvents:content:tabs:panel:phasesDiv:phase:1:name-container:name-input')]</Xpath>
+		<Name>allEvents:content:tabs:panel:phasesDiv:phase:1:name-container:name-input</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>new-phase</ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Delete Phase In About Plan</GivenName>
-		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li/a</Xpath>
+		<Xpath>//a[contains(@class,'phase-delete')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<ClassName>phase-delete</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Table Of Events In Event In Scope</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table</Xpath>
+		<Xpath>//table[contains(@class,'data-table')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
