@@ -158,7 +158,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
             }
-            // list.add( new DOTAttribute( "overlap", "false" ) );
+            list.add( new DOTAttribute( "overlap", "false" ) );
             // list.add( new DOTAttribute( "splines", "true" ) );
             // list.add( new DOTAttribute( "sep", ".1" ) );
             return list;
@@ -196,7 +196,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
-                    list.add( new DOTAttribute( "shape", "box" ) );
+                    list.add( new DOTAttribute( "shape", "ellipse" ) );
                     list.add( new DOTAttribute( "style", "solid" ) );
                     list.add( new DOTAttribute( "color", getHighlightColor( vertex ) ) );
                     list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
@@ -288,10 +288,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
+            list.add( new DOTAttribute( "arrowsize", "1.0" ) );
             list.add( new DOTAttribute( "fontcolor",
                                         colorIfVisible( edge,
                                                         isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
+            list.add( new DOTAttribute( "penwidth", "2.0" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             addTailArrowHead( edge, list );
             list.add( new DOTAttribute( "style",

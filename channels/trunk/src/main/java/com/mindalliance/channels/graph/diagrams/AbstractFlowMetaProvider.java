@@ -39,12 +39,12 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Color for subgraph contour
      */
-    protected static final String SUBGRAPH_COLOR = "azure2";
+    protected static final String SUBGRAPH_COLOR = "#e6e9ed";
 
     /**
      * Font for subgraph labels.
      */
-    protected static final String SUBGRAPH_FONT = "Arial Bold Oblique";
+    protected static final String SUBGRAPH_FONT = "Helvetica-Bold";
 
     /**
      * Font size for subgraph labels.
@@ -54,7 +54,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font for node labels
      */
-    public static final String NODE_FONT = "Arial";
+    public static final String NODE_FONT = "AvantGarde-Book";
 
     /**
      * Font size for node labels.
@@ -79,12 +79,12 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Highlight pen color.
      */
-    protected static final String HIGHLIGHT_COLOR = "gray";
+    protected static final String HIGHLIGHT_COLOR = "#C25036";
 
     /**
      * Font of highlighted node.
      */
-    protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
+    protected static final String HIGHLIGHT_NODE_FONT = "AvantGarde-Book";
     /**
      * Color for implied flows.
      */

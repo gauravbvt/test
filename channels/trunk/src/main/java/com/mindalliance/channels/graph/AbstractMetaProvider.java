@@ -21,7 +21,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Default font color.
      */
-    public static final String FONTCOLOR = "black";
+    public static final String FONTCOLOR = "#333333";
     /**
      * Message format as URL template with {1} = graph id.
      */
@@ -41,7 +41,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Color used to indicate issues.
      */
-    protected static final String COLOR_ERROR = "red3";
+    protected static final String COLOR_ERROR = "#C25036";
     /**
      * Invisible pen color.
      */
@@ -62,7 +62,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Number of characters after which a long line is wrapped on separator.
      */
-    public static final int LINE_WRAP_SIZE = 15;
+    public static final int LINE_WRAP_SIZE = 5;
     /**
      * PNG, SVG, IMAP etc.
      */
@@ -79,7 +79,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Whether the direction is LR or top-bottom.
      */
-    private String graphOrientation = "LR";
+    private String graphOrientation = "TB";
     /**
      * Segment analyst in context.
      */

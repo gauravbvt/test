@@ -439,7 +439,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         FlowMapMetaProvider flowMapMetaProvider = (FlowMapMetaProvider) getMetaProvider();
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "gray" ) );
-        list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+        list.add( new DOTAttribute( "arrowsize", "1.0" ) );
         list.add( new DOTAttribute( "arrowhead", "normal" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
