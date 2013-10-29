@@ -2173,7 +2173,7 @@ public class PlanPage {
 	 * @param phaseName
 	 * @throws UIAutomationException
 	 */
-	public void enterValueInPhaseInAboutPlan(String phaseName) throws UIAutomationException{
+	public void enterValueInPhaseInEvent(String phaseName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
 		UIActions.click(fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
 		UIActions.enterValueInTextBox(phaseName,fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
@@ -2190,6 +2190,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
 		UIActions.click(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
 	}
+	
 	public void clickOnMoveInTaskMover() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Move Button In Task Mover",GlobalVariables.configuration.getAttrSearchList(), "Move Button In Task Mover");
 		UIActions.click(fileName,"Move Button In Task Mover",GlobalVariables.configuration.getAttrSearchList(), "Move Button In Task Mover");
@@ -2240,10 +2241,10 @@ public class PlanPage {
 		}
 		UIActions.enterKey(Keys.TAB);
 		
-		// Check checkbox of event
-		elementController.requireElementSmart(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
-		UIActions.click(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
-		
+//		// Check checkbox of event
+//		elementController.requireElementSmart(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
+//		UIActions.click(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
+//		
 		// Verify event is added
 		elementController.requireElementSmart(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
 		String eventsInPage=UIActions.getText(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
@@ -2252,6 +2253,7 @@ public class PlanPage {
 			throw new UIAutomationException("Event "+eventName+" is not added.");
 		}
 	}
+	
 	/**
 	 * Delete Tag value in textbox
 	 * @throws UIAutomationException
@@ -2422,10 +2424,8 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickStrenchUpForm() throws UIAutomationException{
-		System.out.println("Test 1");
 		elementController.requireElementSmart(fileName,"Strench Up Forms", GlobalVariables.configuration.getAttrSearchList(), "Strench Up Forms");
 		UIActions.click(fileName,"Strench Up Forms", GlobalVariables.configuration.getAttrSearchList(), "Strench Up Forms");
-		System.out.println("Test 2");
 		
 		try {
 			Thread.sleep(5000);
@@ -3202,9 +3202,9 @@ public class PlanPage {
 		UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
 		UIActions.click(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		
-		/*for (int i = 0; i <= 7; i++){
+		for (int i = 0; i <= 7; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
-		}*/
+		}
 		
 		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		
@@ -3522,6 +3522,22 @@ public class PlanPage {
 			throw new UIAutomationException("Segment '"+segmentName+"' not added.");
 		}
 	}
+	
+	/**
+	 * Click Phase tab under Events in scope
+	 * @throws UIAutomationException
+	 */
+	public void clickPhaseTab()throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Event Phases",GlobalVariables.configuration.getAttrSearchList(), "Event Phases");
+		UIActions.click(fileName,"Event Phases",GlobalVariables.configuration.getAttrSearchList(), "Event Phases");
+		// Assertion: Verify if the Events Phase Tab is clicked
+		elementController.requireElementSmart(fileName,"All event phases in the collaboration template",GlobalVariables.configuration.getAttrSearchList(), "All event phases in the collaboration template");
+//		String eventPhaseTab=UIActions.getText(fileName,"All event phases in the collaboration template",GlobalVariables.configuration.getAttrSearchList(), "All event phases in the collaboration template");
+//		System.out.println(eventPhaseTab);
+//		if(!eventPhaseTab.contains(eventPhaseTab)){
+//			throw new UIAutomationException("Events Phases Tab not selected");
+//		}
+	}
 	/**
 	 * Verify goal is removed
 	 * @param goalName
@@ -3557,11 +3573,9 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void deleteEvent(String eventName) throws UIAutomationException{
-		getEvent(eventName);
-		
+//		getEvent(eventName);
 		elementController.requireElementSmart(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
 		UIActions.click(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
-		
 		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Event", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 		
@@ -4070,17 +4084,22 @@ public class PlanPage {
 	public void selectOptionFromQuestionnaireFromSurveysAbout(String option) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
 		UIActions.click(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
-		
 		elementController.requireElementSmart(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
 		Select surveysAboutDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(surveysAboutDropDownList);
 		UIActions.selectByText(option);
-		
+		UIActions.enterKey(Keys.TAB);
 		// Verify option is selected
 		String surveyAboutDropdown=UIActions.getText(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Dropdown Of Surveys About Questionnaire");
 		if(!surveyAboutDropdown.contains(option)){
 			throw new UIAutomationException("Option '"+option+"' can not be selected.");
 		}
+	}
+	
+	public void addQuestionnaire() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Add Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Add Questionnaire");
+		UIActions.click(fileName,"Add Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Add Questionnaire");
+		
 	}
 	/**
 	 * Select option from Channels dropdown in sends panel
