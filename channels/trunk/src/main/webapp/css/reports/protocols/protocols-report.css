@@ -84,7 +84,8 @@ div.protocols-contents div.documentation-top label {
 
 div.protocols-contents h4.task-name,
 div.protocols-contents h4.comm-context,
-div.protocols-contents h4.checklist-title {
+div.protocols-contents h4.checklist-title,
+div.protocols-contents h4.name-employment {
     border-bottom: 5px solid #CCCCCC;
     font-size: 22px;
     font-weight: normal;
@@ -191,6 +192,8 @@ div.protocols-contents span.communicatedContext {
     font-weight: bold;
 }
 */
+
+/*
 div.protocols-contents div.orgContact label,
 div.protocols-contents div.employeeContacts label {
     display: block;
@@ -203,6 +206,8 @@ div.protocols-contents div.employeeContacts label {
 div.protocols-contents div.employeeContacts label {
     padding: 0;
 }
+
+*/
 
 div.protocols-contents div.name-employment {
     border-bottom: 1px solid #CCCCCC;
@@ -218,16 +223,13 @@ span.participationList {
 }
 
 div.protocols-contents div.org-contacts {
-    float: left;
     margin: 0 0 40px;
 }
 
 div.protocols-contents div.employeeContacts {
     border-left: 5px solid #CCCCCC;
-    float: left;
     margin: 0;
-    padding: 12px 15px 15px;
-    width: 711px;
+    padding: 0 0 15px 25px;
 }
 
 /*
@@ -254,19 +256,22 @@ div.protocols-contents div.directory-link {
     display: none;
 }
 
+div.protocols-contents div.supervisors,
 div.protocols-contents div.work,
 div.protocols-contents div.availability,
 div.protocols-contents div.languages,
 div.protocols-contents div.clearances {
-    border-right: 1px solid #CCCCCC;
-    float: left;
-    font-size: 12px;
-    line-height: 175%;
-    margin: 10px 20px 0 0;
-    min-height: 70px;
-    padding: 0 10px 0 0;
-    width: 139px;
+    padding: 15px 0 10px;
 }
+
+div.protocols-contents div.availability div,
+div.protocols-contents div.languages div,
+div.protocols-contents div.clearances div {
+    padding: 0 0 0 20px;
+}
+
+
+/*
 
 div.protocols-contents div.availability {
     width: 170px;
@@ -275,6 +280,9 @@ div.protocols-contents div.availability {
 div.protocols-contents div.clearances {
     border-right: none;
 }
+
+*/
+
 
 /*
 div.protocols-contents div.documentation-top {
