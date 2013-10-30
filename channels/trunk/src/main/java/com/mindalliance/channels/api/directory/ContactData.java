@@ -376,6 +376,10 @@ public class ContactData implements Serializable {
             return ChannelsUser.normalizeFullName( userInfo.getFullName() );
     }
 
+    public String getUserFullName() {
+        return userInfo == null ? null : ChannelsUser.normalizeFullName( userInfo.getFullName() );
+    }
+
     @XmlElement
     public String getId() {
         return commitment == null ? anchor() : null;

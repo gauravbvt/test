@@ -53,7 +53,10 @@ public class ContactDataPanel extends AbstractDataPanel {
     }
 
     private void addName() {
-        add( new Label( "name", contactData.getNormalizedContactName() ) );
+        String userFullName = contactData.getUserFullName();
+        Label userFullNameLabel = new Label( "name", userFullName == null ? "" : userFullName + ", " );
+        userFullNameLabel.setVisible( userFullName != null );
+        add(  userFullNameLabel );
     }
 
     private void addEmployment() {

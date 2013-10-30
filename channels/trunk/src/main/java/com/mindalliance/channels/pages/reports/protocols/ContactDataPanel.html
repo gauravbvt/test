@@ -13,15 +13,18 @@
    <span>
    <a wicket:id="anchor" name="tbd"></a>
 	<div class="name-employment">
-        <h4 wicket:id="name">John Doe</h4>
-        <h5 wicket:id="employment">VP Sales ,Northeast, ACME Inc.</h5>
+        <h4>
+            <span wicket:id="name">John Doe</span>
+            <span wicket:id="employment">VP Sales ,Northeast, ACME Inc.</span>
+        </h4>
 
         <div class="supervisors" wicket:id="supervisors">
             <label>Supervisors</label>
-
-            <div wicket:id="contacts">  <!-- repeated -->
-                <div wicket:id="contact">[contact link panel]</div>
-            </div>
+            <ul>
+                <li wicket:id="contacts">  <!-- repeated -->
+                    <span wicket:id="contact">[contact link panel]</span>
+                </li>
+            </ul>
         </div>
     </div>
    <div class="work" wicket:id="work">

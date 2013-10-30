@@ -22,6 +22,7 @@ import java.util.List;
 public class AgencyContactPanel extends AbstractDataPanel {
 
     private AgencyData agencyData;
+    private WebMarkupContainer orgContactDetails;
 
     public AgencyContactPanel( String id,
                                String serverUrl,
@@ -39,11 +40,28 @@ public class AgencyContactPanel extends AbstractDataPanel {
 
     private void init() {
         addName();
+        addOrgContactDetails();
+    }
+
+    private void addOrgContactDetails() {
+        orgContactDetails = new WebMarkupContainer( "orgContactDetails" );
+        orgContactDetails.setVisible( hasContactDetails() );
+        add( orgContactDetails );
         addParent();
         addStreetAddress();
         addContactInfo();
         addMission();
         addDocumentation();
+    }
+
+    private boolean hasContactDetails() {
+        return agencyData != null && (
+                agencyData.getParent() != null
+                        || ( agencyData.getAddress() != null && !agencyData.getAddress().isEmpty() )
+                        || !agencyData.getChannels().isEmpty()
+                        || ( agencyData.getMission() == null && !agencyData.getMission().isEmpty() )
+                        || !agencyData.getDocumentation().hasReportableDocuments()
+        );
     }
 
     private void addName() {
@@ -52,11 +70,11 @@ public class AgencyContactPanel extends AbstractDataPanel {
 
     private void addParent() {
         AgencyData parentData = agencyData.getParent();
-        add(  makeAttributeContainer( "parent", parentData == null ? null : parentData.getName() ) );
+        orgContactDetails.add( makeAttributeContainer( "parent", parentData == null ? null : parentData.getName() ) );
     }
 
     private void addStreetAddress() {
-        add( makeAttributeContainer(
+        orgContactDetails.add( makeAttributeContainer(
                 "streetAddress",
                 agencyData == null ? "???" : agencyData.getAddress() ) );
     }
@@ -67,7 +85,7 @@ public class AgencyContactPanel extends AbstractDataPanel {
                 : agencyData.getChannels();
         WebMarkupContainer addressContainer = new WebMarkupContainer( "mediaAddresses" );
         addressContainer.setVisible( !mediaAddresses.isEmpty() );
-        add( addressContainer );
+        orgContactDetails.add( addressContainer );
         addressContainer.add(
                 !mediaAddresses.isEmpty()
                         ? new ContactAddressesPanel( "addresses", mediaAddresses, getFinder() )
@@ -76,7 +94,7 @@ public class AgencyContactPanel extends AbstractDataPanel {
     }
 
     private void addMission() {
-        add( makeAttributeContainer(
+        orgContactDetails.add( makeAttributeContainer(
                 "mission",
                 agencyData == null ? "???" : agencyData.getMission() ) );
     }
@@ -85,7 +103,7 @@ public class AgencyContactPanel extends AbstractDataPanel {
         DocumentationData documentationData = agencyData.getDocumentation();
         DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, getFinder() );
         docPanel.setVisible( documentationData.hasReportableDocuments() );
-        add( docPanel );
+        orgContactDetails.add( docPanel );
     }
 
 }
