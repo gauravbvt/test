@@ -59,12 +59,12 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font size for node labels.
      */
-    public static final String NODE_FONT_SIZE = "10";
+    public static final String NODE_FONT_SIZE = "8";
 
     /**
      * Distance for edge head and tail labels.
      */
-    protected static final String LABEL_DISTANCE = "1.0";
+    protected static final String LABEL_DISTANCE = "2.0";
 
     /**
      * Distance for edge head and tail labels.

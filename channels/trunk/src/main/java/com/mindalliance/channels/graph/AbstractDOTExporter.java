@@ -128,10 +128,12 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
         for ( E e : g.edgeSet() ) {
             Thread.sleep(0);
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
+/*
             if ( metaProvider.getEdgeLabelProvider() != null ) {
                 String label = metaProvider.getEdgeLabelProvider().getEdgeName( e );
                 attributes.add( new DOTAttribute( "label", label ) );
             }
+*/
             if ( metaProvider.getDOTAttributeProvider() != null ) {
                 attributes.addAll( metaProvider.getDOTAttributeProvider().getEdgeAttributes( communityService,
                                                                                              e,
