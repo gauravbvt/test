@@ -82,8 +82,9 @@ div.protocols-contents div.documentation-top label {
     color: #333333;
 }
 
-div.protocols-contents h4.taskName,
-div.checklist h4.checklist-title {
+div.protocols-contents h4.task-name,
+div.protocols-contents h4.comm-context,
+div.protocols-contents h4.checklist-title {
     border-bottom: 5px solid #CCCCCC;
     font-size: 22px;
     font-weight: normal;
@@ -93,7 +94,7 @@ div.checklist h4.checklist-title {
     text-transform: uppercase;
 }
 
-div.protocols-contents div.expected-queries h4.taskName {
+div.protocols-contents div.expected-queries h4.task-name {
     border-bottom: none;
     margin: 0;
     padding: 15px 0 0 0px;
@@ -105,6 +106,7 @@ div.protocols-contents div.expected-queries div.triggered {
     padding: 10px 0 0 0;
 }
 
+/*
 div.protocols-contents h5 {
     color: #333333;
     font-size: 13px;
@@ -113,11 +115,18 @@ div.protocols-contents h5 {
     text-transform: capitalize;
     line-height: 150%;
 }
+*/
 
 div.protocols-contents div.contact h5 {
+    color: #333333;
+    font-size: 13px;
+    font-weight: bold;
     padding: 5px 0 0;
+    text-transform: capitalize;
+    line-height: 150%;
 }
 
+/*
 div.protocols-contents h6 {
     background: none repeat scroll 0 0 #E8E8E8;
     color: #999999;
@@ -128,14 +137,21 @@ div.protocols-contents h6 {
     text-align: right;
     display: none;
 }
+*/
 
-div.protocols-contents label {
+div.protocols-contents label,
+div.protocols-contents h5,
+div.protocols-contents h6 {
     color: #000000;
     display: block;
     font-size: 12px;
     font-weight: bold;
     padding: 0 0 5px 0;
     text-transform: uppercase;
+}
+
+div.protocols-contents h5 {
+    padding: 10px 0 15px;
 }
 
 div.protocols-contents label.sub-task {
@@ -347,7 +363,7 @@ div.protocols-contents ul.askedYou li ul,
 div.protocols-contents ul.notifiedYou li ul {
     list-style: none outside none;
     margin: 0;
-    padding: 10px 0 0;
+    padding: 0;
 }
 
 div.protocols-contents div.observations-toc ul li ul {
@@ -363,6 +379,12 @@ div.protocols-contents div.ongoing-toc ul li {
     margin: 5px 0 5px 20px;
     padding: 0 0 5px;
 }
+
+div.protocols-contents ul.askedYou div,
+div.protocols-contents ul.notifiedYou div {
+    padding: 0 0 5px 25px;
+}
+
 
 div.protocols-contents span.task-name {
 
@@ -420,10 +442,16 @@ div.protocols-contents div.ongoing-toc h3 {
 */
 
 div.protocols-contents div.triggered div.procedures,
-div.protocols-contents div.ongoingProcedures {
+div.protocols-contents div.ongoingProcedures,
+div.protocols-contents div.communications-toc div.toc-cont {
     border-left: 5px solid #CCCCCC;
     margin: 0 0 40px;
     padding: 0 0 15px 25px;
+}
+
+div.protocols-contents div.communications-toc div.toc-cont {
+    margin: 0;
+    padding-bottom: 0;
 }
 
 div.protocols-contents div.triggered div.trigger,

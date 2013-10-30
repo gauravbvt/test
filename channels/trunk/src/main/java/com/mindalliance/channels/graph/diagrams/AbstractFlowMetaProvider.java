@@ -54,12 +54,12 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font for node labels
      */
-    public static final String NODE_FONT = "AvantGarde-Book";
+    public static final String NODE_FONT = "DejaVuSans";
 
     /**
      * Font size for node labels.
      */
-    public static final String NODE_FONT_SIZE = "8";
+    public static final String NODE_FONT_SIZE = "10";
 
     /**
      * Distance for edge head and tail labels.
@@ -84,7 +84,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font of highlighted node.
      */
-    protected static final String HIGHLIGHT_NODE_FONT = "AvantGarde-Book";
+    protected static final String HIGHLIGHT_NODE_FONT = "DejaVuSans";
     /**
      * Color for implied flows.
      */

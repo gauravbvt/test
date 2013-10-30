@@ -320,6 +320,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                 isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
             }
             // head and tail labels
+            /*
             String headLabel = null;
             String tailLabel = null;
             if ( edge.isAll() ) {
@@ -349,6 +350,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
+            */
             // Issue coloring
             if ( !isInvisible( edge ) ) {
                 boolean hasErrors = indicateError( edge, communityService.getPlanService() );

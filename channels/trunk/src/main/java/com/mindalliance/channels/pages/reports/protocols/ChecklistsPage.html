@@ -77,48 +77,44 @@
         <div class="communications-toc" wicket:id="communications-toc">
             <h3>Tasks I do when I'm notified or asked for information</h3>
 
-            <div wicket:id="inContextCommunications"> <!-- repeated -->
-                <h5 wicket:id="communicationContext">During responding to bomb alert</h5>
+            <div class="toc-cont" wicket:id="inContextCommunications"> <!-- repeated -->
+                <h4 class="comm-context" wicket:id="communicationContext">During responding to bomb alert</h4>
 
-                <div class="toc-cont">
+                <div wicket:id="interlocutors" class="interlocutors">
 
-                    <div wicket:id="interlocutors" class="interlocutors">
+                    <ul class="askedYou">
+                        <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
+                            <h5>When asked for
+                            &quot;<span wicket:id="request" class="info">a request</span>&quot;
+                            </h5>
+                            <div wicket:id="initiations"> <!-- repeated -->
+                                <h6>By <span wicket:id="contact">[contact link panel]</span>, I do</h6>
+                                <ul>
+                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                        <span wicket:id="checklistLink">a task name</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
 
-                        <ul class="askedYou">
-                            <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
-                                <div class="toc-trigger">
-                                    When asked for
-                                    &quot;<span wicket:id="request" class="info">a request</span>&quot;
-                                    <div wicket:id="initiations"> <!-- repeated -->
-                                        By <span wicket:id="contact">[contact link panel]</span>, I do
-                                        <ul>
-                                            <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                                <span wicket:id="checklistLink">a task name</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <ul class="notifiedYou">
-                            <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
-                                <div class="toc-trigger">
-                                    When notified of
-                                    &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
-                                    <div wicket:id="initiations"> <!-- repeated -->
-                                        By <span wicket:id="contact">[contact link panel]</span>, I do
-                                        <ul>
-                                            <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
-                                                <span wicket:id="checklistLink">a task name</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="notifiedYou">
+                        <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
+                            <h5>When notified of
+                            &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
+                            </h5>
+                            <div wicket:id="initiations"> <!-- repeated -->
+                                <h6>By <span wicket:id="contact">[contact link panel]</span>, I do</h6>
+                                <ul>
+                                    <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                        <span wicket:id="checklistLink">a task name</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+
             </div>
         </div>
     </div>
