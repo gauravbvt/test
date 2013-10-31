@@ -120,7 +120,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		
-	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Click on Send button
+	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Select the Suggestion option, Click on Send button
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
