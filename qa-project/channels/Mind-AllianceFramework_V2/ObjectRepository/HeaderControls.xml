@@ -21,6 +21,15 @@
 			<Title>Send Feedback</Title>
 	</Element>
 	
+	<Element>
+			<GivenName>Send Feedback Alert Window</GivenName>
+			<Title>Feedback sent. Thank you</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>Send Blank Feedback Alert Window</GivenName>
+			<Title>Please enter a short text</Title>
+	</Element>
 	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
@@ -29,6 +38,77 @@
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText>Send Feedback</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Send Feedback Text Field</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div/textarea</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Send Feedback Button</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Send Feedback As Question</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>	Send Feedback As Problem</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 
+   <Element>
+ 		<GivenName>	Send Feedback As Suggestion</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li[2]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Send Feedback DropDown</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Urgent Checkbox</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[2]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
  	
