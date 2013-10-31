@@ -1604,6 +1604,16 @@ public interface QueryService {
     String getFullTitle( String sep, Part part );
 
     /**
+     * Get simplified title for the part.
+     *
+     * @param sep  separator string
+     * @param part a part
+     * @return a string
+     */
+    String getSimplifiedTitle( String sep, Part part );
+
+
+    /**
      * Get all commitments in the plan.
      *
      * @return commitments

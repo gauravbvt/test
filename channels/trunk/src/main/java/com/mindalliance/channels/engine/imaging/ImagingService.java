@@ -101,9 +101,10 @@ public interface ImagingService {
      * @param communityService community service
      * @param part a specable
      * @param assignments a list of assignments
+     * @param simplified whether simplified
      * @return a string
      */
-    String findIconName( CommunityService communityService,  Specable part, Assignments assignments );
+    String findIconName( CommunityService communityService,  Specable part, Assignments assignments, boolean simplified );
 
     /**
      * Get icon directory.

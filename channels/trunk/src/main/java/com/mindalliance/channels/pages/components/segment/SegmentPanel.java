@@ -348,6 +348,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         super.addFlowMapViewingControls();
         addMaximizeControl();
         addMinimizeFlowMapControl();
+        addSimplifyControl();
     }
 
     private void addMaximizeControl() {
@@ -360,6 +361,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
+                props += isSimplified() ? " simplify" : "";
                 maximized = !maximized;
                 addFlowMapViewingControls();
                 target.add( getControlsContainer() );
@@ -393,6 +395,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addTipTitle( icon, new Model<String>( minimized ? "Shrink back forms" : "Stretch up forms" ) );
         shrinkExpand.add( icon );
     }
+
 
     public void changed( Change change ) {
         if ( change.isUpdated() && change.isForInstanceOf( SegmentObject.class ) ) {
@@ -647,6 +650,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             setShowingGoals( property.contains( "showGoals" ) );
             setShowingConnectors( property.contains( "showConnectors" ) );
             setHidingNoop( property.contains( "hideNoop" ) );
+            setSimplified( property.contains( "simplify" ) );
         }
         addFlowDiagram();
         setPartOrFlowUpdated( false );

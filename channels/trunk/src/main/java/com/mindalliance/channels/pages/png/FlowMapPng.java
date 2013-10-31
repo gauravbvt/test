@@ -43,6 +43,8 @@ public class FlowMapPng extends DiagramPng {
                 && parameters.get( "showingConnectors" ).toBoolean();
         boolean hidingNoop = parameters.getNamedKeys().contains( "hidingNoop" )
                 && parameters.get( "hidingNoop" ).toBoolean();
+        boolean simplifying = parameters.getNamedKeys().contains( "simplifying" )
+                && parameters.get( "simplifying" ).toBoolean();
         return diagramFactory.newFlowMapDiagram(
                 segment,
                 node,
@@ -50,7 +52,8 @@ public class FlowMapPng extends DiagramPng {
                 orientation,
                 showingGoals,
                 showingConnectors,
-                hidingNoop );
+                hidingNoop,
+                simplifying );
     }
 
 }

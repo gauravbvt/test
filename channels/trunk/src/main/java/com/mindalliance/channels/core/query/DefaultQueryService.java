@@ -2997,24 +2997,11 @@ public abstract class DefaultQueryService implements QueryService {
         String label = "";
         if ( part.getActor() != null ) {
             label += part.getActor().getName();
-            /*if ( part.getActor().isType() ) {
-                Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null *//*&& !impliedActor.isArchetype()*//* ) {
-                    label += " (" + impliedActor.getName() + ")";
-                }
-            }*/
         }
         if ( part.getRole() != null ) {
             if ( !label.isEmpty() )
                 label += sep;
-            /*if ( part.getActor() == null ) {
-                Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null *//*&& !impliedActor.isArchetype()*//* ) {
-                    label += impliedActor.getName();
-                    label += " ";
-                }
-            }*/
-            if ( !label.isEmpty() )
+             if ( !label.isEmpty() )
                 label += "as ";
             label += part.getRole().getName();
         }
@@ -3036,6 +3023,31 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return label;
     }
+
+    /**
+     * Get extended title for the part.
+     *
+     * @param sep  separator string
+     * @param part a part
+     * @return a string
+     */
+    public String getSimplifiedTitle( String sep, Part part ) {
+        String label = "";
+        if ( part.getActor() != null ) {
+            label += part.getActor().getName();
+        } else  {
+            if ( part.getRole() != null ) {
+                if ( !label.isEmpty() )
+                    label += sep;
+                label += part.getRole().getName();
+            }
+        }
+        if ( !label.isEmpty() )
+            label += sep;
+        label += part.getTask();
+        return label;
+    }
+
 
     @Override
     public Commitments getAllCommitments() {

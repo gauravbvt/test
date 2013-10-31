@@ -39,11 +39,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                 QueryService queryService ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, queryService );
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, false, queryService );
     }
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                boolean showingGoals, boolean showingConnectors, boolean hidingNoop,
+                                boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
                                 QueryService queryService ) {
         super( modelObject,
                 outputFormat,
@@ -51,7 +51,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 analyst,
                 showingGoals,
                 showingConnectors,
-                hidingNoop, queryService );
+                hidingNoop,
+                simplified,
+                queryService );
     }
 
     @Override
@@ -118,15 +120,19 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         return new EdgeNameProvider<Flow>() {
             @Override
             public String getEdgeName( Flow flow ) {
-                String flowName = flow.getName();
-                if ( flow.isAskedFor() && !flowName.endsWith( "?" ) )
-                    flowName += "?";
-                if ( flow.isProhibited() )
-                    flowName += " -PROHIBITED-";
-                if ( !flow.getRestrictions().isEmpty() )
-                    flowName += " (if " + flow.getRestrictionString( true ) + ")";
-                String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
-                return sanitize( label );
+                if ( isSimplified() ) {
+                    return "";
+                } else {
+                    String flowName = flow.getName();
+                    if ( flow.isAskedFor() && !flowName.endsWith( "?" ) )
+                        flowName += "?";
+                    if ( flow.isProhibited() )
+                        flowName += " -PROHIBITED-";
+                    if ( !flow.getRestrictions().isEmpty() )
+                        flowName += " (if " + flow.getRestrictionString( true ) + ")";
+                    String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+                    return sanitize( label );
+                }
             }
         };
     }
@@ -136,17 +142,20 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
  /*       if ( flow.isAskedFor() && !flowName.endsWith( "?" ) )
             flowName += "?";
 */
-        if ( flow.isProhibited() )
-            flowName += " -PROHIBITED-";
-        if ( !flow.getRestrictions().isEmpty() ) {
-            if ( highlighted )
-                flowName += " (if " + flow.getRestrictionString( true ) + ")";
-            else
-                flowName += "*";
+        if ( isSimplified() ) {
+            return "";
+        } else {
+            if ( flow.isProhibited() )
+                flowName += " -PROHIBITED-";
+            if ( !flow.getRestrictions().isEmpty() ) {
+                if ( highlighted )
+                    flowName += " (if " + flow.getRestrictionString( true ) + ")";
+                else
+                    flowName += "*";
+            }
+            String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+            return sanitize( label );
         }
-        String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
-        return sanitize( label );
-
     }
 
     @Override
@@ -216,7 +225,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !isInvisible( vertex ) ) {
-                if ( indicateError( vertex, communityService.getPlanService() ) ) {
+                if ( !isSimplified() && indicateError( vertex, communityService.getPlanService() ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
                             sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
@@ -304,7 +313,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "weight", "2.0" ) );
             addTailArrowHead( edge, list );
             list.add( new DOTAttribute( "style",
-                    conceptual
+                    isSimplified()
+                            ? "normal"
+                            : conceptual
                             ? edge.isCritical()
                             ? "dashed"
                             : "dotted"
@@ -320,39 +331,41 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                 isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
             }
             // head and tail labels
-            String headLabel = null;
-            String tailLabel = null;
-            if ( edge.isAll() ) {
-                if ( edge.isTerminatingToTarget() )
-                    headLabel = "(stop all)";
-                else if ( edge.isTriggeringToTarget() )
-                    headLabel = "(start all)";
-                else {
-                    headLabel = "(all)";
+            if ( !isSimplified() ) {
+                String headLabel = null;
+                String tailLabel = null;
+                if ( edge.isAll() ) {
+                    if ( edge.isTerminatingToTarget() )
+                        headLabel = "(stop all)";
+                    else if ( edge.isTriggeringToTarget() )
+                        headLabel = "(start all)";
+                    else {
+                        headLabel = "(all)";
+                    }
+                } else {
+                    if ( edge.isTerminatingToTarget() )
+                        headLabel = "(stop)";
+                    else if ( edge.isTriggeringToTarget() )
+                        headLabel = "(start)";
                 }
-            } else {
-                if ( edge.isTerminatingToTarget() )
-                    headLabel = "(stop)";
-                else if ( edge.isTriggeringToTarget() )
-                    headLabel = "(start)";
-            }
-            if ( edge.isTerminatingToSource() ) {
-                tailLabel = "(stop)";
-            } else if ( edge.isTriggeringToSource() ) {
-                tailLabel = "(start)";
-            }
-            if ( headLabel != null )
-                list.add( new DOTAttribute( "headlabel", headLabel ) );
-            if ( tailLabel != null )
-                list.add( new DOTAttribute( "taillabel", tailLabel ) );
-            if ( headLabel != null || tailLabel != null ) {
-                list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
-                list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
+                if ( edge.isTerminatingToSource() ) {
+                    tailLabel = "(stop)";
+                } else if ( edge.isTriggeringToSource() ) {
+                    tailLabel = "(start)";
+                }
+                if ( headLabel != null )
+                    list.add( new DOTAttribute( "headlabel", headLabel ) );
+                if ( tailLabel != null )
+                    list.add( new DOTAttribute( "taillabel", tailLabel ) );
+                if ( headLabel != null || tailLabel != null ) {
+                    list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
+                    list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
+                }
             }
             // Issue coloring
             if ( !isInvisible( edge ) ) {
                 boolean hasErrors = indicateError( edge, communityService.getPlanService() );
-                if ( hasErrors ) {
+                if ( !isSimplified() && hasErrors ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 }
@@ -373,7 +386,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     edgeTooltip = sanitize( edge.getName() );
                 }
                 list.add( new DOTAttribute( "edgetooltip", edgeTooltip ) );
-             }
+            }
             return list;
         }
 
@@ -411,7 +424,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean isOverridden( Flow flow ) {
         if ( graphProperties != null && graphProperties.get( "overriddenFlows" ) != null ) {
             List<Flow> impliedFlows = (List<Flow>) graphProperties.get( "overriddenFlows" );
@@ -421,7 +434,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean isOverridden( Node node ) {
         if ( node.isPart() && graphProperties != null && graphProperties.get( "overriddenParts" ) != null ) {
             List<Part> impliedParts = (List<Part>) graphProperties.get( "overriddenParts" );

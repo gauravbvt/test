@@ -46,12 +46,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * Whether to hide conceptual tasks and flows.
      */
     private boolean hidingNoop;
+    /**
+     * whether to show a simplified flow map.
+     */
+    private boolean simplified;
 
     public FlowMapDiagramPanel( String id,
                                 IModel<Segment> segmentModel,
                                 IModel<Part> partModel,
                                 Settings settings ) {
-        this( id, segmentModel, partModel, settings, false, false, false );
+        this( id, segmentModel, partModel, settings, false, false, false, false );
     }
 
     public FlowMapDiagramPanel( String id,
@@ -60,13 +64,15 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 Settings settings,
                                 boolean showingGoals,
                                 boolean showingConnectors,
-                                boolean hidingNoop ) {
+                                boolean hidingNoop,
+                                boolean simplified ) {
         super( id, settings );
         this.segmentModel = segmentModel;
         this.partModel = partModel;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
+        this.simplified = simplified;
         init();
     }
 
@@ -90,7 +96,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 getOrientation(),
                 showingGoals,
                 showingConnectors,
-                hidingNoop );
+                hidingNoop,
+                simplified );
     }
 
     /**
@@ -131,6 +138,11 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&hidingNoop=" );
             sb.append( hidingNoop );
         }
+        if ( simplified ) {
+            sb.append( "&simplifying=" );
+            sb.append( simplified );
+        }
+
         sb.append( "&");
         sb.append( TICKET_PARM );
         sb.append( '=' );
@@ -186,6 +198,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
+                props += isSimplified() ? " simplify" : "";
                 change.setProperty( props );
                 change.setScript( js );
                 this.update( target, change );
@@ -218,6 +231,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String props = isShowingGoals() ? "showGoals" : "";
             props += isShowingConnectors() ? " showConnectors" : "";
             props += isHidingNoop() ? " hideNoop" : "";
+            props += isSimplified() ? " simplify" : "";
             change.setProperty( props );
             change.setScript( js );
             update( target, change );
@@ -247,6 +261,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
 
     public boolean isHidingNoop() {
         return hidingNoop;
+    }
+
+    public boolean isSimplified() {
+        return simplified;
     }
 }
 

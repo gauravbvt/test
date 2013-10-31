@@ -80,10 +80,11 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param showingGoals      whether to show goals
      * @param showingConnectors whether to show connectors
      * @param hidingNoop        whether to hide non-operation tasks and flows
+     * @param simplified        whether to show s simplified flow map
      * @return a flow map diagram
      */
     Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation,
-                               boolean showingGoals, boolean showingConnectors, boolean hidingNoop );
+                               boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified );
 
     /**
      * Instantiates a plan map diagram.

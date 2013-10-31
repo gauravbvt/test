@@ -942,17 +942,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
             boolean showGoals;
             boolean showConnectors;
             boolean hideNoop;
+            boolean simplify;
             String props = change.getProperty();
             showGoals = props != null && props.contains( "showGoals" );
             showConnectors = props != null && props.contains( "showConnectors" );
             hideNoop = props != null && props.contains( "hideNoop" );
+            simplify = props != null && props.contains( "simplify" );
             maximizedFlowPanel = new MaximizedFlowPanel(
                     "maximized-flow",
                     new PropertyModel<Segment>( this, "segment" ),
                     new PropertyModel<Part>( this, "part" ),
                     showGoals,
                     showConnectors,
-                    hideNoop );
+                    hideNoop,
+                    simplify );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }

@@ -759,4 +759,25 @@ public final class ChannelsUtils {
         return name.replaceAll( "\"", " " );
     }
 
+    public static String split( String string, String separator, int maxLines, int maxLineLength ) {
+        String[] tokens = StringUtils.split( string, " " );
+        StringBuilder sb = new StringBuilder(  );
+        String line = "";
+        int lineCount = 0;
+        for ( int i = 0; i < tokens.length; i++ ) {
+            line += tokens[i];
+            if (line.length() >= maxLineLength && lineCount < maxLines ) {
+                sb.append( line );
+                line = "";
+                lineCount++;
+                if ( i < tokens.length - 1 ) {
+                    sb.append( separator );
+                }
+            } else {
+                line += " ";
+            }
+        }
+        sb.append( line );
+        return sb.toString();
+    }
 }

@@ -93,12 +93,12 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
 
     @Override
     public Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation ) {
-        return newFlowMapDiagram( segment, node, diagramSize, orientation, false, false, false );
+        return newFlowMapDiagram( segment, node, diagramSize, orientation, false, false, false, false );
     }
 
     @Override
     public Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation,
-                                      boolean showingGoals, boolean showingConnectors, boolean hidingNoop ) {
+                                      boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified ) {
         LOG.debug( "Making flow map on " + segment + "/" + node );
         return new FlowMapDiagram( segment,
                                    node,
@@ -106,7 +106,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                                    orientation,
                                    showingGoals,
                                    showingConnectors,
-                                   hidingNoop );
+                                   hidingNoop,
+                                   simplified );
     }
 
     @Override

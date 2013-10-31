@@ -492,10 +492,13 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( CommunityService communityService, Specable part, Assignments assignments ) {
+    public String findIconName( CommunityService communityService,
+                                Specable part,
+                                Assignments assignments,
+                                boolean simplified ) {
 
         Assignments partAssignments = assignments.withAll( part );
-        String specific = findSpecificIcon( communityService, part, partAssignments );
+        String specific = simplified ? null : findSpecificIcon( communityService, part, partAssignments );
         return specific == null ? findGenericIconName( part )
                 : specific;
     }

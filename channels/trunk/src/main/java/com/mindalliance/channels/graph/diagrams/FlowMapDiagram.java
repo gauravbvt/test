@@ -52,23 +52,28 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
      * Whether to hide conceptual tasks and flows.
      */
     private boolean hidingNoop;
+    /**
+     * Whether to show a simplified flow map.
+     */
+    private boolean simplified;
 
     public FlowMapDiagram( Segment segment, Node selectedNode, double[] diagramSize, String orientation ) {
-        this( segment, selectedNode, diagramSize, orientation, false, false, false );
+        this( segment, selectedNode, diagramSize, orientation, false, false, false, false );
     }
 
     public FlowMapDiagram( Segment segment, Node selectedNode, double[] diagramSize, String orientation,
-                           boolean showingGoals, boolean showingConnectors, boolean hidingNoop ) {
+                           boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified ) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.selectedNode = selectedNode;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
+        this.simplified = simplified;
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
                         DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
@@ -82,12 +87,13 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
         if ( selectedNode != null )
             graphRenderer.highlightVertex( selectedNode );
         FlowMapMetaProvider metaProvider = new FlowMapMetaProvider( segment,
-                                                                    outputFormat,
-                                                                    diagramFactory.getImageDirectory(),
-                                                                    analyst,
-                                                                    showingGoals,
-                                                                    showingConnectors,
-                                                                    hidingNoop,
+                outputFormat,
+                diagramFactory.getImageDirectory(),
+                analyst,
+                showingGoals,
+                showingConnectors,
+                hidingNoop,
+                simplified,
                 planService );
         metaProvider.setGraphProperties( ( (DirectedMultiGraphWithProperties) graph ).getProperties() );
         if ( diagramSize != null )

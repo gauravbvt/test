@@ -107,14 +107,17 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     private boolean hidingNoop;
 
+    private boolean simplified;
+
     protected AbstractFlowMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                        boolean showingGoals, boolean showingConnectors, boolean hidingNoop,
+                                        boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
                                         QueryService queryService ) {
         super( outputFormat, imageDirectory, analyst, queryService );
         this.context = modelObject;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
+        this.simplified = simplified;
     }
 
     public boolean isShowingGoals() {
@@ -127,6 +130,10 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     public boolean isHidingNoop() {
         return hidingNoop;
+    }
+
+    public boolean isSimplified() {
+        return simplified;
     }
 
     /**
@@ -163,7 +170,9 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     protected String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
-            return getQueryService().getFullTitle( "|", part );
+            return simplified
+                    ? getQueryService().getSimplifiedTitle( "|", part )
+                    : getQueryService().getFullTitle( "|", part );
         } else {
             return "c";
         }
@@ -219,13 +228,14 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                 iconName = "blank";
             else {
                 negated = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
-                                                                                           part ) // todo - this has failed with NullPointerException on timed update - why?
-                                        ? ImagingService.NEGATED
-                                        : "";
+                        part ) // todo - this has failed with NullPointerException on timed update - why?
+                        ? ImagingService.NEGATED
+                        : "";
                 iconName = imagingService.findIconName(
                         communityService,
                         part,
-                        getQueryService().getAssignments() );
+                        getQueryService().getAssignments(),
+                        simplified );
             }
         }
         String name = iconName + ( numLines > 0 ? numLines : "" ) + negated + ".png";

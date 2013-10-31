@@ -37,7 +37,12 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
 
     public DisseminationMetaProvider( SegmentObject segmentObject, String outputFormat, Resource imageDirectory,
                                       Analyst analyst, QueryService queryService ) {
-        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, queryService );
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, false, queryService );
+    }
+
+    @Override
+    public String getGraphOrientation() {
+        return "LR";
     }
 
     @Override

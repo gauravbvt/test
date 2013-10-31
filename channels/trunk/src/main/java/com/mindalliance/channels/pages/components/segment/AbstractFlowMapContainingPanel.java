@@ -51,6 +51,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     private boolean showingConnectors = false;
 
     /**
+     * Whether to simplify the flow map.
+     */
+    private boolean simplified = false;
+
+    /**
      * Width, height dimension contraints on the flow diagram.
      * In inches.
      * None if any is 0.
@@ -113,6 +118,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         this.showingConnectors = showingConnectors;
     }
 
+    public boolean isSimplified() {
+        return simplified;
+    }
+
+    public void setSimplified( boolean simplified ) {
+        this.simplified = simplified;
+    }
+
     public WebMarkupContainer getControlsContainer() {
         return controlsContainer;
     }
@@ -132,7 +145,8 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                         settings,
                         showingGoals,
                         showingConnectors,
-                        hidingNoop );
+                        hidingNoop,
+                        simplified );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
     }
@@ -278,6 +292,35 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 ? "Show flow map at normal size"
                 : "Reduce flow map to fit" ) );
         reduceToFit.add( icon );
+    }
+
+    protected void addSimplifyControl() {
+        // Simplify
+        WebMarkupContainer simplifyFlowMap = new WebMarkupContainer( "simplified" );
+        simplifyFlowMap.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                setSimplified( !isSimplified());
+                addFlowDiagram();
+                target.add( flowMapDiagramPanel );
+                addFlowMapViewingControls();
+                target.add( getControlsContainer() );
+            }
+        } );
+        getControlsContainer().add( simplifyFlowMap );
+        // icon
+        WebMarkupContainer icon = new WebMarkupContainer( "simplify_icon" );
+        icon.add( new AttributeModifier(
+                "src",
+                new Model<String>( isSimplified()
+                        ? "images/simplify_on.png"
+                        : "images/simplify.png" ) ) );
+        addTipTitle(
+                icon,
+                new Model<String>( isSimplified()
+                        ? "Show unsimplified"
+                        : "Show simplified" ) );
+        simplifyFlowMap.add( icon );
     }
 
     protected abstract String getFlowMapDomId();

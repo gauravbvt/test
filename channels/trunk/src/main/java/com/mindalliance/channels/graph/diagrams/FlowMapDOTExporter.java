@@ -15,10 +15,12 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
+import org.apache.commons.lang.StringUtils;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      * Stop vertex.
      */
     private static final String STOP = "__stop__";
+
+    private static final int MAX_LABEL_LINE_LENGTH = 20;
 
     /**
      * Initiating, external parts.
@@ -168,22 +172,32 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
-        String label = sanitize( segment.getEventPhase().toString() )/* + " starts"*/;
-        attributes.add( new DOTAttribute( "label", label ) );
+        String name = sanitize( segment.getEventPhase().toString() );
+        String label = ChannelsUtils.split( name, "|", 4, MAX_LABEL_LINE_LENGTH );
+        attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
+        attributes.add( new DOTAttribute( "margin", "0.11,0.07" ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", label ) );
+        attributes.add( new DOTAttribute( "tooltip", name ) );
         String dirName;
         try {
             dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + "start.png" ) );
+        attributes.add( new DOTAttribute( "image", getStartIcon( dirName, label ) ) );
         out.print( getIndent() );
         out.print( START );
         out.print( "[" );
         out.print( asElementAttributes( attributes ) );
         out.println( "];" );
+    }
+
+    private String getStartIcon( String dirName, String label ) {
+        return dirName + "/" + "start" + ( StringUtils.countMatches( label, "|" ) + 1 ) + ".png";
+    }
+
+    private String getStopIcon( String dirName, String label ) {
+        return dirName + "/" + "stop" + ( StringUtils.countMatches( label, "|" ) + 1 ) + ".png";
     }
 
     private void exportStartedEvents( PrintWriter out, FlowMapMetaProvider metaProvider ) {
@@ -196,17 +210,19 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
             attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
             attributes.add( new DOTAttribute( "labelloc", "b" ) );
-            String label = sanitize( event.getName() );
+            String name = sanitize( event.getName() );
+            String label = ChannelsUtils.split( name, "|", 4, MAX_LABEL_LINE_LENGTH );
+            attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
             attributes.add( new DOTAttribute( "label", label ) );
             attributes.add( new DOTAttribute( "shape", "none" ) );
-            attributes.add( new DOTAttribute( "tooltip", label ) );
+            attributes.add( new DOTAttribute( "tooltip", name ) );
             String dirName;
             try {
                 dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
             } catch ( IOException e ) {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
-            attributes.add( new DOTAttribute( "image", dirName + "/" + "start.png" ) );
+            attributes.add( new DOTAttribute( "image", getStartIcon( dirName, label ) ) );
             out.print( getIndent() );
             out.print( "" + event.getId() );
             out.print( "[" );
@@ -222,10 +238,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
             attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
             attributes.add( new DOTAttribute( "labelloc", "b" ) );
-            String label = sanitize( eventTiming.getEvent().getName() );
-            attributes.add( new DOTAttribute( "label", label ) );
+            String name = sanitize( eventTiming.getEvent().getName() );
+            String label = ChannelsUtils.split( name, "|", 4, MAX_LABEL_LINE_LENGTH );
+            attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
             attributes.add( new DOTAttribute( "shape", "none" ) );
-            attributes.add( new DOTAttribute( "tooltip", label ) );
+            attributes.add( new DOTAttribute( "tooltip", name ) );
             String dirName;
             try {
                 dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
@@ -234,8 +251,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             }
             attributes.add( new DOTAttribute( "image",
                     dirName + "/" + ( eventTiming.isConcurrent() ?
-                            "start.png" :
-                            "stop.png" ) ) );
+                            getStartIcon( dirName, label ) :
+                            getStopIcon( dirName, label ) ) ) );
             out.print( getIndent() );
             out.print( getEventTimingID( eventTiming ) );
             out.print( "[" );
@@ -255,19 +272,21 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
-        String label = segment.getEventPhase().toString();
+        String name = segment.getEventPhase().toString();
         Phase phase = segment.getPhase();
-        label += phase.isPreEvent() ? " succeeds" : " ends";
-        attributes.add( new DOTAttribute( "label", label ) );
+        name += phase.isPreEvent() ? " succeeds" : " ends";
+        String label = ChannelsUtils.split( sanitize( name ), "|", 4, MAX_LABEL_LINE_LENGTH );
+        attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", label ) );
+        attributes.add( new DOTAttribute( "margin", "0.11,0.07" ) );
+        attributes.add( new DOTAttribute( "tooltip", name ) );
         String dirName;
         try {
             dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + "stop.png" ) );
+        attributes.add( new DOTAttribute( "image", getStopIcon( dirName, label ) ) );
         out.print( getIndent() );
         out.print( STOP );
         out.print( "[" );
@@ -361,7 +380,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportEventStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part part : eventStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( part );
-            attributes.add( new DOTAttribute( "headlabel", "(start)" ) );
+            attributes.add( new DOTAttribute( "label", "causes" ) );
             /*attributes.add( new DOTAttribute(
                     "tooltip",
                     sanitize( segment.terminationCause( terminator ) ) ) );*/
@@ -446,11 +465,17 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
-        String label = flow.getName();
-        list.add( new DOTAttribute( "label", label ) );
+        if ( !isSimplified() ) {
+            String label = flow.getName();
+            list.add( new DOTAttribute( "label", label ) );
+        }
         list.add( new DOTAttribute( "tooltip", "Intermediate is bypassed if unreachable" ) );
         flowMapMetaProvider.addTailArrowHead( flow, list );
         return list;
+    }
+
+    private boolean isSimplified() {
+        return ( (AbstractFlowMetaProvider) getMetaProvider() ).isSimplified();
     }
 
 
@@ -496,8 +521,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getSuccessLabel() );
-        attributes.add( new DOTAttribute( "label", label ) );
+        attributes.add( new DOTAttribute( "margin", "0.11,0.07" ) );
+        String label = ChannelsUtils.split( sanitize( goal.getSuccessLabel() ), "|", 4, MAX_LABEL_LINE_LENGTH );
+        attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
         String dirName;
@@ -506,7 +532,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal, part ) ) );
+        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal, part, StringUtils.countMatches( label, "|" ) + 1 ) ) );
         out.print( getIndent() );
         out.print( riskVertexId );
         out.print( "[" );
@@ -514,35 +540,47 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         out.println( "];" );
     }
 
-    private String getGoalIcon( Goal goal, Part part ) {
-        if ( part != null && !isVisible( part ) )
+    private String getGoalIcon( Goal goal, Part part, int numLabelLines ) {
+        String name;
+        if ( part != null && !isVisible( part ) ) {
             return "goal_blank.png";
-        if ( goal.isRiskMitigation() ) {
-            switch ( goal.getLevel() ) {
-                case Low:
-                    return "risk_minor.png";
-                case Medium:
-                    return "risk_major.png";
-                case High:
-                    return "risk_severe.png";
-                case Highest:
-                    return "risk_extreme.png";
-                default:
-                    throw new RuntimeException( "Unknown risk level" );
-            }
         } else {
-            switch ( goal.getLevel() ) {
-                case Low:
-                    return "gain_low.png";
-                case Medium:
-                    return "gain_medium.png";
-                case High:
-                    return "gain_high.png";
-                case Highest:
-                    return "gain_highest.png";
-                default:
-                    throw new RuntimeException( "Unknown gain level" );
+            if ( goal.isRiskMitigation() ) {
+                switch ( goal.getLevel() ) {
+                    case Low:
+                        name = "risk_minor";
+                        break;
+                    case Medium:
+                        name = "risk_major";
+                        break;
+                    case High:
+                        name = "risk_severe";
+                        break;
+                    case Highest:
+                        name = "risk_extreme";
+                        break;
+                    default:
+                        throw new RuntimeException( "Unknown risk level" );
+                }
+            } else {
+                switch ( goal.getLevel() ) {
+                    case Low:
+                        name = "gain_low";
+                        break;
+                    case Medium:
+                        name = "gain_medium";
+                        break;
+                    case High:
+                        name = "gain_high";
+                        break;
+                    case Highest:
+                        name = "gain_highest";
+                        break;
+                    default:
+                        throw new RuntimeException( "Unknown gain level" );
+                }
             }
+            return name + Integer.toString( numLabelLines ) + ".png";
         }
     }
 

@@ -24,11 +24,13 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
             IModel<Part> partModel,
             boolean showingGoals,
             boolean showingConnectors,
-            boolean hidingNoop ) {
+            boolean hidingNoop,
+            boolean simplified ) {
         super( id, segmentModel, partModel, null );
         setShowingGoals( showingGoals );
         setShowingConnectors( showingConnectors );
         setHidingNoop( hidingNoop );
+        setSimplified( simplified );
         init();
     }
 
@@ -45,6 +47,7 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
     protected void addFlowMapViewingControls() {
         super.addFlowMapViewingControls();
         addMinimizeControl();
+        addSimplifyControl();
     }
 
     private void addMinimizeControl() {
@@ -56,6 +59,7 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
+                props += isSimplified() ? " simplify" : "";
                 update( target, new Change(
                         Change.Type.Minimized,
                         getSegment(),
