@@ -32,7 +32,7 @@ import com.mindalliance.pages.LoginPage;
 
 /**
  * Test Case ID: CH0004_SendFeedback
- * Summary: Verify that the "Home" page renders
+ * Summary: Send Feedback from Collaboration Templates Page
  * @author Administrator
  *
  */

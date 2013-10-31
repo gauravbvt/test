@@ -31,6 +31,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * Test Case ID: CH0008_SendFeedbackAsSuggestion
+ * Summary: Send Feedback as Suggestion
+ * @author Administrator
+ *
+ */
 
 public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 

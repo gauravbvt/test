@@ -31,7 +31,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
-
+/**
+ * Test Case ID: CH0006_SendFeedbackAsQuestion
+ * Summary: Send Feedback as Question
+ * @author Administrator
+ *
+ */
 public class CH0006_SendFeedBackAsQuestion extends TestCase {
 
 	public Hashtable<String, String> testData;

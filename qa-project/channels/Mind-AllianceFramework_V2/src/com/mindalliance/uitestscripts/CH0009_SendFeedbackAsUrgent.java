@@ -31,6 +31,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * Test Case ID: CH0009_SendFeedbackAsUrgent
+ * Summary: Send Feedback as 'Urgent'
+ * @author Administrator
+ *
+ */
 
 public class CH0009_SendFeedbackAsUrgent extends TestCase {
 
