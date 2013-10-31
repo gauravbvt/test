@@ -232,14 +232,21 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                     vertex,
                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
-                    String tooltip = vertex.getTitle();
+                    String tooltip;
                     if ( vertex.isPart() ) {
-                        List<Actor> partActors = communityService.getPlanService().findAllActualActors( ( (Part) vertex ).resourceSpec() );
-                        if ( partActors.size() > 1 ) {
-                            tooltip = "Executed by " + sanitize( listActors( partActors ) );
+                        tooltip = isSimplified()
+                                ? getQueryService().getFullTitle( " ", (Part) vertex )
+                                : vertex.getTitle();
+                        if ( !isSimplified() ) {
+                            List<Actor> partActors = communityService.getPlanService().findAllActualActors( ( (Part) vertex ).resourceSpec() );
+                            if ( partActors.size() > 1 ) {
+                                tooltip = "Executed by " + listActors( partActors );
+                            }
                         }
+                    } else {
+                        tooltip = vertex.getTitle();
                     }
-                    list.add( new DOTAttribute( "tooltip", tooltip ) );
+                    list.add( new DOTAttribute( "tooltip", sanitize( tooltip ) ) );
                 }
             }
             if ( vertex.isConnector() ) {
@@ -377,7 +384,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 }
                 list.add( new DOTAttribute( "labeltooltip", labelTooltip ) );
                 String edgeTooltip;
-                if ( hasErrors ) {
+                if ( !isSimplified() && hasErrors ) {
                     edgeTooltip =
                             sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                     edge,
@@ -424,7 +431,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean isOverridden( Flow flow ) {
         if ( graphProperties != null && graphProperties.get( "overriddenFlows" ) != null ) {
             List<Flow> impliedFlows = (List<Flow>) graphProperties.get( "overriddenFlows" );
@@ -434,7 +441,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean isOverridden( Node node ) {
         if ( node.isPart() && graphProperties != null && graphProperties.get( "overriddenParts" ) != null ) {
             List<Part> impliedParts = (List<Part>) graphProperties.get( "overriddenParts" );
