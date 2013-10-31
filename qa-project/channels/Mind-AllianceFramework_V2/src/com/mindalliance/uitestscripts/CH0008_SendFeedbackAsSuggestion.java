@@ -85,7 +85,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method is used to send feedback as suggestion
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

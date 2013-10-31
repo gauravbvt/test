@@ -85,7 +85,7 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method is used to send 'Urgent' feedback
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 
