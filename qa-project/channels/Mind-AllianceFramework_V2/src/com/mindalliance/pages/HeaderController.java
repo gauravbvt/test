@@ -1,5 +1,7 @@
 package com.mindalliance.pages;
 
+import org.openqa.selenium.Keys;
+
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -41,6 +43,16 @@ public class HeaderController {
 		UIActions.click(fileName, "Send Feedback", GlobalVariables.configuration.getAttrSearchList(), "Send feedback Button");
 	}
 	
+	
+	
+	public void enterFeedback(String feedback) throws UIAutomationException, InterruptedException{
+		elementController.requireElementSmart(fileName,"Send Feedback Text Field",GlobalVariables.configuration.getAttrSearchList(), "Send Feedback");
+		UIActions.click(fileName,"Send Feedback Text Field",GlobalVariables.configuration.getAttrSearchList(), "Send Feedback");
+		
+		UIActions.enterValueInTextBox(feedback,fileName,"Send Feedback Text Field",GlobalVariables.configuration.getAttrSearchList(), "Send Feedback");
+		UIActions.enterKey(Keys.TAB);
+	}
+	
 	/**
 	 * 'sendFeedbackOnHelp' method clicks on 'Send Feedback' button
 	 * @throws UIAutomationException 
@@ -57,6 +69,93 @@ public class HeaderController {
 		if(!titleInPage.equals(titleInXML)){
 			throw new UIAutomationException("Window with Title '"+titleInXML+"' not found");
 		}
+	}
+	
+	/**
+	 * 'clickSendButton' method clicks on 'Send Feedback' button
+	 * @throws UIAutomationException 
+	 */
+	public void clickSendButton() throws UIAutomationException{
+	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
+	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
+	
+		String alert=dataController.getPageDataElements(fileName, "Send Feedback Alert Window", "Title");
+		try{
+			Thread.sleep(1000);
+			}
+			catch(Exception e){}
+		UIActions.assertAlert(alert);
+	
+	}
+	
+	/**
+	 * 'clickSendBlankFeedback' method clicks on 'Send Feedback' button after entering blank feedback
+	 * @throws UIAutomationException 
+	 */
+	public void clickSendBlankFeedback() throws UIAutomationException{
+	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
+	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
+	
+		String alert=dataController.getPageDataElements(fileName, "Send Blank Feedback Alert Window", "Title");
+		try{
+			Thread.sleep(1000);
+			}
+			catch(Exception e){}
+		UIActions.assertAlert(alert);
+	
+	}
+	
+	/**
+	 * 'clickSendFeedbackAsQuestion' method clicks on 'Question' option
+	 * @throws UIAutomationException 
+	 */
+	public void clickSendFeedbackAsQuestion() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	
+		
+	    elementController.requireElementSmart(fileName, "Send Feedback As Question", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Question");
+	    UIActions.click(fileName, "Send Feedback As Question", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Question");
+
+	
+	}
+	
+	/**
+	 * 'clickSendFeedbackAsProblem' method clicks on 'Problem' option
+	 * @throws UIAutomationException 
+	 */
+	public void clickSendFeedbackAsProblem() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	
+		
+	    elementController.requireElementSmart(fileName, "Send Feedback As Problem", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Problem");
+	    UIActions.click(fileName, "Send Feedback As Problem", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Problem");
+	
+	}
+	
+	/**
+	 * 'clickSendFeedbackAsSuggestion' method clicks on 'Suggestion' option
+	 * @throws UIAutomationException 
+	 */
+	public void clickSendFeedbackAsSuggestion() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
+	
+		
+	    elementController.requireElementSmart(fileName, "Send Feedback As Suggestion", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Suggestion");
+	    UIActions.click(fileName, "Send Feedback As Suggestion", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Suggestion");
+		
+	}
+	
+	
+	/**
+	 * Check Urgent checkbox
+	 * @throws UIAutomationException
+	 */
+	public void checkUrgentCheckbox() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Urgent Checkbox",GlobalVariables.configuration.getAttrSearchList(), "Urgent Checkbox");
+		UIActions.click(fileName,"Urgent Checkbox",GlobalVariables.configuration.getAttrSearchList(), "Urgent Checkbox");
 	}
 	
 	/**
