@@ -1604,6 +1604,14 @@ public interface QueryService {
     String getFullTitle( String sep, Part part );
 
     /**
+     * Get tooltip for the part.
+     *
+     * @param part a part
+     * @return a string
+     */
+    String getTooltip( Part part );
+
+    /**
      * Get simplified title for the part.
      *
      * @param sep  separator string

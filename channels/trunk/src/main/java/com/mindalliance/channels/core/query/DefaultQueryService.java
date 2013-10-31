@@ -3026,6 +3026,44 @@ public abstract class DefaultQueryService implements QueryService {
 
     /**
      * Get extended title for the part.
+
+     * @param part a part
+     * @return a string
+     */
+    public String getTooltip( Part part ) {
+        String label = "";
+        if ( part.getActor() != null ) {
+            label += part.getActor().getName();
+        }
+        if ( part.getRole() != null ) {
+            if ( !label.isEmpty() )
+                label += " ";
+            if ( !label.isEmpty() )
+                label += "as ";
+            label += part.getRole().getName();
+        }
+        if ( part.getJurisdiction() != null ) {
+            if ( !label.isEmpty() )
+                label += " " + "for ";
+            label += part.getJurisdiction().getName();
+        }
+        if ( part.getOrganization() != null ) {
+            if ( !label.isEmpty() )
+                label += " " + "in ";
+            label += part.getOrganization().getName();
+        }
+        if ( !label.isEmpty() )
+            label += " - ";
+        label += part.getTask();
+        if ( part.isRepeating() ) {
+            label += " (every " + part.getRepeatsEvery() + ")";
+        }
+        return label;
+    }
+
+
+    /**
+     * Get extended title for the part.
      *
      * @param sep  separator string
      * @param part a part

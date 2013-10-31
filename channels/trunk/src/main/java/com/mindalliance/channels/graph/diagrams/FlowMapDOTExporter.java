@@ -471,7 +471,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             String label = flow.getName();
             list.add( new DOTAttribute( "label", label ) );
         }
-        list.add( new DOTAttribute( "tooltip", "Intermediate is bypassed if unreachable" ) );
+        String tooltip;
+        if ( isSimplified() ) {
+            tooltip = flow.getName() + " - " + "intermediate is bypassed if unreachable";
+        } else {
+            tooltip = "Intermediate is bypassed if unreachable";
+        }
+        list.add( new DOTAttribute( "tooltip", tooltip ) );
         flowMapMetaProvider.addTailArrowHead( flow, list );
         return list;
     }

@@ -235,7 +235,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     String tooltip;
                     if ( vertex.isPart() ) {
                         tooltip = isSimplified()
-                                ? getQueryService().getFullTitle( " ", (Part) vertex )
+                                ? getQueryService().getTooltip( (Part) vertex )
                                 : vertex.getTitle();
                         if ( !isSimplified() ) {
                             List<Actor> partActors = communityService.getPlanService().findAllActualActors( ( (Part) vertex ).resourceSpec() );
@@ -390,7 +390,20 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                                     edge,
                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
                 } else {
-                    edgeTooltip = sanitize( edge.getName() );
+                    edgeTooltip = edge.isAskedFor()
+                            ? "Answer with "
+                            : "Notify of ";
+                    edgeTooltip += edge.getName();
+                    if ( edge.isIfTaskFails() ) {
+                        edgeTooltip += " - if task fails";
+                    }
+                    if ( edge.isRestricted() ) {
+                        edgeTooltip += " - only if " + edge.getRestrictionString( true );
+                    }
+                    if ( edge.isReceiptConfirmationRequested() ) {
+                        edgeTooltip += " - request receipt confirmation ";
+                    }
+                    edgeTooltip = sanitize( edgeTooltip );
                 }
                 list.add( new DOTAttribute( "edgetooltip", edgeTooltip ) );
             }
