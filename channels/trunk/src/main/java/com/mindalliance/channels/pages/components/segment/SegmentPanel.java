@@ -705,7 +705,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                     setPartOrFlowUpdated( false );
                     target.add( flowMapDiagramPanel );
                 }
-                stopUpdates = change.isDisplay() && !isPartOrFlowUpdated();
+                stopUpdates = ( change.isExpanded() || change.isCollapsed() ) && !isPartOrFlowUpdated();
             }
             if ( !change.isExists() )
                 refreshMenus( target );
