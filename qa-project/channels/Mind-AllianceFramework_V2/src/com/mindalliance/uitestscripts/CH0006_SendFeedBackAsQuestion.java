@@ -134,17 +134,16 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 			
 	
-			/*// Sign Out from 'Home' page
+			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
-			HeaderController headerController=new HeaderController();
 			headerController.signOut();
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 
 			Reporting reporting= new Reporting();
-		    reporting.generateAutomationReport();*/
+		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
 			// Write log
