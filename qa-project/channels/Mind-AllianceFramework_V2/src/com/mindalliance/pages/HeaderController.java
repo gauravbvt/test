@@ -158,6 +158,18 @@ public class HeaderController {
 		UIActions.click(fileName,"Urgent Checkbox",GlobalVariables.configuration.getAttrSearchList(), "Urgent Checkbox");
 	}
 	
+	
+	/**
+	 * 'clickCancelButton' method clicks on 'Cancel' button
+	 * @throws UIAutomationException 
+	 */
+	public void clickCancelButton() throws UIAutomationException{
+	    elementController.requireElementSmart(fileName, "Cancel Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Cancel Feedback Button");
+	    UIActions.click(fileName, "Cancel Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Cancel Feedback Button");
+
+	
+	}
+	
 	/**
 	 * 'Sign out Admin' method clicks on 'Sign out' button on 'Plan' page
 	 * @throws UIAutomationException 

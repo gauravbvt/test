@@ -1,5 +1,9 @@
 package com.mindalliance.pages;
 
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.ui.Select;
+
+import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -52,12 +56,73 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		UIActions.click(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		
-		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
+		/*elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		String tabTextInPage=UIActions.getText(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"About Me Tab Text" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
-			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");*/
 		}
 	
+	/**
+	 * Clicks on 'Contact info' drop down
+	 * @throws UIAutomationException
+	 */
+	public void selectContactInfo(String contact) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Contact Info Dropdown In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Contact Info Dropdown In Social Panel");
+		UIActions.click(fileName,"Contact Info Dropdown In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Contact Info Dropdown In Social Panel");
+	
+		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(fromDropDownList);
+		UIActions.selectByTextAndClick(contact);
+		UIActions.enterKey(Keys.TAB);
+	
 	}
+	
+	/**
+	 * Enters contact details in the Contact text field
+	 * @throws UIAutomationException
+	 */
+	public void enterContactInfo(String contactInfo) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Contact Info Textfield In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Contact Info Textfield In Social Panel");
+		UIActions.click(fileName,"Contact Info Textfield In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Contact Info Textfield In Social Panel");
+
+		UIActions.enterValueInTextBox(contactInfo,fileName,"Contact Info Textfield In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Contact Info Textfield In Social Panel");
+		UIActions.enterKey(Keys.ENTER);
+			
+			try{
+				Thread.sleep(2000);
+			}
+			catch(Exception e){}
+	}
+
+
+	/**
+	 * Click on Collaboration Template Editor link
+	 * @throws UIAutomationException
+	 */
+	public void clickCollaborationPlanEditorLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
+		UIActions.click(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
+
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Collaboration Plan Editor Page Title", "Title1");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+
+	
+	/**
+	 * Click on Template Issues link
+	 * @throws UIAutomationException
+	 */
+	public void clickTemplateIssuesLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Template Issues Link",GlobalVariables.configuration.getAttrSearchList(), "Template Issues Link");
+		UIActions.click(fileName,"Template Issues Link",GlobalVariables.configuration.getAttrSearchList(), "Template Issues Link");
+
+		// Assertion : Check Title of Page
+    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
+       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	
+       	UIActions.getText(fileName, "IssueSummaryReportPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
+	}
+
 }
