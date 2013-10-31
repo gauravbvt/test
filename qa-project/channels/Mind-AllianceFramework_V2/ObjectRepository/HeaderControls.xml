@@ -61,6 +61,15 @@
     	<ClassName></ClassName>
  	</Element>
  	
+ 	<Element>
+ 		<GivenName>Cancel Feedback Button</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	
  	<Element>
  		<GivenName>Send Feedback As Question</GivenName>
