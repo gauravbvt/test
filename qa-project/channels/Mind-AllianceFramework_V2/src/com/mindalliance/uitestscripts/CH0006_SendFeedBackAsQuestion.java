@@ -85,7 +85,7 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verify that home page is used to send the Feedback as Question
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 
