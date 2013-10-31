@@ -257,7 +257,29 @@ public class Home {
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
-*/		return suite;
+*/		
+
+
+      //Channels Headers
+      suite.addTestSuite(CH0004_SendFeedback.class);
+      suite.addTestSuite(CH0005_SendInvalidFeedback.class);
+      suite.addTestSuite(CH0006_SendFeedBackAsQuestion.class);
+      suite.addTestSuite(CH0008_SendFeedbackAsSuggestion.class);
+      suite.addTestSuite(CH0009_SendFeedbackAsUrgent.class);
+      suite.addTestSuite(CH0010_SendBlankFeedback.class);
+      suite.addTestSuite(CH0011_CancelSendFeedback.class);
+      
+      //Collaboration Templates Page
+      
+      suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
+      suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
+      
+      
+      
+      
+      
+      
+      return suite;
 	}
 }
 
