@@ -451,6 +451,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, "dimgray" ) ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
+        list.add( new DOTAttribute( "penwidth", "1.0" ) );
         return list;
     }
 
@@ -465,6 +466,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
+        list.add( new DOTAttribute( "penwidth", "1.0" ) );
         if ( !isSimplified() ) {
             String label = flow.getName();
             list.add( new DOTAttribute( "label", label ) );
@@ -652,6 +654,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, "dimgray" ) ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
+        list.add( new DOTAttribute( "penwidth", "1.0" ) );
         return list;
     }
 }

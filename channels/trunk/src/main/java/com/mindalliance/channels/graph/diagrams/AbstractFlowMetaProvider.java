@@ -88,7 +88,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Color for implied flows.
      */
-    protected static final String OVERRIDDEN_COLOR = "gray30";
+    protected static final String OVERRIDDEN_COLOR = "#666666";
 
     /**
      * Segment in context.
