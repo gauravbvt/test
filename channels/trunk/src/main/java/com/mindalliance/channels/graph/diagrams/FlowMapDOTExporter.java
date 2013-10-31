@@ -213,7 +213,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             String name = sanitize( event.getName() );
             String label = ChannelsUtils.split( name, "|", 4, MAX_LABEL_LINE_LENGTH );
             attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
-            attributes.add( new DOTAttribute( "label", label ) );
             attributes.add( new DOTAttribute( "shape", "none" ) );
             attributes.add( new DOTAttribute( "tooltip", name ) );
             String dirName;
@@ -313,10 +312,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         Segment segment = getSegment();
         for ( Part initiator : initiators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( initiator );
-            attributes.add( new DOTAttribute( "label", makeLabel( segment.initiationCause( initiator ) ) ) );
-            /*attributes.add( new DOTAttribute(
-                    "tooltip",
-                    sanitize( segment.initiationCause( initiator ) ) ) );*/
+            String label = makeLabel( segment.initiationCause( initiator ) );
+            if ( !isSimplified() )
+                attributes.add( new DOTAttribute( "label", label ) );
+            attributes.add( new DOTAttribute( "tooltip", label ) );
             String initiatorId = getVertexID( initiator );
             out.print( getIndent() + initiatorId + getArrow( g ) + START );
             out.print( "[" );
@@ -328,10 +327,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( EventTiming eventTiming : contextInitiators.keySet() ) {
             for ( Part initiator : contextInitiators.get( eventTiming ) ) {
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( initiator );
-                attributes.add( new DOTAttribute( "label", eventTiming.isConcurrent() ? "causes" : "terminates" ) );
-                /*attributes.add( new DOTAttribute(
-          "tooltip",
-          sanitize( segment.initiationCause( initiator ) ) ) );*/
+                String label = eventTiming.isConcurrent() ? "causes" : "terminates";
+                if ( !isSimplified( ) )
+                    attributes.add( new DOTAttribute( "label", label ) );
+                else
+                    attributes.add( new DOTAttribute( "tooltip",label ) );
                 String initiatorId = getVertexID( initiator );
                 out.print( getIndent() + initiatorId + getArrow( g ) + getEventTimingID( eventTiming ) );
                 out.print( "[" );
@@ -346,9 +346,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportAutoStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part autoStarter : autoStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
-            attributes.add( new DOTAttribute(
-                    "headlabel",
-                    autoStarter.isOngoing() ? "(ongoing)" : "(starts)" ) );
+            String label = autoStarter.isOngoing() ? "(ongoing)" : "(starts)";
+            if ( !isSimplified() )
+                attributes.add( new DOTAttribute( "headlabel", label ) );
+            else
+                attributes.add( new DOTAttribute( "tooltip", label ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
             out.print( "[" );
@@ -363,10 +365,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         Segment segment = getSegment();
         for ( Part terminator : terminators ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( terminator );
-            attributes.add( new DOTAttribute( "label", makeLabel( segment.terminationCause( terminator ) ) ) );
-            /*attributes.add( new DOTAttribute(
-                    "tooltip",
-                    sanitize( segment.terminationCause( terminator ) ) ) );*/
+            String label = makeLabel( segment.terminationCause( terminator ) );
+            if ( !isSimplified() )
+                attributes.add( new DOTAttribute( "label", label ) );
+            else
+                attributes.add( new DOTAttribute( "tooltip", label ) );
             String terminatorId = getVertexID( terminator );
             out.print( getIndent() + terminatorId + getArrow( g ) + STOP );
             out.print( "[" );
@@ -380,10 +383,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportEventStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part part : eventStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( part );
-            attributes.add( new DOTAttribute( "label", "causes" ) );
-            /*attributes.add( new DOTAttribute(
-                    "tooltip",
-                    sanitize( segment.terminationCause( terminator ) ) ) );*/
+            if ( !isSimplified() )
+                attributes.add( new DOTAttribute( "label", "causes" ) );
+            else
+                attributes.add( new DOTAttribute( "tooltip", "causes" ) );
             String starterId = getVertexID( part );
             out.print( getIndent() + starterId + getArrow( g ) + part.getInitiatedEvent().getId() );
             out.print( "[" );
@@ -620,7 +623,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportGoalEdge( Part part, Goal goal, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes( part );
-        attributes.add( new DOTAttribute( "label", goal.isRiskMitigation() ? "mitigates" : "achieves" ) );
+        String label = goal.isRiskMitigation() ? "mitigates" : "achieves";
+        if ( !isSimplified() )
+            attributes.add( new DOTAttribute( "label", label ) );
+        else
+            attributes.add( new DOTAttribute( "tooltip", label ) );
         String goalId = getGoalVertexId( part, goal );
         String partId = getMetaProvider().getVertexIDProvider().getVertexName( part );
         out.print( getIndent() + partId + getArrow( g ) + goalId );
@@ -633,7 +640,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportStopGoalEdge( Goal goal, Part part, PrintWriter out, Graph<Node, Flow> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes( part );
-        attributes.add( new DOTAttribute( "label", "terminates" ) );
+        if ( !isSimplified() )
+            attributes.add( new DOTAttribute( "label", "terminates" ) );
+        else
+            attributes.add( new DOTAttribute( "tooltip", "terminates" ) );
         String goalId = getGoalVertexId( getSegment(), goal );
         out.print( getIndent() + STOP + getArrow( g ) + goalId );
         out.print( "[" );

@@ -955,7 +955,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     showGoals,
                     showConnectors,
                     hideNoop,
-                    simplify );
+                    simplify,
+                    getExpansions() );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );
         }

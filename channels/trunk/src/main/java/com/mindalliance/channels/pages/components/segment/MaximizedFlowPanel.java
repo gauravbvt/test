@@ -8,6 +8,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
+import java.util.Set;
+
 /**
  * Maximized flow map panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -25,8 +27,9 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
             boolean showingGoals,
             boolean showingConnectors,
             boolean hidingNoop,
-            boolean simplified ) {
-        super( id, segmentModel, partModel, null );
+            boolean simplified,
+            Set<Long> expansions ) {
+        super( id, segmentModel, partModel, expansions );
         setShowingGoals( showingGoals );
         setShowingConnectors( showingConnectors );
         setHidingNoop( hidingNoop );

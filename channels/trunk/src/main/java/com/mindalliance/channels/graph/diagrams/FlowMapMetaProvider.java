@@ -307,8 +307,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             // list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
+                list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
             } else {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
+                list.add( new DOTAttribute( "penwidth", "1.0" ) );
             }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "arrowsize", "1.0" ) );
@@ -316,7 +318,6 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     colorIfVisible( edge,
                             isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
-            list.add( new DOTAttribute( "penwidth", "1.0" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
             addTailArrowHead( edge, list );
             list.add( new DOTAttribute( "style",

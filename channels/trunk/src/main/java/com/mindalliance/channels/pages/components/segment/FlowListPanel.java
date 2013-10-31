@@ -333,7 +333,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
             refreshMenus( target );
             if ( !change.isUpdated() ) target.add( flowsDiv );
         }
-        super.updateWith( target, change, updated );
+        if ( !change.isSelected() )
+            super.updateWith( target, change, updated );
         if ( change.isDisplay() ) {
             setSelectedFlowUpdated( false );
         }

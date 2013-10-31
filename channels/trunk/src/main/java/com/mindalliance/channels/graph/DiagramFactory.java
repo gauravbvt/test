@@ -8,6 +8,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
@@ -64,17 +65,19 @@ public interface DiagramFactory<Vertex, Edge> {
      *
      * @param segment     a segment
      * @param node        a selected node
+     * @param flow a selected flow
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a flow map diagram
      */
-    Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation );
+    Diagram newFlowMapDiagram( Segment segment, Node node, Flow flow, double[] diagramSize, String orientation );
 
     /**
      * Instantiates a flow map diagram.
      *
      * @param segment           a segment
      * @param node              a selected node
+     * @param flow a selected flow
      * @param diagramSize       width and height as array of doubles
      * @param orientation       a string
      * @param showingGoals      whether to show goals
@@ -83,7 +86,7 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param simplified        whether to show s simplified flow map
      * @return a flow map diagram
      */
-    Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation,
+    Diagram newFlowMapDiagram( Segment segment, Node node, Flow flow, double[] diagramSize, String orientation,
                                boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified );
 
     /**

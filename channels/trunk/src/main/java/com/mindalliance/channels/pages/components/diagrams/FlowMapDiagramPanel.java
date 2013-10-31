@@ -50,6 +50,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * whether to show a simplified flow map.
      */
     private boolean simplified;
+    /**
+     * Highlighted flow.
+     */
+    private Flow flow;
 
     public FlowMapDiagramPanel( String id,
                                 IModel<Segment> segmentModel,
@@ -76,6 +80,14 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         init();
     }
 
+    public Flow getFlow() {
+        return flow;
+    }
+
+    public void setFlow( Flow flow ) {
+        this.flow = flow;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -92,6 +104,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         return getDiagramFactory().newFlowMapDiagram(
                 getSegment(),
                 getPart(),
+                getFlow(),
                 getDiagramSize(),
                 getOrientation(),
                 showingGoals,
@@ -114,6 +127,13 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         } else {
             sb.append( "NONE" );
         }
+        sb.append( "&flow=" );
+        if ( getFlow() != null ) {
+            sb.append( getFlow().getId() );
+        } else {
+            sb.append( "NONE" );
+        }
+
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );
@@ -266,5 +286,6 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
     public boolean isSimplified() {
         return simplified;
     }
+
 }
 

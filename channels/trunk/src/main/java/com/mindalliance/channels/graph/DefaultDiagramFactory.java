@@ -8,6 +8,7 @@ package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
@@ -92,16 +93,17 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     @Override
-    public Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation ) {
-        return newFlowMapDiagram( segment, node, diagramSize, orientation, false, false, false, false );
+    public Diagram newFlowMapDiagram( Segment segment, Node node, Flow flow, double[] diagramSize, String orientation ) {
+        return newFlowMapDiagram( segment, node, flow, diagramSize, orientation, false, false, false, false );
     }
 
     @Override
-    public Diagram newFlowMapDiagram( Segment segment, Node node, double[] diagramSize, String orientation,
+    public Diagram newFlowMapDiagram( Segment segment, Node node, Flow flow, double[] diagramSize, String orientation,
                                       boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified ) {
         LOG.debug( "Making flow map on " + segment + "/" + node );
         return new FlowMapDiagram( segment,
                                    node,
+                                   flow,
                                    diagramSize,
                                    orientation,
                                    showingGoals,

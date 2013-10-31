@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -69,6 +70,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     private WebMarkupContainer controlsContainer;
     private IModel<Segment> segmentModel;
     private final IModel<Part> partModel;
+    private Flow flow;
 
     /**
      * Flow diagram panel.
@@ -126,6 +128,15 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         this.simplified = simplified;
     }
 
+    public void setFlow( Flow flow ) {
+        this.flow = flow;
+    }
+
+    public Flow getFlow() {
+        return flow;
+    }
+
+
     public WebMarkupContainer getControlsContainer() {
         return controlsContainer;
     }
@@ -147,8 +158,19 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                         showingConnectors,
                         hidingNoop,
                         simplified );
+        flowMapDiagramPanel.setFlow( findExpandedFlow() );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
+    }
+
+    private Flow findExpandedFlow() {
+        Segment segment = getSegment();
+        for ( Long id : getExpansions() ) {
+            Flow flow = segment.getFlow( id );
+            if ( flow != null )
+                return flow;
+        }
+        return null;
     }
 
 

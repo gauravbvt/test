@@ -38,6 +38,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
      */
     private Node selectedNode;
 
+    private Flow selectedFlow;
     /**
      * Whether to show goals.
      */
@@ -57,15 +58,16 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
      */
     private boolean simplified;
 
-    public FlowMapDiagram( Segment segment, Node selectedNode, double[] diagramSize, String orientation ) {
-        this( segment, selectedNode, diagramSize, orientation, false, false, false, false );
+    public FlowMapDiagram( Segment segment, Node selectedNode, Flow selectedFlow, double[] diagramSize, String orientation ) {
+        this( segment, selectedNode, selectedFlow, diagramSize, orientation, false, false, false, false );
     }
 
-    public FlowMapDiagram( Segment segment, Node selectedNode, double[] diagramSize, String orientation,
+    public FlowMapDiagram( Segment segment, Node selectedNode, Flow selectedFlow, double[] diagramSize, String orientation,
                            boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified ) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.selectedNode = selectedNode;
+        this.selectedFlow = selectedFlow;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
@@ -86,6 +88,8 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
         graphRenderer.resetHighlight();
         if ( selectedNode != null )
             graphRenderer.highlightVertex( selectedNode );
+        if ( selectedFlow != null )
+            graphRenderer.highlightEdge( selectedFlow );
         FlowMapMetaProvider metaProvider = new FlowMapMetaProvider( segment,
                 outputFormat,
                 diagramFactory.getImageDirectory(),

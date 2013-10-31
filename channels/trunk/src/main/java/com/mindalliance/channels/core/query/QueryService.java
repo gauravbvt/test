@@ -1616,9 +1616,10 @@ public interface QueryService {
      *
      * @param sep  separator string
      * @param part a part
+     * @param maxLineLength max line line length for task name in title
      * @return a string
      */
-    String getSimplifiedTitle( String sep, Part part );
+    String getSimplifiedTitle( String sep, Part part, int maxLineLength );
 
 
     /**

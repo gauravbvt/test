@@ -392,15 +392,23 @@ public class Segment extends ModelObject {
      * @throws NotFoundException if not found
      */
     public Flow findFlow( long id ) throws NotFoundException {
+        Flow flow = getFlow( id );
+        if ( flow == null )
+            throw new NotFoundException();
+        else
+            return flow;
+    }
+
+    public Flow getFlow( Long id ) {
         Flow flow = null;
         Iterator<Flow> flows = flows();
         while ( flow == null && flows.hasNext() ) {
             Flow f = flows.next();
             if ( f.getId() == id ) flow = f;
         }
-        if ( flow == null ) throw new NotFoundException();
-        else return flow;
+        return flow;
     }
+
 
     /**
      * Count the parts.
@@ -775,6 +783,7 @@ public class Segment extends ModelObject {
     public boolean isSegmentObject() {
         return false;
     }
+
 
 
 //=================================================

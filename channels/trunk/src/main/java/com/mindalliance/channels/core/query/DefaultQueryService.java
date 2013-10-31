@@ -3062,14 +3062,8 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-    /**
-     * Get extended title for the part.
-     *
-     * @param sep  separator string
-     * @param part a part
-     * @return a string
-     */
-    public String getSimplifiedTitle( String sep, Part part ) {
+    @Override
+    public String getSimplifiedTitle( String sep, Part part, int maxLineLength ) {
         String label = "";
         if ( part.getActor() != null ) {
             label += part.getActor().getName();
@@ -3082,7 +3076,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
         if ( !label.isEmpty() )
             label += sep;
-        label += part.getTask();
+        label += ChannelsUtils.split( part.getTask(), sep, 3, maxLineLength );
         return label;
     }
 

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanService;
@@ -27,6 +28,7 @@ public class FlowMapPng extends DiagramPng {
         PlanService planService = communityService.getPlanService();
         Segment segment = PlanPage.findSegment( planService, parameters );
         Node node = null;
+        Flow flow = null;
         if ( segment == null ) {
             segment = planService.getDefaultSegment();
         } else {
@@ -35,6 +37,12 @@ public class FlowMapPng extends DiagramPng {
                 node = null;
             } else {
                 node = PlanPage.findPart( segment, parameters );
+            }
+            if ( parameters.getNamedKeys().contains( "flow" )
+                    && parameters.get( "flow" ).toString().equals( "NONE" ) ) {
+                flow = null;
+            } else {
+                flow = segment.getFlow( parameters.get( "flow" ).toLong() );
             }
         }
         boolean showingGoals = parameters.getNamedKeys().contains( "showingGoals" )
@@ -48,6 +56,7 @@ public class FlowMapPng extends DiagramPng {
         return diagramFactory.newFlowMapDiagram(
                 segment,
                 node,
+                flow,
                 diagramSize,
                 orientation,
                 showingGoals,

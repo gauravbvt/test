@@ -694,8 +694,12 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 receivesFlowPanel.refresh( target );
                 sendsFlowPanel.refresh( target );
             }
-            if ( identifiable instanceof SegmentObject && ( change.isExpanded() || change.isCollapsed() ) ) {
+            if ( identifiable instanceof SegmentObject && change.isDisplay() ) {
                 resizePartPanels( target );
+                if ( identifiable instanceof Flow && ( change.isExpanded() || change.isCollapsed() ) ) {
+                    addFlowDiagram();
+                    target.add( flowMapDiagramPanel );
+                }
                 if ( change.isCollapsed() && isPartOrFlowUpdated() ) {
                     addFlowDiagram();
                     setPartOrFlowUpdated( false );

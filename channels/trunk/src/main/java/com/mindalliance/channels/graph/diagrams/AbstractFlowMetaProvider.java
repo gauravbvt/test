@@ -56,6 +56,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
      */
     public static final String NODE_FONT = "DejaVuSans";
 
+
     /**
      * Font size for node labels.
      */
@@ -84,7 +85,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font of highlighted node.
      */
-    protected static final String HIGHLIGHT_NODE_FONT = "DejaVuSans";
+    protected static final String HIGHLIGHT_NODE_FONT = "DejaVuSans-BOLD";
     /**
      * Color for implied flows.
      */
@@ -171,7 +172,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
         if ( node.isPart() ) {
             Part part = (Part) node;
             return simplified
-                    ? getQueryService().getSimplifiedTitle( "|", part )
+                    ? getQueryService().getSimplifiedTitle( "|", part, 30 )
                     : getQueryService().getFullTitle( "|", part );
         } else {
             return "c";
@@ -215,7 +216,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
             iconName = imagesDirName +
                     ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), flow ) ? "/connector_blank"
-                            : satisfaction ? "/connector"
+                            : ( isSimplified() || satisfaction ) ? "/connector"
                             : "/connector_red" );
         }
 
@@ -227,8 +228,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             if ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) )
                 iconName = "blank";
             else {
-                negated = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
-                        part ) // todo - this has failed with NullPointerException on timed update - why?
+                negated = !isSimplified() && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) // todo - this has failed with NullPointerException on timed update - why?
                         ? ImagingService.NEGATED
                         : "";
                 iconName = imagingService.findIconName(
