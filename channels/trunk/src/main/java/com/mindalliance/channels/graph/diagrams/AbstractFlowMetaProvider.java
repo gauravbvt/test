@@ -85,7 +85,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font of highlighted node.
      */
-    protected static final String HIGHLIGHT_NODE_FONT = "Helvetica-Bold";
+    protected static final String HIGHLIGHT_NODE_FONT = "DejaVuSans";
     /**
      * Color for implied flows.
      */
@@ -101,7 +101,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     protected static final String VERTEX_LABEL_MARGIN = "0.11,0.07";
 
-    protected static final String VERTEX_HIGHLIGHTED_LABEL_MARGIN = "0.2,0.2";
+    protected static final String VERTEX_HIGHLIGHTED_LABEL_MARGIN = "0.11,0.07";
 
     protected static final String EDGE_COLOR = "#666666";
 
