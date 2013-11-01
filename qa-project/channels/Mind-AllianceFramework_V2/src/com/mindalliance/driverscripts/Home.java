@@ -259,7 +259,6 @@ public class Home {
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
 */		
 
-
       //Channels Headers
       suite.addTestSuite(CH0004_SendFeedback.class);
       suite.addTestSuite(CH0005_SendInvalidFeedback.class);
@@ -273,11 +272,8 @@ public class Home {
       
       suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
       suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
-      
-      
-      
-      
-      
+      suite.addTestSuite(CT0007_ClickSurveysLink.class);
+      suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
       
       return suite;
 	}
