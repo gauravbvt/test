@@ -346,7 +346,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportAutoStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part autoStarter : autoStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
-            String label = autoStarter.isOngoing() ? "(ongoing)" : "(starts)";
+            String label = autoStarter.isOngoing() ? "ongoing" : "starts";
             if ( !isSimplified() )
                 attributes.add( new DOTAttribute( "headlabel", label ) );
             else

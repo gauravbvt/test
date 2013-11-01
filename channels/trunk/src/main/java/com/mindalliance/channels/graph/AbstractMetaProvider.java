@@ -53,7 +53,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Font for edge labels.
      */
-    public static final String EDGE_FONT_BOLD = "Helvetica-Bold";
+    public static final String EDGE_FONT_BOLD = "Helvetica-BoldOblique";
     /**
      * Font size for edge labels.
      */

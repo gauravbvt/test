@@ -85,11 +85,30 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     /**
      * Font of highlighted node.
      */
-    protected static final String HIGHLIGHT_NODE_FONT = "DejaVuSans-BOLD";
+    protected static final String HIGHLIGHT_NODE_FONT = "Helvetica-Bold";
     /**
      * Color for implied flows.
      */
     protected static final String OVERRIDDEN_COLOR = "#666666";
+
+    protected static final String _EDGE_FONT_COLOR = "darkslategray";
+
+    protected static final String EDGE_PENWIDTH = "1.0";
+
+    protected static final String EDGE_CRITICAL_COLOR = "black";
+
+    protected static final String EDGE_LEN = "1.5";
+
+    protected static final String VERTEX_LABEL_MARGIN = "0.11,0.07";
+
+    protected static final String VERTEX_HIGHLIGHTED_LABEL_MARGIN = "0.2,0.2";
+
+    protected static final String EDGE_COLOR = "#666666";
+
+    protected static final String ARROW_SIZE = "1.0";
+
+    protected static final String EDGE_WEIGHT = "2.0";
+
 
     /**
      * Segment in context.

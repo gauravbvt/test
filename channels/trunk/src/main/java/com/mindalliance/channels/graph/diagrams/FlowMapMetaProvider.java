@@ -217,11 +217,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "color", getHighlightColor( vertex ) ) );
                 list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
                 list.add( new DOTAttribute( "fontname", HIGHLIGHT_NODE_FONT ) );
+                list.add( new DOTAttribute( "margin", VERTEX_HIGHLIGHTED_LABEL_MARGIN ) );
             } else {
                 list.add( new DOTAttribute( "shape", "none" ) );
                 list.add( new DOTAttribute( "fontname", NODE_FONT ) );
+                list.add( new DOTAttribute( "margin", VERTEX_LABEL_MARGIN ) );
             }
-            list.add( new DOTAttribute( "margin", "0.11,0.07" ) );
             list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !isInvisible( vertex ) ) {
@@ -302,7 +303,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "label", getEdgeLabel( edge, highlighted ) ) );
             list.add( new DOTAttribute( "color",
-                    colorIfVisible( edge, isOverridden( edge ) ? OVERRIDDEN_COLOR : "#666666" ) ) );
+                    colorIfVisible( edge, isOverridden( edge ) ? OVERRIDDEN_COLOR : EDGE_COLOR ) ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             // list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {
@@ -310,15 +311,15 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 list.add( new DOTAttribute( "penwidth", HIGHLIGHT_PENWIDTH ) );
             } else {
                 list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
-                list.add( new DOTAttribute( "penwidth", "1.0" ) );
+                list.add( new DOTAttribute( "penwidth", EDGE_PENWIDTH ) );
             }
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
-            list.add( new DOTAttribute( "arrowsize", "1.0" ) );
+            list.add( new DOTAttribute( "arrowsize", ARROW_SIZE ) );
             list.add( new DOTAttribute( "fontcolor",
                     colorIfVisible( edge,
-                            isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
-            list.add( new DOTAttribute( "len", "1.5" ) );
-            list.add( new DOTAttribute( "weight", "2.0" ) );
+                            isOverridden( edge ) ? OVERRIDDEN_COLOR : _EDGE_FONT_COLOR ) ) );
+            list.add( new DOTAttribute( "len", EDGE_LEN ) );
+            list.add( new DOTAttribute( "weight", EDGE_WEIGHT ) );
             addTailArrowHead( edge, list );
             list.add( new DOTAttribute( "style",
                     isSimplified()
@@ -336,7 +337,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                         "fontcolor",
                         colorIfVisible(
                                 edge,
-                                isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
+                                isOverridden( edge ) ? OVERRIDDEN_COLOR : EDGE_CRITICAL_COLOR ) ) );
             }
             // head and tail labels
             if ( !isSimplified() ) {
