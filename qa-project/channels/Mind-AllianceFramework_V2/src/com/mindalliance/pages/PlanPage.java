@@ -3876,6 +3876,22 @@ public class PlanPage {
 	
 	}
 	
+	
+	/**
+	 * Click hide button to hide the Collaboration Panel
+	 * @param reference
+	 * @param policy
+	 * @throws UIAutomationException
+	 */
+	public void clickHideCollaborationPanelButton() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Hide Collaboration Panel Button",GlobalVariables.configuration.getAttrSearchList(),"Hide Collaboration Panel Button");
+		UIActions.click(fileName,"Hide Collaboration Panel Button",GlobalVariables.configuration.getAttrSearchList(),"Hide Collaboration Panel Button");
+		
+		UIActions.getText(fileName, "HideCollaborationPanelNotification", GlobalVariables.configuration.getAttrSearchList(), "Hide Collaboration Panel Notification");
+	}
+	
+
+	
 	/**
 	 * Verify 'Type' dropdown in issues in sends panel
 	 * @param validity

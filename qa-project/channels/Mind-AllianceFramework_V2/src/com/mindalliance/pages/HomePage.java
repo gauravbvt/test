@@ -41,10 +41,12 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
 		UIActions.click(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
 				
-		// Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+		/*// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Collaboration Plans Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
+		UIActions.getText(fileName, "CollaborationPlansPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plans Page Title");
 	}
+	
 	
 	/**
 	 * 'clickChannelsAdminLink' method clicks on 'Channels Settings' Link

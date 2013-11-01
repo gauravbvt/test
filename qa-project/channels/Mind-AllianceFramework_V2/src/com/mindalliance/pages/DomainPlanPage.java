@@ -104,9 +104,10 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
 		UIActions.click(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
 
-		// Assertion : Check Title of Page
+		/*// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Collaboration Plan Editor Page Title", "Title1");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
+		UIActions.getText(fileName, "CollaborationPlanEditorPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan Editor Page Title");
 	}
 
 	
@@ -123,6 +124,36 @@ public class DomainPlanPage {
        	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	
        	UIActions.getText(fileName, "IssueSummaryReportPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
+	}
+
+	/**
+	 * Click on Surveys link
+	 * @throws UIAutomationException
+	 */
+	public void clickSurveysLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
+		UIActions.click(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
+
+		// Assertion : Check Title of Page
+    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
+       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	
+       	UIActions.getText(fileName, "SurveysTitle", GlobalVariables.configuration.getAttrSearchList(), "Surveys Title");
+	}
+
+	/**
+	 * Click on Feedback And Replies link
+	 * @throws UIAutomationException
+	 */
+	public void clickFeedbackAndRepliesLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
+		UIActions.click(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
+
+		// Assertion : Check Title of Page
+    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
+       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	
+       	UIActions.getText(fileName, "FeedbackAndRepliesTitle", GlobalVariables.configuration.getAttrSearchList(), "FeedbackAndRepliesTitle");
 	}
 
 }
