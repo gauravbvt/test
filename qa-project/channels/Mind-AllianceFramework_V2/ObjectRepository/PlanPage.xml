@@ -199,6 +199,13 @@
 		<Title>Information Dissemination For Task</Title>
 	</Element>
 	
+	
+	<Element>
+		<GivenName>Hide Collaboration Panel Notification</GivenName>
+		<Title>To re-open, select Presence in the top Show menu.</Title>
+	</Element>
+	
+	
 	<Element>
 		<GivenName>Alert Window Title Of Remove Segment</GivenName>
 		<Title>Are you sure?</Title>
@@ -363,16 +370,16 @@
 	</Element>
 	
 	
-	
-//	<Element>
-	//	<GivenName>Analytics Tab</GivenName>
-	//	<Xpath>//a[contains(@class,'active')]/span</Xpath>
-	//	<Name></Name>
-	//	<Id></Id>
-	//	<PartialLinkText></PartialLinkText>
-	//	<LinkText>unnamed</LinkText>
-	//	<ClassName></ClassName>
-//	</Element>
+	<Element>
+		<GivenName>Hide Collaboration Panel Button</GivenName>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+
 	
 	<Element>
 		<GivenName>Analytics Tab</GivenName>

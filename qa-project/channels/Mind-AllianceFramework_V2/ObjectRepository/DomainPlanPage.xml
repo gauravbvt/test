@@ -24,7 +24,18 @@
  		<GivenName>Issue Summary Report Page Title</GivenName>
  		<Title>Issues Summary Report</Title>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Surveys Title</GivenName>
+ 		<Title>Surveys about</Title>
+ 	</Element>
 	
+	
+	<Element>
+ 		<GivenName>Feedback And Replies Title</GivenName>
+ 		<Title>My feedback on</Title>
+ 	</Element>
+ 	
 	<Element>
 		<GivenName>Communities Link</GivenName>
 		<Xpath></Xpath>
@@ -91,6 +102,26 @@
  	<Element>
  		<GivenName>Template Issues Link</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[2]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Surveys Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[3]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Feedback And Replies Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[4]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>

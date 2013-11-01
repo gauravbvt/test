@@ -82,7 +82,7 @@
  	</Element>
  	
  	<Element>
- 		<GivenName>	Send Feedback As Problem</GivenName>
+ 		<GivenName>Send Feedback As Problem</GivenName>
  		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
  		<Name></Name>
  		<Id></Id>
@@ -92,7 +92,7 @@
  	</Element>
  
    <Element>
- 		<GivenName>	Send Feedback As Suggestion</GivenName>
+ 		<GivenName>Send Feedback As Suggestion</GivenName>
  		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li[2]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>

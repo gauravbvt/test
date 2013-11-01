@@ -26,8 +26,8 @@
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
 	<Element>
-		<GivenName>Communities Page Title</GivenName>
-		<Title></Title>
+		<GivenName>Collaboration Plans Page Title</GivenName>
+		<Title>All Collaboration Plans</Title>
 	</Element>
 	<Element>
 		<GivenName>Show Received Text</GivenName>
@@ -53,11 +53,11 @@
 	</Element>
 	<Element>
 		<GivenName>Collaboration Plan</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>COLLABORATION MODEL</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
