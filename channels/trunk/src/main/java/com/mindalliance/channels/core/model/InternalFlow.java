@@ -239,6 +239,8 @@ public class InternalFlow extends Flow {
      * {@inheritDoc}
      */
     public Segment getSegment() {
-        return source.getSegment();
+        return source == null
+                ? null // when detached
+                : source.getSegment();
     }
 }
