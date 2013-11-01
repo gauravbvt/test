@@ -139,7 +139,14 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 			
-	
+	 	    // Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

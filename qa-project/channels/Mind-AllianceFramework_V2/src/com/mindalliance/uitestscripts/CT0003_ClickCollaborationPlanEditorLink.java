@@ -84,7 +84,7 @@ public class CT0003_ClickCollaborationPlanEditorLink extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verifies that Collaboration Plan Editor Page is opened after clicking the Collaboration Plan Editor Link
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

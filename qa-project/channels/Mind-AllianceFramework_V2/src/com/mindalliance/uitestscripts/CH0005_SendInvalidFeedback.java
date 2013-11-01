@@ -137,6 +137,15 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
+		    // Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+		    reporting.generateAutomationReport();
+		    
 		}catch (UIAutomationException ue) {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
