@@ -197,11 +197,10 @@ public class EnvironmentData implements Serializable {
 
 
     private void initPlaces( String serverUrl, CommunityService communityService ) throws NotFoundException {
-        PlanService planService = communityService.getPlanService();
         places = new ArrayList<PlaceData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allPlaceIds() ) {
-            Place place = planService.find( Place.class, id );
+            Place place = communityService.find( Place.class, id );
             places.add( new PlaceData( serverUrl, place, communityService ) );
             added.add( id );
             for ( ModelEntity category : place.getAllTypes() ) {

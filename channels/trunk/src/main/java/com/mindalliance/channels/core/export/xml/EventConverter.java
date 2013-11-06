@@ -42,7 +42,7 @@ public class EventConverter extends EntityConverter {
             ModelEntity entity, HierarchicalStreamWriter writer, MarshallingContext context ) {
         Event event = (Event) entity;
         Place scope = event.getScope();
-        if ( scope != null && !scope.getName().trim().isEmpty() ) {
+        if ( scope != null && !scope.getName().trim().isEmpty() && scope.isActual() ) { // drop place types
             writer.startNode( "scope" );
             writer.addAttribute( "id", Long.toString( scope.getId() ) );
             writer.addAttribute( "kind", scope.getKind().name() );
@@ -65,10 +65,10 @@ public class EventConverter extends EntityConverter {
             String id = reader.getAttribute( "id" );
             String kindName = reader.getAttribute( "kind" );
             String name = reader.getValue();
-            event.setScope( kindName != null && kindName.equals( Kind.Type.name() ) ?
-                            findOrCreateType( Place.class, name, id ) :
-                            findOrCreate( Place.class, name, id ) );
-
+            if ( kindName != null && kindName.equals( Kind.Actual.name() ) ) {
+                Place scope = findOrCreate( Place.class, name, id );
+                event.setScope( scope );
+            }
         } else if ( "self-terminating".equals( nodeName ) )
             event.setSelfTerminating( "true".equals( reader.getValue() ) );
         else

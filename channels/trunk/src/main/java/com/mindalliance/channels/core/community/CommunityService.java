@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
@@ -172,4 +173,16 @@ public interface CommunityService {
      */
     void remove( ModelObject object );
 
+    /**
+     * Find all placeholder places not bound by the plan community.
+     * @return a list of places
+     */
+    List<Place> findUnboundLocationPlaceholders();
+
+    /**
+     * resolve a place to itself or its bound location if bound.
+     * @param place a place
+     * @return the resolved place
+     */
+    Place resolveLocation( Place place );
 }

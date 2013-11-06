@@ -27,6 +27,7 @@ import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -37,6 +38,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -62,10 +64,10 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
 
         super( id, model, expansions );
 
-        init( );
+        init();
     }
 
-    private void init(  ) {
+    private void init() {
         addUri();
         addName();
         addDescription();
@@ -132,13 +134,61 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
 
     private void addLocale() {
         addLocaleLink();
-        add( new EntityReferencePanel<Place>(
-                "localePanel",
-                new Model<Plan>( getPlan() ), getQueryService().findAllEntityNames( Place.class ),
+        final List<Place> choices = getQueryService().listActualEntities( Place.class, true );
+        AutoCompleteTextField<String> localeField = new AutoCompleteTextField<String>(
                 "locale",
-                Place.class
-        ) );
+                new PropertyModel<String>( this, "localeName" ) ) {
+            @Override
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                if ( choices != null ) {
+                    for ( Place place : choices ) {
+                        String choice = place.getName();
+                        if ( getQueryService().likelyRelated( s, choice ) )
+                            candidates.add( choice );
+                    }
+                    Collections.sort( candidates );
+                }
+                return candidates.iterator();
+            }
+        };
+        localeField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addLocaleLink();
+                target.add( localeLink );
+                update( target, new Change( Change.Type.Updated, getPlan(), "locale" ));
+            }
+        });
+        localeField.setEnabled( isLockedByUser( getPlan() ) );
+        addInputHint( localeField, "Enter an actual place" );
+        add( localeField );
     }
+
+    public String getLocaleName() {
+        Place place = getPlan().getLocale();
+        return place == null ? "" : place.getName();
+    }
+
+    public void setLocaleName( String val ) {
+        Place locale;
+        if ( val == null || val.isEmpty() ) {
+            locale = null;
+        } else {
+            locale = doSafeFindOrCreateActual( Place.class, val );
+        }
+        Place oldLocale = getPlan().getLocale();
+        if ( !ModelObject.areEqualOrNull( oldLocale, locale ) ) {
+            doCommand( new UpdatePlanObject(
+                    getUser().getUsername(),
+                    getPlan(),
+                    "locale",
+                    locale ) );
+            if ( oldLocale != null )
+                getCommander().cleanup( Place.class, oldLocale.getName() );
+        }
+    }
+
 
     private void addLocaleLink() {
         localeLink = new ModelObjectLink( "locale-link",

@@ -171,9 +171,7 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
         }
 
         public Place getLocale() {
-            return collaborationPlan.getCommunityLocale() == null
-                    ? getTemplate().getLocale()
-                    : collaborationPlan.getCommunityLocale();
+            return collaborationPlan.getLocale( getCommunityService() );
         }
 
         public Plan getTemplate() {

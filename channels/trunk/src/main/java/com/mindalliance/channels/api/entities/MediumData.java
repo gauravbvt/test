@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 12/8/11
  * Time: 2:29 PM
  */
-@XmlType( propOrder = {"name", "id", "description", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"} )
+@XmlType(propOrder = {"name", "id", "description", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"})
 public class MediumData extends ModelEntityData {
 
     private ActorData actorData;
@@ -36,16 +36,16 @@ public class MediumData extends ModelEntityData {
     }
 
     private void init( CommunityService communityService ) {
-       actorData = getMedium().getQualification() == null
-               ? null
-               : new ActorData( getServerUrl(), getMedium().getQualification(), communityService );
-        delegates = new ArrayList<MediumData>(  );
+        actorData = getMedium().getQualification() == null
+                ? null
+                : new ActorData( getServerUrl(), getMedium().getQualification(), communityService );
+        delegates = new ArrayList<MediumData>();
         for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
-            delegates.add(  new MediumData( getServerUrl(), delegate, communityService ) );
+            delegates.add( new MediumData( getServerUrl(), delegate, communityService ) );
         }
         reach = getMedium().getReach() == null
                 ? null
-                : new PlaceData( getServerUrl(), getMedium().getReach(), communityService );
+                : new PlaceData( getServerUrl(), communityService.resolveLocation( getMedium().getReach() ), communityService );
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MediumData extends ModelEntityData {
     }
 
     @Override
-    @XmlElement( name = "categoryId" )
+    @XmlElement(name = "categoryId")
     public List<Long> getCategories() {
         return super.getCategories();
     }
@@ -84,9 +84,9 @@ public class MediumData extends ModelEntityData {
         return getMedium().isSynchronous();
     }
 
-    @XmlElement( name = "security" )
+    @XmlElement(name = "security")
     public List<SecurityClassificationData> getSecurity() {
-        List<SecurityClassificationData> security = new ArrayList<SecurityClassificationData>(  );
+        List<SecurityClassificationData> security = new ArrayList<SecurityClassificationData>();
         for ( Classification classification : getMedium().getSecurity() ) {
             security.add( new SecurityClassificationData( classification ) );
         }
@@ -115,6 +115,6 @@ public class MediumData extends ModelEntityData {
     }
 
     private TransmissionMedium getMedium() {
-        return (TransmissionMedium)getModelObject();
+        return (TransmissionMedium) getModelObject();
     }
 }

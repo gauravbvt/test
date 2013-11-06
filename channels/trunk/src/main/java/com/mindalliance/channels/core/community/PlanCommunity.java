@@ -7,8 +7,10 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,11 +38,10 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     private String name;
     private String description;
-    private Place communityLocale;
     private String planUri;
     private int planVersion;
     private boolean closed;
-
+    private List<LocationBinding> locationBindings = new ArrayList<LocationBinding>();
     private String plannerSupportCommunity = "";
     private String userSupportCommunity = "";
     private String communityCalendar = "";
@@ -71,7 +72,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         name = planCommunity.getName();
         development = planCommunity.isDevelopment();
         idShifts = planCommunity.getIdShifts();
-        communityLocale = planCommunity.getCommunityLocale();
+        locationBindings = planCommunity.copyLocationBindings();
         description = planCommunity.getDescription();
         closed = planCommunity.isClosed();
         dateCreated = planCommunity.getDateCreated();
@@ -80,6 +81,14 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         communityCalendar = planCommunity.getCommunityCalendar();
         communityCalendarHost = planCommunity.getCommunityCalendarHost();
         communityCalendarPrivateTicket = planCommunity.getCommunityCalendarPrivateTicket();
+    }
+
+    private List<LocationBinding> copyLocationBindings() {
+        List<LocationBinding> copy = new ArrayList<LocationBinding>();
+        for ( LocationBinding locationBinding : locationBindings ) {
+            copy.add( new LocationBinding( locationBinding ) );
+        }
+        return copy;
     }
 
     public void setId( long id ) {
@@ -104,6 +113,40 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     public void setClosed( boolean closed ) {
         this.closed = closed;
+    }
+
+    public List<LocationBinding> getLocationBindings() {
+        return locationBindings;
+    }
+
+    public void setLocationBindings( List<LocationBinding> locationBindings ) {
+        this.locationBindings = locationBindings;
+    }
+
+    public void addLocationBinding( Place locationPlaceholder, Place actualLocation ) {
+        assert actualLocation.isActual() && !actualLocation.isPlaceholder();
+        assert locationPlaceholder.isPlaceholder();
+        LocationBinding locationBinding = new LocationBinding( locationPlaceholder, actualLocation );
+        if ( !locationBindings.contains( locationBinding ) ) {
+            locationBindings.add( locationBinding );
+        }
+    }
+
+    public Place getLocationBoundTo( Place locationPlaceholder ) {
+        for ( LocationBinding locationBinding : locationBindings ) {
+            if ( locationBinding.getPlaceholder().equals( locationPlaceholder ) )
+                return locationBinding.getLocation();
+        }
+        return null;
+    }
+
+    public List<Place> getBoundLocationPlaceholders() {
+        List<Place> boundPlaces = new ArrayList<Place>();
+        for ( LocationBinding locationBinding : locationBindings ) {
+            if ( locationBinding.isBound() )
+                boundPlaces.add( locationBinding.getPlaceholder() );
+        }
+        return boundPlaces;
     }
 
     @Override
@@ -131,18 +174,12 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     }
 
     public Place getLocale( CommunityService communityService ) {
-        return communityLocale == null
-                ? communityService.getPlan().getLocale()
-                : communityLocale;
-    }
-
-
-    public Place getCommunityLocale() {
-        return communityLocale;
-    }
-
-    public void setCommunityLocale( Place communityLocale ) {
-        this.communityLocale = communityLocale;
+        Place templateLocale = communityService.getPlan().getLocale();
+        if ( templateLocale != null ) {
+            return getLocationBoundTo( templateLocale );
+        } else {
+            return null;
+        }
     }
 
     public String getDescription() {
@@ -288,7 +325,11 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     @Override
     public boolean references( final ModelObject mo ) {
-        return ModelObject.areIdentical( communityLocale, mo );
+        for ( LocationBinding locationBinding : locationBindings ) {
+            return ModelObject.areIdentical( locationBinding.getPlaceholder(), mo )
+                    ||  ModelObject.areIdentical( locationBinding.getLocation(), mo );
+        }
+        return false;
     }
 
     //////////////////
@@ -329,4 +370,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return hash;
     }
 
+    public boolean canBeOpenedForParticipation( CommunityService communityService ) {
+        return getLocale( communityService ) != null;
+    }
 }

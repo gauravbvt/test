@@ -106,7 +106,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     private void initLocation( String serverUrl, CommunityService communityService ) {
         if ( getAssignment() != null ) {
-            Place location = getAssignment().getLocation( communityService );
+            Place location = communityService.resolveLocation( getAssignment().getLocation( communityService ) );
             placeData = location != null
                     ? new PlaceData( serverUrl, location, communityService )
                     : null;

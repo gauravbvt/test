@@ -23,7 +23,7 @@ public class Event extends ModelEntity implements GeoLocatable {
     /**
      * Where the event is considered to occur. Null means that its scope is universal.
      */
-    private Place scope;
+    private Place scope; // must be an actual place, placeholder or not
 
     /**
      * Does this even self-terminate?
@@ -106,6 +106,7 @@ public class Event extends ModelEntity implements GeoLocatable {
     }
 
     public void setScope( Place scope ) {
+        assert scope == null || scope.isActual();
         this.scope = scope;
     }
 

@@ -40,7 +40,10 @@ public class ResourceSpecData implements Serializable {
         if ( resourceSpec.getRole() != null )
             role = new RoleData( serverUrl, resourceSpec.getRole(), communityService );
         if ( resourceSpec.getJurisdiction() != null )
-            jurisdiction = new PlaceData( serverUrl, resourceSpec.getJurisdiction(), communityService );
+            jurisdiction = new PlaceData(
+                    serverUrl,
+                    communityService.resolveLocation( resourceSpec.getJurisdiction() ),
+                    communityService );
         if ( resourceSpec.getOrganization() != null )
             organization = new OrganizationData( serverUrl, resourceSpec.getOrganization(), communityService );
     }

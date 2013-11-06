@@ -320,6 +320,31 @@ public class CommunityServiceImpl implements CommunityService {
         getDao().remove( object );
     }
 
+    @Override
+    public List<Place> findUnboundLocationPlaceholders() {
+        List<Place> boundPlaceholders = getPlanCommunity().getBoundLocationPlaceholders();
+        List<Place> unboundPlaceholders = new ArrayList<Place>(  );
+        for ( Place place : listActualEntities( Place.class, true ) ) {
+            if ( place.isPlaceholder() && !boundPlaceholders.contains( place ) ) {
+                unboundPlaceholders.add( place );
+            }
+        }
+        return unboundPlaceholders;
+    }
+
+    @Override
+    public Place resolveLocation( Place place ) {
+        if ( place == null ) {
+            return null;
+        }
+        else if ( place.isPlaceholder() ) {
+            Place boundLocation = getPlanCommunity().getLocationBoundTo( place );
+            return boundLocation == null ? place : boundLocation;
+        } else {
+            return place;
+        }
+    }
+
     private void beforeRemove( ModelObject object ) {
         // Do nothing
     }
@@ -568,7 +593,7 @@ public class CommunityServiceImpl implements CommunityService {
     ///////////////////////////
 
     private Place getCommunityLocale() {
-        return getPlanCommunity().getCommunityLocale();
+        return getPlanCommunity().getLocale( this );
     }
 
 

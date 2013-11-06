@@ -48,11 +48,24 @@ public class CollaborationPlanStatusPanel extends AbstractCommandablePanel {
                 target.add( statusContainer );
             }
         };
+        boolean canBeOpened = getPlanCommunity().canBeOpenedForParticipation( getCommunityService() );
+        if ( getPlanCommunity().isClosed() ) {
+            toggleLink.setEnabled( canBeOpened );
+            if ( !canBeOpened ) {
+                String whyNot = "The plan is not ready to be opened for participation";
+                if ( getPlanCommunity().getLocale( getCommunityService() ) == null) {
+                    whyNot += " because the plan's locale is not resolved to a specific location";
+                }
+                addTipTitle( toggleLink, whyNot );
+            }
+        }
         Label toggleToLabel = new Label(
                 "toggleTo",
-                getPlanCommunity().isClosed()
-                        ? "Open to participation"
-                        : "Close to participation"
+                !getPlanCommunity().isClosed()
+                        ? "Close to participation"
+                        : canBeOpened
+                            ? "Open to participation"
+                            : "(Can't be opened yet for participation)"
         );
         toggleLink.add( toggleToLabel );
         statusContainer.add( toggleLink );

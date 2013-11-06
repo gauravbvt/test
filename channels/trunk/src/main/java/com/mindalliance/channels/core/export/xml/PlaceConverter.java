@@ -68,19 +68,21 @@ public class PlaceConverter extends EntityConverter {
         }
         if ( place.isPlaceholder() ) {
             writer.startNode( "placeholder" );
-            writer.setValue( Boolean.toString( true ));
+            writer.setValue( Boolean.toString( true ) );
             writer.endNode();
         }
-        Place locale = getPlan().getLocale();
-        if ( place.getMustBeContainedIn().isSet( locale ) ) {
-            writer.startNode( "mustBeContainedIn" );
-            writePlaceReference( writer, place.getMustBeContainedIn() );
-            writer.endNode();
-        }
-        if ( place.getMustContain().isSet( locale ) ) {
-            writer.startNode( "mustContain" );
-            writePlaceReference( writer, place.getMustContain() );
-            writer.endNode();
+        if ( isPlanContext() ) {
+            Place locale = getPlan().getLocale();
+            if ( place.getMustBeContainedIn().isSet( locale ) ) {
+                writer.startNode( "mustBeContainedIn" );
+                writePlaceReference( writer, place.getMustBeContainedIn() );
+                writer.endNode();
+            }
+            if ( place.getMustContain().isSet( locale ) ) {
+                writer.startNode( "mustContain" );
+                writePlaceReference( writer, place.getMustContain() );
+                writer.endNode();
+            }
         }
         if ( place.getGeoLocations() != null ) {
             for ( GeoLocation geoLoc : place.getGeoLocations() ) {
@@ -123,9 +125,9 @@ public class PlaceConverter extends EntityConverter {
         } else if ( nodeName.equals( "geoname" ) ) {
             place.setGeoname( reader.getValue() );
         } else if ( nodeName.equals( "mustBeContainedIn" ) ) {
-            place.setMustBeContainedIn( readPlaceReference( reader));
+            place.setMustBeContainedIn( readPlaceReference( reader ) );
         } else if ( nodeName.equals( "mustContain" ) ) {
-             place.setMustContain( readPlaceReference( reader ) );
+            place.setMustContain( readPlaceReference( reader ) );
         } else if ( nodeName.equals( "geoLocation" ) ) {
             place.setGeoLocation( (GeoLocation) context.convertAnother( place, GeoLocation.class ) );
         } else if ( nodeName.equals( "alternateGeoLocation" ) ) {

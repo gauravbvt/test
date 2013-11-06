@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
@@ -28,7 +29,7 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
 
     @Override
     public boolean appliesTo( Identifiable identifiable ) {
-        return identifiable instanceof Actor;
+        return identifiable instanceof Agent;
     }
 
     @Override
@@ -39,34 +40,16 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
     @Override
     public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
         List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
-        final Actor actor = (Actor) identifiable;
-        if ( isEmployedByFixedOrganization( actor, communityService ) ) {
-            int count = CollectionUtils.select(
-                    communityService.getParticipationManager().getAllParticipations( communityService ),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (UserParticipation) object ).getActorId() == actor.getId();
-                        }
-                    } ).size();
-            if ( count == 0 ) {
-                ParticipationIssue issue = new ParticipationIssue( actor, this );
-                issue.setDescription( "No user participates as " + actor.getName() );
-                issue.addRemediationOption( "Request that a user participate as " + actor.getName() );
-                issues.add( issue );
-            }
+        final Agent agent = (Agent) identifiable;
+        int count = communityService.getParticipationManager().findAllUsersParticipatingAs( agent, communityService ).size();
+
+        if ( count == 0 ) {
+            ParticipationIssue issue = new ParticipationIssue( agent, this );
+            issue.setDescription( "No user participates as " + agent.getName() );
+            issue.addRemediationOption( "Request that a user participate as " + agent.getName() );
+            issues.add( issue );
         }
         return issues;
     }
 
-    private boolean isEmployedByFixedOrganization( Actor actor, CommunityService communityService ) {
-        return CollectionUtils.exists(
-                communityService.getPlanService().findAllEmploymentsForActor( actor ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return !( (Employment) object ).getOrganization().isPlaceHolder();
-                    }
-                } );
-    }
 }

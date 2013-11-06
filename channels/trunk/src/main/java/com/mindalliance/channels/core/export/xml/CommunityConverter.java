@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.community.LocationBinding;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
@@ -101,17 +102,35 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
-        // Locale
-        Place locale = planCommunity.getCommunityLocale();
+        // Locale - todo - obsolete
+        /*Place locale = planCommunity.getCommunityLocale();
         if ( locale != null && !locale.getName().trim().isEmpty() ) {
             writer.startNode( "locale" );
             writer.addAttribute( "id", Long.toString( locale.getId() ) );
             writer.addAttribute( "kind", locale.getKind().name() );
             writer.setValue( locale.getName() );
             writer.endNode();
+        }*/
+        for ( LocationBinding locationBinding : planCommunity.getLocationBindings() ) {
+            if ( locationBinding.isBound() ) {
+                writer.startNode( "locationBinding" );
+                // placeholder
+                writer.startNode( "placeholder" );
+                Place placeholder = locationBinding.getPlaceholder();
+                writer.addAttribute( "id", Long.toString( placeholder.getId() ) );
+                writer.addAttribute( "kind", placeholder.getKind().name() );
+                writer.setValue( placeholder.getName() );
+                writer.endNode();
+                // bound location
+                Place location = locationBinding.getLocation();
+                writer.startNode( "location" );
+                writer.addAttribute( "id", Long.toString( location.getId() ) );
+                writer.addAttribute( "kind", location.getKind().name() );
+                writer.setValue( location.getName() );
+                writer.endNode();
+                writer.endNode();
+            }
         }
-        // Local assignments and commitments
-        // TBD
     }
 
     @Override
@@ -166,7 +185,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 importAttachments( planCommunity, reader );
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( planCommunity, UserIssue.class );
-            } else if ( nodeName.equals( "locale" ) ) {
+           /* } else if ( nodeName.equals( "locale" ) ) { // OBSOLETE
                 String placeId = reader.getAttribute( "id" );
                 String kindName = reader.getAttribute( "kind" );
                 String name = reader.getValue();
@@ -176,6 +195,34 @@ public class CommunityConverter extends AbstractChannelsConverter {
                         ModelEntity.Kind.valueOf( kindName ),
                         context );
                 planCommunity.setCommunityLocale( locale );
+            }*/
+            } else if ( nodeName.equals( "locationBinding" ) ) {
+                String placeId;
+                String kindName;
+                String name;
+                reader.moveDown();
+                assert reader.getNodeName().equals( "placeholder" );
+                placeId = reader.getAttribute( "id" );
+                kindName = reader.getAttribute( "kind" );
+                name = reader.getValue();
+                Place placeholder = this.getEntity( Place.class,
+                        name,
+                        Long.getLong( placeId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
+                reader.moveUp();
+                reader.moveDown();
+                assert reader.getNodeName().equals( "location" );
+                placeId = reader.getAttribute( "id" );
+                kindName = reader.getAttribute( "kind" );
+                name = reader.getValue();
+                Place location = this.getEntity( Place.class,
+                        name,
+                        Long.getLong( placeId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
+                reader.moveUp();
+                planCommunity.addLocationBinding( placeholder, location );
             } else if ( nodeName.equals( "requirement" ) ) {
                 context.convertAnother(
                         planCommunity,

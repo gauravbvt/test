@@ -247,6 +247,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     }
 
     public void setLocale( Place locale ) {
+        assert locale == null || locale.isActual();
         this.locale = locale;
     }
 

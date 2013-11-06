@@ -3,15 +3,17 @@ package com.mindalliance.channels.pages.components.community;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.LocationBinding;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -20,7 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -35,10 +37,10 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
 
     private String name;
     private String description;
-    private String localeName;
-    private Place namedLocale;
     private AjaxLink<String> cancelButton;
     private AjaxLink<String> acceptButton;
+    private List<LocationBinding> tempBindings;
+
 
     public CollaborationPlanDetailsPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
@@ -48,16 +50,73 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
     private void init() {
         name = getPlanCommunity().getName();
         description = getPlanCommunity().getDescription();
-        namedLocale = getPlanCommunity().getCommunityLocale() ;
-        localeName = namedLocale == null
-                ? null
-                : namedLocale.getName();
+        initTempBindings();
         addUri();
         addName();
         addDescription();
-        addLocale();
+        addLocationBindingsPanel();
         addButtons();
     }
+
+    public void initTempBindings() {
+        List<LocationBinding> bindings = new ArrayList<LocationBinding>(  );
+        for ( LocationBinding locationBinding : getPlanCommunity().getLocationBindings() ) {
+            bindings.add( new LocationBinding( locationBinding ) );
+        }
+        Collections.sort( bindings, new Comparator<LocationBinding>() {
+            @Override
+            public int compare( LocationBinding binding1, LocationBinding binding2 ) {
+                return binding1.getPlaceholder().getName().compareTo( binding2.getPlaceholder().getName() );
+            }
+        } );
+        List<Place> unboundPlaceholders = findUnboundLocationPlaceholders();
+        Collections.sort( unboundPlaceholders, new Comparator<Place>() {
+            @Override
+            public int compare( Place place1, Place place2 ) {
+                return place1.getName().compareTo( place2.getName() );
+            }
+        } );
+        for ( Place unbound : unboundPlaceholders ) {
+            bindings.add( new LocationBinding( unbound ) );
+        }
+        tempBindings = bindings;
+    }
+
+    private List<Place> findUnboundLocationPlaceholders() {
+        List<Place> boundPlaceholders = getBoundLocationPlaceholders();
+        List<Place> unboundPlaceholders = new ArrayList<Place>(  );
+        for ( Place place : getCommunityService().listActualEntities( Place.class, true ) ) {
+            if ( place.isPlaceholder() && !boundPlaceholders.contains( place ) ) {
+                unboundPlaceholders.add( place );
+            }
+        }
+        return unboundPlaceholders;
+    }
+
+    private List<Place> getBoundLocationPlaceholders() {
+        List<Place> boundPlaceholders = new ArrayList<Place>(  );
+        for ( LocationBinding locationBinding : getPlanCommunity().getLocationBindings() ) {
+            if ( locationBinding.isBound() )
+                boundPlaceholders.add( locationBinding.getPlaceholder() );
+        }
+        return boundPlaceholders;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<LocationBinding> getBoundLocationBindings() {
+        return (List<LocationBinding>)CollectionUtils.select(
+                tempBindings,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((LocationBinding)object).isBound();
+                    }
+                }
+        );
+    }
+
+
+
 
     private void addUri() {
         add( new Label( "uri", getPlan().getUri() ) );
@@ -105,31 +164,9 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
         add( acceptButton );
     }
 
-    private void addLocale() {
-        final List<Place> choices = getPlaceCandidates();
-        AutoCompleteTextField<String> localeNameField = new AutoCompleteTextField<String>(
-                "locale",
-                new PropertyModel<String>( this, "localeName" ) ) {
-            @Override
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                if ( choices != null ) {
-                    for ( Place entity : choices ) {
-                        String choice = entity.getName();
-                        if ( getQueryService().likelyRelated( s, choice ) )
-                            candidates.add( choice );
-                    }
-                    Collections.sort( candidates );
-                }
-                return candidates.iterator();
-            }
-        };
-        localeNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
-            }
-        } );
-        add( localeNameField );
+    private void addLocationBindingsPanel() {
+        LocationBindingsPanel locationBindingsPanel = new LocationBindingsPanel( "locationBindings", tempBindings );
+        addOrReplace( locationBindingsPanel );
     }
 
     private List<Place> getPlaceCandidates() {
@@ -144,33 +181,6 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
         this.description = description;
     }
 
-    public String getLocaleName() {
-        return localeName;
-    }
-
-    public void setLocaleName( String val ) {
-        String oldLocaleName = localeName;
-        Place oldNamedLocale = namedLocale;
-        synchronized ( getCommunityService().getDao() ) {
-            localeName = val;
-            if ( localeName == null || localeName.isEmpty() ) {
-                namedLocale = null;
-            } else {
-                namedLocale = getCommunityService().findOrCreate( Place.class, localeName );
-                Place planLocale = getCommunityService().getPlan().getLocale();
-                if ( planLocale != null ) {
-                    if ( planLocale.isType() && namedLocale.isInCommunity() && namedLocale.getTypes().isEmpty() ) {
-                        namedLocale.addType( planLocale );
-                    }
-                    if ( !namedLocale.narrowsOrEquals( planLocale, planLocale ) ) {
-                        // quietly reject invalid community locale todo - inform user
-                        namedLocale = oldNamedLocale;
-                        this.localeName = oldLocaleName;
-                    }
-                }
-            }
-        }
-    }
 
     public String getName() {
         return name;
@@ -202,12 +212,21 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
                         description
                 ) );
             }
-            if ( !ModelObject.areEqualOrNull( namedLocale, planCommunity.getCommunityLocale() ) ) {
+            if ( !isLocationBindingsUnchanged() ) {
+                CommunityService communityService = getCommunityService();
+                List<LocationBinding> locationBindingsUpdate = new ArrayList<LocationBinding>();
+                // Just to be safe, refresh the updated location bindings
+                for ( LocationBinding locationBinding :getBoundLocationBindings() ) {
+                    Place location = communityService.safeFindOrCreate( Place.class, locationBinding.getLocation().getName() );
+                    if ( location.isActual() ) {
+                        locationBindingsUpdate.add( new LocationBinding( locationBinding.getPlaceholder(), location ));
+                    }
+                }
                 multiCommand.addCommand( new UpdatePlanObject(
                         getUsername(),
                         getCommunity(),
-                        "communityLocale",
-                        getNamedLocale()
+                        "locationBindings",
+                        locationBindingsUpdate
                 ) );
             }
             doCommand( multiCommand );
@@ -218,11 +237,13 @@ public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
         PlanCommunity planCommunity = getCommunity();
         return !( name != null && name.equals( planCommunity.getName() )
                 && ( description != null && description.equals( planCommunity.getDescription() ) )
-                && ModelObject.areEqualOrNull( getNamedLocale(), planCommunity.getCommunityLocale() ) );
+                && isLocationBindingsUnchanged() );
     }
 
-    private Place getNamedLocale() {
-        return namedLocale;
+    private boolean isLocationBindingsUnchanged() {
+        return CollectionUtils.isEqualCollection(
+                getPlanCommunity().getLocationBindings(),
+                getBoundLocationBindings() );
     }
 
     private PlanCommunity getCommunity() {

@@ -109,9 +109,8 @@ public class PlanScopeData implements Serializable {
     }
 
     private void initPlaces( String serverUrl, CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
         places = new ArrayList<PlaceData>();
-        for ( Place place : planService.list( Place.class ) ) {
+        for ( Place place : communityService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
                 places.add( cache( place, new PlaceData( serverUrl, place, communityService ) ) );
         }

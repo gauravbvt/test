@@ -178,7 +178,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         // Export user issues
         exportUserIssues( plan, writer, context );
         Place locale = plan.getLocale();
-        if ( locale != null && !locale.getName().trim().isEmpty() ) {
+        if ( locale != null && !locale.getName().trim().isEmpty() && locale.isActual() ) {
             writer.startNode( "locale" );
             writer.addAttribute( "id", Long.toString( locale.getId() ) );
             writer.addAttribute( "kind", locale.getKind().name() );
@@ -327,7 +327,8 @@ public class PlanConverter extends AbstractChannelsConverter {
                         Long.getLong( placeId ),
                         ModelEntity.Kind.valueOf( kindName ),
                         context );
-                plan.setLocale( locale );
+                if ( locale != null && locale.isActual() )
+                    plan.setLocale( locale );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

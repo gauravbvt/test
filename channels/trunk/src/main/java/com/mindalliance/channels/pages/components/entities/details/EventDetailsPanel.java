@@ -4,20 +4,24 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,14 +39,14 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
      */
     private WebMarkupContainer moDetailsDiv;
     /**
-     * Entity reference panel for scope of event (a place).
+     * For scope of event (a place).
      */
-    private EntityReferencePanel<Place> scopePanel;
+    private AutoCompleteTextField<String> scopeTextField;
     /**
      * Self-terminating checkbox.
      */
     private CheckBox selfTerminatingCheckBox;
-     /**
+    /**
      * Location link.
      */
     private ModelObjectLink locationLink;
@@ -62,7 +66,6 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
 
-
     /**
      * {@inheritDoc }
      */
@@ -71,7 +74,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
         this.moDetailsDiv = moDetailsDiv;
         addSelfTerminatingField();
         addLocationLink();
-        addScopePanel();
+        addScopeField();
         adjustFields();
     }
 
@@ -98,24 +101,45 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     }
 
-    private void addScopePanel() {
-        final List<String> choices = getQueryService().findAllEntityNames( Place.class );
-        scopePanel = new EntityReferencePanel<Place>(
-                "scopePanel",
-                new Model<Event>( getEvent() ),
-                choices,
+    private void addScopeField() {
+        final List<Place> choices = getQueryService().listActualEntities( Place.class, true );
+
+        scopeTextField = new AutoCompleteTextField<String>(
                 "scope",
-                Place.class
-        );
-        moDetailsDiv.add( scopePanel );
+                new PropertyModel<String>( this, "scopeName" ) ) {
+            @Override
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                if ( choices != null ) {
+                    for ( Place place : choices ) {
+                        String choice = place.getName();
+                        if ( getQueryService().likelyRelated( s, choice ) )
+                            candidates.add( choice );
+                    }
+                    Collections.sort( candidates );
+                }
+                return candidates.iterator();
+            }
+        };
+        scopeTextField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addLocationLink();
+                target.add( locationLink );
+                update( target, new Change( Change.Type.Updated, getPlanEvent(), "scope" ));
+            }
+        });
+        scopeTextField.setEnabled( isLockedByUser( getPlanEvent() ) );
+        addInputHint( scopeTextField, "Enter an actual place" );
+        moDetailsDiv.add( scopeTextField );
     }
 
     private void adjustFields() {
-        scopePanel.enable( isLockedByUser( getEvent() ) );
+        scopeTextField.setEnabled( isLockedByUser( getEvent() ) );
         selfTerminatingCheckBox.setEnabled( isLockedByUser( getEvent() ) );
     }
 
-     /**
+    /**
      * Set event as self-terminating.
      *
      * @param val a boolean
@@ -137,6 +161,30 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
         return getPlanEvent().isSelfTerminating();
     }
 
+    public String getScopeName() {
+        Place place = getPlanEvent().getScope();
+        return place == null ? "" : place.getName();
+    }
+
+    public void setScopeName( String val ) {
+        Place scope;
+        if ( val == null || val.isEmpty() ) {
+            scope = null;
+        } else {
+            scope = doSafeFindOrCreateActual( Place.class, val );
+        }
+        Place oldScope = getPlanEvent().getScope();
+        if ( !ModelObject.areEqualOrNull( oldScope, scope ) ) {
+            doCommand( new UpdatePlanObject(
+                    getUser().getUsername(),
+                    getPlanEvent(),
+                    "scope",
+                    scope ) );
+            if ( oldScope != null )
+                getCommander().cleanup( Place.class, oldScope.getName() );
+        }
+    }
+
     private Event getPlanEvent() {
         return (Event) getEntity();
     }
@@ -156,7 +204,6 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
         }
         super.updateWith( target, change, updated );
     }
-
 
 
 }

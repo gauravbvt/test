@@ -190,7 +190,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     public static String getSingularClassLabelOf( Class<? extends ModelEntity> entityClass ) {
         return entityClass == Actor.class
-                ? new Actor().getTypeName()
+                ? "agent"
                 : entityClass == Event.class
                 ? new Event().getTypeName()
                 : entityClass == Organization.class
