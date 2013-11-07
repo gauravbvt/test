@@ -109,10 +109,16 @@ div.part-header div.section-content {
     margin: 0 0 0 0;
 }
 
-#part , #flowMapIssues {
+#part {
     bottom: 0;
     top: 50.5%;
     overflow: hidden;
+}
+
+#flowMapIssues {
+    bottom: 0;
+    top: 50.5%;
+    overflow-y: auto;
 }
 
 #part .summary {
