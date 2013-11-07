@@ -307,7 +307,7 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     }
 
     public boolean isLocal() {
-        return isFixedOrganization() || !getCommunityUri().equals( PlanCommunity.ANY_URI );
+        return !isFixedOrganization() && !getCommunityUri().equals( PlanCommunity.ANY_URI );
     }
 
 }

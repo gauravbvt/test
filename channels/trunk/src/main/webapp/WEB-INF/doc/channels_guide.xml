@@ -424,6 +424,8 @@
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
 
                         As a planner, you can name the plan, localize it, update it to a new version of the collaboration template, and set collaboration requirements for it.
+                        A plan is localized by resolving placeholder places from the template to known locations. At a minimum, the placeholder locale of the adopted template, if identified, needs
+                        to be resolved. Until it is, a plan can not be opened for participation.
 
                         As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or a developer of the collaboration template upon which the plan is based, you can access it.
 
@@ -993,6 +995,22 @@
                     <description>A place is an entity used to delimit jurisdictions of agents employed by organizations,
                         to locate where tasks are to be executed, where events are of significance, and where a template
                         is meant to apply.
+
+                        A place can represent either an actual place ("Grand Central Station") or a type (category) of places
+                        ("Rail Station").
+
+                        An actual place is either a known place ("New York City") or a placeholder for a known place
+                        (The Flooded City). The identity of a placeholder place (or placeholder location) is to be
+                        resolved by each plan adopting the template.
+
+                        The use of placeholder places is required when
+                        * stating the scope of an event
+                        * stating the default locale of the template as a whole
+
+                        Place placeholders enables developers to co-reference a (to-be-determined) place in a template.
+                        For example, a task could be defined as needing to be executed in the same location as the scope of the
+                        event that triggered it. This would be done by using the same placeholder place as the scope of the
+                        event and as the location of the task.
                     </description>
                 </item>
                 <next section="concepts" topic="entity"/>
@@ -1005,6 +1023,8 @@
 
                         A transmission medium can be meant for broadcasting (to all), multicasting (to many) or
                         narrowcasting (to one).
+
+                        A transmission medium is always a type (a category).
                     </description>
                 </item>
                 <next section="concepts" topic="entity"/>
@@ -1741,11 +1761,15 @@ Naming the goal is optional.]]></description>
                         * Information sharing flows connecting tasks
 
                         Using view controls in the left-hand side, you can
+                        * hide or show info needs and capabilities,
+                        * hide or show goals,
+                        * hide tasks without assignments and flows without commitments
                         * maximize the flow map to occupy to whole browser window,
                         * shrink it to fit in the display space,
+                        * squeeze the flow map to make more space for the task and flow forms,
                         * simplify it by reducing the amount of information displayed,
-                        * hide or show goals,
-                        * hide or show info needs and capabilities.
+                        * replace the task and flow forms by a table showing issues related to the selected flow or task
+                        * show a legend about the flow map
 
                         A task is brought into focus for editing by clicking on it in the flow map. Flows can also be
                         opened for editing by clicking on them in the flow map.

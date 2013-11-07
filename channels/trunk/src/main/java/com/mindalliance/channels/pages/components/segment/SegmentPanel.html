@@ -8,15 +8,26 @@
 <body>
 <wicket:panel>
     <span wicket:id="social">[social panel]</span>
+
     <div id="contents">
         <div wicket:id="controls" class="zoom">
-            <span wicket:id="showConnectors"><img wicket:id="show_connectors_icon" src="images/show_connectors.png" title = "Show needs and capabilities (click again to hide them)" alt="Show needs and capabilities"/></span>
-            <span wicket:id="showGoals"><img wicket:id="show_goals_icon" src="images/show_goals.png" title = "Show goals (click again to hide goals)" alt="Show goals"/></span>
-            <span wicket:id="hideNoop"><img wicket:id="hide_noop_icon" src="images/hide_noop.png" title = "Hide not realizable (click again to restore)" alt="Hide not realizable"/></span>
-            <span wicket:id="maximized"><img src="images/fullscreen.png" title = "Maximize" alt="Maximize"/></span>
-            <span wicket:id="fit"><img wicket:id="fit_icon" src="images/fit.png" title = "Reduce to fit (click again to restore)" alt="Reduce to fit"/></span>
-            <span wicket:id="minimized"><img wicket:id="split_icon" src="images/split.png" title = "Minimize (click again to restore)" alt="Minimize"/></span>
-            <span wicket:id="simplified"><img wicket:id="simplify_icon" src="images/simplify.png" title = "Simplify (click again to restore)" alt="Simplify"/></span>
+            <span wicket:id="showConnectors"><img wicket:id="show_connectors_icon" src="images/show_connectors.png"
+                                                  title="Show needs and capabilities (click again to hide them)"
+                                                  alt="Show needs and capabilities"/></span>
+            <span wicket:id="showGoals"><img wicket:id="show_goals_icon" src="images/show_goals.png"
+                                             title="Show goals (click again to hide goals)" alt="Show goals"/></span>
+            <span wicket:id="hideNoop"><img wicket:id="hide_noop_icon" src="images/hide_noop.png"
+                                            title="Hide not realizable (click again to restore)"
+                                            alt="Hide not realizable"/></span>
+            <span wicket:id="maximized"><img src="images/fullscreen.png" title="Maximize" alt="Maximize"/></span>
+            <span wicket:id="fit"><img wicket:id="fit_icon" src="images/fit.png"
+                                       title="Reduce to fit (click again to restore)" alt="Reduce to fit"/></span>
+            <span wicket:id="minimized"><img wicket:id="split_icon" src="images/split.png"
+                                             title="Minimize (click again to restore)" alt="Minimize"/></span>
+            <span wicket:id="simplified"><img wicket:id="simplify_icon" src="images/simplify.png"
+                                              title="Simplify (click again to restore)" alt="Simplify"/></span>
+            <span wicket:id="issues"><img wicket:id="issues_icon" src="images/show_issues.png"
+                                          title="Show issues (click again to hide)" alt="Issues"/></span>
             <span wicket:id="legend"><img src="images/help_small.png" alt="Legend"/></span>
         </div>
         <div id="graph">
@@ -25,17 +36,18 @@
             </div>
             <hr>
         </div>
-        <div id="part">
+        <div id="part" wicket:id="partAndFlows">
             <div class="part-header">
                 <div class="section-title">
                     <h3 wicket:id="task-title">Task</h3>
                     <img wicket:id="overrides" class="task-overrides" src="images/overridden.png" title="overridden"/>
                     <span wicket:id="partMedia" class="partMediaRefs">[media references panel]</span>
-                    <img wicket:id = "help" class="help-icon"/>
+                    <img wicket:id="help" class="help-icon"/>
                     <img wicket:id="checklist" class="checklist-icon" src="images/checklist.png"/>
                     <a class="add-task" wicket:id="addPart" href="#">Add +</a>
                     <span class="menubar">
-                        <span class="menuitem" wicket:id="partShowMenu">[part show menu]</span><span class="menuitem" wicket:id="partActionsMenu">[part action menu]</span>
+                        <span class="menuitem" wicket:id="partShowMenu">[part show menu]</span><span class="menuitem"
+                                                                                                     wicket:id="partActionsMenu">[part action menu]</span>
                     </span>
                 </div>
                 <div wicket:id="part" class="section-content">
@@ -50,6 +62,9 @@
             <div wicket:id="sends" class="sends">
                 <h3>Sends</h3>
             </div>
+        </div>
+        <div id="flowMapIssues" wicket:id="flowMapIssuesContainer" class="aspect">
+            <span wicket:id="flowMapIssues">[flowmap issues panel]</span>
         </div>
     </div>
     <hr>

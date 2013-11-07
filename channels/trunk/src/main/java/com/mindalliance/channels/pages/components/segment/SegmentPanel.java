@@ -50,12 +50,17 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     /**
      * Flow map panel DOM id.
      */
-    static protected final String FLOWMAP_DOM_ID = "#graph";
+    static protected final String FLOW_MAP_DOM_ID = "#graph";
 
     /**
      * Part panel DOM id.
      */
     static private final String PART_DOM_ID = "#part";
+
+    /**
+     * Flow map issues panel DOM id.
+     */
+    static private final String ISSUES_DOM_ID = "#flowMapIssues";
 
     /**
      * Part panel css identifier.
@@ -86,6 +91,12 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private boolean maximized;
 
     private boolean minimized;
+
+    /**
+     * Whether to show flow map issues.
+     */
+    private boolean showingIssues = false;
+
 
     /**
      * Overrides indicator.
@@ -139,6 +150,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     private WebMarkupContainer taskTitleContainer;
     private WebMarkupContainer checklistIcon;
+    private WebMarkupContainer partAndFlowsContainer;
+    private WebMarkupContainer flowMapIssuesContainer;
 
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
@@ -152,10 +165,50 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addFlowMapViewingControls();
         addFlowDiagram();
         addPartAndFlows();
+        addFlowMapIssues();
         addSocialPanel();
     }
 
+    public boolean isShowingIssues() {
+        return showingIssues;
+    }
+
+    public void setShowingIssues( boolean showingIssues ) {
+        this.showingIssues = showingIssues;
+    }
+
+    private void addFlowMapIssues() {
+        flowMapIssuesContainer = new WebMarkupContainer( "flowMapIssuesContainer" );
+        flowMapIssuesContainer.setOutputMarkupId( true );
+        makeVisible( flowMapIssuesContainer, isShowingIssues() );
+        addOrReplace( flowMapIssuesContainer );
+        addFlowMapIssuesPanel();
+    }
+
+    private void addFlowMapIssuesPanel() {
+        FlowMapIssuesPanel flowMapIssuesPanel = new FlowMapIssuesPanel(
+                "flowMapIssues",
+                partModel,
+                new PropertyModel<Flow>( this, "selectedFlow" )
+        );
+        flowMapIssuesContainer.addOrReplace( flowMapIssuesPanel );
+    }
+
+    public Flow getSelectedFlow() {
+        Segment segment = getSegment();
+        for ( Long id : getExpansions() ) {
+            Flow flow = segment.getFlow( id );
+            if ( flow != null )
+                return flow;
+        }
+        return null;
+    }
+
     private void addPartAndFlows() {
+        partAndFlowsContainer = new WebMarkupContainer( "partAndFlows" );
+        partAndFlowsContainer.setOutputMarkupId( true );
+        makeVisible( partAndFlowsContainer, !isShowingIssues() );
+        addOrReplace( partAndFlowsContainer );
         addPartMenuBar();
         addPartTitleContainer();
         addPartMediaPanel();
@@ -180,7 +233,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addTipTitle( addPartLink, "Click to add a new task" );
         addPartLink.setOutputMarkupId( true );
         addPartLink.setVisible( getPlan().isDevelopment() );
-        addOrReplace( addPartLink );
+        partAndFlowsContainer.addOrReplace( addPartLink );
     }
 
     private void addPartActionsMenu() {
@@ -196,13 +249,13 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         }
         partActionsMenu.setOutputMarkupId( true );
         makeVisible( partActionsMenu, getPlan().isDevelopment() && isExpanded( getPart() ) );
-        addOrReplace( partActionsMenu );
+        partAndFlowsContainer.addOrReplace( partActionsMenu );
     }
 
     private void addPartShowMenu() {
         partShowMenu = new PartShowMenuPanel( "partShowMenu", partModel, getExpansions() );
         partShowMenu.setOutputMarkupId( true );
-        addOrReplace( partShowMenu );
+        partAndFlowsContainer.addOrReplace( partShowMenu );
     }
 
     private void addPartTitleContainer() {
@@ -216,7 +269,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                             ChannelsUtils.listToString( conceptualCauses,
                                     ", and " ) ) ) );
         }
-        addOrReplace( taskTitleContainer );
+        partAndFlowsContainer.addOrReplace( taskTitleContainer );
     }
 
     private String cssClasses() {
@@ -226,13 +279,13 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addPartMediaPanel() {
         partMediaPanel = new MediaReferencesPanel( "partMedia", partModel, getExpansions() );
         partMediaPanel.setOutputMarkupId( true );
-        addOrReplace( partMediaPanel );
+        partAndFlowsContainer.addOrReplace( partMediaPanel );
     }
 
     private void addChecklistIcon() {
         checklistIcon = new WebMarkupContainer( "checklist" );
         checklistIcon.setOutputMarkupId( true );
-        addOrReplace( checklistIcon );
+        partAndFlowsContainer.addOrReplace( checklistIcon );
         checklistIcon.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -256,7 +309,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private void addPartHelp() {
-        add( makeHelpIcon( "help", "info-sharing", "add-task" ) );
+        partAndFlowsContainer.add( makeHelpIcon( "help", "info-sharing", "add-task" ) );
     }
 
     private void addOverridesImage() {
@@ -278,7 +331,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             addTipTitle( overridesImage, new Model<String>( title ) );
         }
         makeVisible( overridesImage, overridden || overriding );
-        addOrReplace( overridesImage );
+        partAndFlowsContainer.addOrReplace( overridesImage );
     }
 
     private void addPartPanel() {
@@ -288,19 +341,19 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                         getExpansions(),
                         planPage() ) :
                 new CollapsedPartPanel( "part", new PropertyModel<Part>( this, "part" ), getExpansions() );
-        addOrReplace( partPanel );
+        partAndFlowsContainer.addOrReplace( partPanel );
     }
 
     private void addReceivesFlowPanel() {
         receivesFlowPanel = new FlowListPanel( "receives", partModel, false, getExpansions() );
         receivesFlowPanel.setOutputMarkupId( true );
-        addOrReplace( receivesFlowPanel );
+        partAndFlowsContainer.addOrReplace( receivesFlowPanel );
     }
 
     private void addSendsFlowPanel() {
         sendsFlowPanel = new FlowListPanel( "sends", partModel, true, getExpansions() );
         sendsFlowPanel.setOutputMarkupId( true );
-        addOrReplace( sendsFlowPanel );
+        partAndFlowsContainer.addOrReplace( sendsFlowPanel );
     }
 
     private void addSocialPanel() {
@@ -348,6 +401,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         super.addFlowMapViewingControls();
         addMaximizeControl();
         addMinimizeFlowMapControl();
+        addIssuesControl();
         addSimplifyControl();
     }
 
@@ -375,8 +429,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         WebMarkupContainer shrinkExpand = new WebMarkupContainer( "minimized" );
         final String script =
                 "if (! __channels_flowmap_minimized__) " + " {__graph_bottom = \"90%\"; __part_top = \"10%\"; }"
-                        + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}" + " $(\"" + FLOWMAP_DOM_ID
-                        + "\").css(\"bottom\",__graph_bottom); " + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
+                        + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}" + " $(\"" + FLOW_MAP_DOM_ID
+                        + "\").css(\"bottom\",__graph_bottom); "
+                        + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
+                        + " $(\"" + ISSUES_DOM_ID + "\").css(\"top\",__part_top);"
                         + " __channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";
         shrinkExpand.add( new AttributeModifier( "onMouseUp", new Model<String>( script ) ) );
         shrinkExpand.add( new AjaxEventBehavior( "onclick" ) {
@@ -392,9 +448,44 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         WebMarkupContainer icon = new WebMarkupContainer( "split_icon" );
         icon.add( new AttributeModifier( "src",
                 new Model<String>( minimized ? "images/split_on.png" : "images/split.png" ) ) );
-        addTipTitle( icon, new Model<String>( minimized ? "Shrink back forms" : "Stretch up forms" ) );
+        addTipTitle( icon, new Model<String>( minimized ? "Unsqueeze flow map" : "Squeeze flow map" ) );
         shrinkExpand.add( icon );
     }
+
+    private void addIssuesControl() {
+        // Simplify
+        WebMarkupContainer displayFlowMapIssues = new WebMarkupContainer( "issues" );
+        displayFlowMapIssues.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                setShowingIssues( !isShowingIssues() );
+                addFlowDiagram(); // todo - only display issues in red when showing issues
+                target.add( flowMapDiagramPanel );
+                makeVisible( partAndFlowsContainer, !isShowingIssues() );
+                target.add( partAndFlowsContainer );
+                makeVisible( flowMapIssuesContainer, isShowingIssues() );
+                target.add( flowMapIssuesContainer );
+                addFlowMapViewingControls();
+                target.add( getControlsContainer() );
+            }
+        } );
+        getControlsContainer().add( displayFlowMapIssues );
+        // icon
+        WebMarkupContainer icon = new WebMarkupContainer( "issues_icon" );
+        icon.add( new AttributeModifier(
+                "src",
+                new Model<String>( isShowingIssues()
+                        ? "images/hide_issues.png"
+                        : "images/show_issues.png" ) ) );
+        addTipTitle(
+                icon,
+                new Model<String>( isShowingIssues()
+                        ? "Hide issues"
+                        : "Show issues" ) );
+        displayFlowMapIssues.add( icon );
+    }
+
+
 
 
     public void changed( Change change ) {
@@ -426,7 +517,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
 
     @Override
     protected String getFlowMapDomId() {
-        return FLOWMAP_DOM_ID;
+        return FLOW_MAP_DOM_ID;
     }
 
     public Part getPart() {
@@ -485,11 +576,13 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 target.add( overridesImage );
                 addFlowMapViewingControls();
                 addFlowDiagram();
+                addFlowMapIssues();
                 setPartOrFlowUpdated( false );
                 target.appendJavaScript( PlanPage.IE7CompatibilityScript );
                 resizePartPanels( target );
                 target.add( getControlsContainer() );
                 target.add( flowMapDiagramPanel );
+                target.add( flowMapIssuesContainer );
                 target.add( taskTitleContainer );
                 target.add( partMediaPanel );
                 target.add( overridesImage );
@@ -655,6 +748,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addFlowDiagram();
         setPartOrFlowUpdated( false );
         target.add( flowMapDiagramPanel );
+        target.add( flowMapIssuesContainer );
         addFlowMapViewingControls();
         target.add( getControlsContainer() );
     }

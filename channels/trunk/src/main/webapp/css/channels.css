@@ -95,7 +95,7 @@ div.part-header div.section-content {
     background: #e8e8e8;
 }
 
-#graph, #part {
+#graph, #part, #flowMapIssues {
     position: absolute;
     left: 0;
     right: 0;
@@ -109,7 +109,7 @@ div.part-header div.section-content {
     margin: 0 0 0 0;
 }
 
-#part {
+#part , #flowMapIssues {
     bottom: 0;
     top: 50.5%;
     overflow: hidden;

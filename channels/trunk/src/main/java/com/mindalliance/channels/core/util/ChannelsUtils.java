@@ -31,6 +31,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -780,4 +781,12 @@ public final class ChannelsUtils {
         sb.append( line );
         return sb.toString();
     }
+
+    public static <T> void addIfNotNull( Collection<T> list, T... objects) {
+        for ( T obj : objects) {
+            if ( obj != null )
+                list.add( obj );
+        }
+    }
+
 }

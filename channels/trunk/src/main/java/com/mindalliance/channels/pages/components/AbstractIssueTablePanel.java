@@ -91,7 +91,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         super.redisplay( target );
     }
 
-    private void init() {
+    protected void init() {
         addIssueTypeChoice();
         addFilters();
         addIssuesTable();
@@ -193,7 +193,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
-            columns.add( makeColumn( "Kind", "detectorLabel", EMPTY ) );
+            columns.add( makeColumn( "Issue", "detectorLabel", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "About",
                     "about",
                     "about.label",

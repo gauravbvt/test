@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    of severity
+    <select wicket:id="severity">
+        <option>severe</option>
+    </select>
+    that are <select wicket:id="detectedReported">
+        <option>Detected or reported</option>
+        <option>Detected</option>
+        <option>Reported</option>
+    </select>
+    about <span wicket:id="about">selected task label</span>
+    <input wicket:id="includePeripheral" type="checkbox"/> including peripheral issues
+    <input wicket:id="includeWaived" type="checkbox"/> and waived issues
+</wicket:extend>
+</body>
+</html>
