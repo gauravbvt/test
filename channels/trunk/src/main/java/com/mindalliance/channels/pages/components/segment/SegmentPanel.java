@@ -459,8 +459,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 setShowingIssues( !isShowingIssues() );
-                addFlowDiagram(); // todo - only display issues in red when showing issues
+/*
+                addFlowDiagram(); // todo - only display issues in red when showing issues?
                 target.add( flowMapDiagramPanel );
+*/
                 makeVisible( partAndFlowsContainer, !isShowingIssues() );
                 target.add( partAndFlowsContainer );
                 makeVisible( flowMapIssuesContainer, isShowingIssues() );

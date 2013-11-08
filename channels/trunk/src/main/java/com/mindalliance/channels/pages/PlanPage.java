@@ -818,7 +818,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addFeedback() {
-        form.add( new UserFeedbackPanel( "feedback", Feedback.PLANNING ) );
+        form.add( new UserFeedbackPanel( "feedback", Feedback.TEMPLATES ) );
     }
 
 

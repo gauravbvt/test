@@ -35,6 +35,17 @@ public interface FeedbackService extends DataService<Feedback>, MessageOutboxSer
             boolean urgent,
             ModelObject mo );
 
+    void sendFeedback(
+            String username,
+            CommunityService communityService,
+            Feedback.Type type,
+            String topic,
+            String text,
+            boolean urgent,
+            ModelObject mo,
+            String context );
+
+
     List<Feedback> listNotYetNotifiedNormalFeedbacks( CommunityService communityService );
 
     List<Feedback> listNotYetNotifiedUrgentFeedbacks( CommunityService communityService );

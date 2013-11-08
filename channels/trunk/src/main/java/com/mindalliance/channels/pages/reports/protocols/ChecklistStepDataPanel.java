@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -65,6 +67,7 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
         addStepAct();
         addInstructions();
         addMoreLessButton();
+        addFeedbackPanel();
     }
 
     private void addStepAct() {
@@ -110,6 +113,18 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
         moreLessButton.add( new AttributeModifier( "class", "more" ) );
         stepContainer.addOrReplace( moreLessButton );
     }
+
+    private void addFeedbackPanel() {
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                getChecklist().getPart(),
+                "Feedback",
+                Feedback.CHECKLISTS,
+                "the step " + getStep().getLabel()
+        );
+        stepContainer.addOrReplace( feedbackPanel );
+    }
+
 
     private void addMoreContainer() {
         moreContainer = new WebMarkupContainer( "moreContainer" );

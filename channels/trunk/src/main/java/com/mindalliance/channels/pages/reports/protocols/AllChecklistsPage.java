@@ -52,7 +52,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
     @Override
     protected String getFeedbackType() {
-        return Feedback.PARTICIPATING;
+        return Feedback.CHECKLISTS;
     }
 
 

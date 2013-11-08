@@ -66,11 +66,10 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             ANY,
             Feedback.CHANNELS,
             Feedback.FEEDBACK,
-            Feedback.GUIDELINES,
-            Feedback.INFO_NEEDS,
+            Feedback.CHECKLISTS,
             Feedback.ISSUES,
-            Feedback.PARTICIPATING,
-            Feedback.PLANNING,
+            Feedback.PARTICIPATION,
+            Feedback.TEMPLATES,
             Feedback.SURVEYS,
             Feedback.REQUIREMENTS
     };
@@ -490,15 +489,15 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         }
 
         public String getTypeLabel() {
-            return feedback.getTypeLabel();
+            return StringUtils.capitalize( feedback.getTypeLabel() );
         }
 
         public String getResolvedLabel() {
-            return feedback.isResolved() ? "yes" : "no";
+            return feedback.isResolved() ? "Yes" : "No";
         }
 
         public String getUrgentLabel() {
-            return feedback.isUrgent() ? "yes" : "no";
+            return feedback.isUrgent() ? "Yes" : "No";
         }
 
         public String getFormattedCreated() {

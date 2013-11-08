@@ -122,7 +122,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getFeedbackType() {
-        return Feedback.PROTOCOLS;
+        return Feedback.CHECKLISTS;
     }
 
     @Override

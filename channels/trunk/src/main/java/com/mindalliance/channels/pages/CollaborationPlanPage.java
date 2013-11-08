@@ -510,7 +510,7 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getFeedbackType() {
-        return Feedback.CHANNELS;
+        return Feedback.PLANS;
     }
 
     @Override

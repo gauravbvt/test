@@ -2,6 +2,8 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -35,6 +37,7 @@ public class QueryAnswerPanel extends AbstractDataPanel {
     private void init() {
         addQueryContainer();
         addAnswer();
+        addFeedbackPanel();
         addMoreLessButton();
         addCommitment();
     }
@@ -60,6 +63,16 @@ public class QueryAnswerPanel extends AbstractDataPanel {
 
     private Flow getSharing() {
         return requestData.getSharing();
+    }
+
+    private void addFeedbackPanel() {
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                requestData.flow(),
+                "Feedback",
+                Feedback.CHECKLISTS
+        );
+        queryContainer.addOrReplace( feedbackPanel );
     }
 
     private void addMoreLessButton() {

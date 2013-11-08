@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Channels;
@@ -26,12 +27,11 @@ import java.util.List;
 public class Feedback extends UserStatement {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
-    public static final String PROTOCOLS = "Protocols";
-    public static final String GUIDELINES = "Guidelines";
-    public static final String INFO_NEEDS = "Info needs";
+    public static final String CHECKLISTS = "Checklists";
     public static final String SURVEYS = "Surveys";
-    public static final String PLANNING = "Planning";
-    public static final String PARTICIPATING = "Participating";
+    public static final String TEMPLATES = "Templates";
+    public static final String PLANS = "Plans";
+    public static final String PARTICIPATION = "Participation";
     public static final String ISSUES = "Issues";
     public static final String FEEDBACK = "Feedback";
     public static final String REQUIREMENTS = "Requirements";
@@ -70,6 +70,7 @@ public class Feedback extends UserStatement {
     private String fromEmail;
     private Type type;
     private String topic;
+    private String context;
     private boolean urgent;
     private Date whenNotified;
     private boolean resolved;
@@ -99,6 +100,14 @@ public class Feedback extends UserStatement {
 
     public void setType( Type type ) {
         this.type = type;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext( String context ) {
+        this.context = context;
     }
 
     public boolean isUrgent() {
@@ -268,5 +277,16 @@ public class Feedback extends UserStatement {
     @Override
     public String getLabel() {
         return "Feedback";
+    }
+
+    @Override
+    public String messageContent() {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( super.messageContent() );
+        if ( context != null && !context.isEmpty() ) {
+            sb.append( " - re. ")
+                    .append( context );
+        }
+        return sb.toString();
     }
 }

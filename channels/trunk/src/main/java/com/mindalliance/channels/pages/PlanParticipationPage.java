@@ -67,7 +67,7 @@ public class PlanParticipationPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getFeedbackType() {
-        return Feedback.PARTICIPATING;
+        return Feedback.PARTICIPATION;
     }
 
     @Override

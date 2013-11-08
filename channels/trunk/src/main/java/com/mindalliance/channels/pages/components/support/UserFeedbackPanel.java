@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.support;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -59,8 +60,10 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private AjaxLink sendButton;
     private String feedbackLabel;
     private String topic;
+    private final String context;
     private WebMarkupContainer feedbackOptionsContainer;
     private AjaxLink<String> newFeedback;
+    private boolean opened = false;
 
 
     public UserFeedbackPanel( String id ) {
@@ -77,15 +80,18 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     public UserFeedbackPanel( String id, Identifiable about, String label, String topic ) {
+        this( id, about, label, topic, null );
+    }
+
+
+    public UserFeedbackPanel( String id, Identifiable about, String label, String topic, String context ) {
         super( id );
         this.about = about;
         feedbackLabel = label;
         this.topic = topic;
+        this.context = context;
         init();
     }
-
-
-
 
     private void init() {
         addNewFeedbackLink();
@@ -103,13 +109,17 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         newFeedback = new AjaxLink<String>( "newFeedback" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                newFeedback.add(  new AttributeModifier( "class", "feedback-button feedback-button-active" ) );
+                opened = !opened;
+                newFeedback.add( new AttributeModifier(
+                        "class",
+                        opened ? "feedback-button feedback-button-active" : "feedback-button" ) );
                 target.add( newFeedback );
-                makeVisible( feedbackContainer, true );
+                makeVisible( feedbackContainer, opened );
                 target.add( feedbackContainer );
             }
         };
-        add( newFeedback );
+        newFeedback.setOutputMarkupId( true );
+        addOrReplace( newFeedback );
         newFeedback.add( new Label( "label", getFeedbackLabel() ) );
     }
 
@@ -131,7 +141,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         addOtherOptions();
     }
 
-     private void addSelectedOption() {
+    private void addSelectedOption() {
         AjaxLink<String> selectedOptionLink = new AjaxLink<String>( "selectedOptionLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -175,7 +185,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private List<String> getOtherFeedbackOptionNames() {
-        List<String> others = new ArrayList<String>(  );
+        List<String> others = new ArrayList<String>();
         for ( Feedback.Type value : Feedback.Type.values() ) {
             if ( value != selectedFeedbackOption ) {
                 others.add( value.getLabel() );
@@ -225,11 +235,15 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
                     String alert = success
                             ? "Feedback sent. Thank you!"
                             : "Oops! Your feedback could not be sent. Sorry.";
-                    target.appendJavaScript( "alert('" + alert + "');" );
+                    Change change = new Change( Change.Type.None );
+                    change.setMessage( alert );
                     resetFeedback();
                     updateFields( target );
                     makeVisible( feedbackContainer, !success );
                     target.add( feedbackContainer );
+                    addNewFeedbackLink();
+                    target.add( newFeedback );
+                    update( target, change );
                 } else {
                     target.appendJavaScript( "alert('Please enter a short text.');" );
                     target.add( feedbackContainer );
@@ -244,10 +258,12 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 resetFeedback();
                 updateFields( target );
-                newFeedback.add(  new AttributeModifier( "class", "feedback-button" ) );
+                newFeedback.add( new AttributeModifier( "class", "feedback-button" ) );
                 target.add( newFeedback );
                 makeVisible( feedbackContainer, false );
                 target.add( feedbackContainer );
+                addNewFeedbackLink();
+                target.add( newFeedback );
             }
         };
         feedbackContainer.add( cancelButton );
@@ -261,7 +277,10 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         feedback.setFromEmail( currentUser.getEmail() );
         feedback.setUrgent( isAsap() );
         if ( about != null && about instanceof ModelObject ) {
-            feedback.setMoRef( (ModelObject)about );
+            feedback.setMoRef( (ModelObject) about );
+        }
+        if ( context != null ) {
+            feedback.setContext( context );
         }
         try {
             feedbackService.save( feedback );
@@ -279,7 +298,6 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
 
-
     private String getClientProperties() {
         WebClientInfo clientInfo = getUser().getClientInfo();
         if ( clientInfo != null ) {
@@ -293,6 +311,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         selectedFeedbackOption = Feedback.Type.PROBLEM;
         asap = false;
         content = "";
+        opened = false;
     }
 
 

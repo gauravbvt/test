@@ -265,6 +265,7 @@ a.back {
 	outline: none;
 	float:right;
 	font-family: Arial,Helvetica,sans-serif;
+    line-height: normal;
 }
 
 a.back {

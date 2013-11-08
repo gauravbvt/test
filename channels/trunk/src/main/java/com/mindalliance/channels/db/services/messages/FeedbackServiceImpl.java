@@ -77,6 +77,26 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
     }
 
     @Override
+    public void sendFeedback(
+            String username,
+            CommunityService communityService,
+            Feedback.Type type,
+            String topic,
+            String text,
+            boolean urgent,
+            ModelObject about,
+            String context ) {
+        Feedback feedback = new Feedback( username, type, communityService.getPlanCommunity() );
+        feedback.setTopic( topic );
+        feedback.setText( text );
+        feedback.setUrgent( urgent );
+        feedback.setMoRef( about );
+        feedback.setContext( context );
+        getDb().insert( feedback );
+    }
+
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<Feedback> listNotYetNotifiedNormalFeedbacks( CommunityService communityService ) {
         QFeedback qFeedback = QFeedback.feedback;

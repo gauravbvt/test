@@ -101,4 +101,7 @@ public abstract class UserStatement extends AbstractModelObjectReferencingDocume
     abstract protected String getTextSubject( Format format, CommunityService communityService );
 
 
+    public String messageContent() {
+        return getText();
+    }
 }

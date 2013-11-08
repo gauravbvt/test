@@ -10,8 +10,10 @@ import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Step;
+import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.diagrams.ChecklistFlowDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -56,6 +58,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
     private void init() {
         add( makeAnchor( "anchor", checklistData.getAnchor() ) );
+        addFeedbackPanel();
         addTaskName();
         addFailureImpact();
         addTaskDetails();
@@ -70,6 +73,17 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         //   add( new Label( "org", procedureData.getOrganizationLabel() )  );
 
     }
+
+    private void addFeedbackPanel() {
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                checklistData.getAssignment().getPart(),
+                "Feedback",
+                Feedback.CHECKLISTS
+        );
+        add( feedbackPanel );
+    }
+
 
     // TASK DETAILS
 
@@ -173,6 +187,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         checklistContainer = new WebMarkupContainer( "checklist" );
         add( checklistContainer );
         addChecklistFlowIcon();
+        addChecklistFeedbackPanel();
         ListView<ChecklistStepData> stepListView = new ListView<ChecklistStepData>(
                 "steps",
                 checklistData.getSteps()
@@ -190,6 +205,17 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         };
         checklistContainer.setVisible( !checklistData.getSteps().isEmpty() );
         checklistContainer.add( stepListView );
+    }
+
+    private void addChecklistFeedbackPanel() {
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                checklistData.getAssignment().getPart(),
+                "Feedback",
+                Feedback.CHECKLISTS,
+                "the checklist"
+        );
+        checklistContainer.add( feedbackPanel );
     }
 
     private ChecklistStepDataPanel makeChecklistStepDataPanel( String step,

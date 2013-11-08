@@ -403,7 +403,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getFeedbackType() {
-        return Feedback.CHANNELS;
+        return Feedback.TEMPLATES;
     }
 
     @Override

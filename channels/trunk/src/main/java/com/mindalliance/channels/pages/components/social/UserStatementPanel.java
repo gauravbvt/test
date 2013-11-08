@@ -66,7 +66,7 @@ abstract public class UserStatementPanel extends AbstractSocialEventPanel {
     }
 
     private void addMessage( WebMarkupContainer socialItemContainer ) {
-        Label messageLabel = new Label( "text", new Model<String>( getUserStatement().getText() ) );
+        Label messageLabel = new Label( "text", new Model<String>( getUserStatement().messageContent() ) );
         socialItemContainer.add( messageLabel );
     }
 

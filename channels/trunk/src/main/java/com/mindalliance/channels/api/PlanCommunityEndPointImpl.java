@@ -235,7 +235,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     user.getUsername(),
                     getCommunityService( planCommunity.getPlanUri() ),
                     Feedback.Type.valueOf( type ),
-                    Feedback.PROTOCOLS,
+                    Feedback.CHECKLISTS,
                     feedback,
                     Boolean.parseBoolean( urgent ) );
         } catch ( Exception e ) {
