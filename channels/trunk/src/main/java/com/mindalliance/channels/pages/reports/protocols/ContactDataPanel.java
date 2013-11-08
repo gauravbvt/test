@@ -4,6 +4,8 @@ import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -44,6 +46,7 @@ public class ContactDataPanel extends AbstractDataPanel {
         add( makeAnchor( "anchor", contactData.anchor() ) );
         addName();
         addEmployment();
+        addFeedbackPanel();
         addWorkAddresses();
         addPersonalAddresses();
         addAvailability();
@@ -62,6 +65,19 @@ public class ContactDataPanel extends AbstractDataPanel {
     private void addEmployment() {
         add( new Label( "employment", contactData.getEmployment().getLabel() ) );
     }
+
+    private void addFeedbackPanel() {
+        String userFullName = contactData.getUserFullName();
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                null,
+                "Feedback",
+                Feedback.CHECKLISTS,
+                "contact " + (userFullName == null ? "" : userFullName)
+        );
+        add( feedbackPanel );
+    }
+
 
     private void addWorkAddresses() {
         WebMarkupContainer addressContainer = new WebMarkupContainer( "work" );

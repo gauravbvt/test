@@ -5,6 +5,8 @@ import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -40,6 +42,7 @@ public class AgencyContactPanel extends AbstractDataPanel {
 
     private void init() {
         addName();
+        addFeedbackPanel();
         addOrgContactDetails();
     }
 
@@ -67,6 +70,18 @@ public class AgencyContactPanel extends AbstractDataPanel {
     private void addName() {
         add( new Label( "name", agencyData == null ? "???" : agencyData.getName() ) );
     }
+
+    private void addFeedbackPanel() {
+        UserFeedbackPanel feedbackPanel = new UserFeedbackPanel(
+                "feedback",
+                null,
+                "Feedback",
+                Feedback.CHECKLISTS,
+                " organization " + ( agencyData == null ? "???" : agencyData.getName() )
+        );
+        add( feedbackPanel );
+    }
+
 
     private void addParent() {
         AgencyData parentData = agencyData.getParent();
