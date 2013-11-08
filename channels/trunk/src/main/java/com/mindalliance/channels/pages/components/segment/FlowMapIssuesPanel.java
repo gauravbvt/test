@@ -157,7 +157,7 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
         SegmentObject segmentObject = getSelectedSegmentObject();
         String label = segmentObject.getTypeName()
                 + " \""
-                + (segmentObject instanceof Part ? ((Part)segmentObject).getTask() : segmentObject.getName() )
+                + ( segmentObject instanceof Part ? ( (Part) segmentObject ).getTask() : segmentObject.getName() )
                 + "\"";
         add( new Label( "about", label ) );
     }
@@ -178,7 +178,7 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
     private void addIncludeWaived() {
         AjaxCheckBox includeWaivedCheckBox = new AjaxCheckBox(
                 "includeWaived",
-                new PropertyModel<Boolean>( this, "includeWaived" ) ){
+                new PropertyModel<Boolean>( this, "includeWaived" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
@@ -217,11 +217,11 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
     public List<? extends Issue> getIssues() {
         SegmentObject about = getSelectedSegmentObject();
         List<Issue> issues = new ArrayList<Issue>();
-        for ( Issue issue : getAnalyst().listIssues( getQueryService(), (ModelObject)about, true, includeWaived ) ) {
+        for ( Issue issue : getAnalyst().listIssues( getQueryService(), (ModelObject) about, true, includeWaived ) ) {
             issues.add( issue );
         }
         if ( isPeripheralIssuesIncluded() ) {
-            for (ModelObject peripheral : findPeripheralModelObjects( about ) ) {
+            for ( ModelObject peripheral : findPeripheralModelObjects( about ) ) {
                 for ( Issue issue : getAnalyst().listIssues( getQueryService(), peripheral, true, includeWaived ) ) {
                     issues.add( issue );
                 }
@@ -234,32 +234,30 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
     }
 
     private Set<ModelObject> findPeripheralModelObjects( SegmentObject segmentObject ) {
-        Set<ModelObject> mos = new HashSet<ModelObject>(  );
+        Set<ModelObject> mos = new HashSet<ModelObject>();
         mos.add( getPlan() );
         mos.add( segmentObject.getSegment() );
         if ( segmentObject instanceof Part ) {
-           Part part = (Part)segmentObject;
-           ChannelsUtils.addIfNotNull( mos,
-                   part.getFunction(),
-                   part.getActor(),
-                   part.getInitiatedEvent(),
-                   part.getJurisdiction(),
-                   part.getOrganization(),
-                   part.getRole(),
-                   part.getKnownLocation()
-           );
-        } else if ( segmentObject instanceof Flow ) {
-            Flow flow = (Flow)segmentObject;
+            Part part = (Part) segmentObject;
             ChannelsUtils.addIfNotNull( mos,
-                    flow.getInfoProduct(),
-                    flow.getSource(),
-                    flow.getTarget()
-                    );
+                    part.getFunction(),
+                    part.getActor(),
+                    part.getInitiatedEvent(),
+                    part.getJurisdiction(),
+                    part.getOrganization(),
+                    part.getRole(),
+                    part.getKnownLocation()
+            );
+        } else if ( segmentObject instanceof Flow ) {
+            Flow flow = (Flow) segmentObject;
+            ChannelsUtils.addIfNotNull( mos,
+                    flow.getInfoProduct()
+            );
             for ( Channel channel : flow.getEffectiveChannels() ) {
                 ChannelsUtils.addIfNotNull( mos,
                         channel.getFormat(),
                         channel.getMedium()
-                        );
+                );
             }
         }
         return mos;
@@ -298,8 +296,8 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return getDetectedOrReported().equals( DETECTED_OR_REPORTED )
-                                || ( ( getDetectedOrReported().equals( DETECTED ) ) && ((Issue)obj).isDetected() )
-                                || ( ( getDetectedOrReported().equals( REPORTED ) ) && !((Issue)obj).isDetected() );
+                                || ( ( getDetectedOrReported().equals( DETECTED ) ) && ( (Issue) obj ).isDetected() )
+                                || ( ( getDetectedOrReported().equals( REPORTED ) ) && !( (Issue) obj ).isDetected() );
                     }
                 }
         );

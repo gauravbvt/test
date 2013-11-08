@@ -635,6 +635,7 @@
                         produce collaboration checklists.
                     </description>
                 </item>
+                <next section="info-sharing" topic="flow-map"/>
                 <next section="about-template-developer" topic="protocols"/>
                 <next section="about-template-developer" topic="development-team"/>
                 <next section="about-template-developer" topic="attributions"/>
