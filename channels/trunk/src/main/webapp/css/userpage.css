@@ -2401,6 +2401,7 @@ input[type='text'] {
 .w_content_container table {
     width: 100%;
     font-size: 11px;
+    border-collapse: collapse;
 }
 
 /*
@@ -2416,8 +2417,26 @@ input[type='text'] {
     text-align: left;
 }
 
+.w_content_container table td.location-panel {
+	padding: 2px 0 10px;
+}
+
+.w_content_container table table td {
+    border: medium none;
+    padding: 10px 10px 0;
+}
+
 .w_content_container table th {
 	text-align: right;
+}
+
+.w_content_container table table th {
+    border-bottom: 1px dotted #999999;
+    color: #666666;
+    font-size: 10px;
+    padding: 5px 10px;
+    text-align: left;
+    text-transform: uppercase;
 }
 
 .req-section {
