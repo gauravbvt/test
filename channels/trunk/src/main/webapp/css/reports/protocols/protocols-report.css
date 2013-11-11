@@ -739,7 +739,9 @@ table.checklist-step-outcomes {
 
 .checklist span.checklist-confirmed,
 .checklist a.checklist-flowmap,
-.checklist a.more {
+.checklist a.more,
+.checklist div.feedback a.feedback-button,
+.protocols-contents div.feedback a.feedback-button {
     color: #000000;
     float: right;
     font-size: 10px;
@@ -750,6 +752,28 @@ table.checklist-step-outcomes {
     font-weight: normal;
     border: none;
     cursor: pointer;
+}
+
+.checklist div.feedback a.feedback-button,
+.protocols-contents div.feedback a.feedback-button {
+    font-family: Arial,Helvetica,sans-serif;
+    outline: none;
+    background: none;
+    border: 1px solid #4A89DC;
+    color: #4A89DC;
+}
+
+.checklist div.feedback div.feedback-form-cont,
+.protocols-contents div.feedback div.feedback-form-cont {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #4A89DC;
+    display: block;
+    font-size: 11px;
+    margin: 27px 0 0;
+    padding: 10px;
+    position: absolute;
+    line-height: 100%;
+    text-transform: none;
 }
 
 .checklist span.checklist-confirmed {
@@ -769,12 +793,22 @@ table.checklist-step-outcomes {
 	margin: 0;
 }
 
+.checklist .checklist-step-title div.feedback a.feedback-button {
+	margin: 0 0 0 10px;
+}
+
+.checklist .checklist-step-title div.feedback div.feedback-form-cont {
+	margin: 17px 0 0 10px;
+}
+
 div.protocols-contents div.expected-queries a.more {
 	margin: 10px 10px 0 0;
 }
 
 .checklist a.more:hover,
-.checklist a.checklist-flowmap:hover {
+.checklist a.checklist-flowmap:hover,
+.checklist div.feedback a.feedback-button:hover,
+.protocols-contents div.feedback a.feedback-button:hover {
     background: none repeat scroll 0 0 #5D9CEC;
     border: 1px solid #4A89DC;
     color: #FFFFFF;
