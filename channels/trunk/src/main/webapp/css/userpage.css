@@ -2430,6 +2430,11 @@ input[type='text'] {
 	text-align: right;
 }
 
+.w_content_container table th.location-panel-label {
+    padding-top: 40px;
+    vertical-align: top;
+}
+
 .w_content_container table table th {
     border-bottom: 1px dotted #999999;
     color: #666666;
