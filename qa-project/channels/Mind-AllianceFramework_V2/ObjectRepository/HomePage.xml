@@ -1,111 +1,89 @@
-<?xml version="1.0"?>
-<elements>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Elements>
+
 	<Element>
-		<GivenName>Plan Page Title</GivenName>
-		<Title>Channels: ACME Emergency Communication Plan</Title>
+			<GivenName>Login Page Title</GivenName>
+			<Title>Channels - Sign in</Title>
 	</Element>
 	
 	<Element>
-		<GivenName>Login Page Title</GivenName>
-		<Title>Channels - Sign in</Title>
-	</Element>
-	<Element>
-		<GivenName>Messages Tab Text</GivenName>
-		<Name>Messages</Name>
-	</Element>
-	<Element>
-		<GivenName>Calendar Tab Text</GivenName>
-		<Name>Calendar</Name>
-	</Element>
-	<Element>
-		<GivenName>About Me Tab Text</GivenName>
-		<Name>About Me</Name>
-	</Element>
-	<Element>
-		<GivenName>Admin Page Title</GivenName>
-		<Title>Channels - Collaboration Planning</Title>
-	</Element>
-	<Element>
-		<GivenName>Collaboration Plans Page Title</GivenName>
-		<Title>All Collaboration Plans</Title>
-	</Element>
-	<Element>
-		<GivenName>Show Received Text</GivenName>
-		<Name>show received</Name>
-	</Element>
-	<Element>
-		<GivenName>Hide Broadcasts Name</GivenName>
-		<Name>hide broadcasts</Name>
+			<GivenName>Help Page Title</GivenName>
+			<Title>Channels - Help</Title>
 	</Element>
 	
 	<Element>
-		<GivenName>Show All Messages Name</GivenName>
-		<Name>show all messages</Name>
+			<GivenName>Plan Page Title</GivenName>
+			<Title>Channels:</Title>
 	</Element>
+	
 	<Element>
-		<GivenName>Communities</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/img</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText>COLLABORATION MODEL</LinkText>
-		<ClassName></ClassName>
+			<GivenName>Send Feedback On Help Title</GivenName>
+			<Title>Send Feedback</Title>
 	</Element>
+	
 	<Element>
-		<GivenName>Collaboration Plan</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+			<GivenName>Send Feedback Alert Window</GivenName>
+			<Title>Feedback sent. Thank you</Title>
 	</Element>
+	
 	<Element>
-		<GivenName>Issues Report Link</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[2]/a</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText>Template</LinkText>
-		<ClassName></ClassName>
+			<GivenName>Send Blank Feedback Alert Window</GivenName>
+			<Title>Please enter a short text</Title>
 	</Element>
-	<Element>
- 		<GivenName>Channels Admin Link</GivenName>
- 		<Xpath></Xpath>
+	
+ 	<Element>
+ 		<GivenName>Send Feedback</GivenName>
+ 		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText>CHANNELS SETTINGS</LinkText>
+    	<LinkText>Send Feedback</LinkText>
     	<ClassName></ClassName>
  	</Element>
  	
  	<Element>
- 		<GivenName>Domain Plan Editor</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
- 		<Name></Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText>Collaboration Template Editor</LinkText>
-    	<ClassName></ClassName>
- 	</Element>
- 	
- 	<Element>
-		<GivenName>Domain Plan Editor Page Title</GivenName>
-		<Title>Channels: </Title>
-	</Element>
-	
- 	<Element>
- 		<GivenName>Messages In Social Panel</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[2]/a/span</Xpath>
+ 		<GivenName>Send Feedback Text Field</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div/textarea</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
  	<Element>
- 		<GivenName>Calender In Social Panel</GivenName>tab3 last
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[4]/a/span</Xpath>
+ 		<GivenName>Send Feedback Button</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Cancel Feedback Button</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Send Feedback As Question</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>	Send Feedback As Problem</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -113,9 +91,29 @@
     	<ClassName></ClassName>
  	</Element>
  
+   <Element>
+ 		<GivenName>	Send Feedback As Suggestion</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li[2]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	<Element>
- 		<GivenName>Show Sent In Social Panel</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+ 		<GivenName>Send Feedback DropDown</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Urgent Checkbox</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[2]/input</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -124,48 +122,99 @@
  	</Element>
  	
  	<Element>
-		<GivenName>Hide Broadcasts In Social Panel</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
-	
-	<Element>
-		<GivenName>Show All Messages In Social Panel</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
-	
-	<Element>
-		<GivenName>Issues Report Heading</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div/h1</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
-	
+ 		<GivenName>Send Feedback On Help</GivenName>
+ 		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	
+ 	
+ 	 	
+ 	<Element>
+ 		<GivenName>Help</GivenName>
+ 		<Xpath>//a[contains(@class,'help')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Help</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+
 	<Element>
-		<GivenName>Plan dropdown</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div[2]/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
+ 		<GivenName>Help On Plan Page</GivenName>
+ 		<Xpath>//a[contains(@class,'help')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Help</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+	
+ 	<Element>
+ 		<GivenName>Sign Out</GivenName>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sign Out</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Sign Out Admin</GivenName>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sigh Out Admin</LinkText>
+    	<ClassName>logout</ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Sign Out Plan</GivenName>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sigh Out Plan</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Sign Out Communities</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Home Image Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Home Tab Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[2]/div/ul/li/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
  	
  	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
  	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
  	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
-</elements>
+ 	
+</Elements>
