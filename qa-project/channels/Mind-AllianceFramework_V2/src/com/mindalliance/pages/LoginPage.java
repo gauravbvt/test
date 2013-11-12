@@ -40,9 +40,18 @@ public class LoginPage {
 		UIActions.click(fileName,"submitButton",GlobalVariables.configuration.getAttrSearchList(), "Login button");
 			
 		// Assertion : Check Title of Page
+		if(userName.equals("admin")&&passWord.equals("admin"))
+		{
     	String title=dataController.getPageDataElements(fileName, "Home Page Title", "Title");
     	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
     	UIActions.waitForTitle(title,timeout);
+		}
+		else
+		{
+	    	String title=dataController.getPageDataElements(fileName, "Login Page Title for Invalid Login", "Title");
+	    	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
+	    	UIActions.waitForTitle(title,timeout);
+			}
 	}
 	
 	/**
@@ -59,6 +68,7 @@ public class LoginPage {
     	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
     	UIActions.waitForTitle(title,timeout);
 	}
+	
 	
 	
 	public void clickBackToLoginLink() throws UIAutomationException{
