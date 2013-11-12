@@ -88,6 +88,7 @@ public class HP0005_CollaborationTemplatesLink extends TestCase{
 			LogFunctions.writeResults(testCaseId, stepNo, description, failed, scriptException, blank);
 		}
 	}
+	
 	/**
 	 * This method verify that admin page is displayed by clicking on 'Channels Settings' link
 	 * @throws UIAutomationException
