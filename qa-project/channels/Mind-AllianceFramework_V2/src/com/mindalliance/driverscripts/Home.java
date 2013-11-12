@@ -21,16 +21,6 @@ public class Home {
 		new ElementController();
 		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
 
-		suite.addTestSuite(CL0001_LoginPage.class);
-		suite.addTestSuite(CL0007_ClickSignInButton.class);
-		suite.addTestSuite(CL0009_LogInvalidUserName.class);
-		suite.addTestSuite(CL0010_LoginWithInvalidPassword.class);
-		suite.addTestSuite(CL0011_LoginWithInvalidUsername.class);
-		suite.addTestSuite(CL0012_LoginWithInvalidUsernamePassword.class);
-		suite.addTestSuite(CL0013_BlankUsernamePassword.class);
-		suite.addTestSuite(CL0018_ClickCantAccessYourAccountLink.class);
-		suite.addTestSuite(CL0022_ClickBackToLoginLink.class);
-		
 		//		View
 		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
@@ -266,27 +256,48 @@ public class Home {
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
 */		
+    	
+    	// Channels Login
 
-      //Channels Headers
-      suite.addTestSuite(CH0004_SendFeedback.class);
-      suite.addTestSuite(CH0005_SendInvalidFeedback.class);
-      suite.addTestSuite(CH0006_SendFeedBackAsQuestion.class);
-      suite.addTestSuite(CH0008_SendFeedbackAsSuggestion.class);
-      suite.addTestSuite(CH0009_SendFeedbackAsUrgent.class);
-      suite.addTestSuite(CH0010_SendBlankFeedback.class);
-      suite.addTestSuite(CH0011_CancelSendFeedback.class);
+    	suite.addTestSuite(CL0001_LoginPage.class);
+		suite.addTestSuite(CL0007_ClickSignInButton.class);
+		suite.addTestSuite(CL0009_LogInvalidUserName.class);
+		suite.addTestSuite(CL0010_LoginWithInvalidPassword.class);
+		suite.addTestSuite(CL0011_LoginWithInvalidUsername.class);
+		suite.addTestSuite(CL0012_LoginWithInvalidUsernamePassword.class);
+		suite.addTestSuite(CL0013_BlankUsernamePassword.class);
+		suite.addTestSuite(CL0018_ClickCantAccessYourAccountLink.class);
+		suite.addTestSuite(CL0022_ClickBackToLoginLink.class);
+		
+		//Channels Headers
+		suite.addTestSuite(CH0004_SendFeedback.class);
+		suite.addTestSuite(CH0005_SendInvalidFeedback.class);
+		suite.addTestSuite(CH0006_SendFeedBackAsQuestion.class);
+		suite.addTestSuite(CH0008_SendFeedbackAsSuggestion.class);
+		suite.addTestSuite(CH0009_SendFeedbackAsUrgent.class);
+		suite.addTestSuite(CH0010_SendBlankFeedback.class);
+		suite.addTestSuite(CH0011_CancelSendFeedback.class);
       
-      //Collaboration Templates Page
-      
-      suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
-      suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
-      suite.addTestSuite(CT0007_ClickSurveysLink.class);
-      suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
+		// Channels Home Page
+		suite.addTestSuite(HP0001_HomePage.class);
+		suite.addTestSuite(HP0002_WelcomeMessage.class);
+		suite.addTestSuite(HP0003_CommunitiesLinkPresent.class);
+		suite.addTestSuite(HP0004_ClickCommunitiesLink.class);
+		suite.addTestSuite(HP0005_CollaborationTemplatesLink.class);
+		suite.addTestSuite(HP0006_ClickCollaborationTemplatesLink.class);
+		suite.addTestSuite(HP0007_ChannelSettingsPresent.class);
+		suite.addTestSuite(HP0008_ClickChannelsSettings.class);
+		
+		// Collaboration Templates Page
+		suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
+		suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
+		suite.addTestSuite(CT0007_ClickSurveysLink.class);
+		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
    
-      //Collaboration Panel
-      
-      
-      return suite;
+		//Collaboration Panel
+		
+		
+		return suite;
 	}
 }
 
