@@ -29,15 +29,15 @@ import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.LoginPage;
 
 /**
- * Testcase ID: CL0009_LogInvalidUserName
- * 	   Summary: Verify that user is able to log in when he enters valid Username and password
+ * Testcase ID: CL0010_LoginWithInvalidPassword
+ * 	   Summary: Verify that user is not able to login when invalid password is entered
  * @author Afour
  *
  */
 
-public class CL0009_LogInvalidUserName extends TestCase {
+public class CL0010_LoginWithInvalidPassword extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="CL0009_LogInvalidUserName";
+	public String testCaseId="CL0010_LoginWithInvalidPassword";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -88,7 +88,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
 	}
 	
 	@Test
-	public void testCL0009_LogInvalidUserName() throws UIAutomationException, IOException {
+	public void testCL0010_LoginWithInvalidPassword() throws UIAutomationException, IOException {
 		try{
 			stepNo++;
 			description="URL Entered";
@@ -101,7 +101,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
  			
 			// Login page
 			stepNo++;
-			description="Login Successful";
+			description="Login Failed";
 			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(testData.get("UserName"),testData.get("Password"));
 		    // Write log
@@ -148,7 +148,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for CL0009_LogInvalidUserName.
+     * Loads Test Data for CL0010_LoginWithInvalidPassword.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{
@@ -161,27 +161,27 @@ public class CL0009_LogInvalidUserName extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File CL0009_LogInvalidUserName=new File(path + "CL0009_LogInvalidUserName.xml");
+			File CL0010_LoginWithInvalidPassword=new File(path + "CL0010_LoginWithInvalidPassword.xml");
 			
-			Document docCL0009_LogInvalidUserName=db.parse(CL0009_LogInvalidUserName);
-			Element eleCL0009_LogInvalidUserName=docCL0009_LogInvalidUserName.getDocumentElement();
+			Document docCL0010_LoginWithInvalidPassword=db.parse(CL0010_LoginWithInvalidPassword);
+			Element eleCL0010_LoginWithInvalidPassword=docCL0010_LoginWithInvalidPassword.getDocumentElement();
 	              
-	        Element oXmlEleCL0009_LogInvalidUserName = (Element) eleCL0009_LogInvalidUserName;
+	        Element oXmlEleCL0010_LoginWithInvalidPassword = (Element) eleCL0010_LoginWithInvalidPassword;
 	       	
-			this.testData.put("ChannelsURL",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Title",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("UserName",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Password",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ChannelsURL",oXmlEleCL0010_LoginWithInvalidPassword.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Title",oXmlEleCL0010_LoginWithInvalidPassword.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UserName",oXmlEleCL0010_LoginWithInvalidPassword.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Password",oXmlEleCL0010_LoginWithInvalidPassword.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File CL0009_LogInvalidUserName can not be parsed.");
+			throw new UIAutomationException("File CL0010_LoginWithInvalidPassword can not be parsed.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File CL0009_LogInvalidUserName.xml not found.");
+			throw new UIAutomationException("File CL0010_LoginWithInvalidPassword.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File CL0009_LogInvalidUserName can not be parsed.");
+			throw new UIAutomationException("File CL0010_LoginWithInvalidPassword can not be parsed.");
 		}
 			
 	}

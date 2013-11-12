@@ -29,15 +29,15 @@ import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.LoginPage;
 
 /**
- * Testcase ID: CL0009_LogInvalidUserName
- * 	   Summary: Verify that user is able to log in when he enters valid Username and password
+ * Testcase ID: CL0013_BlankUsernamePassword
+ * 	   Summary: Verify that user is not able to login when blank username and password is entered
  * @author Afour
  *
  */
 
-public class CL0009_LogInvalidUserName extends TestCase {
+public class CL0013_BlankUsernamePassword extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="CL0009_LogInvalidUserName";
+	public String testCaseId="CL0013_BlankUsernamePassword";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -88,7 +88,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
 	}
 	
 	@Test
-	public void testCL0009_LogInvalidUserName() throws UIAutomationException, IOException {
+	public void testCL0013_BlankUsernamePassword() throws UIAutomationException, IOException {
 		try{
 			stepNo++;
 			description="URL Entered";
@@ -101,7 +101,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
  			
 			// Login page
 			stepNo++;
-			description="Login Successful";
+			description="Login failed";
 			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(testData.get("UserName"),testData.get("Password"));
 		    // Write log
@@ -148,7 +148,7 @@ public class CL0009_LogInvalidUserName extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for CL0009_LogInvalidUserName.
+     * Loads Test Data for CL0013_BlankUsernamePassword.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{
@@ -161,27 +161,27 @@ public class CL0009_LogInvalidUserName extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File CL0009_LogInvalidUserName=new File(path + "CL0009_LogInvalidUserName.xml");
+			File CL0013_BlankUsernamePassword=new File(path + "CL0013_BlankUsernamePassword.xml");
 			
-			Document docCL0009_LogInvalidUserName=db.parse(CL0009_LogInvalidUserName);
-			Element eleCL0009_LogInvalidUserName=docCL0009_LogInvalidUserName.getDocumentElement();
+			Document docCL0013_BlankUsernamePassword=db.parse(CL0013_BlankUsernamePassword);
+			Element eleCL0013_BlankUsernamePassword=docCL0013_BlankUsernamePassword.getDocumentElement();
 	              
-	        Element oXmlEleCL0009_LogInvalidUserName = (Element) eleCL0009_LogInvalidUserName;
+	        Element oXmlEleCL0013_BlankUsernamePassword = (Element) eleCL0013_BlankUsernamePassword;
 	       	
-			this.testData.put("ChannelsURL",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Title",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("UserName",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Password",oXmlEleCL0009_LogInvalidUserName.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ChannelsURL",oXmlEleCL0013_BlankUsernamePassword.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Title",oXmlEleCL0013_BlankUsernamePassword.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UserName",oXmlEleCL0013_BlankUsernamePassword.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Password",oXmlEleCL0013_BlankUsernamePassword.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File CL0009_LogInvalidUserName can not be parsed.");
+			throw new UIAutomationException("File CL0013_BlankUsernamePassword can not be parsed.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File CL0009_LogInvalidUserName.xml not found.");
+			throw new UIAutomationException("File CL0013_BlankUsernamePassword.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File CL0009_LogInvalidUserName can not be parsed.");
+			throw new UIAutomationException("File CL0013_BlankUsernamePassword can not be parsed.");
 		}
 			
 	}
