@@ -20,6 +20,21 @@ public class HomePage {
 	ElementController elementController= new ElementController();
 	DataController dataController=new DataController();
 	
+	
+	/**
+	 * Welcome message verification
+	 * @throws UIAutomationException 
+	 */
+	
+	public void verifyHomePage() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels message");
+		String headingInPage=UIActions.getText(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels");
+    	
+		if(!headingInPage.contains("Welcome To Channels")){
+    		throw new UIAutomationException("Welcome To Channels page not found.");
+    	}
+	}
+	
 	/**
 	 * 'clickDomainPlans' method clicks on Domain Plans Link
 	 * @throws UIAutomationException 
@@ -105,8 +120,7 @@ public class HomePage {
 		// Assertion : Check Heading of Page
 		elementController.requireElementSmart(fileName,"Issues Report Heading",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Heading");
 		String headingInPage=UIActions.getText(fileName,"Issues Report Heading",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Heading");
-    	System.out.println(heading);
-    	System.out.println(headingInPage);
+  
 		if(!headingInPage.contains(heading)){
     		throw new UIAutomationException("Issues Summary Report page not found.");
     	}
