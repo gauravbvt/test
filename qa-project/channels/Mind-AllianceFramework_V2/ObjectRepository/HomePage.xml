@@ -17,6 +17,11 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Messages Tab Text</GivenName>
+		<Name>Messages</Name>
+	</Element>
+	
+	<Element>
 			<GivenName>Send Feedback On Help Title</GivenName>
 			<Title>Send Feedback</Title>
 	</Element>
