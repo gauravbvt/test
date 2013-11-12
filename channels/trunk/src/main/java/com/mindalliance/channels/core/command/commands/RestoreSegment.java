@@ -38,24 +38,13 @@ public class RestoreSegment extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
         ImportExportFactory importExportFactory = commander.getImportExportFactory();
         Importer importer = importExportFactory.createImporter( getUserName(), commander.getDao() );
         String xml = (String) get( "xml" );
         if ( xml != null ) {
-            Long defaultSegmentId = (Long) get( "defaultSegment" );
-            Segment defaultSegment = null;
-            if ( defaultSegmentId != null ) {
-                // a default segment was added before removing the one to be restored.
-                List<Segment> segments = queryService.list( Segment.class );
-                assert segments.size() == 1;
-                defaultSegment = segments.get( 0 );
-            }
             Segment segment = importer.restoreSegment( xml );
             describeTarget( segment );
             set( "segment", segment.getId() );
-            if ( defaultSegment != null )
-                queryService.remove( defaultSegment );
             return new Change( Change.Type.Added, segment );
         } else {
             throw new CommandException( "Can't restore segment." );

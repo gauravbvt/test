@@ -443,7 +443,7 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     private void removeSegment( Segment segment ) {
-        if ( list( Segment.class ).size() > 1 ) {
+        if ( list( Segment.class ).size() > 0 ) { // segment is already removed from plan, so not counted
             super.remove( segment );
             disconnect( segment );
         }

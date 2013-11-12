@@ -28,7 +28,9 @@ import java.util.List;
  */
 public class FlowActionsMenuPanel extends MenuPanel {
 
-    /** Whether flow viewed as send. */
+    /**
+     * Whether flow viewed as send.
+     */
     private boolean isSend;
 
     public FlowActionsMenuPanel( String s, IModel<? extends Flow> model, boolean isSend ) {
@@ -51,7 +53,9 @@ public class FlowActionsMenuPanel extends MenuPanel {
         super.init();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<LinkMenuItem> getMenuItems() {
 
@@ -65,45 +69,45 @@ public class FlowActionsMenuPanel extends MenuPanel {
 
             if ( getCommander().isTimedOut( getUser().getUsername() ) ) {
                 menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
-            }
-            else if ( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null )
+            } else if ( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null )
                 menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers( flow ) ) );
-            else  {
-               menuItems.add( editedByLinkMenuItem( "menuItem", flow, getLockOwner( flow ) ) );
+            else {
+                menuItems.add( editedByLinkMenuItem( "menuItem", flow, getLockOwner( flow ) ) );
             }
 
             return menuItems;
-        }    }
+        }
+    }
 
     private List<CommandWrapper> getCommandWrappers( Flow flow ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        if ( getPart() != null )
+            commandWrappers.add( wrap( new CopyFlow( getUser().getUsername(), flow, getPart() ), false ) );
 
-        commandWrappers.add( wrap( new CopyFlow( getUser().getUsername(), flow, getPart() ), false ) );
+        if ( flow.isSharing() )
+            commandWrappers.add( wrap( new DuplicateFlow( getUser().getUsername(), flow, isSend ), false ) );
 
-            if ( flow.isSharing() )
-                commandWrappers.add( wrap( new DuplicateFlow( getUser().getUsername(), flow, isSend ), false ) );
-
-            commandWrappers.add( wrap(
-                  flow.isSharing() ? new DisconnectFlow( getUser().getUsername(), flow )
-                                   : flow.isNeed()    ? new RemoveNeed( getUser().getUsername(), flow )
-                                                      : new RemoveCapability( getUser().getUsername(), flow ),
-                  CONFIRM ) );
+        commandWrappers.add( wrap(
+                flow.isSharing() ? new DisconnectFlow( getUser().getUsername(), flow )
+                        : flow.isNeed() ? new RemoveNeed( getUser().getUsername(), flow )
+                        : new RemoveCapability( getUser().getUsername(), flow ),
+                CONFIRM ) );
 
         commandWrappers.add( wrap( new AddUserIssue( getUser().getUsername(), flow ), false ) );
 
         commandWrappers.add( wrap( new PasteAttachment( getUser().getUsername(), flow ), false ) );
 
         if ( flow.isSharing() ) {
-                commandWrappers.add( wrap( new AddIntermediate( getUser().getUsername(), flow ), false ) );
-                commandWrappers.add( wrap( new BreakUpFlow( getUser().getUsername(), flow ), CONFIRM ) );
-            }
+            commandWrappers.add( wrap( new AddIntermediate( getUser().getUsername(), flow ), false ) );
+            commandWrappers.add( wrap( new BreakUpFlow( getUser().getUsername(), flow ), CONFIRM ) );
+        }
 
         return commandWrappers;
     }
 
     private Part getPart() {
         return isSend ? (Part) getFlow().getSource()
-                      : (Part) getFlow().getTarget();
+                : (Part) getFlow().getTarget();
     }
 
     private Flow getFlow() {

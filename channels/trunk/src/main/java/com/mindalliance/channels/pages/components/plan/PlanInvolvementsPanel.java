@@ -20,7 +20,6 @@ import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -254,7 +253,6 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
                         + entityClassLabel
                         + " (then press enter)" );
         newInvolvedContainer.add( addInvolvedField );
-        newInvolvedContainer.setVisible( isLockedByUser( Channels.ALL_INVOLVEMENTS ) );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -314,7 +312,7 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
                 target.add( entityContainer );
             }
         };
-        expectationActionLink.setVisible( isLockedByUser( Channels.ALL_INVOLVEMENTS ) );
+        // expectationActionLink.setVisible( isLockedByUser( Channels.ALL_INVOLVEMENTS ) );
         entityContainer.add( expectationActionLink );
         Label expectationLabel = new Label(
                 "expectationAction",

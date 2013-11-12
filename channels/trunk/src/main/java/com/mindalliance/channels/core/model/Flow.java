@@ -558,6 +558,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             message += " (" + getIntent().getLabel().toLowerCase() + ")";
         }
         Node source = getSource();
+        if ( source == null ) return "";
         if ( source.isConnector() ) {
             title = MessageFormat.format(
                     isAskedFor() ? "Needs to ask for \"{0}\""
@@ -597,6 +598,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return the description
      */
     public String getSendTitle() {
+        if ( getTarget() == null ) return "";
         String title;
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
@@ -743,8 +745,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return true if node is included in this flow
      */
     public boolean isConnectedTo( boolean isSend, Node node ) {
-        return isSend && getTarget().equals( node )
-                || !isSend && getSource().equals( node );
+        return isSend && getTarget() != null && getTarget().equals( node )
+                || !isSend && getSource() != null && getSource().equals( node );
     }
 
     public List<Channel> allChannels() {
@@ -957,7 +959,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canBeUnicast() {
         Node node = isAskedFor() ? getSource() : getTarget();
-        if ( node.isPart() ) {
+        if ( node != null && node.isPart() ) {
             Part part = (Part) node;
             ResourceSpec resourceSpec = part.resourceSpec();
             return resourceSpec.isActor() || resourceSpec.isOrganization();
@@ -1020,7 +1022,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public Part getContactedPart() {
         Node node = isAskedFor() ? getSource() : getTarget();
-        return node.isPart() ? (Part) node : null;
+        return node != null && node.isPart() ? (Part) node : null;
     }
 
     /**
@@ -1039,11 +1041,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public Part getLocalPart() {
         Node source = getSource();
-        if ( source.isPart() && source.getSegment().equals( getSegment() ) ) {
+        if ( source != null && source.isPart() && source.getSegment().equals( getSegment() ) ) {
             return (Part) source;
         } else {
             Node target = getTarget();
-            if ( target.isPart() && target.getSegment().equals( getSegment() ) ) {
+            if ( target != null && target.isPart() && target.getSegment().equals( getSegment() ) ) {
                 return (Part) target;
             } else {
                 // Should never happen?
@@ -1106,7 +1108,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSharing() {
-        return getSource().isPart() && getTarget().isPart();
+        return getSource() != null
+                && getSource().isPart()
+                && getTarget() != null
+                && getTarget().isPart();
     }
 
     /**
@@ -1115,7 +1120,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isNeed() {
-        return isInternal() && getSource().isConnector();
+        return isInternal()
+                && getSource() != null
+                && getSource().isConnector();
     }
 
     /**
@@ -1124,7 +1131,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isCapability() {
-        return isInternal() && getTarget().isConnector();
+        return isInternal() && getTarget() != null && getTarget().isConnector();
     }
 
     public List<AttachmentImpl.Type> getAttachmentTypes() {
@@ -1241,7 +1248,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSatisfied() {
-        if ( isNeed() ) {
+        if ( isNeed() && getTarget() != null ) {
             for ( Iterator<Flow> it = getTarget().receives(); it.hasNext(); ) {
                 Flow flow = it.next();
                 if ( flow.isSharing() && Matcher.same( getName(), flow.getName() ) )
@@ -1257,7 +1264,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSatisfying() {
-        return isCapability() && ( (Connector) getTarget() ).externalFlows().hasNext()
+        return getSource() != null
+                && isCapability()
+                && getTarget() != null
+                && ( (Connector) getTarget() ).externalFlows().hasNext()
                 ||
                 CollectionUtils.exists(
                         IteratorUtils.toList( getSource().sends() ),
@@ -1441,6 +1451,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             Part target = (Part) getTarget();
             Part otherSource = (Part) other.getSource();
             Part otherTarget = (Part) other.getTarget();
+            if ( source == null || target == null || otherSource == null || otherTarget == null ) return false;
             return !( source.equals( otherSource ) )
                     && target.overridesOrEquals( otherTarget, locale )
                     && source.overridesOrEquals( otherSource, locale );
@@ -1499,11 +1510,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( isSharing() ) {
             if ( isAskedFor() || isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
                 Part target = (Part) getTarget();
-                for ( Flow f : target.getAllSharingSends() ) {
-                    if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
-                        if ( f.isNotification() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
-                            if ( this.containsAsMuchAs( f ) ) {
-                                intermediatedTargets.add( (Part) f.getTarget() );
+                if ( target != null ) {
+                    for ( Flow f : target.getAllSharingSends() ) {
+                        if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
+                            if ( f.isNotification() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                                if ( this.containsAsMuchAs( f ) ) {
+                                    intermediatedTargets.add( (Part) f.getTarget() );
+                                }
                             }
                         }
                     }
@@ -1524,11 +1537,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( isSharing() ) {
             if ( isNotification() || isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
                 Part source = (Part) getSource();
-                for ( Flow f : source.getAllSharingReceives() ) {
-                    if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
-                        if ( f.isAskedFor() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
-                            if ( this.containsAsMuchAs( f ) ) {
-                                intermediatedSources.add( (Part) f.getSource() );
+                if ( source != null ) {
+                    for ( Flow f : source.getAllSharingReceives() ) {
+                        if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
+                            if ( f.isAskedFor() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                                if ( this.containsAsMuchAs( f ) ) {
+                                    intermediatedSources.add( (Part) f.getSource() );
+                                }
                             }
                         }
                     }
@@ -1658,23 +1673,25 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @Override
     public String getEOIHolderLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "In " );
-        sb.append( isNeed()
-                ? "need for "
-                : isCapability()
-                ? "availability of "
-                : "sharing of " );
-        sb.append( getName() );
-        sb.append( isNeed()
-                ? ""
-                : isCapability()
-                ? " from " + "\"" + getSource().getTitle() + "\""
-                : " by " + "\"" + getSource().getTitle() + "\"" );
-        sb.append( isCapability()
-                ? ""
-                : isNeed()
-                ? " by " + "\"" + getTarget().getTitle() + "\""
-                : " with " + "\"" + getTarget().getTitle() + "\"" );
+        if ( getSource() != null && getTarget() != null ) {
+            sb.append( "In " );
+            sb.append( isNeed()
+                    ? "need for "
+                    : isCapability()
+                    ? "availability of "
+                    : "sharing of " );
+            sb.append( getName() );
+            sb.append( isNeed()
+                    ? ""
+                    : isCapability()
+                    ? " from " + "\"" + getSource().getTitle() + "\""
+                    : " by " + "\"" + getSource().getTitle() + "\"" );
+            sb.append( isCapability()
+                    ? ""
+                    : isNeed()
+                    ? " by " + "\"" + getTarget().getTitle() + "\""
+                    : " with " + "\"" + getTarget().getTitle() + "\"" );
+         }
         return sb.toString();
     }
 
@@ -1723,7 +1740,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public ResourceSpec getSourceResourceSpec() {
         Node source = getSource();
-        if ( source.isPart() ) {
+        if ( source != null && source.isPart() ) {
             return ( (Part) source ).resourceSpec();
         } else {
             return new ResourceSpec();
@@ -1737,6 +1754,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         } else {
             return new ResourceSpec();
         }
+    }
+
+    public boolean isConnected() {
+        return getSource() != null && getTarget() != null;
     }
 
     /**

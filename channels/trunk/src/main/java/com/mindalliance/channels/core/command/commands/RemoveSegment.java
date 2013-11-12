@@ -43,35 +43,38 @@ public class RemoveSegment extends AbstractCommand {
     }
 
     @Override
+    public boolean canDo( Commander commander ) {
+        return commander.getPlan().getSegmentCount() > 1;
+    }
+
+    @Override
     public String getName() {
         return "delete segment";
     }
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
-            describeTarget( segment );
-            segment.setBeingDeleted( true );
-            Exporter exporter = commander.getExporter( getUserName() );
-            exporter.export( segment, bos );
-            set( "xml", bos.toString() );
-            Plan plan = commander.getPlan();
-            if ( plan.getSegmentCount() == 1 ) {
-                // first create a new, replacement segment
-                Segment defaultSegment = queryService.createSegment();
-                plan.addSegment( defaultSegment );
-                set( "defaultSegment", defaultSegment.getId() );
-            }
-            queryService.remove( segment );
-            releaseAnyLockOn( commander, segment );
-            return new Change( Type.Removed, segment );
+        if ( commander.getPlan().getSegmentCount() > 1 ) {
+            QueryService queryService = commander.getQueryService();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+                describeTarget( segment );
+                segment.setBeingDeleted( true );
+                Exporter exporter = commander.getExporter( getUserName() );
+                exporter.export( segment, bos );
+                set( "xml", bos.toString() );
+                queryService.remove( segment );
+                releaseAnyLockOn( commander, segment );
+                return new Change( Type.Removed, segment );
 
-        } catch ( IOException e ) {
-            throw new CommandException( "Failed to remove segment.", e );
+            } catch ( IOException e ) {
+                throw new CommandException( "Failed to remove segment.", e );
+            }
+        } else {
+            throw new CommandException( "Can not remove sole segment." );
         }
+
     }
 
     @Override
@@ -86,10 +89,6 @@ public class RemoveSegment extends AbstractCommand {
             MultiCommand multi = new MultiCommand( getUserName(), "restore segment" );
             RestoreSegment restoreSegment = new RestoreSegment( getUserName() );
             restoreSegment.set( "xml", xml );
-            Long defaultSegmentId = (Long) get( "defaultSegment" );
-            if ( defaultSegmentId != null ) {
-                restoreSegment.set( "defaultSegment", defaultSegmentId );
-            }
             multi.addCommand( restoreSegment );
             return multi;
         } else {

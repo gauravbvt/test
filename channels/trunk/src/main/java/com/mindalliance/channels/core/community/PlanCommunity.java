@@ -371,6 +371,9 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     }
 
     public boolean canBeOpenedForParticipation( CommunityService communityService ) {
-        return getLocale( communityService ) != null;
+        Place templateLocale = communityService.getPlan().getLocale();
+        return templateLocale == null
+                || !templateLocale.isPlaceholder()
+                || getLocale( communityService ) != null;
     }
 }

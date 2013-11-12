@@ -127,7 +127,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
     private void addShowMenu() {
-        if ( selectedFlow != null ) {
+        if ( selectedFlow != null  && selectedFlow.isConnected() ) {
             flowShowMenu = new FlowShowMenuPanel(
                     "flowShowMenu",
                     new Model<Flow>( selectedFlow ),
@@ -143,7 +143,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     private void addActionsMenu() {
         boolean visible = false;
-        if ( selectedFlow != null && isExpanded( selectedFlow.getId() ) ) {
+        if ( selectedFlow != null && isExpanded( selectedFlow.getId() ) && selectedFlow.isConnected() ) {
             visible = true;
             flowActionsMenu = new FlowActionsMenuPanel( "flowActionsMenu",
                     new Model<Flow>( selectedFlow ),
