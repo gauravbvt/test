@@ -118,11 +118,11 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			stepNo++;
 			description="Navigated to Admin page";
 			HomePage homePage=new HomePage();
-			homePage.clickChannelsAdminLink();
+			homePage.verifyCommunitiesLink();
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
-					
+			
 			// Sign Out from 'Admin' page
 			stepNo++;
 			description="Logout successful";
