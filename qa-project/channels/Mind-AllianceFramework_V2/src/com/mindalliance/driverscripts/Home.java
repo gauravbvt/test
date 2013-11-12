@@ -288,6 +288,9 @@ public class Home {
       suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
       suite.addTestSuite(CT0007_ClickSurveysLink.class);
       suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
+   
+      //Collaboration Panel
+      
       
       return suite;
 	}
