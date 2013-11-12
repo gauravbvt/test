@@ -22,6 +22,26 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Collaboration Plans Page Title</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Collaboration Plans Link</GivenName>
+		<LinkText>COLLABORATION PLANS</LinkText>
+	</Element>
+	
+	<Element>
+		<GivenName>Channels Admin Link</GivenName>
+		<LinkText>CHANNELS SETTINGS</LinkText>
+	</Element>
+	
+	<Element>
+		<GivenName>Collaboration Templates Link</GivenName>
+		<LinkText>COLLABORATION PLANS</LinkText>
+	</Element>
+	
+	<Element>
 			<GivenName>Send Feedback On Help Title</GivenName>
 			<Title>Send Feedback</Title>
 	</Element>
@@ -47,6 +67,31 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Channels Admin</GivenName>
+ 		<Xpath></Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>CHANNELS SETTINGS</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Domain Plan Editor</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Domain Plan Editor</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+		<GivenName>Domain Plan Editor Page Title</GivenName>
+		<Title>Channels: </Title>
+	</Element>
+	
+ 	<Element>
  		<GivenName>Send Feedback Text Field</GivenName>
  		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div/textarea</Xpath>
  		<Name></Name>
@@ -54,6 +99,12 @@
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Collaboration Plans</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+    	<LinkText>Collaboration Plans</LinkText>
  	</Element>
  	
  	<Element>
@@ -187,6 +238,18 @@
     	<LinkText>Sigh Out Plan</LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Communities or Collaboration Plans</GivenName>
+ 		<Xpath>//div[contains(@class,'goto')]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Collaboration Plans</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
  	<Element>
  		<GivenName>Sign Out Communities</GivenName>
  		<Xpath>/html/body/form/div[2]/div/div/div/a</Xpath>
@@ -217,7 +280,7 @@
  	</Element>
  	
  	
- 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<ImplicitWaitTimeMilliSecs>500</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
  	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
  	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
