@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
@@ -39,6 +40,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private List<MediumData> mediumDataList;
     private List<ChannelData> channelDataList;
 
+    private AssignmentData assignmentData;
+
     public AbstractFlowData() {
         // required
     }
@@ -57,12 +60,29 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     protected void initOtherData( CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
+         PlanService planService = communityService.getPlanService();
         initFailureSeverity( planService );
         initMediumDataList( serverUrl, communityService );
         initChannelDataList( communityService );
         documentation = new DocumentationData( serverUrl, getSharing() );
     }
+
+    protected void initAssignmentData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        CommunityCommitments commitments = communityService.findAllCommitments( getSharing(), false );
+        assignmentData = new AssignmentData(
+                serverUrl,
+                getAssignment(),
+                commitments.benefiting( getAssignment() ),
+                commitments.committing( getAssignment() ),
+                communityService,
+                user
+        );
+    }
+
+    public AssignmentData getAssignmentData() {
+        return assignmentData;
+    }
+
 
     private void initChannelDataList( CommunityService communityService ) {
         channelDataList = new ArrayList<ChannelData>();

@@ -57,11 +57,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         add( producerTaskContainer );
         boolean visible = flowData.isRequest() && !flowData.isInitiating();
         if ( visible ) {
-            RequestData requestData = (RequestData) flowData;
             producerTaskContainer.add(
                     new ChecklistDataLinkPanel(
                             "producerTaskLink",
-                            requestData.getAssignmentData(),
+                            flowData instanceof NotificationData
+                                    ? ( (NotificationData) flowData ).getAssignmentData()
+                                    : ( (RequestData) flowData ).getAssignmentData(),
                             getFinder() ) );
         } else {
             producerTaskContainer.add( new Label( "producerTaskLink", "" ) );

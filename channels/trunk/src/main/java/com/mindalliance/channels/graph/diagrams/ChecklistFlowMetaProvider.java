@@ -69,6 +69,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     private static final String ACTION_ICON = "step_action";
     private static final String NOTIFICATION_ICON = "step_notification";
     private static final String REQUEST_ICON = "step_request";
+    private static final String ANSWER_ICON = "step_answer";
     private static final String RECEIPT_CONFIRMATION_ICON = "step_receipt_confirmation";
     private static final String RESEARCH_ICON = "step_research";
     private static final String FOLLOW_UP_ICON = "step_follow_up";
@@ -174,9 +175,17 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( ( (ActionStep) step ).getAction() );
             } else if ( step.isCommunicationStep() ) {
                 CommunicationStep commStep = (CommunicationStep) step;
-                sb.append( commStep.isNotification() ? "SEND " : "ASK for " )
+                sb.append( commStep.isNotification()
+                        ? "SEND "
+                        : commStep.isAnswer()
+                        ? "ANSWER with "
+                        : "ASK for")
                         .append( commStep.getSharing().getName() )
-                        .append( commStep.isNotification() ? " to " : " from " )
+                        .append( commStep.isNotification()
+                                ? " to "
+                                : commStep.isAnswer()
+                                ? " to "
+                                : " from ")
                         .append( commStep.isNotification()
                                 ? ( (Part) commStep.getSharing().getTarget() ).resourceSpec().getName()
                                 : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() );
@@ -331,9 +340,12 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 if ( step.isActionStep() ) {
                     iconName = ACTION_ICON;
                 } else if ( step.isCommunicationStep() ) {
-                    iconName = ( (CommunicationStep) step ).isNotification()
+                    CommunicationStep communicationStep = (CommunicationStep)step;
+                    iconName = communicationStep.isNotification()
                             ? NOTIFICATION_ICON
-                            : REQUEST_ICON;
+                            : communicationStep.isAnswer()
+                                ? ANSWER_ICON
+                                : REQUEST_ICON;
                 } else if ( step.isReceiptConfirmation() ) {
                     iconName = RECEIPT_CONFIRMATION_ICON;
                 } else {

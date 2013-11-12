@@ -37,7 +37,6 @@ public class RequestData extends AbstractFlowData {
     private List<ContactData> contacts;
     private List<CommunityEmployment> contactEmployments;
     private String impactOnConsumingTask;
-    private AssignmentData assignmentData;
 
     public RequestData() {
         // required
@@ -71,18 +70,6 @@ public class RequestData extends AbstractFlowData {
         initConsumingTask( serverUrl, communityService );
         initAssignmentData( serverUrl, communityService, new ChannelsUser( userInfo ) );
         initOtherData( communityService );
-    }
-
-    private void initAssignmentData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        CommunityCommitments commitments = communityService.findAllCommitments( getSharing(), false );
-        assignmentData = new AssignmentData(
-                serverUrl,
-                getAssignment(),
-                commitments.benefiting( getAssignment() ),
-                commitments.committing( getAssignment() ),
-                communityService,
-                user
-        );
     }
 
     private void initCommitments( CommunityService communityService ) {
@@ -246,7 +233,4 @@ public class RequestData extends AbstractFlowData {
         return super.getId();
     }
 
-    public AssignmentData getAssignmentData() {
-        return assignmentData;
-    }
 }
