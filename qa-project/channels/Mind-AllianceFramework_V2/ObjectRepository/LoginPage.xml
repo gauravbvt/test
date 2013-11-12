@@ -6,6 +6,12 @@
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
 	
+	
+	<Element>
+		<GivenName>Login Page Title for Invalid Login</GivenName>
+		<Title>Channels - Sign in</Title>
+	</Element>
+	
 	<Element>
     	<GivenName>submitButton</GivenName>
     	<Xpath>//input[contains(@value,'Sign In')]</Xpath>
