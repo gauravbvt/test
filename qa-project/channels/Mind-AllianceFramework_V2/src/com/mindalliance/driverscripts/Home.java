@@ -7,6 +7,20 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.functionaltestscripts.CH0004_SendFeedback;
+import com.mindalliance.functionaltestscripts.CH0005_SendInvalidFeedback;
+import com.mindalliance.functionaltestscripts.CH0006_SendFeedBackAsQuestion;
+import com.mindalliance.functionaltestscripts.CH0008_SendFeedbackAsSuggestion;
+import com.mindalliance.functionaltestscripts.CH0009_SendFeedbackAsUrgent;
+import com.mindalliance.functionaltestscripts.CH0010_SendBlankFeedback;
+import com.mindalliance.functionaltestscripts.CH0011_CancelSendFeedback;
+import com.mindalliance.functionaltestscripts.CL0001_LoginPage;
+import com.mindalliance.functionaltestscripts.CL0007_ClickSignInButton;
+import com.mindalliance.functionaltestscripts.CL0018_ClickCantAccessYourAccountLink;
+import com.mindalliance.functionaltestscripts.CT0003_ClickCollaborationPlanEditorLink;
+import com.mindalliance.functionaltestscripts.CT0005_ClickTemplateIssuesLink;
+import com.mindalliance.functionaltestscripts.CT0007_ClickSurveysLink;
+import com.mindalliance.functionaltestscripts.CT0009_ClickFeedbackAndRepliesLink;
 import com.mindalliance.uitestscripts.*;
 
 /**
