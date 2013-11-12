@@ -332,9 +332,9 @@ public class Reporting extends TakeScreenshot {
 				testName = GlobalVariables.configuration.getList().getModel()
 						.getElementAt(i).toString();
 				if (testName.contains("CL"))
-					sheet = sheet.getSpreadSheet().getSheet(1);
-				else if (testName.contains("HP"))
 					sheet = sheet.getSpreadSheet().getSheet(2);
+				else if (testName.contains("HP"))
+					sheet = sheet.getSpreadSheet().getSheet(5);
 				else if (testName.contains("CA"))
 					sheet = sheet.getSpreadSheet().getSheet(3);
 				else if (testName.contains("DC"))
