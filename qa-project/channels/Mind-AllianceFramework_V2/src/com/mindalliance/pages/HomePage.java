@@ -35,6 +35,19 @@ public class HomePage {
     	}
 	}
 	
+
+	/**
+	 * 'verifyCollaborationTemplateLink' method verifies that link is present on home page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyCollaborationTemplateLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
+				
+		// Assertion : Check Link is present on page
+		String linkText=dataController.getPageDataElements(fileName, "Collaboration Templates Link", "LinkText");
+		UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
 	/**
 	 * 'clickDomainPlans' method clicks on Domain Plans Link
 	 * @throws UIAutomationException 
@@ -61,15 +74,14 @@ public class HomePage {
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
 		UIActions.getText(fileName, "CollaborationPlansPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plans Page Title");
 	}
-	
-	
+		
 	/**
 	 * 'clickChannelsAdminLink' method clicks on 'Channels Settings' Link
 	 * @throws UIAutomationException 
 	 */
 	public void clickChannelsAdminLink() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Channels Admin Link",GlobalVariables.configuration.getAttrSearchList(), "Channels Admin Link");
-		UIActions.click(fileName,"Channels Admin Link",GlobalVariables.configuration.getAttrSearchList(), "Channels Admin Link");
+		elementController.requireElementSmart(fileName,"Channels Admin",GlobalVariables.configuration.getAttrSearchList(), "Channels Admin");
+		UIActions.click(fileName,"Channels Admin",GlobalVariables.configuration.getAttrSearchList(), "Channels Admin");
 		
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Admin Page Title", "Title");
@@ -77,17 +89,41 @@ public class HomePage {
 	}	
 	
 	/**
+	 * 'verifyCollaborationTemplateLink' method verifies that link is present on home page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyChannelsAdminLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Channels Admin",GlobalVariables.configuration.getAttrSearchList(), "Channels Admin Link");
+				
+		// Assertion : Check Link is present on page
+		String linkText=dataController.getPageDataElements(fileName, "Channels Admin Link", "LinkText");
+		System.out.println(linkText);
+		UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
 	 * 'clickCommunitiesLink' method clicks on Communities Link
 	 * @throws UIAutomationException 
 	 */
 	public void clickCommunitiesLink() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Communities",GlobalVariables.configuration.getAttrSearchList(), "Communities");
-		UIActions.click(fileName,"Communities",GlobalVariables.configuration.getAttrSearchList(), "Communities");
+		elementController.requireElementSmart(fileName,"Communities or Collaboration Plans",GlobalVariables.configuration.getAttrSearchList(), "Communities or Collaboration Plans");
+		UIActions.click(fileName,"Communities or Collaboration Plans",GlobalVariables.configuration.getAttrSearchList(), "Communities or Collaboration Plans");
 				
-		
 		// Assertion : Check Title of Page
-    	//String title=dataController.getPageDataElements(fileName, "Communities Page Title", "Title");
-       	//UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+    	String title=dataController.getPageDataElements(fileName, "Collaboration Plans Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
+	 * 'verifyCommunitiesLink' method verifies that link is present on home page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyCommunitiesLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Plans",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plans");
+				
+		// Assertion : Check Link is present on page
+		String linkText=dataController.getPageDataElements(fileName, "Collaboration Plans Link", "LinkText");
+       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
