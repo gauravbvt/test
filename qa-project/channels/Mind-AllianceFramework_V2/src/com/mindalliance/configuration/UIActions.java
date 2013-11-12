@@ -274,6 +274,8 @@ public class UIActions {
 		elementController.requireElementSmart(fileName, elementName, GlobalVariables.configuration.getAttrSearchList(), elementName);
 		GlobalVariables.configuration.getWebElement().sendKeys(keyName);
 		}
+
+	
 	/**
 	 * Waits for page Title
 	 * @param titleSuffix 		A portion of the title of the next page to be loaded to determine that the page has been loaded.
@@ -307,6 +309,7 @@ public class UIActions {
 		}	
 		
 	}
+	
 	/**
 	 * Gets title of page
 	 * @return
@@ -315,4 +318,48 @@ public class UIActions {
 		return GlobalVariables.configuration.getWebDriver().getTitle();
 		
 	}
+	
+	/**
+	 * Waits for page Title
+	 * @param titleSuffix 		A portion of the title of the next page to be loaded to determine that the page has been loaded.
+	 * @param pageLoadTimeout 	The wait time for the page to load.  
+	 * @throws UIAutomationException 
+	 * 
+	 */
+	public static void waitForLinkText(final String linkTextSuffix, long pageLoadTimeout) throws UIAutomationException
+	{
+		long startTimeMilliSecs = System.currentTimeMillis(); 
+		try{			
+			int cnt	=	0;
+			do{	
+				try{
+					String linkText	=	GlobalVariables.configuration.getWebElement().getText();
+					if(linkText.contains(linkTextSuffix)){
+						break;
+					}
+				}
+				catch(Exception e){}				
+				cnt++;
+	            Thread.sleep(500);
+	            if(cnt==pageLoadTimeout){
+	            	throw new UIAutomationException("Page with the link '"+linkTextSuffix+"' not found.");
+	            }
+				
+			}while(cnt < pageLoadTimeout);
+			System.out.println(linkTextSuffix + " load time: " + Reporting.actionTime(startTimeMilliSecs));
+		}catch (InterruptedException ce){			
+			throw new UIAutomationException("Unable to click to open new page");
+		}	
+		
+	}
+	
+	
+//	/**
+//	 * Gets title of page
+//	 * @return
+//	 */
+//	public static String getTitle(){
+//		return GlobalVariables.configuration.getWebDriver().getTitle();
+//		
+//	}
 }
