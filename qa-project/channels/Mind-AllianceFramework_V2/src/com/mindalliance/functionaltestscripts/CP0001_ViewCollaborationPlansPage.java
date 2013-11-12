@@ -1,4 +1,4 @@
-package com.mindalliance.uitestscripts;
+package com.mindalliance.functionaltestscripts;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +26,9 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
-import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.HomePage;
-import com.mindalliance.pages.CollaborationPlansPage;
 
 /**
  * Test Case ID: CP0001_ViewCollaborationPlansPage

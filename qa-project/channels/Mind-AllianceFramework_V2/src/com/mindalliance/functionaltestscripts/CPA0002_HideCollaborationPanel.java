@@ -1,4 +1,4 @@
-package com.mindalliance.uitestscripts;
+package com.mindalliance.functionaltestscripts;
 
 import java.io.File;
 import java.io.IOException;
