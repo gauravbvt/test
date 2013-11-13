@@ -22,8 +22,8 @@
 	</Element>
 	
 	<Element>
-			<GivenName>Send Feedback Alert Window</GivenName>
-			<Title>Feedback sent. Thank you</Title>
+			<GivenName>Send Feedback Notification</GivenName>
+			<Title>Feedback sent. Thank you!</Title>
 	</Element>
 	
 	<Element>
