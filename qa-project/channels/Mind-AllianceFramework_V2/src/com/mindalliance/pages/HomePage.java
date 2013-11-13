@@ -1,4 +1,5 @@
 package com.mindalliance.pages;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.configuration.Configuration;
@@ -127,6 +128,21 @@ public class HomePage {
 	}
 	
 	/**
+	 * 'verifyApplyButtonInAboutMe' method verifies that Apply button is present on home page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyApplyButtonInAboutMe() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
+				
+		// Assertion : Check Button is present on page
+		String linkText=dataController.getPageDataElements(fileName, "Apply Button Name In About Me", "LinkText");
+		System.out.println(linkText);
+//       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	
+	
+	/**
 	 * 'selectPlanFromDropDown' method clicks on Plan drop down
 	 * @throws UIAutomationException 
 	 */
@@ -180,6 +196,51 @@ public class HomePage {
 	
 	}
 	
+	/**
+	 * Enters Email address in About Me tab
+	 * @throws UIAutomationException
+	 */
+	public void enterEmailInAboutMe(String email) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Email Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "Email Address");
+		UIActions.click(fileName,"Email Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "Email Address");
+		UIActions.clearTextBox(fileName,"Email Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "Email Address");
+		UIActions.enterValueInTextBox(email,fileName,"Email Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "Email Address");
+		UIActions.enterKey(Keys.TAB);
+	
+	}
+	
+	/**
+	 * Enters Name in Name text field in the About Me tab
+	 * @throws UIAutomationException
+	 */
+	public void enterNameInAboutMe(String name) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Name Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.click(fileName,"Name Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.clearTextBox(fileName,"Name Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.enterValueInTextBox(name,fileName,"Name Text Field In About Me",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.enterKey(Keys.TAB);
+	
+	}
+	
+	/**
+	 * Clicks on 'Apply' button in About Me tab
+	 * @throws UIAutomationException
+	 */
+	public void clickApplyButtonInAboutMe() throws UIAutomationException{	
+		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
+		UIActions.click(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
+		
+		/*elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
+		String tabTextInPage=UIActions.getText(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Applied Notification" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}*/
+		}
+		
+		
 	/**
 	 * Clicks on 'Calendar' tab
 	 * @throws UIAutomationException
