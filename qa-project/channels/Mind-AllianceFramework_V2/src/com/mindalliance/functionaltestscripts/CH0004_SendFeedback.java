@@ -125,14 +125,29 @@ public class CH0004_SendFeedback extends TestCase{
 	 		
 	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Click on Send button
 	 		stepNo++;
-	 		description="Send Feedback";
+	 		description="Click Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
-	 		headerController.enterFeedback(testData.get("Feedback"));
-	 		headerController.clickSendButton();
-	 		// Write log			
+	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Enter Feedback
+	 		stepNo++;
+	 		description="Enter Feedback";
+	 		headerController.enterFeedback(testData.get("Feedback"));
+	    	// Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Click on Send Button
+	 		stepNo++;
+	 		description="Click Send Button";
+	 		headerController.clickSendButton();
+	    	// Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
 
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
