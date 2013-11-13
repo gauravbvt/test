@@ -126,19 +126,46 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		
-	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Click on Send button
+	 		//Click on Send Feedback button,  , Click on Send button
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Enter feedback in the Feedback text area
+	 		stepNo++;
+	 		description="Enter Feedback";
 	 		headerController.enterFeedback(testData.get("Feedback"));
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Select Suggestion Option
+	 		stepNo++;
+	 		description="Select Suggestion option";
 	 		headerController.clickSendFeedbackAsSuggestion();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		// Check Urgent Checkbox
+	 		stepNo++;
+	 		description="Check Urgent Checkbox";
 	 		headerController.checkUrgentCheckbox();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Click Send button
+	 		stepNo++;
+	 		description="Click Send Button";
 	 		headerController.clickSendButton();
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 			
 	
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();

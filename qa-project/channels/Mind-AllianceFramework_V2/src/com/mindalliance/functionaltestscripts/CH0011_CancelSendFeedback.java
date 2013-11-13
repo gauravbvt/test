@@ -123,18 +123,30 @@ public class CH0011_CancelSendFeedback extends TestCase{
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		
-	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Click on Cancel button
+	 		//Click on Send Feedback button 
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		// Enter feedback in the Feedback text area
+	 		stepNo++;
+	 		description="Enter feedback";
 	 		headerController.enterFeedback(testData.get("Feedback"));
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		//Click Cancel button
+	 		stepNo++;
 	 		headerController.clickCancelButton();
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 			
-	
 			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
