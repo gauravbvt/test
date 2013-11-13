@@ -44,6 +44,10 @@ public class HeaderController {
 	}
 	
 	
+	/**
+	 * 'enterFeedback' method enters feedback in the Feedback textarea
+	 * @throws UIAutomationException 
+	 */
 	
 	public void enterFeedback(String feedback) throws UIAutomationException, InterruptedException{
 		elementController.requireElementSmart(fileName,"Send Feedback Text Field",GlobalVariables.configuration.getAttrSearchList(), "Send Feedback");
@@ -78,13 +82,10 @@ public class HeaderController {
 	public void clickSendButton() throws UIAutomationException{
 	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
 	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
-	
-		String alert=dataController.getPageDataElements(fileName, "Send Feedback Alert Window", "Title");
-		try{
-			Thread.sleep(1000);
-			}
-			catch(Exception e){}
-		UIActions.assertAlert(alert);
+	   
+		UIActions.getText(fileName, "Send Feedback Notification", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Notification");
+		
+		
 	
 	}
 	
