@@ -123,17 +123,31 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		
-	 		//Click on Send Feedback button, Enter invalid feedback in the Feedback text area , Click on Send button
+	 		//Click on Send Feedback button Click on Send button
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
+	 		// Enter invalid feedback in the Feedback text area 
+	 		stepNo++;
+	 		description="Enter Feedback";
 	 		headerController.enterFeedback(testData.get("Feedback"));
-	 		headerController.clickSendButton();
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 
+	    	// Enter invalid feedback in the Feedback text area 
+	 		stepNo++;
+	 		description="Click Send Button";
+	 		headerController.clickSendButton();
+	 	    // Write log			
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
