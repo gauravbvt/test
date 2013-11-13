@@ -56,6 +56,11 @@
 			<Title>Please enter a short text</Title>
 	</Element>
 	
+	<Element>
+			<GivenName>No Changes Applied Notification</GivenName>
+			<Title>No changes were made</Title>
+	</Element>
+	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
  		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
@@ -276,6 +281,36 @@
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Email Text Field In About Me</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td[2]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Name Text Field In About Me</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td[2]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Apply Button In About Me</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/div/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Apply</LinkText>
     	<ClassName></ClassName>
  	</Element>
  	
