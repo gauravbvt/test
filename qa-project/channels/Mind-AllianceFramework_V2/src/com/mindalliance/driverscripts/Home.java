@@ -21,7 +21,7 @@ public class Home {
 		new ElementController();
 		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
 
-		/*//		View
+		//		View
 		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
@@ -147,7 +147,7 @@ public class Home {
 		suite.addTestSuite(MAV0270_ViewOrganizationStructureTab.class);
 		suite.addTestSuite(MAV0272_ViewOrganizationAnalyticsTab.class);
 		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
-		suite.addTestSuite(MAV0243_ShowRequirements.class);
+/*		suite.addTestSuite(MAV0243_ShowRequirements.class);
 		suite.addTestSuite(MAV0245_ShowRequirementDefinition.class);
 		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
 		suite.addTestSuite(MAV0247_NewRequirement.class);
@@ -174,7 +174,7 @@ public class Home {
 		suite.addTestSuite(MAV0157_viewSocialPanelCalender.class);
 		suite.addTestSuite(MAV0194_TaskNewIssue.class);
 		suite.addTestSuite(MAV0213_AttachReceiveSentAttachOption.class);
-		
+*/		
 		//		Plan
 		suite.addTestSuite(MAP0001_AddPlan.class);
 		suite.addTestSuite(MAP0005_DeletePlan.class);
@@ -193,7 +193,7 @@ public class Home {
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
     	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
-    			suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
+    	/*		suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 		suite.addTestSuite(MAP0004_DeleteUser.class);
     	suite.addTestSuite(MAP0018_attachFile.class);
@@ -206,7 +206,7 @@ public class Home {
 		suite.addTestSuite(MAP0025_receiveTask.class);
 		suite.addTestSuite(MAP0026_sendTask.class);
 		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);
-
+*/
     	//		Command
 
     	suite.addTestSuite(MAC0001_UndoAddSegment.class);
@@ -234,7 +234,7 @@ public class Home {
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
     	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
-		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+/*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
 		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
@@ -255,9 +255,9 @@ public class Home {
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
-		
+*/		
     	
-*/    	// Channels Login
+    	// Channels Login
 
     	suite.addTestSuite(CL0001_LoginPage.class);
 		suite.addTestSuite(CL0007_ClickSignInButton.class);
@@ -269,7 +269,7 @@ public class Home {
 		suite.addTestSuite(CL0018_ClickCantAccessYourAccountLink.class);
 		suite.addTestSuite(CL0022_ClickBackToLoginLink.class);
 		
-		/*//Channels Headers
+		//Channels Headers
 		suite.addTestSuite(CH0004_SendFeedback.class);
 		suite.addTestSuite(CH0005_SendInvalidFeedback.class);
 		suite.addTestSuite(CH0006_SendFeedBackAsQuestion.class);
@@ -295,7 +295,7 @@ public class Home {
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
    
 		//Collaboration Panel
-		*/
+		
 		
 		return suite;
 	}
