@@ -32,7 +32,7 @@ import com.mindalliance.pages.LoginPage;
 
 /**
  * Test Case ID: CH0005_SendInvalidFeedback
- * Summary: Send Feedback from Collaboration Templates Page
+ * Summary: Send Invalid Feedback from Collaboration Templates Page
  * @author Administrator
  *
  */
