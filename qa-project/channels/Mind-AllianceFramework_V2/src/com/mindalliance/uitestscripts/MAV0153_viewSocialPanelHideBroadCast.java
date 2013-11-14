@@ -160,7 +160,7 @@ public class MAV0153_viewSocialPanelHideBroadCast extends TestCase{
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
 		    
-			// Sign out from home page
+			// Sign Out from home page
 		    stepNo++;
 		    description="Logout successful";
 			HeaderController headerController=new HeaderController();

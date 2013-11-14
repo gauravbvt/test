@@ -141,7 +141,7 @@ public class MAV0151_viewSocialPanelShowSentMessage extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 										
-			// Sign Out from 'Home' page
+			// Sign out from 'Home' page
 			stepNo++;
 			description="Logout successful";
 			HeaderController headerController=new HeaderController();
