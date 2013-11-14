@@ -13,7 +13,7 @@
 	
 	<Element>
 			<GivenName>Plan Page Title</GivenName>
-			<Title>Channels:</Title>
+			<Title>Channels</Title>
 	</Element>
 	
 	<Element>
@@ -61,6 +61,11 @@
 			<Title>No changes were made</Title>
 	</Element>
 	
+	<Element>
+			<GivenName>	Show All Messages Name</GivenName>
+			<Title>Show all messages</Title>
+	</Element>
+	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
  		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
@@ -94,6 +99,16 @@
  	<Element>
 		<GivenName>Domain Plan Editor Page Title</GivenName>
 		<Title>Channels: </Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Domain Plan Editor Page Title</GivenName>
+		<Title>Channels: </Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Show Received Text</GivenName>
+		<Title>show received</Title>
 	</Element>
 	
  	<Element>
@@ -305,6 +320,16 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Name Text Field In About Me</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td[2]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Apply Button In About Me</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/div/input</Xpath>
  		<Name></Name>
@@ -314,6 +339,47 @@
     	<ClassName></ClassName>
  	</Element>
  	
+ 	<Element>
+ 		<GivenName>Messages In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[2]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Show Sent In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Hide Broadcasts In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Show All Messages In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	
  	<ImplicitWaitTimeMilliSecs>500</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
