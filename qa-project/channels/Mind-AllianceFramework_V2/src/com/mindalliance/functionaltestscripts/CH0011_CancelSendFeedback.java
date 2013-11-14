@@ -32,7 +32,7 @@ import com.mindalliance.pages.LoginPage;
 
 /**
  * Test Case ID: CH0011_CancelSendFeedback
- * Summary: Cancel send feedback
+ * Summary: Cancel sending feedback
  * @author Administrator
  *
  */

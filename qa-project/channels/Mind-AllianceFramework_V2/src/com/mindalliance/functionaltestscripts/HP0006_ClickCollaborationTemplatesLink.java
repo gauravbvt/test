@@ -114,7 +114,7 @@ public class HP0006_ClickCollaborationTemplatesLink extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 				
-			// Click on Chanels Settings Link
+			// Click on Channels Settings Link
 			stepNo++;
 			description="Collaboration Template page";
 			HomePage homePage=new HomePage();
