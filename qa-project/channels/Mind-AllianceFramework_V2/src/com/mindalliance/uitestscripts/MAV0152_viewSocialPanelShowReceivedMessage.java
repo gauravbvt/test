@@ -124,7 +124,7 @@ public class MAV0152_viewSocialPanelShowReceivedMessage extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
- 			// Click on 'Messages' tab under 'Social Panel'
+ 			// Click on the 'Messages' tab under 'Social Panel'
 		    stepNo++;
 			description="Messages tab opened";
 			HomePage homePage=new HomePage();

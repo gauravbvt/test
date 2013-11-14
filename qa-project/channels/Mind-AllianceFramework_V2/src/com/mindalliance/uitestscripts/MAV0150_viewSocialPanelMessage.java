@@ -120,6 +120,7 @@ public class MAV0150_viewSocialPanelMessage extends TestCase{
 			description="Domain Plans";
 			DomainPlanPage domainPlanPage= new DomainPlanPage();
 			domainPlanPage.clickDomainPlans();	
+			
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -129,6 +130,7 @@ public class MAV0150_viewSocialPanelMessage extends TestCase{
 			description="Messages tab opened";
 			HomePage homePage=new HomePage();
 			homePage.clickMessagesTabInSocialPanel();
+			
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
