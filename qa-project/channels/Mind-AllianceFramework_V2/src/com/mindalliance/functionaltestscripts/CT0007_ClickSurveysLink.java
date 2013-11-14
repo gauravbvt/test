@@ -30,7 +30,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
-
+/**
+ * Testcase ID: CT0007_ClickSurveysLink
+ * 	   Summary: Verify that the Surveys page is shown
+ * @author Afour
+ *
+ */
 public class CT0007_ClickSurveysLink extends TestCase {
 
 	public Hashtable<String, String> testData;

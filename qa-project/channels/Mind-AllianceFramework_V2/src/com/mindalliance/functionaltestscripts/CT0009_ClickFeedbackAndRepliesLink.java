@@ -30,7 +30,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
-
+/**
+ * Testcase ID: CT0009_ClickFeedbackAndRepliesLink
+ * 	   Summary: Verify that the Feedback page is shown
+ * @author Afour
+ *
+ */
 public class CT0009_ClickFeedbackAndRepliesLink extends TestCase {
 
 	public Hashtable<String, String> testData;

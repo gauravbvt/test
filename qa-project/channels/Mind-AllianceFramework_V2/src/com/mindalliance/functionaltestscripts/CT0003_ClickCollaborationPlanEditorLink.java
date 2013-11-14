@@ -30,7 +30,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
-
+/**
+ * Testcase ID: CT0003_ClickCollaborationPlanEditorLink
+ * 	   Summary: Verify that Collaboration Plan Editor Page is shown
+ * @author Afour
+ *
+ */
 public class CT0003_ClickCollaborationPlanEditorLink extends TestCase {
 
 	public Hashtable<String, String> testData;
@@ -127,7 +132,6 @@ public class CT0003_ClickCollaborationPlanEditorLink extends TestCase {
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 			
 	
 			// Sign Out from 'Home' page
 			stepNo++;

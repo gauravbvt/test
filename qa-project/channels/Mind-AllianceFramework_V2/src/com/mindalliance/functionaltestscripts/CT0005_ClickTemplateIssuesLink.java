@@ -30,7 +30,12 @@ import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
-
+/**
+ * Testcase ID: CT0005_ClickTemplateIssuesLink
+ * 	   Summary: Verify that Issue Summary Report page is shown
+ * @author Afour
+ *
+ */
 public class CT0005_ClickTemplateIssuesLink extends TestCase {
 
 	public Hashtable<String, String> testData;
