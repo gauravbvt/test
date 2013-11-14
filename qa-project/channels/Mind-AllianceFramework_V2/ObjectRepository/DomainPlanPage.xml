@@ -99,6 +99,27 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Surveys Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[3]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	<Element>
+ 		<GivenName>Feedback And Replies Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[4]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
 		<GivenName>Domain Plan Editor Page Title</GivenName>
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
