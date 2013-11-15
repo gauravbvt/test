@@ -15,6 +15,13 @@
  		<Title>About me</Title>
  	</Element>
  	
+ 	
+ 	<Element>
+		<GivenName>Messages Tab Text</GivenName>
+		<Name>Messages</Name>
+	</Element>
+	
+	
  	<Element>
  		<GivenName>Collaboration Plan Editor Page Title</GivenName>
  		<Title>Channels</Title>
@@ -118,6 +125,9 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	
+ 	
  	
  	<Element>
 		<GivenName>Domain Plan Editor Page Title</GivenName>
