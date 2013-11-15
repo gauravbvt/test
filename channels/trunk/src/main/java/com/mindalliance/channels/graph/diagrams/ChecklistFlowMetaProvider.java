@@ -173,14 +173,14 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         ? "SEND"
                         : commStep.isAnswer()
                         ? "ANSWER with"
-                        : "ASK FOR");
+                        : "ASK for");
                 Flow.Intent intent = commStep.getSharing().getIntent();
-                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toLowerCase() ) );
+                       sb.append( intent == null ? " info" : (" " + intent.getLabel().toLowerCase() ) );
             } else if ( step.isReceiptConfirmation() ) {
-                sb.append( "CONFIRM RECEIPT" );
+                sb.append( "CONFIRM RECEIPT of" );
             } else if ( step.isSubTaskStep() ) {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
-                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP ON " );
+                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP on " );
             }
         }
         return sanitize( sb.toString() );
@@ -199,8 +199,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             } else if ( step.isReceiptConfirmation() ) {
                 ReceiptConfirmationStep confStep = (ReceiptConfirmationStep) step;
                 Flow sharing = confStep.getSharingToConfirm();
-                sb.append( "of " )
-                        .append( sharing.isNotification()
+                sb.append( sharing.isNotification()
                                 ? sharing.getIntent() != null
                                 ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
                                 : "notification of "
@@ -272,7 +271,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                                        ChecklistElement vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
@@ -322,8 +321,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             return DOTAttribute.emptyList();
         }
 
-        private String getIcon( CommunityService communityService,
-                                ImagingService imagingService,
+        private String getIcon( ImagingService imagingService,
                                 ChecklistElement vertex ) {
             int numLines = 0;
             String iconName;
