@@ -149,7 +149,7 @@ public class MSGS0009_SendMessageToAllDevelopers extends TestCase {
 			 //Click on Send button
 			 stepNo++;
 			 description="Click Send Button"; 	
-             homePage.clickSendButtonInMessagesTab();
+             homePage.clickSendButtonInMessagesTab(testData.get("Message"));
              // Write log
 			 LogFunctions.writeLogs(description);
 			 LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
