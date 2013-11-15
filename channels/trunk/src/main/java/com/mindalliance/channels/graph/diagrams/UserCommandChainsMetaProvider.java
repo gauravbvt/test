@@ -3,7 +3,9 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.CommandRelationship;
 import com.mindalliance.channels.engine.analysis.graph.Contact;
@@ -161,8 +163,6 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
                 list.add( new DOTAttribute( "ratio", "compress" ) );
                 list.add( new DOTAttribute( "overlap", "false" ) );
-                // list.add( new DOTAttribute( "mode", "hier" ) );
-                // list.add( new DOTAttribute( "sep", "+100,100" ) );
             }
             return list;
         }
@@ -188,6 +188,7 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", CONTACT_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", CONTACT_FONT ) );
+            list.add( new DOTAttribute( "tooltip", getContactToolTip( contact, communityService ) ) );
             return list;
         }
 
@@ -204,9 +205,6 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( highlighted ) {
-                list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            }
             return list;
         }
 
@@ -218,7 +216,9 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
                 String iconSrc = getSquaredUserPhotoSrc( contact );
                 if ( iconSrc == null ) {
                     String dirPath = getImageDirectory().getFile().getAbsolutePath();
-                    iconSrc = dirPath + "/" + ( contact.isForUser( user ) ? "person.png" : "role.png" );
+                    iconSrc = dirPath
+                            + "/"
+                            + ( contact.getAgent().getActor().isSystem() ? "system.png" : "person.png" );
                 }
                 // insert numlines
                 if ( numLines > 0 ) {
@@ -235,6 +235,23 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
             }
         }
 
+    }
+
+    private String getContactToolTip( Contact contact, CommunityService communityService ) {
+        ChannelsUser user = contact.getUser();
+        if ( user != null ) {
+            StringBuilder sb = new StringBuilder(  );
+            for ( ContactInfo contactInfo : user.getUserRecord().getContactInfoList() ) {
+                Channel channel = contactInfo.asChannel( communityService );
+                if ( sb.length() > 0 ) {
+                    sb.append( " - " );
+                }
+                sb.append( channel.getLabel() );
+            }
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
 
 

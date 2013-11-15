@@ -24,6 +24,7 @@ import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistElementRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -157,96 +158,78 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     }
 
     private String getIconLabelSeparated( ChecklistElement cle ) {
-        int lineWrapSize = LINE_WRAP_SIZE;
-        String label = "";
-        do {
-            label = AbstractMetaProvider.separate( getIconLabel( cle ), lineWrapSize );
-            lineWrapSize++;
-        } while ( label.split( "\\|" ).length > 5 );
-        return label;
+        String prefix = getLabelPrefix( cle );
+        String postfix = ChannelsUtils.split( getLabelPostfix( cle ), "|", 4, LINE_WRAP_SIZE );
+        return prefix + (prefix.isEmpty() ? "" : "|" ) + postfix;
     }
 
-    private String getIconLabel( ChecklistElement cle ) {
+    private String getLabelPrefix( ChecklistElement cle ) {
         StringBuilder sb = new StringBuilder();
         if ( cle.getStep() != null ) {
             Step step = cle.getStep();
-            if ( step.isActionStep() ) {
-                sb.append( "DO " )
-                        .append( ( (ActionStep) step ).getAction() );
-            } else if ( step.isCommunicationStep() ) {
+            if ( step.isCommunicationStep() ) {
                 CommunicationStep commStep = (CommunicationStep) step;
                 sb.append( commStep.isNotification()
                         ? "SEND "
                         : commStep.isAnswer()
-                        ? "ANSWER WITH "
-                        : "ASK FOR ")
-                        .append( commStep.getSharing().getName() )
-                        /**
-                        *.append( commStep.isNotification()
-                        *        ? " to "
-                        *        : commStep.isAnswer()
-                        *        ? " to "
-                        *        : " from ")
-                        *.append( commStep.isNotification()
-                        *        ? ( (Part) commStep.getSharing().getTarget() ).resourceSpec().getName()
-                        *        : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() )
-                        */
-                        ;
+                        ? "ANSWER with "
+                        : "ASK for");
+                Flow.Intent intent = commStep.getSharing().getIntent();
+                       sb.append( intent == null ? " info" : (" " + intent.getLabel().toLowerCase() ) );
+            } else if ( step.isReceiptConfirmation() ) {
+                sb.append( "CONFIRM RECEIPT" );
+            } else if ( step.isSubTaskStep() ) {
+                SubTaskStep subTaskStep = (SubTaskStep) step;
+                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP on " );
+            }
+        }
+        return sanitize( sb.toString() );
+    }
+
+    private String getLabelPostfix( ChecklistElement cle ) {
+        StringBuilder sb = new StringBuilder();
+        if ( cle.getStep() != null ) {
+            Step step = cle.getStep();
+            if ( step.isActionStep() ) {
+                sb.append( ( (ActionStep) step ).getAction() );
+            } else if ( step.isCommunicationStep() ) {
+                CommunicationStep commStep = (CommunicationStep) step;
+                sb.append( commStep.getSharing().getName() );
 
             } else if ( step.isReceiptConfirmation() ) {
                 ReceiptConfirmationStep confStep = (ReceiptConfirmationStep) step;
                 Flow sharing = confStep.getSharingToConfirm();
-                sb.append( "CONFIRM RECEIPT OF " )
+                sb.append( "of " )
                         .append( sharing.isNotification()
                                 ? sharing.getIntent() != null
                                 ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
                                 : "notification of "
                                 : "request for "
                         )
-                        .append( sharing.getName() )
-                        /**
-                        *.append( " from " )
-                        *.append( sharing.isNotification()
-                        *        ? ( (Part) sharing.getSource() ).resourceSpec().getName()
-                        *        : ( (Part) sharing.getTarget() ).resourceSpec().getName() )
-                        */
-                        ;
-                        
-            } else {
+                        .append( sharing.getName() );
+            } else if ( step.isSubTaskStep() ) {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
-                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP ON " )
-                        .append( subTaskStep.getSharing().getName() )
-                        /**
-                        *.append( " by doing " )
-                        *.append( subTaskStep.getSubTask().getTask() )
-                        */
-                        ;
+                sb.append( subTaskStep.getSharing().getName() );
             }
         } else if ( cle.isCondition() ) { // condition
             Condition condition = cle.getCondition();
-            String ifUnless = cle.getContext().toUpperCase() + " ";
             if ( condition.isLocalCondition() ) {
-                sb.append( ifUnless )    // if or unless
-                        .append( ( (LocalCondition) condition ).getState() );
+                sb.append( ( (LocalCondition) condition ).getState() );
             } else if ( condition.isGoalCondition() ) {
                 Goal goal = ( (GoalCondition) condition ).getGoal();
-                sb.append( ifUnless )
-                        .append( goal.getLabel() )
+                sb.append( goal.getLabel() )
                         .append( goal.isGain() ? " is realized" : " is mitigated" );
 
             } else if ( condition.isNeedSatisfiedCondition() ) {
                 Information need = ( (NeedSatisfiedCondition) condition ).getNeededInfo();
-                sb.append( ifUnless )
-                        .append( "need for " )
+                sb.append( "the need for " )
                         .append( need.getName() )
                         .append( " is satisfied" );
 
             } else if ( condition.isTaskFailedCondition() ) {
-                sb.append( ifUnless )
-                        .append( "the task failed" );
+                sb.append( "the task failed" );
             } else { //EventTiming condition
-                sb.append( ifUnless )
-                        .append( ( (EventTimingCondition) condition ).getEventTiming().getLabel() );
+                sb.append( ( (EventTimingCondition) condition ).getEventTiming().getLabel() );
             }
         } else if ( cle.isOutcome() ) {
             Outcome outcome = cle.getOutcome();
@@ -268,6 +251,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
         }
         return sanitize( sb.toString() );
     }
+
 
     @Override
     public VertexNameProvider<ChecklistElement> getVertexIDProvider() {
@@ -291,7 +275,6 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             list.add( new DOTAttribute( "shape", "none" ) );
-            //list.add( new DOTAttribute( "margin", "0.11,0.2") );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
@@ -329,7 +312,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
-                //list.add( new DOTAttribute( "ratio", "compress" ) );
+                list.add( new DOTAttribute( "ratio", "compress" ) );
             }
             return list;
         }
