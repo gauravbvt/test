@@ -156,4 +156,6 @@ public class DomainPlanPage {
        	UIActions.getText(fileName, "FeedbackAndRepliesTitle", GlobalVariables.configuration.getAttrSearchList(), "FeedbackAndRepliesTitle");
 	}
 
+	
+	
 }
