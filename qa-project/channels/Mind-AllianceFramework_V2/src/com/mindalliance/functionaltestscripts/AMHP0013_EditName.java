@@ -207,7 +207,7 @@ public class AMHP0013_EditName extends TestCase {
 			this.testData.put("UserName",oXmlEleAMHP0013_EditName.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Password",oXmlEleAMHP0013_EditName.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Name",oXmlEleAMHP0013_EditName.getElementsByTagName("name").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Email",oXmlEleAMHP0013_EditName.getElementsByTagName("email").item(0).getChildNodes().item(0).getNodeValue());
+//			this.testData.put("Email",oXmlEleAMHP0013_EditName.getElementsByTagName("email").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File AMHP0013_EditName can not be parsed.");
