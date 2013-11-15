@@ -170,17 +170,17 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             if ( step.isCommunicationStep() ) {
                 CommunicationStep commStep = (CommunicationStep) step;
                 sb.append( commStep.isNotification()
-                        ? "SEND "
+                        ? "SEND"
                         : commStep.isAnswer()
-                        ? "ANSWER with "
-                        : "ASK for");
+                        ? "ANSWER with"
+                        : "ASK FOR");
                 Flow.Intent intent = commStep.getSharing().getIntent();
-                       sb.append( intent == null ? " info" : (" " + intent.getLabel().toLowerCase() ) );
+                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toLowerCase() ) );
             } else if ( step.isReceiptConfirmation() ) {
                 sb.append( "CONFIRM RECEIPT" );
             } else if ( step.isSubTaskStep() ) {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
-                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP on " );
+                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP ON " );
             }
         }
         return sanitize( sb.toString() );
@@ -312,7 +312,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
-                list.add( new DOTAttribute( "ratio", "compress" ) );
+                //list.add( new DOTAttribute( "ratio", "compress" ) );
             }
             return list;
         }
