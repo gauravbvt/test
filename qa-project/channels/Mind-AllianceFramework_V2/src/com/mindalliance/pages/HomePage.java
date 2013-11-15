@@ -336,12 +336,18 @@ public class HomePage {
 	 * Clicks on 'Send' button in Messages tab
 	 * @throws UIAutomationException
 	 */
-	public void clickSendButtonInMessagesTab() throws UIAutomationException{	
+	public void clickSendButtonInMessagesTab(String message) throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
 		UIActions.click(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
 		
-		
-		
+		if(message.equals(""))
+		{
+			UIActions.getText(message, "Blank Message Notification", GlobalVariables.configuration.getAttrSearchList(),"Blank Message Notification");
+		}
+		else
+		{
+			UIActions.getText(message, "Message Sent Notification",GlobalVariables.configuration.getAttrSearchList() , "Message Sent Notification");
+		}
 	//	UIActions.getText(fileName, "Password Changed Notification",GlobalVariables.configuration.getAttrSearchList() , "Password Changed Notification");
 		}
 	
