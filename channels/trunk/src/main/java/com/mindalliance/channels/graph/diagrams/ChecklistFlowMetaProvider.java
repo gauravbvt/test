@@ -176,7 +176,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             } else if ( step.isCommunicationStep() ) {
                 CommunicationStep commStep = (CommunicationStep) step;
                 sb.append( commStep.isNotification()
-                        ? " \\n SEND "
+                        ? "SEND "
                         : commStep.isAnswer()
                         ? "ANSWER WITH "
                         : "ASK FOR ")
@@ -291,8 +291,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             list.add( new DOTAttribute( "shape", "none" ) );
-            //list.add( new DOTAttribute( "fixedsize", "true" ) );
-            //list.add( new DOTAttribute( "margin", "0.11,0.055") );
+            //list.add( new DOTAttribute( "margin", "0.11,0.2") );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
@@ -380,7 +379,6 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 iconName = null;
             }
 
-            //String name = imagingService.getImageDirPath() + '/' + iconName + ".png";
             String name = imagingService.getImageDirPath() + '/' + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
             if ( !new File( name ).canRead() ) {
                 LOG.warn( "Icon file not found " + name );
