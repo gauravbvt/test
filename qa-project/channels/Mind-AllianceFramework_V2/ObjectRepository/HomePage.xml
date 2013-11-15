@@ -57,6 +57,11 @@
 	</Element>
 	
 	<Element>
+			<GivenName>Blank Message Notification</GivenName>
+			<Title>Message is empty.Not sent</Title>
+	</Element>
+	
+	<Element>
 			<GivenName>No Changes Applied Notification</GivenName>
 			<Title>No changes were made</Title>
 	</Element>
@@ -444,6 +449,48 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Message Text Area In Messages Tab</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div[4]/textarea</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Send Button In Messages Tab</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div[4]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>To Drop Down In Messages Tab</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div[4]/div/select</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Reset Button In Messages Tab</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div[4]/input[3]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 
  	
  	<ImplicitWaitTimeMilliSecs>500</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
