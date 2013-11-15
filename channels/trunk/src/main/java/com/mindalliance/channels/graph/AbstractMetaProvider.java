@@ -62,7 +62,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Number of characters after which a long line is wrapped on separator.
      */
-    public static final int LINE_WRAP_SIZE = 5;
+    public static final int LINE_WRAP_SIZE = 10;
     /**
      * PNG, SVG, IMAP etc.
      */

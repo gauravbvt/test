@@ -57,7 +57,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     /**
      * Font for node labels
      */
-    public static final String NODE_FONT = "Arial";
+    public static final String NODE_FONT = "DejaVuSans";
 
     /**
      * Font size for node labels.
@@ -176,24 +176,27 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             } else if ( step.isCommunicationStep() ) {
                 CommunicationStep commStep = (CommunicationStep) step;
                 sb.append( commStep.isNotification()
-                        ? "SEND "
+                        ? " \\n SEND "
                         : commStep.isAnswer()
-                        ? "ANSWER with "
-                        : "ASK for")
+                        ? "ANSWER WITH "
+                        : "ASK FOR ")
                         .append( commStep.getSharing().getName() )
-                        .append( commStep.isNotification()
-                                ? " to "
-                                : commStep.isAnswer()
-                                ? " to "
-                                : " from ")
-                        .append( commStep.isNotification()
-                                ? ( (Part) commStep.getSharing().getTarget() ).resourceSpec().getName()
-                                : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() );
+                        /**
+                        *.append( commStep.isNotification()
+                        *        ? " to "
+                        *        : commStep.isAnswer()
+                        *        ? " to "
+                        *        : " from ")
+                        *.append( commStep.isNotification()
+                        *        ? ( (Part) commStep.getSharing().getTarget() ).resourceSpec().getName()
+                        *        : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() )
+                        */
+                        ;
 
             } else if ( step.isReceiptConfirmation() ) {
                 ReceiptConfirmationStep confStep = (ReceiptConfirmationStep) step;
                 Flow sharing = confStep.getSharingToConfirm();
-                sb.append( "CONFIRM RECEIPT of " )
+                sb.append( "CONFIRM RECEIPT OF " )
                         .append( sharing.isNotification()
                                 ? sharing.getIntent() != null
                                 ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
@@ -201,16 +204,23 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                 : "request for "
                         )
                         .append( sharing.getName() )
-                        .append( " from " )
-                        .append( sharing.isNotification()
-                                ? ( (Part) sharing.getSource() ).resourceSpec().getName()
-                                : ( (Part) sharing.getTarget() ).resourceSpec().getName() );
+                        /**
+                        *.append( " from " )
+                        *.append( sharing.isNotification()
+                        *        ? ( (Part) sharing.getSource() ).resourceSpec().getName()
+                        *        : ( (Part) sharing.getTarget() ).resourceSpec().getName() )
+                        */
+                        ;
+                        
             } else {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
-                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP with " )
+                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP ON " )
                         .append( subTaskStep.getSharing().getName() )
-                        .append( " by doing " )
-                        .append( subTaskStep.getSubTask().getTask() );
+                        /**
+                        *.append( " by doing " )
+                        *.append( subTaskStep.getSubTask().getTask() )
+                        */
+                        ;
             }
         } else if ( cle.isCondition() ) { // condition
             Condition condition = cle.getCondition();
@@ -281,6 +291,8 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             list.add( new DOTAttribute( "shape", "none" ) );
+            //list.add( new DOTAttribute( "fixedsize", "true" ) );
+            //list.add( new DOTAttribute( "margin", "0.11,0.055") );
             list.add( new DOTAttribute( "fontname", NODE_FONT ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
@@ -299,11 +311,11 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
             } else {
-                list.add( new DOTAttribute( "color", "black" ) );
+                list.add( new DOTAttribute( "color", "#666666" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
                 list.add( new DOTAttribute( "style", "normal" ) );
-                list.add( new DOTAttribute( "arrowhead", "open" ) );
+                list.add( new DOTAttribute( "arrowhead", "normal" ) );
                 list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
                 list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
                 list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
@@ -318,7 +330,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
             if ( getGraphSize() != null ) {
                 list.add( new DOTAttribute( "size", getGraphSizeString() ) );
-                list.add( new DOTAttribute( "ratio", "compress" ) );
+                //list.add( new DOTAttribute( "ratio", "compress" ) );
             }
             return list;
         }
@@ -368,6 +380,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 iconName = null;
             }
 
+            //String name = imagingService.getImageDirPath() + '/' + iconName + ".png";
             String name = imagingService.getImageDirPath() + '/' + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
             if ( !new File( name ).canRead() ) {
                 LOG.warn( "Icon file not found " + name );
