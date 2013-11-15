@@ -2743,6 +2743,12 @@ div.attachment-panel-add-container select {
     margin-top: 3px;
 }
 
+.chains-icon {
+    float:right;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
 
 /*  participation manager */
 

@@ -339,6 +339,7 @@ CONFIGURATION NOTES:
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
+        <property name="userIconDirectory" value="${channels.home}${file.separator}public${file.separator}users${file.separator}photos${file.separator}cache"/>
     </bean>
 
     <!-- =========================== Transmission Media -->

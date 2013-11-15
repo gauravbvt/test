@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -82,6 +83,8 @@ public interface CommunityService {
     RegisteredOrganizationService getRegisteredOrganizationService();
 
     ParticipationAnalyst getParticipationAnalyst();
+
+    UserUploadService getUserUploadService();
 
     Boolean isCommunityPlanner( ChannelsUser user );
 

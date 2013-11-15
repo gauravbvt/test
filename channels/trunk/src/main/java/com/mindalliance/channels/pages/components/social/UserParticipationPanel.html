@@ -7,6 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
+    <div id="commandChains" wicket:id="commandChainsDialog" > </div>
     <div class="userInfo" wicket:id="userParticipation">
         <div wicket:id="participatesInPlanContainer" class="tabcontent-group">
             <h3>
@@ -28,7 +29,8 @@
         <div wicket:id="openAndConfirmedParticipation" class="tabcontent-group">
             <h3>
                 I participate as
-                <img wicket:id = "helpParticipateAs" class="help-icon"/>
+                <img wicket:id = "helpParticipateAs" class="help-icon" />
+                <img wicket:id="commandChain" src="images/command_chain.png" class="chains-icon"/>
             </h3>
             <div wicket:id="noParticipation" class="tabcontent-content">No one yet</div>
             <div class="tabcontent-content">
@@ -43,11 +45,12 @@
         </div>
         <div wicket:id="newParticipationContainer" class="tabcontent-group">
             <h3>
-                <span wicket:id="newParticipationLabel">I (also) participate in</span>
+                <span wicket:id="newParticipationLabel">I want to participate</span>
                 <img wicket:id = "helpNewParticipation" class="help-icon"/>
             </h3>
             <div class="tabcontent-content" wicket:id="newParticipation">
-                in <select wicket:id="agencies">
+                in organization
+                <select wicket:id="agencies">
                     <option>org</option>
                 </select>
                 <div wicket:id="asAgent">

@@ -3,6 +3,7 @@ package com.mindalliance.channels.engine.imaging;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Function;
@@ -66,7 +67,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     //private String uploadPath = "";
 
     /**
-     * Directory for generated icons.
+     * Directory for generated thematic icons.
      */
     private Resource iconDirectory;
 
@@ -181,12 +182,32 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return true;
     }
 
-    private boolean squarify( CommunityService communityService, String url, ModelObject modelObject ) {
+    private boolean iconize( File imageFile, String iconPrefix ) {
+        try {
+            BufferedImage image = ImageIO.read( imageFile );
+            int height = ICON_HEIGHTS[0];
+            int width = height * image.getWidth() / image.getHeight();
+
+            BufferedImage resized = resize( image, width, height );
+            String filePath = imageFile.getAbsolutePath();
+            File iconFile =  new File( filePath.substring( 0, filePath.lastIndexOf( "." ) ) + iconPrefix + ".png" );
+            ImageIO.write( resized, "png", iconFile );
+            createNumberedIcons( resized, width, iconFile );
+
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to iconize image " + imageFile.getAbsolutePath() + " (" + e.getMessage() + ')' );
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean squarifyModelObjectImage( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
             BufferedImage image = ImageIO.read( new File( url ) );
            // BufferedImage image = getImage( communityService, url );
             BufferedImage icon = doSquarify( image );
-            ImageIO.write( icon, "png", getIconFile( communityService, modelObject, "_squared.png" ) );
+            ImageIO.write( icon, "png", getIconFile( communityService, modelObject, UserUploadService.SQUARED + ".png" ) );
             return true;
 
         } catch ( IOException e ) {
@@ -214,14 +235,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public boolean squarify( String filePath, File iconFile ) {
+    public boolean squarifyAndIconize( String filePath, File squaredFile, String iconPrefix ) {
         try {
             BufferedImage image = ImageIO.read( new File( filePath ) );
-            BufferedImage icon = doSquarify( image );
-            ImageIO.write( icon, "png", iconFile );
+            BufferedImage squared = doSquarify( image );
+            ImageIO.write( squared, "png", squaredFile );
+            iconize( squaredFile, iconPrefix );
             return true;
         } catch ( IOException e ) {
-            LOG.warn( "Failed to squarify image at " + filePath + " (" + e.getMessage() + ')' );
+            LOG.warn( "Failed to squarify and iconize image at " + filePath + " (" + e.getMessage() + ')' );
             return false;
         }
 
@@ -233,7 +255,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             File iconFile = getIconFile( communityService, modelObject, ".png" );
             if ( iconFile.delete() )
                 LOG.debug( "Deleted {}", iconFile );
-            iconFile = getIconFile( communityService, modelObject, "_squared.png" );
+            iconFile = getIconFile( communityService, modelObject, UserUploadService.SQUARED + ".png" );
             if ( iconFile.delete() )
                 LOG.debug( "Deleted {}", iconFile );
 
@@ -272,7 +294,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     @Override
     public String getSquareIconUrl( CommunityService communityService, ModelObject modelObject ) {
         try {
-            File squareIconFile = getIconFile( communityService, modelObject, "_squared.png" );
+            File squareIconFile = getIconFile( communityService, modelObject, UserUploadService.SQUARED + ".png" );
             if ( squareIconFile.exists() ) {
                 String prefix = getIconFilePrefix( communityService );
 
@@ -287,7 +309,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             }
 
             String path = getModelObjectIconsPath( communityService, modelObject );
-            if ( path != null && squarify( communityService, path + ".png", modelObject ) )
+            if ( path != null && squarifyModelObjectImage( communityService, path + ".png", modelObject ) )
                 return getSquareIconUrl( communityService, modelObject );
 
         } catch ( IOException e ) {
@@ -311,28 +333,30 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private void createNumberedIcons( CommunityService communityService, BufferedImage resized, int width, ModelObject modelObject )
             throws IOException {
-
-        for ( int i = 1; i < ICON_HEIGHTS.length; i++ )
-            createNumberedIcon( communityService, resized, modelObject, width, ICON_HEIGHTS[i], i );
+        createNumberedIcons( resized, width, getIconFile( communityService, modelObject, ".png") );
     }
 
-    private void createNumberedIcon( CommunityService communityService,
-                                     BufferedImage resized,
-                                     ModelObject modelObject,
+    private void createNumberedIcons( BufferedImage resized, int width, File iconFile ) throws IOException {
+        for ( int i = 1; i < ICON_HEIGHTS.length; i++ )
+            createNumberedIcon( resized, iconFile, width, ICON_HEIGHTS[i], i );
+    }
+
+    private void createNumberedIcon( BufferedImage resized,
+                                     File iconFile,
                                      int width,
                                      int height,
-                                     int number )
-            throws IOException {
-
+                                     int number ) throws IOException {
+        String iconFileName = iconFile.getAbsolutePath();
+        String extended = iconFileName.substring( 0, iconFileName.lastIndexOf( '.' ) );
         BufferedImage icon = new BufferedImage( width, height, BufferedImage.TRANSLUCENT );
         icon.createGraphics();
         Graphics2D graphics = (Graphics2D) icon.getGraphics();
         graphics.drawImage( resized, 0, 0, resized.getWidth(), resized.getHeight(), null );
-        ImageIO.write( icon, "png", getIconFile( communityService, modelObject, number + ".png" ) );
+        ImageIO.write( icon, "png", new File( extended + number + ".png" ) );
         String negatedIconUrl = getImageDirectory().getFile().getAbsolutePath() + NEGATED_ICON_URL;
         BufferedImage negatedIcon = ImageIO.read( new File( negatedIconUrl ) );
         graphics.drawImage( negatedIcon, 0, 0, null );
-        ImageIO.write( icon, "png", getIconFile( communityService, modelObject, number + NEGATED + ".png" ) );
+        ImageIO.write( icon, "png", new File ( extended + number + NEGATED + ".png" ) );
         graphics.dispose();
     }
 

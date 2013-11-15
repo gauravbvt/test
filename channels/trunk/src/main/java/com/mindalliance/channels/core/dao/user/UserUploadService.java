@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 import java.io.File;
@@ -14,12 +15,17 @@ import java.io.File;
  * Time: 9:09 AM
  */
 public interface UserUploadService {
+
+    static final String SQUARED = "_squared";
+
+    static final String ICON = "_icon";
+
     // Photo must be null for upload to happen.
-    boolean uploadUserPhoto( ChannelsUser user, FileUpload upload );
+    boolean uploadUserPhoto( ChannelsUser user, FileUpload upload, CommunityService communityService );
 
     String getSquareUserIconURL( ChannelsUser user );
 
-    File findSquaredUserPhoto( String fileName );
+    File findSquaredUserPhoto( String photoName );
 
     // Remove all unreferenced photos
    void cleanUpPhotos();

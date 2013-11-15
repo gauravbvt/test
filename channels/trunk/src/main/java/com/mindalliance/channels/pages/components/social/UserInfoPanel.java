@@ -245,7 +245,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         FileUpload upload = uploadPhotoField.getFileUpload();
         if ( upload != null ) {
             LoggerFactory.getLogger( getClass() ).info( "Uploading photo for {}", temp );
-            userUploadService.uploadUserPhoto( temp, upload );
+            userUploadService.uploadUserPhoto( temp, upload, getCommunityService() );
         }
     }
 

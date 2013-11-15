@@ -442,5 +442,10 @@ public class ChannelsUser implements UserDetails {
     public boolean hasAccessTo( String uri ) {
         return isPlannerOrAdmin( uri ) || isParticipant( uri );
     }
+
+    public boolean hasPhoto() {
+        String photoUrl = getUserRecord().getPhoto();
+        return photoUrl != null && !photoUrl.isEmpty();
+    }
 }
 

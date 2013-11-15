@@ -60,9 +60,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
             producerTaskContainer.add(
                     new ChecklistDataLinkPanel(
                             "producerTaskLink",
-                            flowData instanceof NotificationData
-                                    ? ( (NotificationData) flowData ).getAssignmentData()
-                                    : ( (RequestData) flowData ).getAssignmentData(),
+                            flowData.getAssignmentData(),
                             getFinder() ) );
         } else {
             producerTaskContainer.add( new Label( "producerTaskLink", "" ) );

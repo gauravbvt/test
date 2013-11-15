@@ -83,24 +83,23 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new ParticipationConfirmationsPanel( id, getModel() );
             }
         } );
-        tabs.add( new AbstractTab( new PropertyModel<String>( this, "issuesTitle" ) ) {
-            public Panel getPanel( String id ) {
-                return new ParticipationIssuesPanel( id );
-            }
-        } );
-        tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
+         tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
             @Override
             public Panel getPanel( String id ) {
                 return new UsersParticipationPanel( id );
             }
         } );
-
         tabs.add( new AbstractTab( new Model<String>( "Planners" ) ) {
-                @Override
-                public Panel getPanel( String id ) {
-                    return new CollaborationPlannersPanel( id );
-                }
-            } );
+            @Override
+            public Panel getPanel( String id ) {
+                return new CollaborationPlannersPanel( id );
+            }
+        } );
+        tabs.add( new AbstractTab( new PropertyModel<String>( this, "issuesTitle" ) ) {
+            public Panel getPanel( String id ) {
+                return new ParticipationIssuesPanel( id );
+            }
+        } );
         return tabs;
     }
 

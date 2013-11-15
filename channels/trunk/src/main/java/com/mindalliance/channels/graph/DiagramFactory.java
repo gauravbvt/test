@@ -7,6 +7,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Hierarchical;
@@ -65,7 +66,7 @@ public interface DiagramFactory<Vertex, Edge> {
      *
      * @param segment     a segment
      * @param node        a selected node
-     * @param flow a selected flow
+     * @param flow        a selected flow
      * @param diagramSize width and height as array of doubles
      * @param orientation a string
      * @return a flow map diagram
@@ -77,7 +78,7 @@ public interface DiagramFactory<Vertex, Edge> {
      *
      * @param segment           a segment
      * @param node              a selected node
-     * @param flow a selected flow
+     * @param flow              a selected flow
      * @param diagramSize       width and height as array of doubles
      * @param orientation       a string
      * @param showingGoals      whether to show goals
@@ -164,9 +165,15 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Get preset image directory path.
      *
-     * @return a String
+     * @return a resource
      */
     Resource getImageDirectory();
+
+    /**
+     * Get user icon directory.
+     * @return a resource
+     */
+    Resource getUserIconDirectory();
 
     /**
      * Instantiates a dissemination diagram.
@@ -226,4 +233,15 @@ public interface DiagramFactory<Vertex, Edge> {
      * @return a checklist flow diagram
      */
     Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation, boolean interactive );
+
+    /**
+     * Instantiates a command chains diagram.
+     *
+     * @param user        a channels user
+     * @param diagramSize an array of doubles
+     * @param orientation a string
+     * @param algo        the rendering algorithm
+     * @return a command chains diagram
+     */
+    Diagram newUserCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo );
 }

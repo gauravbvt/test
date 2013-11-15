@@ -131,11 +131,13 @@ public interface ImagingService {
 
     /**
      * Make square a file given its path and store into given file.
+     * Make numbered versions with empty space under for labels.
      * @param filePath path to image to make square
      * @param iconFile file where to store squared image
+     * @param iconPrefix pre-extension string indicating an icon (to make icons from the squarified image)
      * @return boolean whether successful
      */
-    boolean squarify( String filePath, File iconFile );
+    boolean squarifyAndIconize( String filePath, File iconFile, String iconPrefix );
 
     /**
      * Get image dir path.

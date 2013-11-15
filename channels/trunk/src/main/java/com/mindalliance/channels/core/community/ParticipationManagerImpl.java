@@ -999,5 +999,41 @@ public class ParticipationManagerImpl implements ParticipationManager {
         );
     }
 
+    @Override
+    public List<Agent> findTopSupervisorsOf( Agent agent, CommunityService communityService ) {
+        return new ArrayList<Agent>( safeFindTopSupervisorsOf( agent, communityService, new HashSet<Agent>() ) );
+    }
+
+    private Set<Agent> safeFindTopSupervisorsOf( Agent agent,
+                                                 CommunityService communityService,
+                                                 Set<Agent> visited ) {
+        Set<Agent> topSupervisors = new HashSet<Agent>(  );
+        if ( !visited.contains( agent ) ) {
+           visited.add( agent );
+            for ( Agent supervisor : findAllSupervisorsOf( agent, communityService )) {
+                if ( findAllSupervisorsOf( supervisor, communityService ).isEmpty() ) {
+                    topSupervisors.add( supervisor );
+                } else {
+                    topSupervisors.addAll( safeFindTopSupervisorsOf( supervisor, communityService, visited ) );
+                }
+            }
+        }
+        return topSupervisors;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Agent> findAllSupervisedBy( final Agent supervisor, final CommunityService communityService ) {
+        return (List<Agent>) CollectionUtils.select(
+                getAllKnownAgents( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return findAllSupervisorsOf( (Agent)object, communityService ).contains( supervisor );
+                    }
+                }
+        );
+    }
+
 
 }

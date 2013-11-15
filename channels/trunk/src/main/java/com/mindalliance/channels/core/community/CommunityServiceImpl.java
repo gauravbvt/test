@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
@@ -68,6 +69,8 @@ public class CommunityServiceImpl implements CommunityService {
     private UserRecordService userRecordService;
     @Autowired
     private RegisteredOrganizationService registeredOrganizationService;
+    @Autowired
+    private UserUploadService userUploadService;
 
     private PlanCommunity planCommunity;
     private PlanService planService;
@@ -131,6 +134,14 @@ public class CommunityServiceImpl implements CommunityService {
 
     private void setParticipationManager( ParticipationManager participationManager ) {
         this.participationManager = participationManager;
+    }
+
+    public UserUploadService getUserUploadService() {
+        return userUploadService;
+    }
+
+    public void setUserUploadService( UserUploadService userUploadService ) {
+        this.userUploadService = userUploadService;
     }
 
     @Override

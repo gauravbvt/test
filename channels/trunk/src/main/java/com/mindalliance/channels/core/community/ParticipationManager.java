@@ -436,9 +436,28 @@ public interface ParticipationManager {
 
     /**
      * Whether users participate as this agent via participation as another agent.
-     * @param agent an agent
+     *
+     * @param agent            an agent
      * @param communityService a community service
      * @return a boolean
      */
     boolean isLinked( Agent agent, CommunityService communityService );
+
+    /**
+     * Find the top, possibly indirect, supervisors of a given agent.
+     *
+     * @param agent            an agent
+     * @param communityService a community service
+     * @return a list of supervising agents  that have no supervisors
+     */
+    List<Agent> findTopSupervisorsOf( Agent agent, CommunityService communityService );
+
+    /**
+     * Find all agents directly supervised by a given agent.
+     *
+     * @param agent            an agent
+     * @param communityService a community service
+     * @return a list of supervised agents
+     */
+    List<Agent> findAllSupervisedBy( Agent agent, CommunityService communityService );
 }

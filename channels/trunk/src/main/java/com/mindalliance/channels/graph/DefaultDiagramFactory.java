@@ -7,6 +7,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Hierarchical;
@@ -31,6 +32,7 @@ import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
+import com.mindalliance.channels.graph.diagrams.UserCommandChainsDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -60,6 +62,12 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
      */
     private Resource imageDirectory;
 
+    /**
+     * Directory for generated user photo icons.
+     */
+    private Resource userIconDirectory;
+
+
     private Analyst analyst;
 
     public DefaultDiagramFactory() {
@@ -82,6 +90,15 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     @Override
     public void setImageDirectory( Resource imageDirectory ) {
         this.imageDirectory = imageDirectory;
+    }
+
+    @Override
+    public Resource getUserIconDirectory() {
+        return userIconDirectory;
+    }
+
+    public void setUserIconDirectory( Resource userIconDirectory ) {
+        this.userIconDirectory = userIconDirectory;
     }
 
     public Analyst getAnalyst() {
@@ -202,5 +219,11 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     public Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation, boolean interactive ) {
         LOG.debug( "Making checklist flow diagram" );
         return new ChecklistFlowDiagram( part, diagramSize, orientation, interactive );
+    }
+
+    @Override
+    public Diagram newUserCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo ) {
+        LOG.debug( "Making command chains diagram" );
+        return new UserCommandChainsDiagram( user, diagramSize, orientation, algo );
     }
 }

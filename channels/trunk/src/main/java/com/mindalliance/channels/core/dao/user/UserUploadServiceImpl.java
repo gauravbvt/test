@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.commons.io.FileUtils;
@@ -46,7 +47,6 @@ public class UserUploadServiceImpl implements UserUploadService {
     private Resource publicDirectory;
     private String userPhotoUpload;
     private String userPhotoURL;
-    private static final String SQUARED_PNG = "_squared.png";
 
     public UserUploadServiceImpl() {
     }
@@ -88,7 +88,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     @Override
-    public boolean uploadUserPhoto( ChannelsUser user, FileUpload upload ) {
+    public boolean uploadUserPhoto( ChannelsUser user, FileUpload upload, CommunityService communityService ) {
         if ( user.getPhoto() != null ) {
             LOG.warn( "Photo already uploaded for " + user.getUsername() );
             return false;
@@ -99,9 +99,10 @@ public class UserUploadServiceImpl implements UserUploadService {
             user.setPhoto( fileName );
             File outputFile = new File( getUserPhotoUploadDirPath() + File.separator + fileName + ".png" );
             ImageIO.write( image, "png", outputFile );
-            imagingService.squarify(
+            imagingService.squarifyAndIconize(
                     outputFile.getAbsolutePath(),
-                    new File( getSquaredDirectory(), fileName + SQUARED_PNG ) );
+                    new File( getSquaredDirectory(), fileName + SQUARED + ".png" ),
+                    ICON );
             LOG.info( "Uploaded file into ", outputFile );
             return true;
         } catch ( IOException e ) {
@@ -111,33 +112,34 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     @Override
-    public File findSquaredUserPhoto( String fileName ) {
-        if ( fileName != null ) {
-            return new File( getSquaredDirectory(), fileName + SQUARED_PNG );
+    public File findSquaredUserPhoto( String photoName ) {
+        if ( photoName != null ) {
+            return new File( getSquaredDirectory(), photoName + SQUARED + ".png" );
         } else {
             return null;
         }
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void cleanUpPhotos() {
         LOG.info( "Cleaning up uploaded photos" );
         int count = 0;
-        Set<String> allPhotos = new HashSet<String>(  );
+        Set<String> allPhotos = new HashSet<String>();
         for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
             String photo = user.getPhoto();
             if ( photo != null )
                 allPhotos.add( photo );
         }
-        for ( File photoFile : (Collection<File>)FileUtils.listFiles( getUserPhotoUploadDir(), EXT, false ) )  {
-             String fileName = StringUtils.removeEnd( photoFile.getName(), ".png" );
-             if ( !allPhotos.contains( fileName ) ) {
-                 if ( photoFile.delete() ) count++;
-             }
+        for ( File photoFile : (Collection<File>) FileUtils.listFiles( getUserPhotoUploadDir(), EXT, false ) ) {
+            String fileName = StringUtils.removeEnd( photoFile.getName(), ".png" );
+            if ( !allPhotos.contains( fileName ) ) {
+                if ( photoFile.delete() ) count++;
+            }
         }
-        for ( File photoFile : (Collection<File>)FileUtils.listFiles( getSquaredDirectory(), EXT, false ) )  {
-            String fileName = StringUtils.removeEnd( photoFile.getName(), SQUARED_PNG );
+        for ( File photoFile : (Collection<File>) FileUtils.listFiles( getSquaredDirectory(), EXT, false ) ) {
+            String photoFileName = photoFile.getName();
+            String fileName = photoFileName.substring( 0, photoFileName.lastIndexOf( SQUARED ) );
             if ( !allPhotos.contains( fileName ) ) {
                 if ( photoFile.delete() ) count++;
             }
@@ -146,7 +148,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     private String getUserPhotoUploadPath( ChannelsUser user ) {
-        String fileName = user.getPhoto(  );
+        String fileName = user.getPhoto();
         return fileName != null ? getUserPhotoUploadDirPath() + File.separator + fileName + ".png" : null;
     }
 
@@ -167,22 +169,18 @@ public class UserUploadServiceImpl implements UserUploadService {
 
     @Override
     public String getSquareUserIconURL( ChannelsUser user ) {
-        File squareIconFile = getSquaredUserFile( user );
-        if ( squareIconFile != null ) {
-            if ( squareIconFile.exists() ) {
-                return getUserPhotoUpload()
-                        + "/" + user.getPhoto();
-            } else {
-                return null;
-            }
+        String photo = user.getPhoto();
+        if ( photo != null ) {
+            return getUserPhotoUpload() + File.separator + photo;
+        } else {
+            return null;
         }
-        return null;
     }
 
-    private File getSquaredUserFile( ChannelsUser user ) {
-        String fileName = user.getPhoto( );
+    private File getSquaredIconUserFile( ChannelsUser user ) {
+        String fileName = user.getPhoto();
         if ( fileName != null )
-            return new File( getSquaredDirectory(), fileName + SQUARED_PNG );
+            return new File( getSquaredDirectory(), fileName + SQUARED + ICON + ".png" );
         else
             return null;
     }

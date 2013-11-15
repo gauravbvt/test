@@ -56,6 +56,17 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
         this.prefixDomIdentifier = prefixDomIdentifier;
     }
 
+    public AbstractResizableDiagramPanel(
+            String id,
+            Set<Long> expansions,
+            String prefixDomIdentifier,
+            double[] diagramSize ) {
+        super( id, null, expansions );
+        this.prefixDomIdentifier = prefixDomIdentifier;
+        this.diagramSize = diagramSize;
+    }
+
+
     public String getDomIdentifier() {
         return ( prefixDomIdentifier == null ? "" : prefixDomIdentifier + " " )
                 + DOM_IDENTIFIER;

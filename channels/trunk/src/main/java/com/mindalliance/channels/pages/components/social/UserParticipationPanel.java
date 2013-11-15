@@ -11,17 +11,22 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.pages.components.ChannelsModalWindow;
+import com.mindalliance.channels.pages.components.community.UserCommandChainsPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -49,11 +54,21 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( UserParticipationPanel.class );
 
+    private static final String PREFIX_DOM_IDENTIFIER = "#commandChains";
+
+    private static final int COMMAND_CHAINS_DIALOG_WIDTH = 1000;
+
+    private static final int COMMAND_CHAINS_DIALOG_HEIGHT = 800;
+
+    private static final double[] COMMAND_CHAINS_DIAGRAM_SIZE = { COMMAND_CHAINS_DIALOG_WIDTH - 10 , COMMAND_CHAINS_DIALOG_HEIGHT - 30 };
+
     @SpringBean
     private ChannelsUser user;
 
     @SpringBean
     private ParticipationManager participationManager;
+
+    private ModalWindow commandChainsDialog;
 
     private WebMarkupContainer userParticipationContainer;
 
@@ -83,12 +98,35 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private void resetAll() {
+        addCommandChainsDialog();
         addUserParticipationContainer();
         addUserRole();
         addParticipatesInPlan();
         addOpenAndConfirmedParticipation();
         addNewParticipation();
         addToBeConfirmedParticipation();
+    }
+
+    private void addCommandChainsDialog() {
+        commandChainsDialog = new ChannelsModalWindow( "commandChainsDialog" );
+        commandChainsDialog.setInitialHeight( COMMAND_CHAINS_DIALOG_HEIGHT );
+        commandChainsDialog.setInitialWidth( COMMAND_CHAINS_DIALOG_WIDTH );
+        commandChainsDialog.setTitle( "Chains of command" );
+        commandChainsDialog.setCookieName( "channels-command-chains" );
+        commandChainsDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                target.add( commandChainsDialog );
+                commandChainsDialog = null;
+            }
+        } );
+        UserCommandChainsPanel userCommandChainsPanel = new UserCommandChainsPanel(
+                commandChainsDialog.getContentId(),
+                new Model<ChannelsUser>( getUser() ),
+                getExpansions(),
+                PREFIX_DOM_IDENTIFIER
+        );
+        commandChainsDialog.setContent( userCommandChainsPanel );
+        addOrReplace( commandChainsDialog );
     }
 
     private void addUserRole() {
@@ -191,8 +229,26 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         openAndConfirmedParticipationContainer.add( participationList );
+        openAndConfirmedParticipationContainer.add( makeCommandChainIcon() );
         openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation", "images/help_guide_gray.png" ) );
         openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
+    }
+
+    private WebMarkupContainer makeCommandChainIcon() {
+        WebMarkupContainer commandChainIcon = new WebMarkupContainer( "commandChain" );
+        commandChainIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showCommandChainDialog( target );
+            }
+        } );
+        addTipTitle( commandChainIcon, "My chains of command" );
+        return commandChainIcon;
+    }
+
+    private void showCommandChainDialog( AjaxRequestTarget target ) {
+        addCommandChainsDialog();
+        commandChainsDialog.show( target );
     }
 
     private void addNewParticipation() {
@@ -204,8 +260,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 new Label(
                         "newParticipationLabel",
                         participationWrappers.isEmpty()
-                                ? "I participate"
-                                : "I also participate" )
+                                ? "I want to participate"
+                                : "I also want to participate" )
         );
         WebMarkupContainer newParticipationControls = new WebMarkupContainer( "newParticipation" );
         newParticipationControls.setOutputMarkupId( true );
@@ -267,7 +323,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return new ArrayList<UserParticipation>( participations );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> unsupervisedParticipations() {
         return (List<UserParticipation>) CollectionUtils.select(
                 getCommunityService().getParticipationManager().getUserParticipations(
@@ -281,7 +337,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 } );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> confirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService
                 = getCommunityService().getUserParticipationConfirmationService();
@@ -468,7 +524,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return agents;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Agency> agenciesWithAvailableParticipation(
             final List<ParticipationWrapper> participationWrappers ) {
         List<Agency> agencies = (List<Agency>) CollectionUtils.select(
@@ -528,7 +584,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return wrappers;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> unconfirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService =
                 getCommunityService().getUserParticipationConfirmationService();

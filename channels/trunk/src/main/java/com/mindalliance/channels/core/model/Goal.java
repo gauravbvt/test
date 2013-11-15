@@ -258,10 +258,10 @@ public class Goal implements Serializable, Mappable {
      * @param sep the separator string
      * @return a string
      */
-    public String getFailureLabel( String sep ) {
+    public String getFailureLabel(  ) {
         String label = getName().isEmpty() ? category.getName( positive ) : getName();
         label += isRiskMitigation() ? " not mitigated for " : " not achieved by ";
-        label += sep + organization.getName();
+        label += organization.getName();
         return label;
     }
 

@@ -29,6 +29,7 @@ import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
+import com.mindalliance.channels.pages.png.UserCommandChainsPng;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
@@ -298,6 +299,13 @@ public class Channels extends WebApplication
         ) );
         mountResource( "hierarchy.png", new PngReference(
                 HierarchyPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "command_chains.png", new PngReference(
+                UserCommandChainsPng.class,
                 getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),

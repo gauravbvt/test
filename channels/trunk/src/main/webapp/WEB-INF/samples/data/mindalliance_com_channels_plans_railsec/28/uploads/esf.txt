@@ -1,0 +1,15 @@
+esf:transportation, esf:communications
+
+esf:public works
+esf:firefighting
+esf:emergency management
+esf:mass care
+esf:logistics and resources
+esf:public health and medical
+esf:search and rescue
+esf:hazmat
+esf:agriculture and natural
+
+esf:energy
+esf:public safety
+esf:community recovery, esf:external affairs

@@ -7,10 +7,12 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
+import org.apache.commons.lang.StringUtils;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -31,6 +33,8 @@ import java.util.Set;
  * Time: 11:30:31 AM
  */
 public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
+
+    private static final int MAX_LABEL_LINE_LENGTH = 20;
 
     /**
      * Stop vertex.
@@ -139,8 +143,8 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getFailureLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
-        attributes.add( new DOTAttribute( "label", label ) );
+        String label = ChannelsUtils.split( sanitize( goal.getFailureLabel( ) ), "|", 4, MAX_LABEL_LINE_LENGTH );
+        attributes.add( new DOTAttribute( "label", label.replaceAll( "\\|", "\\\\n" ) ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
         String dirName;
@@ -149,7 +153,10 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
         } catch ( IOException e ) {
             throw new RuntimeException( "Unable to get image directory location", e );
         }
-        attributes.add( new DOTAttribute( "image", dirName + "/" + getGoalIcon( goal ) ) );
+        attributes.add(
+                new DOTAttribute(
+                        "image",
+                        dirName + "/" + getGoalIcon( goal, StringUtils.countMatches( label, "|" ) + 1 ) ) );
         out.print( getIndent() );
         out.print( riskVertexId );
         out.print( "[" );
@@ -157,34 +164,44 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
         out.println( "];" );
     }
 
-    private String getGoalIcon( Goal goal ) {
+    private String getGoalIcon( Goal goal, int numLabelLines ) {
+        String name;
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
                 case Low:
-                    return "risk_minor.png";
+                    name = "risk_minor";
+                    break;
                 case Medium:
-                    return "risk_major.png";
+                    name = "risk_major";
+                    break;
                 case High:
-                    return "risk_severe.png";
+                    name = "risk_severe";
+                    break;
                 case Highest:
-                    return "risk_extreme.png";
+                    name = "risk_extreme";
+                    break;
                 default:
                     throw new RuntimeException( "Unknown risk level" );
             }
         } else {
             switch ( goal.getLevel() ) {
                 case Low:
-                    return "gain_low.png";
+                    name = "gain_low";
+                    break;
                 case Medium:
-                    return "gain_medium.png";
+                    name = "gain_medium";
+                    break;
                 case High:
-                    return "gain_high.png";
+                    name = "gain_high";
+                    break;
                 case Highest:
-                    return "gain_highest.png";
+                    name = "gain_highest";
+                    break;
                 default:
                     throw new RuntimeException( "Unknown gain level" );
             }
         }
+        return name + Integer.toString( numLabelLines ) + ".png";
     }
 
     private String getGoalVertexId( Part part, Goal goal ) {

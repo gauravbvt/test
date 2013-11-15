@@ -146,6 +146,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
+/*
             if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
@@ -156,6 +157,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
                                                     vertex,
                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
+*/
             return list;
         }
 
@@ -170,14 +172,17 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
+            int count = edge.getFlows().size();
+            list.add( new DOTAttribute( "tooltip",
+                    count + ( count > 1 ? " flows" : " flow" )
+            ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( edge.hasIssues( getAnalyst(), communityService.getPlanService() ) ) {
+ /*           if ( edge.hasIssues( getAnalyst(), communityService.getPlanService() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip",
-                                            sanitize( edge.getIssuesSummary( getAnalyst(), communityService.getPlanService() ) ) ) );
             }
+*/
             return list;
         }
 

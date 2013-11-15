@@ -158,7 +158,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         assert ticket != null;
         dotExporter.setHighlightedVertices( highlightedVertices );
         dotExporter.setHighlightedEdges( highlightedEdges );
-        // System.out.println( dot );
         boolean success = false;
         int attempts = 0;
         String name = sanitize( ticket );
@@ -175,6 +174,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                     // will interrupt this thread if external process does not terminate before timeout
                     timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
                     String dot = getDOT( communityService, graph, dotExporter );
+                    // System.out.println( dot );
                     baos = new ByteArrayOutputStream();
                     doRender( dot, name, format, baos );
                     // Stop the timer

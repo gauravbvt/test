@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
@@ -248,7 +249,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
     }
 
     public void setNewUsername( String newUsername ) {
-        this.newUsername = newUsername;
+        this.newUsername = ChannelsUtils.sanitize( newUsername );
     }
 
     public String getSearchString() {
