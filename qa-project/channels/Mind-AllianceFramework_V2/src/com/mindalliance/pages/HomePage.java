@@ -315,6 +315,66 @@ public class HomePage {
 	}
 	
 	/**
+	 * Enters message in text area in the Messages tab 
+	 * @throws UIAutomationException
+	 */
+	public void enterMessageInMessagesTextArea(String message) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Message Text Area In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Message Text Area");
+		UIActions.click(fileName,"Message Text Area In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Message Text Area");
+		UIActions.clearTextBox(fileName,"Message Text Area In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Message Text Area");
+		UIActions.enterValueInTextBox(message,fileName,"Message Text Area In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Message Text Area");
+		UIActions.enterKey(Keys.TAB);
+		
+		if(message.equals(""))
+		{
+			UIActions.getText(message, "Blank Message Notification", GlobalVariables.configuration.getAttrSearchList(),"Blank Message Notification");
+		}
+	
+	}
+	/**
+	 * Clicks on 'Send' button in Messages tab
+	 * @throws UIAutomationException
+	 */
+	public void clickSendButtonInMessagesTab() throws UIAutomationException{	
+		elementController.requireElementSmart(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
+		UIActions.click(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
+		
+		
+		
+	//	UIActions.getText(fileName, "Password Changed Notification",GlobalVariables.configuration.getAttrSearchList() , "Password Changed Notification");
+		}
+	
+	/**
+	 * Clicks on 'Reset' button in Messages tab
+	 * @throws UIAutomationException
+	 */
+	public void clickResetButtonInMessagesTab() throws UIAutomationException{	
+		elementController.requireElementSmart(fileName,"Reset Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Reset Button In Messages Tab");
+		UIActions.click(fileName,"Reset Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Reset Button In Messages Tab");
+		
+	
+		}
+	
+	
+	/**
+	 * 'selectFromToDropDown' method clicks on To drop down
+	 * @throws UIAutomationException 
+	 */
+	public void selectFromToDropDown(String To) throws UIAutomationException{
+		// Select an option from to dropdown
+		elementController.requireElementSmart(fileName,"To Drop Down In Messages Tab",GlobalVariables.configuration.getAttrSearchList(),"To Drop Down In Messages Tab");
+		UIActions.click(fileName,"To Drop Down In Messages Tab",GlobalVariables.configuration.getAttrSearchList(),"To Drop Down In Messages Tab");
+				
+		Select planDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(planDropDownList);
+		
+		UIActions.selectByTextAndClick(To);
+		
+	}
+	
+	
+	/**
 	 * Clicks on 'Password' tab
 	 * @throws UIAutomationException
 	 */
