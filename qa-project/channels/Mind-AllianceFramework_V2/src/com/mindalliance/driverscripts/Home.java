@@ -296,7 +296,18 @@ public class Home {
    
 		//Collaboration Panel
 		
-		
+		//About Me Home Page
+		suite.addTestSuite(AMHP0009_InvalidEmail.class);
+		suite.addTestSuite(AMHP0010_BlankEmail.class);
+		suite.addTestSuite(AMHP0011_BlankName.class);
+		suite.addTestSuite(AMHP0012_InvalidName.class);
+        suite.addTestSuite(AMHP0013_EditName.class);		
+        
+        //Messages
+        suite.addTestSuite(MSGS0007_SendBlankMessage.class);
+        suite.addTestSuite(MSGS0008_SendMessageToEveryone.class);
+        suite.addTestSuite(MSGS0009_SendMessageToAllDevelopers.class);
+        suite.addTestSuite(MSGS0014_ResetMessage.class);
 		return suite;
 	}
 }
