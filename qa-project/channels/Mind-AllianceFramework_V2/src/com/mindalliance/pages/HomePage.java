@@ -57,9 +57,9 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
 		UIActions.click(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
 				
-		// Assertion : Check Title of Page
+		/*// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Domain Plan Editor Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
 	}
 	
 	/**
@@ -179,22 +179,7 @@ public class HomePage {
 	}	
 	
 	
-	/**
-	 * Clicks on 'Message' tab
-	 * @throws UIAutomationException
-	 */
-	public void clickMessagesTabInSocialPanel() throws UIAutomationException{
-	
-		elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
-		UIActions.click(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
-		elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
-		String tabTextInPage=UIActions.getText(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
-		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab Text" , "Name");
-		if(!tabTextInPage.contains(tabTextInXML)){
-			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}
-	
-	}
+
 	
 	/**
 	 * Enters Email address in About Me tab
@@ -240,7 +225,60 @@ public class HomePage {
 		}*/
 		}
 		
+	/**
+	 * Enters password in Current Password text field in the My Password tab
+	 * @throws UIAutomationException
+	 */
+	public void enterPasswordInCurrentPassword(String currentPassword) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
+		UIActions.click(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
+		UIActions.clearTextBox(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
+		UIActions.enterValueInTextBox(currentPassword,fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
+		UIActions.enterKey(Keys.TAB);
+	
+	}
+	
+	/**
+	 * Enters password in New Password text field in the My Password tab
+	 * @throws UIAutomationException
+	 */
+	public void enterPasswordInNewPassword(String newPassword) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"New Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "New Password");
+		UIActions.click(fileName,"New Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "New Password");
+		UIActions.clearTextBox(fileName,"New Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "New Password");
+		UIActions.enterValueInTextBox(newPassword,fileName,"New Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "New Password");
+		UIActions.enterKey(Keys.TAB);
+	
+	}
+	
+	/**
+	 * Enters password in New Password text field in the My Password tab
+	 * @throws UIAutomationException
+	 */
+	public void enterPasswordInConfirmPassword(String confirmPassword) throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Confirm Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Confirm Password");
+		UIActions.click(fileName,"Confirm Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Confirm Password");
+		UIActions.clearTextBox(fileName,"Confirm Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Confirm Password");
+		UIActions.enterValueInTextBox(confirmPassword,fileName,"Confirm Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Confirm Password");
+		UIActions.enterKey(Keys.TAB);
+	
+	}
+	
+	/**
+	 * Clicks on 'Apply' button in My Password tab
+	 * @throws UIAutomationException
+	 */
+	public void clickApplyButtonInMyPassword() throws UIAutomationException{	
+		elementController.requireElementSmart(fileName,"Apply Button In My Password",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In My Password");
+		UIActions.click(fileName,"Apply Button In My Password",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In My Password");
 		
+		UIActions.getText(fileName, "Password Changed Notification",GlobalVariables.configuration.getAttrSearchList() , "Password Changed Notification");
+		}
+	
+	
 	/**
 	 * Clicks on 'Calendar' tab
 	 * @throws UIAutomationException
@@ -255,6 +293,37 @@ public class HomePage {
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
+	
+	}
+	
+	/**
+	 * Clicks on 'Message' tab
+	 * @throws UIAutomationException
+	 */
+	public void clickMessagesTabInSocialPanel() throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
+		UIActions.click(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
+		/*elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
+		String tabTextInPage=UIActions.getText(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab Text" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}*/
+		UIActions.getText(fileName, "Messages Tab Text", GlobalVariables.configuration.getAttrSearchList(), "Messages Tab Text");
+	
+	}
+	
+	/**
+	 * Clicks on 'Password' tab
+	 * @throws UIAutomationException
+	 */
+	public void clickMyPasswordTab() throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"My Password In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "My Password In Social Panel");
+		UIActions.click(fileName,"My Password In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "My Password In Social Panel");
+		
+		UIActions.getText(fileName, "My Password Tab Text", GlobalVariables.configuration.getAttrSearchList(), "My Password Tab Text");
 	
 	}
 	
