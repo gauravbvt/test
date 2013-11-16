@@ -172,15 +172,15 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 sb.append( commStep.isNotification()
                         ? "SEND"
                         : commStep.isAnswer()
-                        ? "ANSWER with"
-                        : "ASK for");
+                        ? "ANSWER WITH"
+                        : "ASK FOR");
                 Flow.Intent intent = commStep.getSharing().getIntent();
-                       sb.append( intent == null ? " info" : (" " + intent.getLabel().toLowerCase() ) );
+                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toLowerCase() ) );
             } else if ( step.isReceiptConfirmation() ) {
-                sb.append( "CONFIRM RECEIPT of" );
+                sb.append( "CONFIRM RECEIPT OF" );
             } else if ( step.isSubTaskStep() ) {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
-                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP on " );
+                sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP ON " );
             }
         }
         return sanitize( sb.toString() );
@@ -221,7 +221,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
             } else if ( condition.isNeedSatisfiedCondition() ) {
                 Information need = ( (NeedSatisfiedCondition) condition ).getNeededInfo();
-                sb.append( "the need for " )
+                sb.append( "The need for " )
                         .append( need.getName() )
                         .append( " is satisfied" );
 
@@ -243,7 +243,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( goal.isGain() ? " is realized" : " is mitigated" );
             } else if ( outcome.isCapabilityCreatedOutcome() ) {
                 Information capability = ( (CapabilityCreatedOutcome) outcome ).getShareableInfo();
-                sb.append( "Info \"" )
+                sb.append( "INFO \"" )
                         .append( capability.getName() )
                         .append( "\" can now be shared" );
             }
@@ -295,6 +295,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 list.add( new DOTAttribute( "color", "#666666" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
+                list.add( new DOTAttribute( "arrowsize", "0.7" ) );
                 list.add( new DOTAttribute( "style", "normal" ) );
                 list.add( new DOTAttribute( "arrowhead", "normal" ) );
                 list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
