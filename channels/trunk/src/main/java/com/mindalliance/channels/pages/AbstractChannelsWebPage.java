@@ -147,9 +147,6 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     private SemanticMatcher semanticMatcher;
 
     @SpringBean
-    private ChannelsUser user;
-
-    @SpringBean
     private UserRecordService userInfoService;
 
     @SpringBean
@@ -423,6 +420,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public PlanCommunity getPlanCommunity() {
+        ChannelsUser user = getUser();
         if ( planCommunity == null ) {
             planCommunity = user.getPlan() != null  // domain context else community context
                     ? planCommunityManager.getDomainPlanCommunity( user.getPlan() )
@@ -591,6 +589,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      * @return a list of plans
      */
     public final List<Plan> getPlans() {
+        ChannelsUser user = getUser();
         List<Plan> result = new ArrayList<Plan>();
         result.addAll( planManager.getReadablePlans( user ) );
        /* for ( Plan p : planManager.getReadablePlans( user ) ) {
@@ -618,6 +617,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      * @return a list of plan communities
      */
     public final List<PlanCommunity> getVisibleCollaborationPlans() {
+        ChannelsUser user = getUser();
         List<PlanCommunity> result = new ArrayList<PlanCommunity>();
         for ( PlanCommunity p : planCommunityManager.getPlanCommunities() ) {
             if ( !p.isDomainCommunity() ) {
@@ -657,6 +657,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     protected String getSupportCommunity() {
+        ChannelsUser user = getUser();
         Plan plan = user.getPlan();
         if ( plan != null ) {
             return plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
@@ -666,6 +667,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public boolean isPlanner() {
+        ChannelsUser user = getUser();
         return user.isPlannerOrAdmin( getPlan().getUri() );
     }
 
@@ -931,15 +933,16 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public static String queryParameters() {
+        ChannelsUser user = ChannelsUser.current();
         StringBuilder query = new StringBuilder();
         query.append( "&" );
         try {
-            if ( ChannelsUser.current().getPlanCommunityUri() != null ) {
+            if ( user.getPlanCommunityUri() != null ) {
                 query.append( COLLAB_PLAN_PARM )
                         .append( "=" )
-                        .append( ChannelsUser.current().getPlanCommunityUri() );
+                        .append( user.getPlanCommunityUri() );
             } else {
-                Plan p = ChannelsUser.current().getPlan();
+                Plan p = user.getPlan();
                 query.append( TEMPLATE_PARM )
                         .append( "=" )
                         .append( URLEncoder.encode( p.getUri(), "UTF-8" ) )
@@ -981,12 +984,14 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public void setPlan( Plan plan ) {
+        ChannelsUser user = getUser();
         this.plan = plan;
         user.setPlan( plan );
         queryService = null;
     }
 
     public void setPlanCommunity( PlanCommunity planCommunity ) {  // sets user plan and community uri
+        ChannelsUser user = getUser();
         this.planCommunity = planCommunity;
         if ( planCommunity != null ) {
             user.setPlanCommunityUri( planCommunity.getUri() );
@@ -1029,6 +1034,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      * @param parameters the parameters
      */
     protected void setPlanFromParameters( PageParameters parameters ) {
+        ChannelsUser user = getUser();
         Plan plan = getPlanFromParameters( planManager, user, parameters );
         setPlan( plan );
     }
@@ -1213,11 +1219,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public ChannelsUser getUser() {
-        return user;
-    }
-
-    public void setUser( ChannelsUser user ) {
-        this.user = user;
+        return ChannelsUser.current();
     }
 
     public UserRecordService getUserInfoService() {

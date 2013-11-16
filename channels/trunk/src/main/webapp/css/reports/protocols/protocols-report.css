@@ -741,7 +741,8 @@ table.checklist-step-outcomes {
 .checklist a.checklist-flowmap,
 .checklist a.more,
 .checklist div.feedback a.feedback-button,
-.protocols-contents div.feedback a.feedback-button {
+.protocols-contents div.feedback a.feedback-button,
+.command-chains-link {
     color: #000000;
     float: right;
     font-size: 10px;
@@ -783,13 +784,14 @@ table.checklist-step-outcomes {
 }
 
 .checklist a.more,
-.checklist a.checklist-flowmap {
+.checklist a.checklist-flowmap,
+.command-chains-link {
     background: none;
     border: 1px solid #4A89DC;
     color: #4A89DC;
 }
 
-.checklist a.more {
+.checklist a.more,.command-chains-link {
 	margin: 0;
 }
 
@@ -808,6 +810,7 @@ div.protocols-contents div.expected-queries a.more {
 .checklist a.more:hover,
 .checklist a.checklist-flowmap:hover,
 .checklist div.feedback a.feedback-button:hover,
+.command-chains-link:hover,
 .protocols-contents div.feedback a.feedback-button:hover {
     background: none repeat scroll 0 0 #5D9CEC;
     border: 1px solid #4A89DC;

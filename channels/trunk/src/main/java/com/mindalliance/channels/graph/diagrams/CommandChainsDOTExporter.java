@@ -27,9 +27,9 @@ import java.util.Set;
  * Date: 11/13/13
  * Time: 12:58 PM
  */
-public class UserCommandChainsDOTExporter extends AbstractDOTExporter<Contact, CommandRelationship> {
+public class CommandChainsDOTExporter extends AbstractDOTExporter<Contact, CommandRelationship> {
 
-    public UserCommandChainsDOTExporter( MetaProvider<Contact, CommandRelationship> metaProvider ) {
+    public CommandChainsDOTExporter( MetaProvider<Contact, CommandRelationship> metaProvider ) {
         super( metaProvider );
     }
 

@@ -13,10 +13,16 @@
    <span>
    <a wicket:id="anchor" name="tbd"></a>
    <h4 class="name-employment">
-      <span wicket:id="name">John Doe</span>
-      <span wicket:id="employment">VP Sales ,Northeast, ACME Inc.</span>
+       <span wicket:id="name">John Doe</span>
+       <span wicket:id="employment">VP Sales ,Northeast, ACME Inc.</span>
        <span wicket:id="feedback">[User feedback panel]</span>
+       <a wicket:id="commandChainsLink" href="#" class="command-chains-link">
+           <span wicket:id="showHideCommandChains">+ Show command chains</span>
+       </a>
    </h4>
+   <div class="checklist-flow" wicket:id="commandChains">
+       <span wicket:id="commandChainsDiagram"> [command chains diagram panel]</span> <!-- class set by code -->
+   </div>
    <div class="supervisors" wicket:id="supervisors">
        <label>Supervisors</label>
        <ul>

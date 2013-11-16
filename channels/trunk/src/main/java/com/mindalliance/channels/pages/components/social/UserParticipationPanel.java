@@ -12,7 +12,7 @@ import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
-import com.mindalliance.channels.pages.components.community.UserCommandChainsPanel;
+import com.mindalliance.channels.pages.components.community.CommandChainsPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -26,7 +26,6 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -119,13 +118,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 commandChainsDialog = null;
             }
         } );
-        UserCommandChainsPanel userCommandChainsPanel = new UserCommandChainsPanel(
+        CommandChainsPanel commandChainsPanel = new CommandChainsPanel(
                 commandChainsDialog.getContentId(),
-                new Model<ChannelsUser>( getUser() ),
+                getUser(),
                 getExpansions(),
                 PREFIX_DOM_IDENTIFIER
         );
-        commandChainsDialog.setContent( userCommandChainsPanel );
+        commandChainsDialog.setContent( commandChainsPanel );
         addOrReplace( commandChainsDialog );
     }
 

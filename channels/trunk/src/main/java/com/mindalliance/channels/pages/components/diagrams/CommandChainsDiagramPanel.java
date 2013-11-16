@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.IModel;
 
 import java.util.Map;
 
@@ -14,28 +14,50 @@ import java.util.Map;
  * Date: 11/13/13
  * Time: 2:18 PM
  */
-public class UserCommandChainsDiagramPanel extends AbstractDiagramPanel {
+public class CommandChainsDiagramPanel extends AbstractDiagramPanel {
 
-    private final IModel<? extends ChannelsUser> userModel;
+    private ChannelsUser user;
+    private Agent agent;
     private final String algo;
 
-    public UserCommandChainsDiagramPanel( String id,
-                                          IModel<? extends ChannelsUser> userModel,
-                                          double[] diagramSize,
-                                          String domIdentifier ) {
-        this( id, userModel, diagramSize, domIdentifier, "dot" );
+    public CommandChainsDiagramPanel( String id,
+                                      ChannelsUser user,
+                                      double[] diagramSize,
+                                      String domIdentifier ) {
+        this( id, user, diagramSize, domIdentifier, "dot" );
 
     }
-        public UserCommandChainsDiagramPanel( String id,
-                                              IModel<? extends ChannelsUser> userModel,
-                                              double[] diagramSize,
-                                              String domIdentifier,
-                                              String algo ) {
+
+    public CommandChainsDiagramPanel( String id,
+                                      ChannelsUser user,
+                                      double[] diagramSize,
+                                      String domIdentifier,
+                                      String algo ) {
         super( id, new Settings( domIdentifier, null, diagramSize, true, true ) );
-        this.userModel = userModel;
+        this.user = user;
         this.algo = algo;
         init();
     }
+
+    public CommandChainsDiagramPanel( String id,
+                                      Agent agent,
+                                      double[] diagramSize,
+                                      String domIdentifier ) {
+        this( id, agent, diagramSize, domIdentifier, "dot" );
+
+    }
+
+    public CommandChainsDiagramPanel( String id,
+                                      Agent agent,
+                                      double[] diagramSize,
+                                      String domIdentifier,
+                                      String algo ) {
+        super( id, new Settings( domIdentifier, null, diagramSize, true, true ) );
+        this.agent = agent;
+        this.algo = algo;
+        init();
+    }
+
 
     @Override
     protected String getContainerId() {
@@ -44,19 +66,34 @@ public class UserCommandChainsDiagramPanel extends AbstractDiagramPanel {
 
     @Override
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newUserCommandChainsDiagram(
-                userModel.getObject(),
+        if ( user != null )
+        return getDiagramFactory().newCommandChainsDiagram(
+                user,
                 getDiagramSize(),
                 getOrientation(),
                 algo );
+        else
+            return getDiagramFactory().newCommandChainsDiagram(
+                    agent,
+                    getDiagramSize(),
+                    getOrientation(),
+                    algo );
     }
 
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "command_chains.png?user=" );
-        sb.append( userModel.getObject().getUsername() );
-        sb.append( "&algo=");
+        sb.append( "command_chains.png?");
+        if ( user != null ) {
+            sb.append( "user=" );
+            sb.append( user.getUsername() );
+        } else {
+            sb.append( "agent=" );
+            sb.append( agent.getActorId() );
+            sb.append( "&org=");
+            sb.append( agent.getRegisteredOrganizationUid() );
+        }
+        sb.append( "&algo=" );
         sb.append( algo );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
@@ -70,7 +107,7 @@ public class UserCommandChainsDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&orientation=" );
             sb.append( orientation );
         }
-        sb.append( "&");
+        sb.append( "&" );
         sb.append( TICKET_PARM );
         sb.append( '=' );
         sb.append( getTicket() );

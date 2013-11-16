@@ -7,6 +7,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -243,5 +244,17 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param algo        the rendering algorithm
      * @return a command chains diagram
      */
-    Diagram newUserCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo );
+    Diagram newCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo );
+
+    /**
+     * Instantiates a command chains diagram.
+     *
+     * @param agent        an agent
+     * @param diagramSize an array of doubles
+     * @param orientation a string
+     * @param algo        the rendering algorithm
+     * @return a command chains diagram
+     */
+    Diagram newCommandChainsDiagram( Agent agent, double[] diagramSize, String orientation, String algo );
+
 }

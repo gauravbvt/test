@@ -118,11 +118,16 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting summary for community " + uri + " and plan version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeAccessToPlan( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
-            return new PlanSummaryData(
+            PlanSummaryData planSummaryData = new PlanSummaryData(
                     serverUrl,
                     communityService );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return planSummaryData;
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -138,9 +143,14 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting release info for community " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             CommunityService communityService = getCommunityService( planCommunity );
-            return new PlanReleaseData( communityService );
+            PlanReleaseData planReleaseData = new PlanReleaseData( communityService );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return planReleaseData;
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -191,10 +201,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeAccessToPlan( user, uri, version, plannerOnly );
-            return new PlanScopeData(
+            PlanScopeData planScopeData = new PlanScopeData(
                     serverUrl,
                     getCommunityService( planCommunity ) );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return planScopeData;
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -210,9 +225,14 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizePlanner( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
-            return new IssuesData( serverUrl, communityService );
+            IssuesData issuesData = new IssuesData( serverUrl, communityService );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return issuesData;
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -230,6 +250,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Receiving feedback for protocols from community " + uri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             feedbackService.sendFeedback(
                     user.getUsername(),
@@ -238,6 +260,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     Feedback.CHECKLISTS,
                     feedback,
                     Boolean.parseBoolean( urgent ) );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -252,12 +276,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Inviting user to participate in community " + uri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             CommunityService communityService = getCommunityService( planCommunity );
             UserRecord invitedUser = userRecordService.getOrMakeUserFromEmail( email, communityService );
             message = message + makeInvitation( invitedUser, communityService );
             emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
-
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -300,10 +327,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting community summary for " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             if ( !planCommunity.isDomainCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
-                return new CommunitySummaryData( serverUrl, communityService );
+                CommunitySummaryData communitySummaryData = new CommunitySummaryData( serverUrl, communityService );
+                user.setPlan( oldPlan );
+                user.setPlanCommunityUri( oldPlanCommunityUri );
+                return communitySummaryData;
             } else {
                 throw new WebApplicationException(
                         Response
@@ -332,6 +364,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userRecordService );
         LOG.info( "Getting all user checklists for all participants in community " + communityUri );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             AllProtocolsData allProtocolsData = new AllProtocolsData();
@@ -346,6 +380,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     allProtocolsData.addProtocolsData( protocolsData );
                 }
             }
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
             return allProtocolsData;
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
@@ -363,16 +399,21 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting user checklists for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                     user,
                     communityService );
-            return new ProtocolsData(
+            ProtocolsData protocolsData = new ProtocolsData(
                     serverUrl,
                     communityService,
                     participations,
                     user );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return protocolsData;
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -389,16 +430,21 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting user checklists for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                     user,
                     communityService );
-            return new ProtocolsData(
+            ProtocolsData protocolsData = new ProtocolsData(
                     serverUrl,
                     communityService,
                     participations,
                     user );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return protocolsData;
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -418,17 +464,22 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 + " for organization participation" + registeredOrganizationId
                 + " in community " + communityUri );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
             RegisteredOrganization registeredOrganization =
                     registeredOrganizationService.load( registeredOrganizationId );
             if ( registeredOrganization == null ) throw new NotFoundException();
-            return new ProtocolsData(
+            ProtocolsData protocolsData = new ProtocolsData(
                     serverUrl,
                     communityService,
                     new Agent( actor, registeredOrganization, communityService ),
                     user );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return protocolsData;
         } catch ( Exception e ) {
             LOG.warn( "No checklists available for agent " + actorId, e );
             throw new WebApplicationException(
@@ -461,6 +512,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting user directory for production version of plan " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = participationManager.getActiveUserParticipations(
@@ -470,7 +523,10 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 throw new Exception( user.getUsername() + " does not participate in community " + communityUri );
             }
             ProtocolsData protocolsData = getMyChecklists( communityUri );
-            return new DirectoryData( protocolsData );
+            DirectoryData directoryData = new DirectoryData( protocolsData );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
+            return directoryData;
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -486,6 +542,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Adding user contact info " );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
@@ -495,6 +553,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     user.getUserRecord(),
                     new Channel( medium, address ),
                     communityService );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -509,10 +569,14 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Removing user contact info " );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             userRecordService.removeChannel( user.getUserRecord(), new Channel( medium, address ), communityService );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -527,6 +591,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Adding user participation in community " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( actorId ) );
@@ -541,6 +607,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                         agent,
                         planCommunity );
                 userParticipationService.accept( participation, communityService );
+                user.setPlan( oldPlan );
+                user.setPlanCommunityUri( oldPlanCommunityUri );
             } else {
                 throw new Exception( "Participation was not accepted" );
             }
@@ -558,6 +626,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Refusing user participation in community " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
+            Plan oldPlan = user.getPlan();
+            String oldPlanCommunityUri = user.getPlanCommunityUri();
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
@@ -570,6 +640,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     agent,
                     communityService
             );
+            user.setPlan( oldPlan );
+            user.setPlanCommunityUri( oldPlanCommunityUri );
             if ( userParticipation != null && !userParticipation.isLinked() ) {
                 userParticipationService.refuse( userParticipation, communityService );
             } else {

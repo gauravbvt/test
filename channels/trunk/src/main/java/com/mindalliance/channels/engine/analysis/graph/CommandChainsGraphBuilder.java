@@ -20,14 +20,21 @@ import java.util.List;
  * Date: 11/13/13
  * Time: 10:53 AM
  */
-public class UserCommandChainsGraphBuilder implements GraphBuilder<Contact, CommandRelationship> {
+public class CommandChainsGraphBuilder implements GraphBuilder<Contact, CommandRelationship> {
 
-    private final ChannelsUser user;
+    private ChannelsUser user;
+    private Agent selectedAgent;
     private final CommunityService communityService;
     private ParticipationManager participationManager;
 
-    public UserCommandChainsGraphBuilder( ChannelsUser user, CommunityService communityService ) {
+    public CommandChainsGraphBuilder( ChannelsUser user, CommunityService communityService ) {
         this.user = user;
+        this.communityService = communityService;
+        participationManager = communityService.getParticipationManager();
+    }
+
+    public CommandChainsGraphBuilder( Agent selectedAgent, CommunityService communityService ) {
+        this.selectedAgent = selectedAgent;
         this.communityService = communityService;
         participationManager = communityService.getParticipationManager();
     }
@@ -44,14 +51,18 @@ public class UserCommandChainsGraphBuilder implements GraphBuilder<Contact, Comm
                             }
 
                         } );
+        List<Agent> agents;
         if ( user != null ) {
-            List<Agent> agents = participationManager.listAgentsUserParticipatesAs( user, communityService );
-            for ( Agent agent : agents ) {
-                Contact contact = new Contact( agent, user );
-                digraph.addVertex( contact );
-                populateGraphUp( digraph, contact );
-                populateGraphDown( digraph, contact );
-            }
+            agents = participationManager.listAgentsUserParticipatesAs( user, communityService );
+        } else {
+            agents = new ArrayList<Agent>();
+            agents.add( selectedAgent );
+        }
+        for ( Agent agent : agents ) {
+            Contact contact = user == null ? new Contact( agent) : new Contact( agent, user );
+            digraph.addVertex( contact );
+            populateGraphUp( digraph, contact );
+            populateGraphDown( digraph, contact );
         }
         return digraph;
     }

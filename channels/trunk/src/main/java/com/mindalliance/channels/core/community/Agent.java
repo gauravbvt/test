@@ -30,6 +30,8 @@ public class Agent implements Nameable, Identifiable {
                   RegisteredOrganization registeredOrganization,
                   CommunityService communityService ) {
         this.actor = actor;
+        if ( registeredOrganization == null )
+            throw new IllegalArgumentException(  );
         agency = new Agency( registeredOrganization, communityService );
         name = agency.getJobTitleOf( this, true, communityService );
         linked = agency.isLinked( this, communityService );

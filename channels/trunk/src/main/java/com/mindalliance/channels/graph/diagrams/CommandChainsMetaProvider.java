@@ -1,5 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
@@ -28,7 +29,7 @@ import java.util.List;
  * Date: 11/13/13
  * Time: 12:57 PM
  */
-public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
+public class CommandChainsMetaProvider extends AbstractMetaProvider {
 
     /**
      * Font for node labels.
@@ -48,20 +49,33 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
     private static final int MAX_LABEL_LINE_LENGTH = 20;
 
 
-    private final ChannelsUser user;
+    private ChannelsUser user;
+    private Agent agent;
     private Resource userIconDirectory;
     private CommunityService communityService;
 
-    public UserCommandChainsMetaProvider( ChannelsUser user,
-                                          String outputFormat,
-                                          Resource imageDirectory,
-                                          Resource userIconDirectory, Analyst analyst,
-                                          CommunityService communityService ) {
+    public CommandChainsMetaProvider( ChannelsUser user,
+                                      String outputFormat,
+                                      Resource imageDirectory,
+                                      Resource userIconDirectory, Analyst analyst,
+                                      CommunityService communityService ) {
         super( outputFormat, imageDirectory, analyst, communityService.getPlanService() );
         this.user = user;
         this.userIconDirectory = userIconDirectory;
         this.communityService = communityService;
     }
+
+    public CommandChainsMetaProvider( Agent agent,
+                                      String outputFormat,
+                                      Resource imageDirectory,
+                                      Resource userIconDirectory, Analyst analyst,
+                                      CommunityService communityService ) {
+        super( outputFormat, imageDirectory, analyst, communityService.getPlanService() );
+        this.agent = agent;
+        this.userIconDirectory = userIconDirectory;
+        this.communityService = communityService;
+    }
+
 
     @Override
     public Object getContext() {
@@ -179,7 +193,7 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( contact ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
-            if ( contact.isForUser( user ) ) {
+            if ( isSelected( contact ) ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
                 list.add( new DOTAttribute( "style", "solid" ) );
                 list.add( new DOTAttribute( "color", "gray" ) );
@@ -235,6 +249,11 @@ public class UserCommandChainsMetaProvider extends AbstractMetaProvider {
             }
         }
 
+    }
+
+    private boolean isSelected( Contact contact ) {
+        return user != null && contact.isForUser( user )
+                || agent != null && contact.getAgent().equals( agent );
     }
 
     private String getContactToolTip( Contact contact, CommunityService communityService ) {

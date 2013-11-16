@@ -352,6 +352,14 @@ public class ContactData implements Serializable {
         return otherParticipations;
     }
 
+    public UserRecord userInfo() {
+        return userInfo;
+    }
+
+    public Agent agent() {
+        return getAgent();
+    }
+
     public String anchor() {
         StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
@@ -513,6 +521,6 @@ public class ContactData implements Serializable {
     }
 
     public String username() {
-        return userInfo.getUsername();
+        return userInfo != null ? userInfo.getUsername() : null;
     }
 }

@@ -17,6 +17,7 @@ import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.png.ChecklistPng;
+import com.mindalliance.channels.pages.png.CommandChainsPng;
 import com.mindalliance.channels.pages.png.DisseminationPng;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPng;
 import com.mindalliance.channels.pages.png.EntityNetworkPng;
@@ -29,7 +30,6 @@ import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
-import com.mindalliance.channels.pages.png.UserCommandChainsPng;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
@@ -305,7 +305,7 @@ public class Channels extends WebApplication
                 getPlanCommunityManager()
         ) );
         mountResource( "command_chains.png", new PngReference(
-                UserCommandChainsPng.class,
+                CommandChainsPng.class,
                 getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),

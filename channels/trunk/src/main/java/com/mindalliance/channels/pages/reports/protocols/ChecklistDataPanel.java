@@ -46,7 +46,6 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     private WebMarkupContainer checklistContainer;
     private WebMarkupContainer checklistFlowContainer;
     private AjaxLink<String> checklistFlowLink;
-    private Label hideShowLabel;
 
     public ChecklistDataPanel( String id,
                                ChecklistData checklistData,
@@ -251,7 +250,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     }
 
     private void addShowHideFlow() {
-        hideShowLabel = new Label( "showHideFlow", ( showingChecklistFlow ? "- Hide flow" : "+ Show flow" ) );
+        Label hideShowLabel = new Label( "showHideFlow", ( showingChecklistFlow ? "- Hide flow" : "+ Show flow" ) );
         hideShowLabel.setOutputMarkupId( true );
         addTipTitle(
                 hideShowLabel,

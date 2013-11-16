@@ -7,6 +7,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -24,6 +25,7 @@ import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.ChecklistFlowDiagram;
 import com.mindalliance.channels.graph.diagrams.ChecklistsMapDiagram;
+import com.mindalliance.channels.graph.diagrams.CommandChainsDiagram;
 import com.mindalliance.channels.graph.diagrams.DisseminationDiagram;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
@@ -32,7 +34,6 @@ import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
-import com.mindalliance.channels.graph.diagrams.UserCommandChainsDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -222,8 +223,14 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     @Override
-    public Diagram newUserCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo ) {
+    public Diagram newCommandChainsDiagram( ChannelsUser user, double[] diagramSize, String orientation, String algo ) {
         LOG.debug( "Making command chains diagram" );
-        return new UserCommandChainsDiagram( user, diagramSize, orientation, algo );
+        return new CommandChainsDiagram( user, diagramSize, orientation, algo );
+    }
+
+    @Override
+    public Diagram newCommandChainsDiagram( Agent agent, double[] diagramSize, String orientation, String algo ) {
+        LOG.debug( "Making command chains diagram" );
+        return new CommandChainsDiagram( agent, diagramSize, orientation, algo );
     }
 }
