@@ -28,7 +28,7 @@ public class HomePage {
 	 */
 	
 	public void verifyHomePage() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels message");
+		elementController.requireElementSmart(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels");
 		String headingInPage=UIActions.getText(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels");
     	
 		if(!headingInPage.contains("Welcome To Channels")){
@@ -401,13 +401,30 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
 		UIActions.click(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
 			
-			// Check by clicking on 'show sent' it changes to 'show received'
+		/*	// Check by clicking on 'show sent' it changes to 'show received'
 			elementController.requireElementSmart(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
 			String linkTextInPage=UIActions.getText(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
 			String linkTextInXML=dataController.getPageDataElements(fileName,"Show Received Text" , "Name");
 			if(!linkTextInPage.contains(linkTextInXML)){
 				throw new UIAutomationException( "'"+linkTextInXML +"' not found");
-			}
+			}*/
+	}
+	
+	/**
+	 * Clicks on 'show received'
+	 * @throws UIAutomationException
+	 */
+	public void clickShowReceived() throws UIAutomationException{		
+		elementController.requireElementSmart(fileName,"Show Received In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Received In Social Panel");
+		UIActions.click(fileName,"Show Received In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Received In Social Panel");
+			
+		/*	// Check by clicking on 'show sent' it changes to 'show received'
+			elementController.requireElementSmart(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
+			String linkTextInPage=UIActions.getText(fileName,"Show Sent In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Sent In Social Panel");
+			String linkTextInXML=dataController.getPageDataElements(fileName,"Show Received Text" , "Name");
+			if(!linkTextInPage.contains(linkTextInXML)){
+				throw new UIAutomationException( "'"+linkTextInXML +"' not found");
+			}*/
 	}
 	
 	/**
@@ -425,7 +442,6 @@ public class HomePage {
 		if(!linkTextInPage.contains(linkTextInXML)){
 			throw new UIAutomationException( "'"+linkTextInXML +"' not found");
 		}
-		
 		
 		// Click on 'show All messages'
 		elementController.requireElementSmart(fileName,"Show All Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show All Messages In Social Panel");
