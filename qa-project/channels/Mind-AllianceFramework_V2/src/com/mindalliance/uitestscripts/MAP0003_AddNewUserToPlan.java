@@ -136,7 +136,7 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));
 			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"), testData.get("isAdministrator"),testData.get("isDisabled"));
-			//channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
+			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
