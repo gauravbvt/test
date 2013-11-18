@@ -172,7 +172,7 @@ public class MAV0197_TaskIssueSeverityOption extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Verify dropdown of severity in issue
+			// Verify drop-down of severity in issue
 			stepNo++;
 			description="Severity Issues";
 			planPage.verifySeverityDropdownInIssueInTask(testData.get("Minor"), testData.get("Major"),testData.get("Severe"), testData.get("Extreme"));

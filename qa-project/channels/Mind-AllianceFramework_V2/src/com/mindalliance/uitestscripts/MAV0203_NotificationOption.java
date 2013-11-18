@@ -166,7 +166,7 @@ public class MAV0203_NotificationOption extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 				
-			// Click on 'Notification' in receives panel
+			// Click on 'Notification' option in receives panel
 			stepNo++;
 			description="Notification - Receives Panel";
 			planPage.clickNotificationInReceivesPanel();

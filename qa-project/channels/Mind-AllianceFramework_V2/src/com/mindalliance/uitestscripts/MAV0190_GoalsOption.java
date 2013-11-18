@@ -187,14 +187,14 @@ public class MAV0190_GoalsOption extends TestCase{
 			// Strench up form
 			planPage.clickStrenchUpForm();
 						
-			// Select goal from dropdown list
+			/*// Select goal from dropdown list
 			stepNo++;
 			description="Goal From Drop Down";
 			planPage.selectgoalfromDropDownInTask(testData.get("SelectgoalFromListInTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			*/
 			// Remove This segment
  			stepNo++;
 			description="Remove This Segment";

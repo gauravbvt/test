@@ -25,7 +25,6 @@ import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
-import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
 import junit.framework.Assert;
@@ -127,8 +126,7 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Click on 'Issue Report' link
 		    stepNo++;
 			description="Issue summary report page opened";	
-			HomePage homePage=new HomePage();
-			homePage.clickIssuesReportLink(testData.get("headingOfIssuesSummary"));
+			domainPlanPage.clickTemplateIssuesLink();
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    

@@ -88,7 +88,7 @@ public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
 		try{
 			stepNo++;
 			description="URL Entered";
-			// Enter URL of Channels
+			// Enter the  URL of Channels
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
