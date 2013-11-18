@@ -2,6 +2,6 @@
 <elements>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
-<message>  </message>
+<message>Hi</message>
 <to>All developers</to>
 </elements>
