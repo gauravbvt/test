@@ -101,6 +101,10 @@ div.issues-contents table.data-table tr.child {
 	font-size:11px;
 }
 
+table.issues-metrics a {
+    color: #555555;
+}
+
 div.issues-contents table.issues-severity {
 	width: 97%;
 	font-size:11px;

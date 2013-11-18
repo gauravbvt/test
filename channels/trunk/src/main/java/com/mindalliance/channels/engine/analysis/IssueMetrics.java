@@ -185,6 +185,10 @@ public class IssueMetrics implements Serializable {
             return issueKinds;
         }
 
+        public List<Issue> getIssuesOfKind( String kind ) {
+            return issuesOfTypeByKind.get( kind );
+        }
+
         public Metrics getIssueTypeMetrics( String kind ) {
             int count = issuesOfTypeByKind.get( kind ).size();
             double total = getAllUnwaivedIssuesCount();

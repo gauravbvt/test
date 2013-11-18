@@ -7,36 +7,41 @@
         lang="en">
 <body>
 <wicket:panel>
-  <table wicket:id="issue-metrics" class="issues-metrics">
-     <thead>
+    <table wicket:id="issue-metrics" class="issues-metrics">
+        <thead>
         <th>Kind</th>
         <th>Count</th>
         <th>Severity</th>
-     </thead>
-      <tbody>
-        <tr wicket:id="kinds">
-            <td wicket:id="kind">kind</td>
-            <td wicket:id="count">20 (10%)</td>
-            <td>
-                <table class="issues-severity">
-                    <tr class="parent">
-                        <th>Extreme</th>
-                        <th>Severe</th>
-                        <th>Major</th>
-                        <th>Minor</th>
-                    </tr>
-                    <tr class="child">
-                        <td wicket:id="extreme">1</td>
-                        <td wicket:id="severe">1</td>
-                        <td wicket:id="major">1</td>
-                        <td wicket:id="minor">1</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-      </tbody>
-  </table>
-   <div wicket:id="no-issues" class="no-issues"> No issues found </div>
+        </thead>
+        <tbody>
+            <span wicket:id="kinds">
+               <tr>
+                   <td ><a wicket:id="kindLink"><span wicket:id="kind">kind</span> </a></td>
+                   <td wicket:id="count">20 (10%)</td>
+                   <td>
+                       <table class="issues-severity">
+                           <tr class="parent">
+                               <th>Extreme</th>
+                               <th>Severe</th>
+                               <th>Major</th>
+                               <th>Minor</th>
+                           </tr>
+                           <tr class="child">
+                               <td wicket:id="extreme">1</td>
+                               <td wicket:id="severe">1</td>
+                               <td wicket:id="major">1</td>
+                               <td wicket:id="minor">1</td>
+                           </tr>
+                       </table>
+                   </td>
+               </tr>
+                <tr wicket:id="tableContainer">
+                    <td colspan="3"><span wicket:id="table">[issues table]</span></td>
+                </tr>
+            </span>
+        </tbody>
+    </table>
+    <div wicket:id="no-issues" class="no-issues"> No issues found</div>
 
 </wicket:panel>
 </body>

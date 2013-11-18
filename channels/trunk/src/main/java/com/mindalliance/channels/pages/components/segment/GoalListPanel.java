@@ -89,6 +89,10 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
      * Goals for which achiever tasks are shown.
      */
     private GoalWrapper selectedGoal;
+    /**
+     * Selected goal label.
+     */
+    private Label goalLabel;
 
     public GoalListPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
@@ -112,11 +116,19 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
     }
 
     private void init() {
+        addGoalsList();
+        addGoalMore();
+    }
+
+    private void addGoalsList() {
         goalsContainer = new WebMarkupContainer( "goalsDiv" );
         goalsContainer.setOutputMarkupId( true );
         addOrReplace( goalsContainer );
         goalsContainer.add( makeAtEnd() );
         goalsContainer.add( makeGoalsTable() );
+    }
+
+    private void addGoalMore() {
         moreContainer = new WebMarkupContainer( "moreDiv" );
         moreContainer.setOutputMarkupId( true );
         addOrReplace( moreContainer );
@@ -124,7 +136,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
         addNameField();
         addDescriptionField();
         moreContainer.addOrReplace( makeTasksTable() );
-        makeVisible( moreContainer, false );
+        makeVisible( moreContainer, selectedGoal != null );
     }
 
     private WebMarkupContainer makeAtEnd() {
@@ -143,7 +155,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
     }
 
     private void initLabel() {
-        Label goalLabel = new Label( "goalLabel", new PropertyModel<String>( this, "goalLabel" ) );
+        goalLabel = new Label( "goalLabel", new PropertyModel<String>( this, "goalLabel" ) );
         goalLabel.setOutputMarkupId( true );
         moreContainer.addOrReplace( goalLabel );
     }
@@ -326,12 +338,18 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 "more-link",
                 new Model<String>( "more" ) ) {
             public void onClick( AjaxRequestTarget target ) {
-                selectedGoal = wrapper;
-                moreContainer.addOrReplace( makeTasksTable() );
-                makeVisible( moreContainer, selectedGoal != null );
+                if ( selectedGoal != null && selectedGoal.getGoal().equals( wrapper.getGoal() ) )
+                    selectedGoal = null;
+                else
+                    selectedGoal = wrapper;
+                addGoalsList();
+                target.add( goalsContainer );
+                addGoalMore();
                 target.add( moreContainer );
             }
         };
+        Label moreLessLabel = new Label( "moreLess", selectedGoal != null && selectedGoal.getGoal().equals( wrapper.getGoal() ) ? "Less" : "More" );
+        moreLink.add( moreLessLabel );
         makeVisible( moreLink, !wrapper.isMarkedForCreation() );
         item.add( moreLink );
     }
@@ -472,13 +490,22 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        goalsContainer.addOrReplace( makeGoalsTable() );
-        initLabel();
-        moreContainer.addOrReplace( makeTasksTable() );
-        makeVisible( moreContainer, selectedGoal != null );
-        target.add( goalsContainer );
-        target.add( moreContainer );
-        super.updateWith( target, change, updated );
+        if ( change.isForInstanceOf( GoalWrapper.class ) ) {
+            GoalWrapper wrapper = (GoalWrapper) change.getSubject( getCommunityService() );
+            if ( !wrapper.isUndergoingCreation() ) {
+                addGoalsList();
+                addGoalMore();
+                target.add( goalsContainer );
+                target.add( moreContainer );
+                super.updateWith( target, change, updated );
+            }
+        } else {
+            addGoalsList();
+            addGoalMore();
+            target.add( goalsContainer );
+            target.add( moreContainer );
+            super.updateWith( target, change, updated );
+        }
     }
 
     public class GoalWrapper implements Identifiable {

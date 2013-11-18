@@ -200,6 +200,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
 
     public String getUri() {
+        assert uri != null;
         return uri;
     }
 

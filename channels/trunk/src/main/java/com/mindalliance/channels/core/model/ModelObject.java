@@ -26,7 +26,7 @@ public abstract class ModelObject
 
     public static final List<String> CLASS_LABELS;
 
-     public static enum Context {  // order is important: MODEL < COMMUNITY < USER
+    public static enum Context {  // order is important: MODEL < COMMUNITY < USER
         MODEL,
         COMMUNITY,
         USER
@@ -515,6 +515,10 @@ public abstract class ModelObject
         return modelObject == null || modelObject.isUnknown();
     }
 
+    public String getSegmentName() {
+        return isSegmentObject() ? ( (SegmentObject) this ).getSegment().getName() : null;
+    }
+
     public Map<String, Object> mapState() {
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "name", getName() );
@@ -525,7 +529,7 @@ public abstract class ModelObject
         return state;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         setName( (String) state.get( "name" ) );
         setDescription( (String) state.get( "description" ) );
@@ -552,7 +556,7 @@ public abstract class ModelObject
         return getTypeName(); // default
     }
 
-     public abstract boolean isSegmentObject();
+    public abstract boolean isSegmentObject();
 
     public static boolean isUnknownModelObject( Identifiable identifiable ) {
         return identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isUnknown();

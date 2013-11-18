@@ -104,7 +104,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Job transfer markup container.
      */
-    private WebMarkupContainer jobTransferDiv;
+    private WebMarkupContainer transferablesContainer;
     /**
      * Organization jobs are being transferred from.
      */
@@ -120,7 +120,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Do transfer button.
      */
-    private AjaxLink<String> doTransfer;
+    private AjaxLink<String> doTransferLink;
+    /**
+     * Transfer cehckbox container.
+     */
+    private WebMarkupContainer transferCheckBoxContainer;
 
 
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
@@ -131,9 +135,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     private void init() {
         addJobs();
         addJobTransfers();
-        flowsDiv = new WebMarkupContainer( "flows" );
-        flowsDiv.setOutputMarkupId( true );
-        addOrReplace( flowsDiv );
         addJobPlaybook( null );
     }
 
@@ -193,10 +194,81 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     }
 
     private void addJobTransfers() {
-        jobTransferDiv = new WebMarkupContainer( "transferDiv" );
-        jobTransferDiv.setOutputMarkupId( true );
-        makeVisible( jobTransferDiv, isTransferring() );
-        addOrReplace( jobTransferDiv );
+        addTransferCheckbox();
+        addTransferables();
+    }
+
+    private void addTransferCheckbox() {
+        transferCheckBoxContainer = new WebMarkupContainer( "transferCheckBoxContainer" );
+        transferCheckBoxContainer.setOutputMarkupId( true );
+        transferCheckBoxContainer.setVisible( getPlan().isDevelopment() );
+        addOrReplace( transferCheckBoxContainer );
+        CheckBox transferCheckBox = new CheckBox(
+                "transfer",
+                new PropertyModel<Boolean>( this, "transferring" ) );
+        transferCheckBox.setOutputMarkupId( true );
+        transferCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addTransferables();
+                target.add( transferablesContainer );
+            }
+        } );
+        transferCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        transferCheckBoxContainer.addOrReplace( transferCheckBox );
+    }
+
+    private void addTransferables() {
+        transferablesContainer = new WebMarkupContainer( "transferablesContainer" );
+        transferablesContainer.setOutputMarkupId( true );
+        makeVisible( transferablesContainer, isTransferring() );
+        addOrReplace( transferablesContainer );
+        addTransferFromChoice();
+        addJobTransferPanel();
+        addCopyJobsOption();
+        addDoTransferButton();
+    }
+
+    private void addDoTransferButton() {
+        // do transfer button
+        doTransferLink = new AjaxLink<String>(
+                "doTransfer",
+                new PropertyModel<String>( this, "transferButtonLabel" ) ) {
+            public void onClick( AjaxRequestTarget target ) {
+                if ( executeJobTransfers() ) {
+                    addJobs();
+                    addJobTransfers();
+                    target.add( jobsDiv );
+                    target.add( transferCheckBoxContainer );
+                    target.add( transferablesContainer );
+                    update( target, new Change(
+                            Change.Type.Updated,
+                            getOrganization(),
+                            "jobs"
+                    ) );
+                }
+            }
+        };
+        doTransferLink.setOutputMarkupId( true );
+        makeVisible( doTransferLink, isTransferring() );
+        transferablesContainer.add( doTransferLink );
+    }
+
+    private void addCopyJobsOption() {
+        // take copies option
+        CheckBox copyingCheckBox = new CheckBox(
+                "copying",
+                new PropertyModel<Boolean>( this, "copying" )
+        );
+        copyingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        } );
+        transferablesContainer.add( copyingCheckBox );
+    }
+
+    private void addTransferFromChoice() {
         DropDownChoice transferFromChoice = new DropDownChoice<Organization>(
                 "fromOrganization",
                 new PropertyModel<Organization>( this, "transferFrom" ),
@@ -219,62 +291,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         );
         transferFromChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addJobTransferPanel( jobTransferDiv );
+                addJobTransferPanel( );
                 target.add( jobTransferPanel );
             }
         } );
-        jobTransferDiv.add( transferFromChoice );
-        addJobTransferPanel( jobTransferDiv );
-        // take copies option
-        CheckBox copyingCheckBox = new CheckBox(
-                "copying",
-                new PropertyModel<Boolean>( this, "copying" )
-        );
-        copyingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
-            }
-        } );
-        jobTransferDiv.add( copyingCheckBox );
-        // do transfer button
-        doTransfer = new AjaxLink<String>(
-                "doTransfer",
-                new PropertyModel<String>( this, "transferButtonLabel" ) ) {
-            public void onClick( AjaxRequestTarget target ) {
-                if ( executeJobTransfers() ) {
-                    addJobs();
-                    addJobTransfers();
-                    target.add( jobsDiv );
-                    target.add( jobTransferDiv );
-                    update( target, new Change(
-                            Change.Type.Updated,
-                            getOrganization(),
-                            "jobs"
-                    ) );
-                }
-            }
-        };
-        doTransfer.setOutputMarkupId( true );
-        makeVisible( doTransfer, isTransferring() );
-        jobTransferDiv.add( doTransfer );
-
-        WebMarkupContainer transferContainer = new WebMarkupContainer( "transferContainer" );
-        transferContainer.setOutputMarkupId( true );
-        transferContainer.setVisible( getPlan().isDevelopment() );
-        addOrReplace( transferContainer );
-        CheckBox transferCheckBox = new CheckBox(
-                "transfer",
-                new PropertyModel<Boolean>( this, "transferring" ) );
-        transferCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                addJobTransferPanel( jobTransferDiv );
-                makeVisible( jobTransferDiv, isTransferring() );
-                target.add( jobTransferDiv );
-            }
-        } );
-        transferCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
-        transferContainer.add( transferCheckBox );
+        transferablesContainer.add( transferFromChoice );
     }
 
     private boolean executeJobTransfers() {
@@ -298,7 +319,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         this.copying = copying;
     }
 
-    private void addJobTransferPanel( WebMarkupContainer transferringDiv ) {
+    private void addJobTransferPanel(  ) {
         if ( getTransferFrom() == null ) {
             jobTransferPanel = new Label( "jobTransfers", "" );
         } else {
@@ -309,7 +330,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         }
         jobTransferPanel.setOutputMarkupId( true );
         makeVisible( jobTransferPanel, getTransferFrom() != null );
-        transferringDiv.addOrReplace( jobTransferPanel );
+        transferablesContainer.addOrReplace( jobTransferPanel );
     }
 
     public boolean isTransferring() {
@@ -343,6 +364,9 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     }
 
     private void addJobPlaybook( Job job ) {
+        flowsDiv = new WebMarkupContainer( "flows" );
+        flowsDiv.setOutputMarkupId( true );
+        addOrReplace( flowsDiv );
         selectedJob = job;
         Label jobLabel;
         Component jobPlaybook;
@@ -555,8 +579,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      * {@inheritDoc}
      */
     public void update( AjaxRequestTarget target, Object object, String action ) {
-        makeVisible( doTransfer, !getTransferredJobs().isEmpty() );
-        target.add( doTransfer );
+        makeVisible( doTransferLink, !getTransferredJobs().isEmpty() );
+        target.add( doTransferLink );
     }
 
     /**
