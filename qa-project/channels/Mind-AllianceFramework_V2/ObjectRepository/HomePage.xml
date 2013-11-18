@@ -6,6 +6,12 @@
 			<Title>Channels - Sign in</Title>
 	</Element>
 	
+	
+	<Element>
+			<GivenName>Welcome To Channels</GivenName>
+			<Title>Welcome To Channels! Collaboration by design</Title>
+	</Element>
+	
 	<Element>
 			<GivenName>Help Page Title</GivenName>
 			<Title>Channels - Help</Title>
@@ -59,6 +65,11 @@
 	<Element>
 			<GivenName>Blank Message Notification</GivenName>
 			<Title>Message is empty.Not sent</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>Message Sent Notification</GivenName>
+			<Title>Message sent</Title>
 	</Element>
 	
 	<Element>
@@ -369,6 +380,17 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Show Received In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
  	
  	<Element>
  		<GivenName>Hide Broadcasts In Social Panel</GivenName>

@@ -910,8 +910,8 @@
 	</Element>
 	<Element>
 		<GivenName>Task Is Dropdown In Task Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:classificationContainer:category')]</Xpath>
-		<Name>segment:part:classificationContainer:category</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[3]/td/select</Xpath>
+		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -2092,12 +2092,6 @@
 		<Name></Name>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Organization in goal dropdown</GivenName>
-		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType')]</Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</Name>
-	//</Element>
-	
     <Element>
 		<GivenName>Organization for goal</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/input</Xpath>
@@ -2284,13 +2278,13 @@
 	</Element>
 	<Element>
 		<GivenName>Type Dropdown In New Issue Text In Task Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:issues:issues-container:issues:0:issue:type')]</Xpath>
-		<Name>segment:part:issues:issues-container:issues:0:issue:type</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span[2]/div/span/ol/li/span/div/table/tbody/tr[2]/td/select</Xpath>
+		<Name></Name>
 	</Element>
 	<Element>
 		<GivenName>Severity Dropdown In New Issue Text In Task Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:issues:issues-container:issues:0:issue:severity')]</Xpath>
-		<Name>segment:part:issues:issues-container:issues:0:issue:severity</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span[2]/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
+		<Name></Name>
 	</Element>
 	<Element>
 		<GivenName>Attach Dropdown In New Issue Text In Task Panel</GivenName>
@@ -2897,8 +2891,8 @@
 	</Element>
 	<Element>
 		<GivenName>Instructions In Receives Panel</GivenName>
-		<Xpath>//textarea[contains(@name,'segment:receives:flows-div:flows:0:flow:description')]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:description</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[11]/td/textarea</Xpath>
+		<Name></Name>
 	</Element>
 	
 	<Element>
@@ -2913,14 +2907,14 @@
 	
 	<Element>
 		<GivenName>But Only If In Receives Panel</GivenName>
-		<Xpath>//input[contains(@name,'segment:receives:flows-div:flows:0:flow:restrictionContainer:restricted')]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:restrictionContainer:restricted</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/input</Xpath>
+		<Name></Name>
 	</Element>
 	
 	<Element>
 		<GivenName>But Only If Dropdown In Receives Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction')]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/div/select</Xpath>
+		<Name></Name>
 	</Element>
 	
 	<Element>
