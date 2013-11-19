@@ -13,9 +13,14 @@
    <span>
    <a wicket:id="anchor" name="tbd"></a>
    <h4 class="name-employment">
-       <span wicket:id="name">John Doe</span>
-       <span wicket:id="employment">VP Sales ,Northeast, ACME Inc.</span>
-       <span wicket:id="feedback">[User feedback panel]</span>
+       <span class="contact-details">
+           <span wicket:id="nameContainer"><span class="contact-name" wicket:id="name">John Doe</span><br/></span>
+           <span><span class="contact-role" wicket:id="title">Director Public Relations</span><br/></span>
+           <span> <span class="contact-org" wicket:id="employer">Metropolis Transit Authority</span><br/></span>
+       </span>
+       <span>
+            <div class="feedback" wicket:id="feedback">[User feedback panel]</div>
+       </span>
        <a wicket:id="commandChainsLink" href="#" class="command-chains-link">
            <span wicket:id="showHideCommandChains">+ Show command chains</span>
        </a>

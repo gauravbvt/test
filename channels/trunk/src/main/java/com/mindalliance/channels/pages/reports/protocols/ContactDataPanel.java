@@ -57,7 +57,8 @@ public class ContactDataPanel extends AbstractDataPanel {
     private void init() {
         add( makeAnchor( "anchor", contactData.anchor() ) );
         addName();
-        addEmployment();
+        addTitle();
+        addEmployer();
         addFeedbackPanel();
         addCommandChains();
         addWorkAddresses();
@@ -69,14 +70,20 @@ public class ContactDataPanel extends AbstractDataPanel {
     }
 
     private void addName() {
+        WebMarkupContainer nameContainer = new WebMarkupContainer( "nameContainer" );
+        add( nameContainer );
         String userFullName = contactData.getUserFullName();
         Label userFullNameLabel = new Label( "name", userFullName == null ? "" : userFullName + ", " );
-        userFullNameLabel.setVisible( userFullName != null );
-        add( userFullNameLabel );
+        nameContainer.setVisible( userFullName != null );
+        nameContainer.add( userFullNameLabel );
     }
 
-    private void addEmployment() {
-        add( new Label( "employment", contactData.getEmployment().getLabel() ) );
+    private void addTitle() {
+        add( new Label( "title", contactData.getEmployment().getTitle() ) );
+    }
+
+    private void addEmployer() {
+        add( new Label( "employer", contactData.getEmployment().getAgencyName() ) );
     }
 
     private void addFeedbackPanel() {
