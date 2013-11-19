@@ -104,7 +104,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 			stepNo++;
 			description="Login Successful";
 			LoginPage loginPage = new LoginPage();
-		    loginPage.Login(testData.get("UserName"),testData.get("Password"));
+		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

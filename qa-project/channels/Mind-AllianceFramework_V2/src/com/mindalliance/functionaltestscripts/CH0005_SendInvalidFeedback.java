@@ -209,7 +209,6 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	              
 	        Element oXmlEleCH0005_SendInvalidFeedback = (Element) eleCH0005_SendInvalidFeedback;
 	                     	
-	        
 			this.testData.put("ChannelsURL",oXmlEleCH0005_SendInvalidFeedback.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleCH0005_SendInvalidFeedback.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Feedback",oXmlEleCH0005_SendInvalidFeedback.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
