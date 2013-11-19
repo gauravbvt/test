@@ -190,12 +190,18 @@ public class ChannelsAdmin {
 	 * @param userName
 	 * @throws UIAutomationException
 	 */
-	public void addUserDetails(String email,String password,String isAdministrator,String isDisabled) throws UIAutomationException{
+	public String addUserDetails(String email,String password,String isAdministrator,String isDisabled) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
 		UIActions.click(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
+		UIActions.clearTextBox(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
+		UIActions.enterValueInTextBox(email,fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
+		UIActions.enterKey(Keys.TAB);
 		
 		elementController.requireElementSmart(fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password");
 		UIActions.click(fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password");
+		UIActions.clearTextBox(fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password Of User");
+		UIActions.enterValueInTextBox(password,fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password Of User");
+		UIActions.enterKey(Keys.TAB);
 		
 		elementController.requireElementSmart(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
 		UIActions.click(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
@@ -208,11 +214,15 @@ public class ChannelsAdmin {
 		Select disabledDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(disabledDropDownList);
 		UIActions.selectByTextAndClick(isDisabled);
-		
-	//	elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
-	//	UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 			
-		// Assertion: Verify that "User 1" is added
+		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
+		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
+		
+		
+		// Verify that the new user is added
+		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
+		String notification=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
+		return notification;		
 	}
 	
 	
