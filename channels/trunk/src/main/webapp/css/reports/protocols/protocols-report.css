@@ -95,6 +95,10 @@ div.protocols-contents h4.name-employment {
     text-transform: uppercase;
 }
 
+div.protocols-contents span.contact-details {
+	display: inline-block;
+}
+
 div.protocols-contents div.expected-queries h4.task-name {
     border-bottom: none;
     margin: 0;
@@ -791,18 +795,17 @@ table.checklist-step-outcomes {
     color: #4A89DC;
 }
 
-.checklist a.more,
-.protocols-contents a.command-chains-link {
+.checklist a.more {
 	margin: 0;
 }
 
 .checklist .checklist-step-title div.feedback a.feedback-button,
-.protocols-contents .org-contacts div.feedback a.feedback-button {
+.protocols-contents .org-contacts h3 div.feedback a.feedback-button {
 	margin: 0 0 0 10px;
 }
 
 .checklist .checklist-step-title div.feedback div.feedback-form-cont,
-.protocols-contents .org-contacts div.feedback div.feedback-form-cont {
+.protocols-contents .org-contacts h3 div.feedback div.feedback-form-cont {
 	margin: 17px 0 0 10px;
 }
 

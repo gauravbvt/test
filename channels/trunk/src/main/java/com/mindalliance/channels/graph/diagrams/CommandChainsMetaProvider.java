@@ -196,7 +196,7 @@ public class CommandChainsMetaProvider extends AbstractMetaProvider {
             if ( isSelected( contact ) ) {
                 list.add( new DOTAttribute( "shape", "ellipse" ) );
                 list.add( new DOTAttribute( "style", "solid" ) );
-                list.add( new DOTAttribute( "color", "#999999" ) );
+                list.add( new DOTAttribute( "color", "gray" ) );
             } else {
                 list.add( new DOTAttribute( "shape", "none" ) );
             }
@@ -213,8 +213,8 @@ public class CommandChainsMetaProvider extends AbstractMetaProvider {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "none" ) );
             list.add( new DOTAttribute( "arrowtail", "open" ) );
-            list.add( new DOTAttribute( "arrowsize", "0.7" ) );
-            list.add( new DOTAttribute( "color", "#999999" ) );
+            list.add( new DOTAttribute( "arrowsize", "0.5" ) );
+            list.add( new DOTAttribute( "color", "gray" ) );
             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
