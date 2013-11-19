@@ -484,6 +484,9 @@
 
                         By check a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
                         this position. By un-checking an already checked box, you unilaterally resign the assignment.
+
+                        By pressing the "command chains" icons next to the help icon, you can see your command chains
+                        defined by your participation and that of other users in the plan.
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>
@@ -2114,8 +2117,8 @@ Note that all profile attributes are optional.]]>
                         organization. The participating organization inherits (a copy of) the agents employed by the
                         placeholder.
 
-                        The custodian of a placeholder organization an the agent authorized to register known
-                        organizations as the placeholder. Whoever in a plan participates as this agent is an acting
+                        The custodian of a placeholder organization is the agent authorized to register known
+                        organizations as participating as the placeholder. Whoever in a plan participates as this agent is an acting
                         custodian. Collaboration planners are by default acting custodians.
                     </description>
                     <script>
