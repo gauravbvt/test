@@ -73,7 +73,7 @@ public class ContactDataPanel extends AbstractDataPanel {
         WebMarkupContainer nameContainer = new WebMarkupContainer( "nameContainer" );
         add( nameContainer );
         String userFullName = contactData.getUserFullName();
-        Label userFullNameLabel = new Label( "name", userFullName == null ? "" : userFullName + ", " );
+        Label userFullNameLabel = new Label( "name", userFullName == null ? "" : userFullName );
         nameContainer.setVisible( userFullName != null );
         nameContainer.add( userFullNameLabel );
     }

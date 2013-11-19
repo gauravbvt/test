@@ -175,7 +175,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         ? "ANSWER WITH"
                         : "ASK FOR");
                 Flow.Intent intent = commStep.getSharing().getIntent();
-                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toLowerCase() ) );
+                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toUpperCase() ) );
             } else if ( step.isReceiptConfirmation() ) {
                 sb.append( "CONFIRM RECEIPT OF" );
             } else if ( step.isSubTaskStep() ) {

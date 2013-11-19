@@ -665,9 +665,5 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         }
     }
 
-    @Override
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        //Todo navigate to sub-task when applicable
-    }
 }
 

@@ -601,7 +601,16 @@
                         ** self-assigned "research" sub-tasks
                         ** self-assigned "follow up" tasks
 
-                        A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist.
+                        A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist
+                        and gives access to the chains of command of each contact.
+
+                        Users can provide feedback (question, suggestion or problem) about
+
+                        * the entire page
+                        * individual checklists
+                        * individual steps in checklists
+                        * individual contacts
+
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>

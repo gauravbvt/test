@@ -270,7 +270,7 @@ public class CommandChainsMetaProvider extends AbstractMetaProvider {
             }
             return sb.toString();
         } else {
-            return "";
+            return "No user assigned yet";
         }
     }
 
