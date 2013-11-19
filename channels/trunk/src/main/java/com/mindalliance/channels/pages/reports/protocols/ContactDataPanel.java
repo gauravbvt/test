@@ -148,7 +148,8 @@ public class ContactDataPanel extends AbstractDataPanel {
     }
 
     private String getCssClass() {
-        return "command-chains" + contactData.getId();
+        return "command-chains";
+        //return "command-chains" + contactData.getId();
     }
 
     private ChannelsUser getUser() {
