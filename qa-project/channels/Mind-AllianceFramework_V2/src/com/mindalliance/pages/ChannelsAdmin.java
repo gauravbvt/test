@@ -69,9 +69,36 @@ public class ChannelsAdmin {
 	 */
 	public void clickSavePlanButton() throws UIAutomationException
 	{
+		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
+		
+		UIActions.getText(fileName, "Settings Changed Notification", GlobalVariables.configuration.getAttrSearchList(),  "Settings Changed Notification");
 	}
+	
+	/**
+	 * Click the Save Plan button when Plan ids are the same
+	 * @throws UIAutomationException 
+	 */
+	public String clickSavePlanButtonSamePlanId(String planName) throws UIAutomationException
+	{
+		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
+		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
+		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
+		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
+		
+		
+		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		
+		elementController.requireElementSmart(fileName,"Notification for same plan",GlobalVariables.configuration.getAttrSearchList(), "Notification for same plan");
+		return UIActions.getText(fileName, "Same Plan Notification",GlobalVariables.configuration.getAttrSearchList() , "Same Plan Notification");
+	 
+	}
+	
+	
 	
 	/**
 	 * Click the Productize Plan button
