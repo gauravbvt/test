@@ -92,17 +92,20 @@ public class RegisteredOrganizationServiceImpl
             if ( registered == null ) {
                 Organization fixedOrg = communityService.getPlanService().findActualEntity( Organization.class, orgName );
                 if ( fixedOrg != null ) {
-                    registered = new RegisteredOrganization(
-                            user.getUsername(),
-                            fixedOrg.getId(),
-                            communityService.getPlanCommunity()
-                    );
+                    if ( !fixedOrg.isUnknown() ) {
+                        registered = new RegisteredOrganization(
+                                user.getUsername(),
+                                fixedOrg.getId(),
+                                communityService.getPlanCommunity()
+                        );
+                    }
                 } else {
                     registered = local
                             ? new RegisteredOrganization( user.getUsername(), orgName, communityService.getPlanCommunity() )
                             : new RegisteredOrganization( user.getUsername(), orgName );
                 }
-                save( registered );
+                if ( registered != null )
+                    save( registered );
                 communityService.clearCache();
             }
             return registered;
@@ -219,7 +222,7 @@ public class RegisteredOrganizationServiceImpl
                 && ( registeredOrg.getParent( communityService ) == null || isValid( registeredOrg.getParent( communityService ), communityService ) );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<RegisteredOrganization> validate(
             List<RegisteredOrganization> registeredOrganizations,
             final CommunityService communityService ) {
