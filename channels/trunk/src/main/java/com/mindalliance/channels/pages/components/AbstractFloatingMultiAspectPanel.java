@@ -201,13 +201,11 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     }
 
     private void showAspect( String aspect, Change change ) {
-        if ( !isMinimized() ) {
         setSelectedTabName( aspect );
         String aspectToShow = aspect == null ? getDefaultAspect() : aspect;
         aspectPanel = makeAspectPanel( aspectToShow, change );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
-        }
     }
 
     private void releaseAspectShown() {
@@ -262,25 +260,29 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        refreshMenus( target );
-        if ( change.isAspectReplaced() ) {
-            refresh( target, change, change.getProperty() );
+        if ( !isMinimized() ) {
+            refreshMenus( target );
+            if ( change.isAspectReplaced() ) {
+                refresh( target, change, change.getProperty() );
+            }
         }
         super.updateWith( target, change, updated );
     }
 
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        super.refresh( target, change, aspect );
-        refreshTitle( target );
-        refreshMenus( target );
-        if ( change.isUnknown()
-                || change.isRefresh()
-                || change.isDisplay()
-                || change.isModified()
-                || change.isSelected() ) {
-            if ( !isMinimized() && isAspect( aspect ) ) {
-                showAspect( aspect, change, target );
+        if ( !isMinimized() ) {
+            super.refresh( target, change, aspect );
+            refreshTitle( target );
+            refreshMenus( target );
+            if ( change.isUnknown()
+                    || change.isRefresh()
+                    || change.isDisplay()
+                    || change.isModified()
+                    || change.isSelected() ) {
+                if ( /*!isMinimized() && */isAspect( aspect ) ) {
+                    showAspect( aspect, change, target );
+                }
             }
         }
     }

@@ -354,10 +354,15 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @Override
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
-        if ( !updated.contains( this ) && !change.isNone() ) {
+        if ( !isMinimized() && !updated.contains( this ) && !change.isNone() ) {
             refresh( target, change, aspect );
             //   target.add( this );
         }
+    }
+
+    protected boolean isMinimized(  ) {
+        return this instanceof AbstractFloatingTabbedCommandablePanel
+                && ( (AbstractFloatingTabbedCommandablePanel) this ).isMinimized();
     }
 
     /**

@@ -31,6 +31,7 @@ import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingTabbedCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -2578,6 +2579,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 change.isDisplay()
                         && change.isForInstanceOf( ModelEntity.class ) ) {
             updateEntityPanel( target, change );
+            if ( !( entityPanel instanceof EntityPanel )
+                    || !((EntityPanel)entityPanel).isMinimized() )
             target.add( entityPanel );
         } else if ( entityPanel instanceof EntityPanel ) {
             ( (EntityPanel) entityPanel ).refresh( target,

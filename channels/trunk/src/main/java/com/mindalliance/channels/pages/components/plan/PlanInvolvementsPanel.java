@@ -218,6 +218,7 @@ public class PlanInvolvementsPanel extends AbstractCommandablePanel implements G
         String singularClassLabel = ModelEntity.getSingularClassLabelOf( getSelectedEntityClass() );
         Label singularLabel = new Label( "entityClassSingular", singularClassLabel );
         singularLabel.setOutputMarkupId( true );
+        newInvolvedContainer.setVisible( isPlanner() && getPlan().isDevelopment() );
         newInvolvedContainer.addOrReplace( singularLabel );
         addInvolvedField = new AutoCompleteTextField<String>(
                 "newInvolved",

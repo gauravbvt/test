@@ -130,12 +130,13 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
             getEntityHistory().add( previous.getId() );
         setModel( new Model<ModelEntity>( entity ) );
         setExpansions( expansions );
-        if ( target != null ) {
-            refresh( target, change, aspect );
-            showAspect( aspect, change, target );
+        if ( !isMinimized() ) {
+            if ( target != null ) {
+                refresh( target, change, aspect );
+                showAspect( aspect, change, target );
+            } else
+                setAspectShown( aspect );
         }
-        else
-            setAspectShown( aspect );
     }
 
     @Override
@@ -461,7 +462,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected List<String> getActionableAspects() {
         final List<String> allActionableAspects = Arrays.asList( ACTIONABLE_ASPECTS );
         return (List<String>) CollectionUtils.select(
