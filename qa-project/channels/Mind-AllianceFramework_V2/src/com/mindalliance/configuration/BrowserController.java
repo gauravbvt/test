@@ -74,9 +74,9 @@ public class BrowserController{
      * @param title
      * @throws UIAutomationException
      */
-	public void enterURL(String URL,String title) throws UIAutomationException{
-		GlobalVariables.configuration.getWebDriver().get(URL);
-    	
+	public void enterURL() throws UIAutomationException{
+		GlobalVariables.configuration.getWebDriver().get(GlobalVariables.configuration.getConfigData().get("URL"));
+		String title="";
     	// Assertion : Check Title of Page
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
     }
