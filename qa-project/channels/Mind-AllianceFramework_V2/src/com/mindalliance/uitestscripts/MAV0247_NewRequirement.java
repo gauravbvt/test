@@ -88,10 +88,9 @@ public class MAV0247_NewRequirement extends TestCase{
 		try{
 			stepNo++;
 			description="URL Entered";
-			
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

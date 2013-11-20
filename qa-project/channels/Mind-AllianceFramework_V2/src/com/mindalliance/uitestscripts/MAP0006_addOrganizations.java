@@ -101,7 +101,7 @@ public class MAP0006_addOrganizations extends TestCase{
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
