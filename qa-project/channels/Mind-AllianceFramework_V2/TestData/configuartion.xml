@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <Configuration>
- <Credentials>
- <URL>http://192.168.31.5:8080/channels/login.html</URL>
-  <ChannelsURL>http://192.168.4.5:8080/channels/login.html</ChannelsURL>
-  <UserName>admin</UserName>
-  <PassWord>admin</PassWord>
-  <Browser>Mozilla Firefox</Browser>
- </Credentials>
- <TimeOutForFindingElementSeconds>20</TimeOutForFindingElementSeconds>
- <TimeOutForFindingElementSecondsForClick>60</TimeOutForFindingElementSecondsForClick>
+	<Credentials>
+		<URL>http://192.168.31.144:8080/channels/login.html</URL>
+		<ChannelsURL>http://192.168.31.144:8080/channels/login.html</ChannelsURL>
+		<UserName>admin</UserName>
+		<PassWord>admin</PassWord>
+		<Browser>Mozilla Firefox</Browser>
+		<title>Channels - Sign in</title>
+	</Credentials>
+	<TimeOutForFindingElementSeconds>20</TimeOutForFindingElementSeconds>
+	<TimeOutForFindingElementSecondsForClick>60
+	</TimeOutForFindingElementSecondsForClick>
 </Configuration>
