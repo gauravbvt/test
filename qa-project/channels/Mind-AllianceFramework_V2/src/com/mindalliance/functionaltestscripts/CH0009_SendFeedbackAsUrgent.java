@@ -103,7 +103,7 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL();
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -228,7 +228,6 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 	              
 	        Element oXmlEleCH0009_SendFeedbackAsUrgent = (Element) eleCH0009_SendFeedbackAsUrgent;
 	                     	
-			this.testData.put("ChannelsURL",oXmlEleCH0009_SendFeedbackAsUrgent.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleCH0009_SendFeedbackAsUrgent.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Feedback",oXmlEleCH0009_SendFeedbackAsUrgent.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
 		}
