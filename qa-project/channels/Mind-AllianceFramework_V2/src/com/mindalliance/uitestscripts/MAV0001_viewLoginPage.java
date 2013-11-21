@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -46,11 +47,12 @@ public class MAV0001_viewLoginPage extends TestCase{
 	
 	/**
 	 * This method will initialize the setup required for every test case
+	 * @throws IOException 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	
 	@Before
-	protected void setUp() throws UIAutomationException{	
+	protected void setUp() throws UIAutomationException, IOException{	
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -66,6 +68,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 			loadTestData();
 			
 			// Loads Test Data
+			Log4J.getlogger(this.getClass()).info(testCaseId +" test case started");
 			description = "Testcase: " + testCaseId + " execution started";
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
@@ -80,6 +83,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+
 		}
 	}
 	
@@ -98,7 +103,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
-		
+		Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+
 		// Quits the Browser
 		stepNo++;
 		description="Browser closed";
@@ -107,6 +113,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+	    Log4J.getlogger(this.getClass()).info(testCaseId +" execution completed");
 	    
 	    Reporting reporting= new Reporting();
 	    reporting.generateAutomationReport();
@@ -120,6 +127,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" browser quit");
 		}
 	}
 	
