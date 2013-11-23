@@ -276,7 +276,7 @@ public class PlanChecklistsMapPanel extends AbstractUpdatablePanel {
                     isSummarizeByOrg(),
                     isSummarizeByRole(),
                     getFocusEntity() );
-            graphBuilder.setQueryService( getQueryService() );
+            graphBuilder.setCommunityService( getCommunityService() );
             boolean noProcedures = !graphBuilder.hasCommitments();
             checklistsMapDiagramPanel.add( new AttributeModifier(
                     "style",

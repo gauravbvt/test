@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -28,12 +30,13 @@ public class RedundantPlace extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         List<Place> equivalentPlaces = findPlacesEquivalentTo( queryService, place );
         if ( !equivalentPlaces.isEmpty() ) {
-            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, place );
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, place );
             issue.setSeverity( Level.Low );
             StringBuilder sb = new StringBuilder();
             Iterator<Place> iter = equivalentPlaces.iterator();
@@ -64,7 +67,7 @@ public class RedundantPlace extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Place;
     }
 

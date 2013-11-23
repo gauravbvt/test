@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Flow;
@@ -25,12 +27,12 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = null;
         Flow flow = (Flow) modelObject;
         String name = flow.getName();
         if ( name == null || name.trim().isEmpty() ) {
-            DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject, "name" );
+            DetectedIssue issue = makeIssue( communityService, DetectedIssue.VALIDITY, modelObject, "name" );
             issue.setDescription( "The name of the information is missing." );
             issue.setRemediation( "Name the information flow." );
             issues = new ArrayList<Issue>();
@@ -41,7 +43,7 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

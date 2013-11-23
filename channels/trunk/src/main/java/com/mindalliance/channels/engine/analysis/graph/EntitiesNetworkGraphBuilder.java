@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -20,15 +20,15 @@ import java.util.List;
 public class EntitiesNetworkGraphBuilder implements GraphBuilder<ModelEntity, EntityRelationship> {
     private List<ModelEntity> entities;
     private List<EntityRelationship> entityRels;
-    private QueryService queryService;
+    private CommunityService communityService;
 
     public EntitiesNetworkGraphBuilder(
             List<ModelEntity> entities,
             List<EntityRelationship> entityRels,
-            QueryService queryService ) {
+            CommunityService communityService ) {
         this.entities = entities;
         this.entityRels = entityRels;
-        this.queryService = queryService;
+        this.communityService = communityService;
     }
 
     public DirectedGraph<ModelEntity, EntityRelationship> buildDirectedGraph() {
@@ -55,8 +55,8 @@ public class EntitiesNetworkGraphBuilder implements GraphBuilder<ModelEntity, En
         }
         for ( EntityRelationship entityRel : entityRels ) {
             if ( entityRel != null ) {
-                digraph.addEdge( (ModelEntity) entityRel.getFromIdentifiable( queryService ),
-                        (ModelEntity) entityRel.getToIdentifiable( queryService ),
+                digraph.addEdge( (ModelEntity) entityRel.getFromIdentifiable( communityService ),
+                        (ModelEntity) entityRel.getToIdentifiable( communityService ),
                         entityRel );
             }
         }

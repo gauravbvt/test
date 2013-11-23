@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -24,17 +26,18 @@ public class SupervisedParticipationActorWithoutSupervisors extends AbstractIssu
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Actor;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>(  );
         Actor actor = (Actor)modelObject;
         if ( actor.isSupervisedParticipation() ) {
             if ( queryService.findAllSupervisorsOf( actor ).isEmpty() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, actor );
                 issue.setDescription( "Participation as agent \"" + actor.getName()
                         + "\" must be confirmed by supervisors and " +
                         "the agent has none." );

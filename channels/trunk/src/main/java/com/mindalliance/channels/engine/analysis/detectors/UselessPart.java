@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -46,7 +48,7 @@ public class UselessPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
@@ -60,12 +62,12 @@ public class UselessPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.getAllSharingReceives().isEmpty() || !part.getAllSharingSends().isEmpty() ) {
             if ( !isUseful( part, new HashSet<Part>() ) ) {
-                DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
+                DetectedIssue issue = makeIssue( communityService, DetectedIssue.COMPLETENESS, part );
                 issue.setDescription( "The task is not useful: it achieves no goal, "
                         + "and it does not trigger nor send information to a useful task." );
                 issue.setRemediation( "Have the task achieve a goal, end the event phase (if it would end a risk)\n" 

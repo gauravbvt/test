@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -24,17 +26,17 @@ public class NonPlaceholderOrganizationHasPlaceholderParent extends AbstractIssu
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         Organization org = (Organization)modelObject;
         List<Issue> issues = new ArrayList<Issue>(  );
         Organization parent = org.getParent();
         if ( org.isActual() && !org.isPlaceHolder() && parent != null && parent.isPlaceHolder() ) {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, org );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, org );
             issue.setDescription( "The parent \"" + parent.getName() + "\" is a placeholder." );
             issue.setRemediation( "Remove the placeholder parent organization" +
                     "\nor change the organization a placeholder organization" +

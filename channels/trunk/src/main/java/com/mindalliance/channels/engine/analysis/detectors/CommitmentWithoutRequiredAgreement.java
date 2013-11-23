@@ -6,7 +6,9 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Agreement;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -27,7 +29,8 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( org.isActual() && org.isEffectiveAgreementsRequired() ) {
@@ -37,7 +40,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
                                                                                  queryService.findAllFlows() ) )
             {
                 if ( !confirmed.contains( agreement ) ) {
-                    DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
+                    DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, org );
                     issue.setDescription( "Not confirmed: " + agreement.getSummary( org ) + '.' );
                     issue.setRemediation( "Confirm the agreement,\n" + "or remove the requirement for agreements from "
                                           + agreementRequiringOrganization( org ).getName() );
@@ -54,7 +57,7 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

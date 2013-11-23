@@ -6,10 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -29,17 +29,17 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
     /**
      * A query service.
      */
-    private final QueryService queryService;
+    private final CommunityService communityService;
 
     /**
      * The analyst.
      */
     private final Analyst analyst;
 
-    public EntityNetworkGraphBuilder( ModelEntity entity, Analyst analyst, QueryService queryService ) {
+    public EntityNetworkGraphBuilder( ModelEntity entity, Analyst analyst, CommunityService communityService ) {
         this.entity = entity;
         this.analyst = analyst;
-        this.queryService = queryService;
+        this.communityService = communityService;
     }
 
     @Override
@@ -58,15 +58,15 @@ public class EntityNetworkGraphBuilder implements GraphBuilder<ModelEntity, Enti
 
     private void populateGraph( DirectedGraph<ModelEntity, EntityRelationship> digraph ) {
         digraph.addVertex( entity );
-        List<EntityRelationship> rels = analyst.findEntityRelationships( null, entity, queryService );
+        List<EntityRelationship> rels = analyst.findEntityRelationshipsInPlan( null, entity, communityService );
         for ( EntityRelationship entityRel : rels ) {
-            digraph.addVertex( (ModelEntity) entityRel.getToIdentifiable( queryService ) );
-            digraph.addVertex( (ModelEntity) entityRel.getFromIdentifiable( queryService ) );
+            digraph.addVertex( (ModelEntity) entityRel.getToIdentifiable( communityService ) );
+            digraph.addVertex( (ModelEntity) entityRel.getFromIdentifiable( communityService ) );
         }
         for ( EntityRelationship entityRel : rels )
             if ( entityRel != null )
-                digraph.addEdge( (ModelEntity) entityRel.getFromIdentifiable( queryService ),
-                                 (ModelEntity) entityRel.getToIdentifiable( queryService ),
+                digraph.addEdge( (ModelEntity) entityRel.getFromIdentifiable( communityService ),
+                                 (ModelEntity) entityRel.getToIdentifiable( communityService ),
                                  entityRel );
     }
 }

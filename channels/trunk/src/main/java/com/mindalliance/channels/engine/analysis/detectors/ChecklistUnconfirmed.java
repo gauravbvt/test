@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -25,17 +27,18 @@ public class ChecklistUnconfirmed extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Part part = (Part) modelObject;
         Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();
         if ( !checklist.isEmpty() && !checklist.isConfirmed() ) {
-            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
             issue.setDescription( "The checklist is not confirmed." );
             issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
             issue.setRemediation( "Confirm the checklist once deemed satisfactory." );

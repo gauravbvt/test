@@ -100,7 +100,7 @@ public class SegmentOrganizationsPanel extends AbstractUpdatablePanel implements
             for ( Organization other : orgs ) {
                 if ( org != other ) {
                     EntityRelationship<Organization> sendRel =
-                            getAnalyst().findEntityRelationship( getQueryService(), org, other, getSegment() );
+                            getAnalyst().findEntityRelationshipInPlan( getCommunityService(), org, other, getSegment() );
                     if ( sendRel != null )
                         orgRels.add( sendRel );
                 }

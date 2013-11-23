@@ -85,15 +85,15 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
         PlanService planService = communityService.getPlanService();
         renderer.highlight( selectedSegment, selectedSgRel );
         renderer.render( communityService,
-                         createGraph( planService, analyst ),
-                         createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, planService ),
+                         createGraph( communityService, analyst ),
+                         createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, communityService ),
                          outputFormat,
                          ticket,
                          outputStream );
     }
 
-    private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService, Analyst analyst ) {
-        return new PlanMapGraphBuilder( segments, queryService, analyst ).buildDirectedGraph();
+    private DirectedGraph<Segment, SegmentRelationship> createGraph( CommunityService communityService, Analyst analyst ) {
+        return new PlanMapGraphBuilder( segments, communityService, analyst ).buildDirectedGraph();
     }
 
     /**
@@ -110,10 +110,10 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
     }
 
     private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory, Analyst analyst,
-                                               QueryService queryService ) {
+                                               CommunityService communityService ) {
 
         PlanMapMetaProvider metaProvider =
-                new PlanMapMetaProvider( segments, outputFormat, imageDirectory, analyst, queryService );
+                new PlanMapMetaProvider( segments, outputFormat, imageDirectory, analyst, communityService );
         metaProvider.setGroupByPhase( groupByPhase );
         metaProvider.setGroupByEvent( groupByEvent );
         metaProvider.setSelectedGroup( selectedGroup );

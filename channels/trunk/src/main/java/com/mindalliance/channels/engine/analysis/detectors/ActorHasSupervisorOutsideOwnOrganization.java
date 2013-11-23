@@ -1,10 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -32,13 +33,14 @@ public class ActorHasSupervisorOutsideOwnOrganization extends AbstractIssueDetec
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Actor && ( (Actor) modelObject ).isActual();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Actor actor = (Actor) modelObject;
         List<Actor> supervisors = queryService.findAllSupervisorsOf( actor );
@@ -66,7 +68,7 @@ public class ActorHasSupervisorOutsideOwnOrganization extends AbstractIssueDetec
                                 }
                             }
                     );
-                    Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );
+                    Issue issue = makeIssue( communityService, Issue.VALIDITY, actor );
                     issue.setDescription( "Agent \""
                             + actor.getName()
                             + "\" is supervised by \""

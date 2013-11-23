@@ -30,11 +30,11 @@ public interface Issue extends Identifiable, Serializable {
     String[] TYPES = new String[]{VALIDITY, COMPLETENESS, ROBUSTNESS};
 
     /**
-     * The identifiable object the issue is about.
+     * The identifiable the issue is about.
      *
-     * @return a ModelObject
+     * @return an identifiable
      */
-    ModelObject getAbout();
+    Identifiable getAbout();
 
     /**
      * The type of issue (validity, completeness or robustness).

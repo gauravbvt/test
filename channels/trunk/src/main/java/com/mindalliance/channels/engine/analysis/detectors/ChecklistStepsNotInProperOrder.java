@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -33,12 +35,13 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         Checklist checklist = part.getEffectiveChecklist();
@@ -56,7 +59,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                     && conditionStep != null
                                     && !outcomeStep.equals( conditionStep )
                                     && !checklist.listPrerequisiteStepsFor( conditionStep ).contains( outcomeStep ) ) {
-                                Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+                                Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
                                 issue.setDescription( "Step \""
                                         + conditionStep.getLabel()
                                         + "\" has condition '"
@@ -101,7 +104,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                 if ( outcomeStep != null
                                         && !communicationStep.equals( outcomeStep )
                                         && !checklist.listPrerequisiteStepsFor( communicationStep ).contains( outcomeStep ) ) {
-                                    Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+                                    Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
                                     issue.setDescription( "Step \""
                                             + communicationStep.getLabel()
                                             + "\" shares information '"

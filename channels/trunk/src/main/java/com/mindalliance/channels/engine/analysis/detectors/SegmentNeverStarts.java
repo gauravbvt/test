@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -29,7 +31,8 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         Plan plan = queryService.getPlan();
@@ -42,7 +45,7 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
                                 || phase.isPostEvent() && event.isSelfTerminating();
 
         if ( !canStart ) {
-            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, segment );
             String eventName = segment.getEvent().getName();
             String description = "The segment may never start";
             String remediation = "";
@@ -73,7 +76,7 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Segment;
     }
 

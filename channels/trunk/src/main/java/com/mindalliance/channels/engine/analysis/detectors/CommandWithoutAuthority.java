@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -25,19 +27,20 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow && ( (Flow) modelObject ).isSharing();
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.getIntent() != null && flow.getIntent() == Flow.Intent.Command ) {
             boolean fromSupervisor = fromSupervisor( flow );
             if ( !fromSupervisor ) {
                 if ( isAcrossOrganizationalLine( flow ) ) {
-                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                    Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "The command \""
                             + flow.getName()
                             + "\" sent not by a supervisor"
@@ -48,7 +51,7 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
                             "\n or restrict the flow to be \"to supervised\"." );
                     issues.add( issue );
                 } else if ( couldCrossOrganizationalLine( flow ) ) {
-                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                    Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "The command \""
                             + flow.getName()
                             + "\" sent not by a supervisor"
@@ -59,7 +62,7 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
                             "\n or restrict the flow to be \"to supervised\"." );
                     issues.add( issue );
                 } else {
-                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                    Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "The command \""
                             + flow.getName()
                             + "\" sent not by a supervisor." );

@@ -6,10 +6,12 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -39,7 +41,8 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         int n;
@@ -49,7 +52,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
             if ( !assignments.isEmpty() && !areAllSystemsOrArchetypes( assignments )
                  && ( n = countDifferentBeneficiaries( part, assignments, queryService ) ) > TOO_MANY )
             {
-                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "Agents executing task \"" + part.getTitle()
                                       + "\" would have communication commitments with too many different agents (" + n
                                       + ")." );
@@ -112,7 +115,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

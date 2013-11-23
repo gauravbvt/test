@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Plan;
 
 /**
@@ -13,16 +14,16 @@ import com.mindalliance.channels.core.model.Plan;
 public interface Scanner {
     /**
      * Start scan of all plans.
-     * @param plan a plan
+     * @param planCommunity a plan community
      */
-    void scan( Plan plan );
+    void scan( PlanCommunity planCommunity );
 
     /**
      * Abort scan of plan and restart it.
      *
-     * @param plan a plan
+     * @param planCommunity a plan community
      */
-    void rescan( Plan plan );
+    void rescan( PlanCommunity planCommunity );
 
     /**
      * Abort all scans.

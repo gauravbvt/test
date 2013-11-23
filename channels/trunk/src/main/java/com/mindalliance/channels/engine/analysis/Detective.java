@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
@@ -19,41 +19,41 @@ public interface Detective {
     /**
      * Detect all waived issues on a model object .
      *
-     * @param queryService
-     * @param modelObject a model object
+     * @param communityService
+     * @param identifiable a model object
      * @param propertySpecific - whether issues are property specific
      * @return a list of issues
      */
-    List<? extends Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
+    List<? extends Issue> detectWaivedIssues( CommunityService communityService, Identifiable identifiable, Boolean propertySpecific );
 
     /**
       * Detect all waived issues on a model object .
       *
-     * @param queryService
-    * @param modelObject a model object
+     * @param communityService
+    * @param identifiable a model object
    * @param propertySpecific - whether issues are property specific
     * @return a list of issues
       */
-    List<? extends Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
+    List<? extends Issue> detectUnwaivedIssues( CommunityService communityService, Identifiable identifiable, Boolean propertySpecific );
 
     /**
      * Detect all waived property issues on a model object .
      *
-     * @param queryService
-     * @param modelObject a model object
+     * @param communityService
+     * @param identifiable a model object
      * @param property a string - issues for this property if given
      * @return a list of issues
      */
-    List<? extends Issue> detectWaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> detectWaivedPropertyIssues( CommunityService communityService, Identifiable identifiable, String property );
 
     /**
       * Detect all waived property issues on a model object .
       *
-     * @param queryService
-   * @param modelObject a model object
+     * @param communityService
+   * @param identifiable a model object
    * @param property a string - issues for this property if given
     * @return a list of issues
       */
-    List<? extends Issue> detectUnwaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> detectUnwaivedPropertyIssues( CommunityService communityService, Identifiable identifiable, String property );
 
 }

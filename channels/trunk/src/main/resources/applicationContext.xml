@@ -204,7 +204,7 @@ CONFIGURATION NOTES:
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>
 
-    <bean id="detective" class="com.mindalliance.channels.engine.analysis.DefaultDetective">
+    <bean id="detective" class="com.mindalliance.channels.engine.analysis.CollaborationTemplateDetective">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FromUser"/>

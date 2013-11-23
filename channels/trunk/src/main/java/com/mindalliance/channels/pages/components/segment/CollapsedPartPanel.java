@@ -86,7 +86,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     }
 
     private void adjustFields() {
-        boolean partHasIssues = getAnalyst().hasIssues( getQueryService(), getPart(), false );
+        boolean partHasIssues = getAnalyst().hasIssues( getCommunityService(), getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
     }
 

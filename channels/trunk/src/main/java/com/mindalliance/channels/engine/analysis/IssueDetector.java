@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
@@ -26,28 +26,28 @@ public interface IssueDetector {
      * Detect an issue on a model object
      *
      *
-     * @param queryService a query service
-     * @param modelObject -- the ModelObject being analyzed
+     * @param communityService a community service service
+     * @param identifiable -- the identifiable being analyzed
      * @return a list of Issues
      */
-    List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject );
+    List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable );
 
     /**
      * Tests whether the detector applies to the model object
      *
-     * @param modelObject -- the ModelObject being analyzed
+     * @param identifiable -- the ModelObject being analyzed
      * @return whether the detector applies
      */
-    boolean appliesTo( ModelObject modelObject );
+    boolean appliesTo( Identifiable identifiable );
 
     /**
      * Tests whether the detector applies to the naed property of the model object
      *
-     * @param modelObject -- the ModelObject being analyzed
+     * @param identifiable -- the ModelObject being analyzed
      * @param property    -- the name of a property of the model object
      * @return whether the detector applies
      */
-    boolean appliesTo( ModelObject modelObject, String property );
+    boolean appliesTo( Identifiable identifiable, String property );
 
     /**
      * Gets the name of the specific property tested, if applicable
@@ -71,10 +71,10 @@ public interface IssueDetector {
 
     /**
      * Test if this detector applies to an object.
-     * @param modelObject the object
+     * @param identifiable the object
      * @param waived true if waiving was applied
      * @param propertySpecific  true if specific to a property
      * @return true if detector is applicable
      */
-    boolean isApplicable( ModelObject modelObject, boolean waived, boolean propertySpecific );
+    boolean isApplicable( Identifiable identifiable, boolean waived, boolean propertySpecific );
 }

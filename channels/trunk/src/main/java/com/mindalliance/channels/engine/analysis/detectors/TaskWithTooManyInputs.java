@@ -6,10 +6,12 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -38,7 +40,8 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         // Send commitments
@@ -46,7 +49,7 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( !assignments.isEmpty() && !areAllSystemsOrArchetypes( assignments )
                 && ( n = countDifferentCommitters( part, assignments, queryService ) ) > TOO_MANY ) {
-            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+            Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
             issue.setDescription( "Agents executing task \"" + part.getTitle()
                     + "\" could receive information from too many different agents (" + n + ")." );
             issue.setRemediation( "Remove \"receive\" sharing flows"
@@ -94,7 +97,7 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

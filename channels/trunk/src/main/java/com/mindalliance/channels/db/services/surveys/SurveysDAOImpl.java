@@ -86,7 +86,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                         issue );
                 survey = new RFISurvey( communityService.getPlanCommunity(), username );
                 survey.setQuestionnaire( questionnaire );
-                survey.setMoRef( issue.getAbout() );
+                survey.setMoRef( (ModelObject)issue.getAbout() );
                 rfiSurveyService.save( survey );
             }
             return survey;
@@ -121,7 +121,7 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     private List<Question> makeRemediationQuestions( Questionnaire questionnaire, String username, Issue issue ) {
         List<Question> questions = new ArrayList<Question>();
-        ModelObject mo = issue.getAbout();
+        ModelObject mo = (ModelObject)issue.getAbout();
         // Intro
         Question intro = new Question( username, questionnaire );
         intro.setType( Question.Type.STATEMENT );

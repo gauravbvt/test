@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -92,15 +93,15 @@ public class SegmentRelationship implements Identifiable {
         return Long.valueOf( fromId + toId );
     }
 
-    public void setId( long id, QueryService queryService, Analyst analyst ) {
+    public void setId( long id, CommunityService communityService, Analyst analyst ) {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
         fromSegmentId = Long.valueOf( fromId );
         toSegmentId = Long.valueOf( toId );
-        SegmentRelationship scRel = analyst.findSegmentRelationship( queryService,
-                                                                     getFromSegment( queryService ),
-                                                                     getToSegment( queryService ) );
+        SegmentRelationship scRel = analyst.findSegmentRelationship( communityService,
+                                                                     getFromSegment( communityService ),
+                                                                     getToSegment( communityService ) );
         if ( scRel != null ) {
             externalFlows = scRel.getExternalFlows();
             initiators = scRel.getInitiators();
@@ -150,12 +151,12 @@ public class SegmentRelationship implements Identifiable {
     /**
      * Get from-segment.
      *
-     * @param queryService a query service
+     * @param communityService a community service
      * @return a plan segment
      */
-    public Segment getFromSegment( QueryService queryService ) {
+    public Segment getFromSegment( CommunityService communityService ) {
         try {
-            return queryService.find( Segment.class, fromSegmentId );
+            return communityService.find( Segment.class, fromSegmentId );
         } catch ( NotFoundException e ) {
             LOG.warn( "From-segment not found", e );
             return null;
@@ -165,12 +166,12 @@ public class SegmentRelationship implements Identifiable {
     /**
      * Get to-segment.
      *
-     * @param queryService a query service
+     * @param communityService a community service
      * @return a plan segment
      */
-    public Segment getToSegment( QueryService queryService ) {
+    public Segment getToSegment( CommunityService communityService ) {
         try {
-            return queryService.find( Segment.class, toSegmentId );
+            return communityService.find( Segment.class, toSegmentId );
         } catch ( NotFoundException e ) {
             LOG.warn( "To-segment not found", e );
             return null;
@@ -181,14 +182,14 @@ public class SegmentRelationship implements Identifiable {
      * Does any of the external flows have issues?
      *
      * @param analyst an analyst
-     * @param queryService the query service
+     * @param communityService the community service
      * @return a boolean
      */
-    public boolean hasIssues( Analyst analyst, QueryService queryService ) {
+    public boolean hasIssues( Analyst analyst, CommunityService communityService ) {
         boolean hasIssues = false;
         Iterator<ExternalFlow> iterator = externalFlows.iterator();
         while ( !hasIssues && iterator.hasNext() )
-            hasIssues = analyst.hasUnwaivedIssues( queryService, iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            hasIssues = analyst.hasUnwaivedIssues( communityService, iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
         return hasIssues;
     }
 
@@ -196,13 +197,13 @@ public class SegmentRelationship implements Identifiable {
      * Tell the number of issues on all external flows.
      *
      * @param analyst an analyst
-     * @param queryService the query service
+     * @param communityService the community service
      * @return a string
      */
-    public String getIssuesSummary( Analyst analyst, QueryService queryService ) {
+    public String getIssuesSummary( Analyst analyst, CommunityService communityService ) {
         int count = 0;
         for ( ExternalFlow externalFlow : externalFlows )
-            count += analyst.listUnwaivedIssues( queryService,
+            count += analyst.listUnwaivedIssues( communityService,
                                                  externalFlow,
                                                  Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
         return count + ( count > 1 ? " issues" : " issue" );

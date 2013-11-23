@@ -76,7 +76,7 @@ public class SegmentCausesPanel extends AbstractTablePanel<SegmentRelationship> 
     private List<Causation> getCausations() {
         List<Causation> causations = new ArrayList<Causation>();
         for ( SegmentRelationship scRel : sgRels ) {
-            Segment toSegment = scRel.getToSegment( getQueryService() );
+            Segment toSegment = scRel.getToSegment( getCommunityService() );
             for ( Part part : scRel.getInitiators() ) {
                 causations.add( new Causation( part, Causation.STARTS, toSegment ) );
             }

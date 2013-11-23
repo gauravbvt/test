@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -29,7 +31,8 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         Level failureSeverity = computeTaskFailureSeverity( queryService, part );
@@ -44,7 +47,7 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
                     }
             );
             if ( !notifiesOfFailure ) {
-                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "Failure of this task would have "
                         + failureSeverity.getNegativeLabel().toLowerCase()
                         + " consequences, yet no one is to be notified should it fail." );
@@ -59,7 +62,7 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

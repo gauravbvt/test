@@ -424,12 +424,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
         String summary = property == null ?
-                analyst.getIssuesSummary( getQueryService(), object, false ) :
-                analyst.getIssuesSummary( getQueryService(), object, property );
+                analyst.getIssuesSummary( getCommunityService(), object, false ) :
+                analyst.getIssuesSummary( getCommunityService(), object, property );
 
         boolean hasIssues = property == null ?
-                analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
-                analyst.hasIssues( getQueryService(), object, property );
+                analyst.hasIssues( getCommunityService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
+                analyst.hasIssues( getCommunityService(), object, property );
 
         if ( summary.isEmpty() ) {
             component.add( new AttributeModifier( "class",
@@ -599,9 +599,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                                         String errorClass ) {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = property == null ?
-                analyst.getIssuesSummary( getQueryService(), object, false ) :
-                analyst.getIssuesSummary( getQueryService(), object, property );
-        boolean hasIssues = analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                analyst.getIssuesSummary( getCommunityService(), object, false ) :
+                analyst.getIssuesSummary( getCommunityService(), object, property );
+        boolean hasIssues = analyst.hasIssues( getCommunityService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
             component.add( new AttributeModifier( "class", new Model<String>( errorClass ) ) );
             addTipTitle( component, new Model<String>( summary ) );

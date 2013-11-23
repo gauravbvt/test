@@ -7,6 +7,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -264,8 +265,8 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         } else if ( selectedSegment != null ) {
             return "Flows connecting \"" + selectedSegment.getName() + "\" to other plan segments";
         } else if ( selectedSgRel != null ) {
-            Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
-            Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
+            Segment fromSegment = selectedSgRel.getFromSegment( getCommunityService() );
+            Segment toSegment = selectedSgRel.getToSegment( getCommunityService() );
             if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -291,8 +292,8 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         } else if ( selectedSegment != null ) {
             return "Causations for segment \"" + selectedSegment.getName() + "\"";
         } else if ( selectedSgRel != null ) {
-            Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
-            Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
+            Segment fromSegment = selectedSgRel.getFromSegment( getCommunityService() );
+            Segment toSegment = selectedSgRel.getToSegment( getCommunityService() );
             if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -312,7 +313,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         if ( selectedSgRel != null )
             return selectedSgRel.getExternalFlows();
 
-        QueryService queryService = getQueryService();
+        CommunityService communityService = getCommunityService();
         if ( selectedGroup != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
             List<Segment> segmentsInGroup = getSegmentsInGroup();
@@ -322,7 +323,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                     if ( !segment.equals( other ) && ( segmentsInGroup.contains( segment ) || segmentsInGroup.contains(
                             other ) ) )
                     {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( communityService, segment, other );
                         if ( scRel != null )
                             externalFlows.addAll( scRel.getExternalFlows() );
                     }
@@ -334,10 +335,10 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
-                    SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, selectedSegment, other );
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( communityService, selectedSegment, other );
                     if ( scRel != null )
                         externalFlows.addAll( scRel.getExternalFlows() );
-                    scRel = analyst.findSegmentRelationship( queryService, other, selectedSegment );
+                    scRel = analyst.findSegmentRelationship( communityService, other, selectedSegment );
                     if ( scRel != null )
                         externalFlows.addAll( scRel.getExternalFlows() );
                 }
@@ -349,7 +350,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( communityService, segment, other );
                         if ( scRel != null )
                             externalFlows.addAll( scRel.getExternalFlows() );
                     }
@@ -396,7 +397,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                             other ) ) )
                     {
                         SegmentRelationship scRel =
-                                analyst.findSegmentRelationship( getQueryService(), segment, other );
+                                analyst.findSegmentRelationship( getCommunityService(), segment, other );
                         if ( scRel != null )
                             scRels.add( scRel );
                     }
@@ -407,10 +408,10 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
                     SegmentRelationship scRel =
-                            analyst.findSegmentRelationship( getQueryService(), selectedSegment, other );
+                            analyst.findSegmentRelationship( getCommunityService(), selectedSegment, other );
                     if ( scRel != null )
                         scRels.add( scRel );
-                    scRel = analyst.findSegmentRelationship( getQueryService(), other, selectedSegment );
+                    scRel = analyst.findSegmentRelationship( getCommunityService(), other, selectedSegment );
                     if ( scRel != null )
                         scRels.add( scRel );
                 }
@@ -421,7 +422,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
                         SegmentRelationship scRel =
-                                analyst.findSegmentRelationship( getQueryService(), segment, other );
+                                analyst.findSegmentRelationship( getCommunityService(), segment, other );
                         if ( scRel != null )
                             scRels.add( scRel );
                     }
@@ -438,7 +439,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
      */
     public Segment getToSegment() {
         if ( selectedSgRel != null ) {
-            return selectedSgRel.getToSegment( getQueryService() );
+            return selectedSgRel.getToSegment( getCommunityService() );
         } else {
             return null;
         }

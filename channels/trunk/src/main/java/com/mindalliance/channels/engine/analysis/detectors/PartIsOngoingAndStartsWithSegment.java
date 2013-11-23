@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -22,11 +24,11 @@ import java.util.List;
 public class PartIsOngoingAndStartsWithSegment extends AbstractIssueDetector {
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>(  );
         Part part = (Part)modelObject;
         if ( part.isOngoing() && part.isStartsWithSegment() )  {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
             issue.setDescription( "A task can't be both ongoing and start with the segment." );
             issue.setRemediation( "Make the task ongoing but not starting with the segment" +
                     "\nor make the task start with the segment but not ongoing" +
@@ -38,7 +40,7 @@ public class PartIsOngoingAndStartsWithSegment extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

@@ -6,6 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -61,6 +65,10 @@ public class IssueScanner implements Scanner, PlanListener {
 
     private PlanServiceFactory planServiceFactory;
 
+    private CommunityServiceFactory communityServiceFactory;
+
+    private PlanCommunityManager planCommunityManager;
+
     //-------------------------------
     public IssueScanner() {
     }
@@ -88,16 +96,16 @@ public class IssueScanner implements Scanner, PlanListener {
     }
 
     @Override
-    public void rescan( Plan plan ) {
-        LOG.debug( "Rescanning issue in {}", plan.getName() );
-        terminate( plan.getUri() );
-        scan( plan );
+    public void rescan( PlanCommunity planCommunity ) {
+        LOG.debug( "Rescanning issues in {}", planCommunity.getName() );
+        terminate( planCommunity.getUri() );
+        scan( planCommunity );
     }
 
     @Override
-    public void scan( Plan plan ) {
-        Daemon daemon = new Daemon( planServiceFactory.getService( plan ) );
-        daemons.put( plan.getUri(), daemon );
+    public void scan( PlanCommunity planCommunity ) {
+        Daemon daemon = new Daemon( communityServiceFactory.getService( planCommunity ) );
+        daemons.put( planCommunity.getUri(), daemon );
         daemon.activate();
     }
 
@@ -130,8 +138,8 @@ public class IssueScanner implements Scanner, PlanListener {
     }
 
     @Override
-    public void created( Plan devPlan ) {
-        scan( devPlan );
+    public void created( Plan plan ) {
+        scan( planCommunityManager.getDomainPlanCommunity( plan ) );
     }
 
     @Override
@@ -147,6 +155,14 @@ public class IssueScanner implements Scanner, PlanListener {
         this.planServiceFactory = planServiceFactory;
     }
 
+    public void setCommunityServiceFactory( CommunityServiceFactory communityServiceFactory ) {
+        this.communityServiceFactory = communityServiceFactory;
+    }
+
+    public void setPlanCommunityManager( PlanCommunityManager planCommunityManager ) {
+        this.planCommunityManager = planCommunityManager;
+    }
+
     //===============================================================
     /**
      * Background analysis daemon.
@@ -158,16 +174,16 @@ public class IssueScanner implements Scanner, PlanListener {
          */
         private final Plan plan;
 
-        private final QueryService queryService;
+        private final CommunityService communityService;
 
         /**
          * Whether scan is active (else terminates).
          */
         private boolean active;
 
-        public Daemon( QueryService queryService ) {
-            this.queryService = queryService;
-            this.plan = queryService.getPlan();
+        public Daemon( CommunityService communityService ) {
+            this.communityService = communityService;
+            this.plan = communityService.getPlan();
 
             setDaemon( true );
             setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
@@ -209,15 +225,15 @@ public class IssueScanner implements Scanner, PlanListener {
                 LOG.debug( "Current user = {}, plan = {}", user, plan );
                 long startTime = System.currentTimeMillis();
                 if ( !active ) return;
-                for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
+                for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
                     if ( !active ) return;
                     // Garbage-collect unreferenced and undefined entities.
-                    queryService.cleanup( mo.getClass(), mo.getName() );
+                    communityService.getDao().cleanup( mo.getClass(), mo.getName() );
                     if ( !active ) return;
                     scanIssues( mo );
                 }
                 if ( !active ) return;
-                for ( Segment segment : queryService.list( Segment.class ) ) {
+                for ( Segment segment : communityService.list( Segment.class ) ) {
                     if ( !active ) return;
                     Iterator<Part> parts = segment.parts();
                     while ( parts.hasNext() ) {
@@ -236,19 +252,19 @@ public class IssueScanner implements Scanner, PlanListener {
 //                analyst.findAllIssues();
                 if ( !active ) return;
 
-                analyst.findAllUnwaivedIssues( queryService );
+                analyst.findAllUnwaivedIssues( communityService );
                 if ( !active ) return;
-                analyst.isValid( queryService, plan );
+                analyst.isValid( communityService, plan );
                 if ( !active ) return;
-                analyst.isComplete( queryService, plan );
+                analyst.isComplete( communityService, plan );
                 if ( !active ) return;
-                analyst.isRobust( queryService, plan );
+                analyst.isRobust( communityService, plan );
                 if ( !active ) return;
-                analyst.countTestFailures( queryService, plan, Issue.VALIDITY );
+                analyst.countTestFailures( communityService, plan, Issue.VALIDITY );
                 if ( !active ) return;
-                analyst.countTestFailures( queryService, plan, Issue.COMPLETENESS );
+                analyst.countTestFailures( communityService, plan, Issue.COMPLETENESS );
                 if ( !active ) return;
-                analyst.countTestFailures( queryService, plan, Issue.ROBUSTNESS );
+                analyst.countTestFailures( communityService, plan, Issue.ROBUSTNESS );
                 if ( !active ) return;
                 // Find all commitments
                 // queryService.findAllCommitments();
@@ -278,7 +294,7 @@ public class IssueScanner implements Scanner, PlanListener {
 
             // Model object can be null when deleted when scan was in progress
             if ( mo != null )
-                analyst.listIssues( queryService, mo, true );
+                analyst.listIssues( communityService, mo, true );
         }
     }
 }

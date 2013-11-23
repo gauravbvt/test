@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Hierarchical relationship from superior to inferior.
@@ -20,16 +20,16 @@ public class HierarchyRelationship<T extends Hierarchical> extends Relationship 
         super( fromHierarchical, toHierarchical );
     }
 
-    public void setId( long id, QueryService queryService ) {
-        super.setId( id, queryService );
+    public void setId( long id, CommunityService communityService ) {
+        super.setId( id, communityService );
     }
 
-    private Hierarchical getFromHierarchical( QueryService queryService ) {
-        return (Hierarchical) getFromIdentifiable( queryService );
+    private Hierarchical getFromHierarchical( CommunityService communityService ) {
+        return (Hierarchical) getFromIdentifiable( communityService );
     }
 
-    private Hierarchical getToHierarchical( QueryService queryService ) {
-        return (Hierarchical) getToIdentifiable( queryService );
+    private Hierarchical getToHierarchical( CommunityService communityService ) {
+        return (Hierarchical) getToIdentifiable( communityService );
     }
 
 }

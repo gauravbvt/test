@@ -7,6 +7,7 @@
 package com.mindalliance.channels.core.query;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
@@ -186,12 +187,12 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
-    public Commitments realizable( Analyst analyst, Plan plan, QueryService queryService ) {
+    public Commitments realizable( Analyst analyst, Plan plan, CommunityService communityService ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
         while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
-            if ( analyst.canBeRealized( commitment, plan, queryService ) )
+            if ( analyst.canBeRealized( commitment, plan, communityService ) )
                 result.add( commitment );
         }
         return result;

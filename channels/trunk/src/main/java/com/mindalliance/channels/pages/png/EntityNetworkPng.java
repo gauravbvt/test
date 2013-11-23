@@ -34,12 +34,11 @@ public class EntityNetworkPng extends DiagramPng {
                                    DiagramFactory diagramFactory ) throws DiagramException {
         ModelEntity entity = null;
         EntityRelationship selectedEntityRel = null;
-        PlanService planService = communityService.getPlanService();
         if ( parameters.getNamedKeys().contains( "entity" )
                 && !parameters.get( "entity" ).toString().equals( "NONE" ) ) {
             Long entityId = parameters.get( "entity" ).toLong();
             try {
-                entity = planService.find( ModelEntity.class, entityId );
+                entity = communityService.find( ModelEntity.class, entityId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected entity not found at :" + entityId, e );
             }
@@ -48,7 +47,7 @@ public class EntityNetworkPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = parameters.get( "connection" ).toLong();
             selectedEntityRel = new EntityRelationship();
-            selectedEntityRel.setId( scRelId, planService );
+            selectedEntityRel.setId( scRelId, communityService );
         }
         return diagramFactory.newEntityNetworkDiagram( entity, selectedEntityRel, size, orientation );
     }

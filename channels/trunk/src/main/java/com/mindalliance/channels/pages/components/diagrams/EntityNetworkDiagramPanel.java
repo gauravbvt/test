@@ -174,7 +174,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
             Map<String,String> extras,
             AjaxRequestTarget target ) {
         EntityRelationship<T> entityRelationship = new EntityRelationship<T>();
-        entityRelationship.setId( Long.valueOf( edgeId ), null, getQueryService(), getAnalyst() );
+        entityRelationship.setId( Long.valueOf( edgeId ), null, getCommunityService(), getAnalyst() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, entityRelationship );
         change.setScript( js );

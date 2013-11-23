@@ -80,9 +80,8 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
                         DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
         GraphBuilder flowMapGraphBuilder =
-                new FlowMapGraphBuilder( segment, planService, showingConnectors );
+                new FlowMapGraphBuilder( segment, communityService, showingConnectors );
         Graph<Node, Flow> graph = flowMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -98,7 +97,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
                 showingConnectors,
                 hidingNoop,
                 simplified,
-                planService );
+                communityService );
         metaProvider.setGraphProperties( ( (DirectedMultiGraphWithProperties) graph ).getProperties() );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );

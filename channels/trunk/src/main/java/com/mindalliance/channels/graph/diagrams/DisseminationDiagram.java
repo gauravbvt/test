@@ -42,7 +42,7 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void render( String outputFormat, String ticket, OutputStream outputStream, Analyst analyst,
                         DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
@@ -54,11 +54,12 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
         graphRenderer.resetHighlight();
         if ( segmentObject instanceof Part )
             graphRenderer.highlightVertex( (Part) segmentObject );
-        DisseminationMetaProvider metaProvider = new DisseminationMetaProvider( segmentObject,
-                                                                                outputFormat,
-                                                                                diagramFactory.getImageDirectory(),
-                                                                                analyst,
-                communityService.getPlanService() );
+        DisseminationMetaProvider metaProvider = new DisseminationMetaProvider(
+                segmentObject,
+                outputFormat,
+                diagramFactory.getImageDirectory(),
+                analyst,
+                communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )

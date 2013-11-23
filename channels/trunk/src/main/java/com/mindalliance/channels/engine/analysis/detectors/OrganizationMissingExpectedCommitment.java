@@ -6,9 +6,11 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow.Intent;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -110,7 +112,8 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
     };
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( queryService.isInvolvementExpected( org ) ) {
@@ -130,7 +133,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
                     if ( next instanceof Intent )
                         intents.add( (Intent) next );
                 }
-                verifyExpectation( org, fromCat, toCat, familyRels, intents, commitments, issues, queryService );
+                verifyExpectation( org, fromCat, toCat, familyRels, intents, commitments, issues, communityService );
             }
         }
         return issues;
@@ -138,11 +141,12 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
 
     private void verifyExpectation( Organization fromOrg, Category fromCat, Category toCat,
                                     List<FamilyRelationship> familyRels, List<Intent> intents,
-                                    List<Commitment> commitments, List<Issue> issues, QueryService queryService ) {
+                                    List<Commitment> commitments, List<Issue> issues, CommunityService communityService ) {
 
         // Verify that there is at least one commitment with an org
         // with a required family relationship
         // and assigned a task of a required category
+        QueryService queryService = communityService.getPlanService();
         boolean isExpected = false;
         for ( Commitment commitment : commitments ) {
             Assignment committer = commitment.getCommitter();
@@ -163,7 +167,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
         }
         if ( isExpected ) {
             // expected commitment not found
-            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, fromOrg );
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, fromOrg );
             issue.setDescription( issueDescription( fromOrg, fromCat, toCat, familyRels, intents ) );
             issue.setRemediation( issueRemediation( fromOrg, fromCat, toCat, familyRels, intents ) );
             issue.setSeverity( Level.Low );
@@ -247,7 +251,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

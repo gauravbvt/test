@@ -6,10 +6,12 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -31,7 +33,8 @@ import java.util.Set;
 public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetector {
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
@@ -55,7 +58,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
                                     }
                                 } );
                         if ( !hasValidChannel ) {
-                            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
+                            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, flow );
                             issue.setDescription(
                                     "There is no valid channel for contacting " + contacted.getName() + " via "
                                     + flowChannel.getMedium() );
@@ -74,7 +77,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

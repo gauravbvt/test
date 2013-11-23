@@ -107,7 +107,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             scope.add( about );
 
         for ( ModelObject mo : scope )
-            issues.addAll( analyst.listIssues( getQueryService(), mo, true, includeWaived ) );
+            issues.addAll( analyst.listIssues( getCommunityService(), mo, true, includeWaived ) );
 
         return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
             @Override

@@ -61,14 +61,14 @@ public class ChecklistsMapDiagram extends AbstractDiagram<Assignment, Commitment
         PlanService planService = communityService.getPlanService();
         ChecklistsMapGraphBuilder graphBuilder =
                 new ChecklistsMapGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
-        graphBuilder.setQueryService( planService );
+        graphBuilder.setCommunityService( communityService );
         Graph<Assignment, Commitment> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Assignment, Commitment> graphRenderer = diagramFactory.getGraphRenderer();
         ChecklistsMapMetaProvider metaProvider = new ChecklistsMapMetaProvider( segment,
                                                                           outputFormat,
                                                                           diagramFactory.getImageDirectory(),
                                                                           analyst,
-                planService );
+                communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )

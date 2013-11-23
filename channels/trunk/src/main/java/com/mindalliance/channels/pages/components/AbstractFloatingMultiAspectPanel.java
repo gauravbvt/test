@@ -348,10 +348,10 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
             ModelObject mo = (ModelObject) identifiable;
             boolean waived = false;
             String summary =
-                    getAnalyst().getIssuesSummary( getQueryService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                    getAnalyst().getIssuesSummary( getCommunityService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC );
             if ( !summary.isEmpty() ) {
                 titleString = summary;
-            } else if ( getAnalyst().hasIssues( getQueryService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            } else if ( getAnalyst().hasIssues( getCommunityService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 waived = true;
                 titleString = "All issues waived";
             } else {

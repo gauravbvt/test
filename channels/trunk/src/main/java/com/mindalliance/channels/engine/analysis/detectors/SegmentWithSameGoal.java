@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -44,7 +46,8 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         for ( Segment other : queryService.list( Segment.class ) ) {
@@ -59,7 +62,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
                     }
                 }
                 for ( Goal sharedGoal : sharedGoals ) {
-                    DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, segment );
+                    DetectedIssue issue = makeIssue( communityService, Issue.VALIDITY, segment );
                     issue.setDescription( "This segment is for the same event phase as \""
                             + other.getName()
                             + "\" and both have a common goal: \"" + sharedGoal.getLabel()
@@ -88,7 +91,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Segment;
     }
 

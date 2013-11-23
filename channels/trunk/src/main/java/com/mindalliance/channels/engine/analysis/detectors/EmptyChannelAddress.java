@@ -1,8 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -28,7 +30,9 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
+        QueryService queryService = communityService.getPlanService();
+        ModelObject modelObject = (ModelObject)identifiable;
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
@@ -41,7 +45,7 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
                         && !( modelObject.isEntity() && ( (ModelEntity) modelObject ).isType() ) ) {
                     problem = "The " + channel.getMedium().getName() + " channel's address is required but empty.";
                     remediation = "Enter a valid address.";
-                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, modelObject );
+                    Issue issue = makeIssue( communityService, Issue.COMPLETENESS, modelObject );
                     issue.setDescription( channel.toString() + ": " + problem );
                     issue.setRemediation( remediation );
                     issue.setSeverity( getSeverity( channelable, queryService ) );
@@ -65,7 +69,7 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
 
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Channelable;
     }
 

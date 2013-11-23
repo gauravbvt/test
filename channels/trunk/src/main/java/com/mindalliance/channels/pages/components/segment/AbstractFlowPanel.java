@@ -94,12 +94,12 @@ public class AbstractFlowPanel extends AbstractCommandablePanel {
 
     protected boolean hasIssues() {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.hasIssues( getQueryService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        return analyst.hasIssues( getCommunityService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
     protected String getErrorSummary() {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.getIssuesSummary( getQueryService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        return analyst.getIssuesSummary( getCommunityService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
     public String getCssClasses() {

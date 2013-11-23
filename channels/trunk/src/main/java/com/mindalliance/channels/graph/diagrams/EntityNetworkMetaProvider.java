@@ -8,7 +8,6 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -39,8 +38,8 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
     private static final String ENTITY_FONT_SIZE = "10";
 
     public EntityNetworkMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
-                                      QueryService queryService ) {
-        super( outputFormat, imageDirectory, analyst, queryService );
+                                      CommunityService communityService ) {
+        super( outputFormat, imageDirectory, analyst, communityService );
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -28,12 +30,13 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         List<Classification> eoiClassifications = flow.getClassifications();
@@ -47,7 +50,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                     if ( !Classification.encompass(
                             mediumClassifications,
                             eoiClassifications, plan ) ) {
-                        Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                        Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                         issue.setDescription( "Classified information would be communicated "
                                 + "over unsecured or insufficiently secured channel \""
                                 + channel + "\"." );
@@ -67,7 +70,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                         if ( !Classification.encompass(
                                 delegateClassifications,
                                 eoiClassifications, plan ) ) {
-                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "Classified information could be communicated "
                                     + "over unsecured or insufficiently secured delegated channel \""
                                     + delegate + "\"" );

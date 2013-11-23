@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Commitment;
@@ -29,7 +31,8 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( final QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( final CommunityService communityService, Identifiable modelObject ) {
+        final QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization organization = (Organization) modelObject;
         for ( final Agreement agreement : organization.getAgreements() ) {
@@ -45,7 +48,7 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
                                                          }
                                                      } );
             if ( !exists ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, organization );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, organization );
                 issue.setDescription(
                         " No commitment is covered by " + "\"" + agreement.getSummary( organization ) + "\"" );
                 issue.setRemediation(
@@ -58,7 +61,7 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return Organization.class.isAssignableFrom( modelObject.getClass() );
     }
 

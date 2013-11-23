@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -20,9 +20,9 @@ import java.util.List;
 public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, HierarchyRelationship> {
 
     /**
-     * A query service.
+     * A community service.
      */
-    private QueryService queryService;
+    private CommunityService communityService;
     /**
      * A hierarchical object.
      */
@@ -30,9 +30,9 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
 
     public HierarchyGraphBuilder(
             Hierarchical hierarchical,
-            QueryService queryService ) {
+            CommunityService communityService ) {
         this.hierarchical = hierarchical;
-        this.queryService = queryService;
+        this.communityService = communityService;
     }
 
     /**
@@ -50,9 +50,9 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
                             }
 
                         } );
-        for ( Hierarchical root : queryService.findRoots( hierarchical ) ) {
+        for ( Hierarchical root : communityService.getPlanService().findRoots( hierarchical ) ) {
             populateGraph( digraph, root );
-            List<Hierarchical> descendants = queryService.findAllDescendants( root );
+            List<Hierarchical> descendants = communityService.getPlanService().findAllDescendants( root );
             for ( Hierarchical descendant : descendants ) {
                 populateGraph( digraph, descendant );
             }
@@ -64,7 +64,7 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
                                 Hierarchical hierarchical ) {
         if ( !digraph.containsVertex( hierarchical ) ) {
             digraph.addVertex( hierarchical );
-            for ( Hierarchical superior : hierarchical.getSuperiors( queryService ) ) {
+            for ( Hierarchical superior : hierarchical.getSuperiors( communityService.getPlanService() ) ) {
                 populateGraph( digraph, superior );
                 digraph.addEdge( superior, hierarchical, new HierarchyRelationship( superior, hierarchical ) );
             }

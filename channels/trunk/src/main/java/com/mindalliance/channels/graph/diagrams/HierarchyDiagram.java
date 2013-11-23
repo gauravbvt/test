@@ -45,9 +45,8 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
                         DiagramFactory diagramFactory, CommunityService communityService ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
         GraphBuilder<Hierarchical, HierarchyRelationship> hierarchyGraphBuilder =
-                new HierarchyGraphBuilder( hierarchical, planService );
+                new HierarchyGraphBuilder( hierarchical, communityService );
         Graph<Hierarchical, HierarchyRelationship> graph = hierarchyGraphBuilder.buildDirectedGraph();
         GraphRenderer<Hierarchical, HierarchyRelationship> graphRenderer =
                 diagramFactory.getGraphRenderer().cloneSelf();
@@ -55,7 +54,7 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( hierarchical );
         HierarchyMetaProvider metaProvider =
-                new HierarchyMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst, planService );
+                new HierarchyMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst, communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )

@@ -728,7 +728,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private String getSegmentIssuesSummary() {
         Analyst analyst = getApp().getAnalyst();
-        return analyst.getIssuesSummary( getQueryService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        return analyst.getIssuesSummary( getCommunityService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
 
@@ -2069,7 +2069,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 } else {
                     if ( expanded instanceof Issue ) {
                         Issue issue = (Issue) expanded;
-                        ModelObject about = issue.getAbout();
+                        Identifiable about = issue.getAbout();
                         if ( about instanceof Flow || about instanceof Part ) {
                             toCollapse.add( expanded );
                         }

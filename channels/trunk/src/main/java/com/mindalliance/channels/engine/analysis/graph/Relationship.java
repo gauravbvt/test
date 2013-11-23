@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -71,7 +72,7 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         return Long.valueOf( fromId + toId );
     }
 
-    public void setId( long id, QueryService queryService ) {
+    public void setId( long id, CommunityService communityService ) {
         String s = Long.toString( id );
         String toId = s.substring( s.length() - 9 );
         String fromId = s.substring( 0, s.length() - 9 );
@@ -98,14 +99,14 @@ public class Relationship<T extends Identifiable> implements Identifiable {
     /**
      * Get from-entity.
      *
-     * @param queryService a query service
+     * @param communityService a community service
      * @return an entity
      */
     @SuppressWarnings( "unchecked" )
-    public T getFromIdentifiable( QueryService queryService ) {
+    public T getFromIdentifiable( CommunityService communityService ) {
         try {
             // TODO - Should be find( Identifiable.class,...)
-            return (T) queryService.find( ModelObject.class, fromIdentifiable );
+            return (T) communityService.find( ModelObject.class, fromIdentifiable );
         } catch ( NotFoundException e ) {
             LOG.warn( "From-identifiable not found", e );
             return null;
@@ -115,14 +116,14 @@ public class Relationship<T extends Identifiable> implements Identifiable {
     /**
      * Get to-entity.
      *
-     * @param queryService a query service
+     * @param communityService a community service
      * @return an entity
      */
     @SuppressWarnings( "unchecked" )
-    public T getToIdentifiable( QueryService queryService ) {
+    public T getToIdentifiable( CommunityService communityService ) {
         try {
             // TODO - Should be find( Identifiable.class,...)
-            return (T) queryService.find( ModelObject.class, toIdentifiable );
+            return (T) communityService.find( ModelObject.class, toIdentifiable );
         } catch ( NotFoundException e ) {
             LOG.warn( "To-identifiable not found", e );
             return null;

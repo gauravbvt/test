@@ -95,7 +95,7 @@ public class PlanMapPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.get( "connection" ).toString() );
             sgRel = new SegmentRelationship();
-            sgRel.setId( scRelId, planService, communityService.getAnalyst() );
+            sgRel.setId( scRelId, communityService, communityService.getAnalyst() );
         }
         List<Segment> allSegments = planService.list( Segment.class );
         return diagramFactory.newPlanMapDiagram(

@@ -93,8 +93,8 @@ public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, 
             "?graph={0,number,0}&edge={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
 
     public ChecklistsMapMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                      QueryService queryService ) {
-        super( outputFormat, imageDirectory, analyst, queryService );
+                                      CommunityService communityService ) {
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.segment = segment;
     }
 

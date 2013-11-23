@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -30,7 +32,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         List<Flow.Restriction> restrictions = flow.getRestrictions();
@@ -51,7 +53,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetOrg != null
                     && sourceOrg.isActual()
                     && targetOrg.isActual() ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the organizations named in specifying both source " +
                         "and target tasks are actual organizations." );
@@ -65,7 +67,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetLoc != null
                     && sourceLoc.isActual()
                     && targetLoc.isActual() ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the locations named in specifying both source " +
                         "and target tasks are actual places." );
@@ -78,7 +80,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetActor != null
                     && sourceActor.isActual()
                     && targetActor.isActual() ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the agents named in specifying both source " +
                         "and target tasks are actual agents." );
@@ -94,7 +96,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

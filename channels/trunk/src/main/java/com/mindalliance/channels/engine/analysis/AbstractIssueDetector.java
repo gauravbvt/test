@@ -7,7 +7,9 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -46,10 +48,10 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     private AttachmentManager attachmentManager;
 
     @Override
-    public abstract List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject );
+    public abstract List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable );
 
     @Override
-    public abstract boolean appliesTo( ModelObject modelObject );
+    public abstract boolean appliesTo( Identifiable identifiable );
 
     @Override
     public abstract String getTestedProperty();
@@ -66,8 +68,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject, String property ) {
-        return appliesTo( modelObject ) && property != null && isPropertySpecific() && property.equals(
+    public boolean appliesTo( Identifiable identifiable, String property ) {
+        return appliesTo( identifiable ) && property != null && isPropertySpecific() && property.equals(
                 getTestedProperty() );
     }
 
@@ -98,15 +100,15 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * Make detected issue.
      *
-     * @param queryService the query service
+     * @param communityService the query service
      * @param type a string
      * @param about a model object
      * @return a detected issue
      */
-    protected DetectedIssue makeIssue( QueryService queryService, String type, ModelObject about ) {
+    protected DetectedIssue makeIssue( CommunityService communityService, String type, Identifiable about ) {
         DetectedIssue issue = new DetectedIssue( type, about );
-        initializeDetectedIssue( queryService, issue );
-        if ( !about.isWaived( getKind() ) )
+        initializeDetectedIssue( communityService, issue );
+        if ( !isWaived(about, getKind() ) )
             LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' );
         return issue;
     }
@@ -116,26 +118,29 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * Make detected issue.
      *
-     * @param queryService the query service
+     * @param communityService the community service
      * @param type a string
      * @param about a model object
      * @param property a string
      * @return a detected issue
      */
-    protected DetectedIssue makeIssue( QueryService queryService, String type, ModelObject about, String property ) {
+    protected DetectedIssue makeIssue( CommunityService communityService, String type, Identifiable about, String property ) {
         DetectedIssue issue = new DetectedIssue( type, about, property );
-        initializeDetectedIssue( queryService, issue );
-        if ( !about.isWaived( getKind() ) )
+        initializeDetectedIssue( communityService, issue );
+        if ( !isWaived(about, getKind() ) )
             LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' + ':'
                        + issue.getProperty() );
         return issue;
     }
 
-    private void initializeDetectedIssue( QueryService queryService, DetectedIssue issue ) {
+    private void initializeDetectedIssue( CommunityService communityService, DetectedIssue issue ) {
         issue.setKind( getKind() );
         issue.setDetectorLabel( getKindLabel() );
         issue.setCanBeWaived( canBeWaived() );
-        issue.setDefaultRemediators( queryService.findAllPlanners() );
+        if ( communityService.getPlanCommunity().isDomainCommunity() )
+            issue.setDefaultRemediators( communityService.getPlanService().findAllPlanners() );
+        else
+            issue.setDefaultRemediators( communityService.getCommunityPlannerUsernames() );
         issue.setDetectorTags( getTags() );
     }
 
@@ -172,8 +177,13 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     }
 
     @Override
-    public boolean isApplicable( ModelObject modelObject, boolean waived, boolean propertySpecific ) {
-        return appliesTo( modelObject ) && modelObject.isWaived( getKind() ) == waived
+    public boolean isApplicable( Identifiable identifiable, boolean waived, boolean propertySpecific ) {
+        return appliesTo( identifiable ) && isWaived( identifiable, getKind() ) == waived
                && isPropertySpecific() == propertySpecific;
     }
+
+    public static boolean isWaived( Identifiable identifiable, String kind ) {
+        return identifiable instanceof ModelObject && ((ModelObject)identifiable).isWaived( kind );
+    }
+
 }

@@ -92,9 +92,9 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
     private ModelObject selectedGroup;
 
     public PlanMapMetaProvider( List<Segment> segments, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                QueryService queryService ) {
+                                CommunityService communityService ) {
 
-        super( outputFormat, imageDirectory, analyst, queryService );
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.segments = segments;
     }
 
@@ -260,13 +260,13 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
             list.add( new DOTAttribute( "fontname", SEGMENT_FONT ) );
             list.add( new DOTAttribute( "tooltip",
                                         sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
-            if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
+            if ( getAnalyst().hasUnwaivedIssues( communityService,
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
             {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
+                                            sanitize( getAnalyst().getIssuesOverview( communityService,
                                                     vertex,
                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
@@ -289,11 +289,11 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
             }
             // Issue coloring
-            if ( edge.hasIssues( getAnalyst(), communityService.getPlanService() ) ) {
+            if ( edge.hasIssues( getAnalyst(), communityService ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( edge.getIssuesSummary( getAnalyst(), communityService.getPlanService() ) ) ) );
+                                            sanitize( edge.getIssuesSummary( getAnalyst(), communityService ) ) ) );
             }
             return list;
         }

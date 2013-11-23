@@ -36,8 +36,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
     private static final int MAX_INFO_LENGTH = 20;
 
     public DisseminationMetaProvider( SegmentObject segmentObject, String outputFormat, Resource imageDirectory,
-                                      Analyst analyst, QueryService queryService ) {
-        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, false, queryService );
+                                      Analyst analyst, CommunityService communityService ) {
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, false, communityService );
     }
 
     @Override
@@ -198,10 +198,11 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( getAnalyst().hasUnwaivedIssues( getQueryService(),
+            if ( getAnalyst().hasUnwaivedIssues( getCommunityService(),
                                                        vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getQueryService(),
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview(
+                        getCommunityService(),
                         vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
@@ -221,7 +222,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         @Override
         public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
-            boolean conceptual = getAnalyst().isEffectivelyConceptual( getQueryService(), flow );
+            boolean conceptual = getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), flow );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -285,11 +286,11 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasUnwaivedIssues( getQueryService(),
+            if ( getAnalyst().hasUnwaivedIssues( getCommunityService(),
                                                        flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getQueryService(),
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getCommunityService(),
                         flow,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {

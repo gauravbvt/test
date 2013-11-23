@@ -146,8 +146,8 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
     @SuppressWarnings( "unchecked" )
     public String getFlowsTitle() {
         if ( selectedEntityRel != null ) {
-            T fromEntity = (T) selectedEntityRel.getFromIdentifiable( getQueryService() );
-            T toEntity = (T) selectedEntityRel.getToIdentifiable( getQueryService() );
+            T fromEntity = (T) selectedEntityRel.getFromIdentifiable( getCommunityService() );
+            T toEntity = (T) selectedEntityRel.getToIdentifiable( getCommunityService() );
             if ( fromEntity == null || toEntity == null ) {
                 return "*** You need to refresh ***";
             } else {
@@ -237,13 +237,13 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             ModelEntity entity = getEntity();
             if ( entity != null ) {
                 // relationships with a given entity
-                rels.addAll( getAnalyst().findEntityRelationships( segment, entity, getQueryService() ) );
+                rels.addAll( getAnalyst().findEntityRelationshipsInPlan( segment, entity, getCommunityService() ) );
             } else {
                 // relationships between all actual entities of given class in a segment or entire plan if segment is null
-                rels.addAll( getAnalyst().findEntityRelationships( getQueryService(),
-                                                                   segment,
-                                                                   entityClass,
-                                                                   ModelEntity.Kind.Actual ) );
+                rels.addAll( getAnalyst().findEntityRelationshipsInPlan( getCommunityService(),
+                        segment,
+                        entityClass,
+                        ModelEntity.Kind.Actual ) );
             }
         }
         return rels;
@@ -254,8 +254,8 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         return (List<ActorFlow>) CollectionUtils.collect( entityRelationship.getFlows(), new Transformer() {
             @Override
             public Object transform( Object obj ) {
-                return new ActorFlow( (Actor) entityRelationship.getFromIdentifiable( getQueryService() ),
-                                      (Actor) entityRelationship.getToIdentifiable( getQueryService() ),
+                return new ActorFlow( (Actor) entityRelationship.getFromIdentifiable( getCommunityService() ),
+                                      (Actor) entityRelationship.getToIdentifiable( getCommunityService() ),
                                       (Flow) obj );
             }
         } );

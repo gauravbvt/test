@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -30,12 +32,12 @@ public class OrganizationGivesActorMultipleTitles extends AbstractIssueDetector 
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization && ( (Organization) modelObject ).isActual();
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         Map<Actor, Set<String>> actorTitles = new HashMap<Actor, Set<String>>();
@@ -54,7 +56,7 @@ public class OrganizationGivesActorMultipleTitles extends AbstractIssueDetector 
         for ( Actor actor : actorTitles.keySet() ) {
             Set<String> titles = actorTitles.get( actor );
             if ( titles.size() > 1 ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, org );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, org );
                 issue.setDescription( "The organization \""
                         + org.getName()
                         + "\" gives agent \"" + actor.getName() + "\" more than one title ("

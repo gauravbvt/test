@@ -59,7 +59,7 @@ public class CommandChainsMetaProvider extends AbstractMetaProvider {
                                       Resource imageDirectory,
                                       Resource userIconDirectory, Analyst analyst,
                                       CommunityService communityService ) {
-        super( outputFormat, imageDirectory, analyst, communityService.getPlanService() );
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.user = user;
         this.userIconDirectory = userIconDirectory;
         this.communityService = communityService;
@@ -70,7 +70,7 @@ public class CommandChainsMetaProvider extends AbstractMetaProvider {
                                       Resource imageDirectory,
                                       Resource userIconDirectory, Analyst analyst,
                                       CommunityService communityService ) {
-        super( outputFormat, imageDirectory, analyst, communityService.getPlanService() );
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.agent = agent;
         this.userIconDirectory = userIconDirectory;
         this.communityService = communityService;

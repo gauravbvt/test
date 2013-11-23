@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.GeoLocation;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -26,13 +28,13 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String geoname = place.getGeoname();
         List<GeoLocation> geoLocations = place.getGeoLocations();
         if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
-            DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, place, getTestedProperty() );
+            DetectedIssue issue = makeIssue( communityService, Issue.VALIDITY, place, getTestedProperty() );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The place's geoname is unknown. No geolocation could be found for it." );
             issue.setRemediation( "Change the geoname\nor remove it." );
@@ -42,7 +44,7 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Place;
     }
 

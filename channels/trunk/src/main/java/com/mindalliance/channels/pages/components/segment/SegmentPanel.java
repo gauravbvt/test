@@ -262,7 +262,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         taskTitleContainer = new WebMarkupContainer( "task-title" );
         taskTitleContainer.setOutputMarkupId( true );
         taskTitleContainer.add( new AttributeModifier( "class", new Model<String>( cssClasses() ) ) );
-        List<String> conceptualCauses = getAnalyst().findConceptualCauses( getQueryService(), getPart() );
+        List<String> conceptualCauses = getAnalyst().findConceptualCausesInPlan( getCommunityService(), getPart() );
         if ( !conceptualCauses.isEmpty() ) {
             addTipTitle( taskTitleContainer, new Model<String>(
                     "Not executable: " + StringUtils.capitalize(
@@ -273,7 +273,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private String cssClasses() {
-        return getAnalyst().isEffectivelyConceptual( getQueryService(), getPart() ) ? "task-title-noop" : "task-title";
+        return getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), getPart() ) ? "task-title-noop" : "task-title";
     }
 
     private void addPartMediaPanel() {
@@ -293,7 +293,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
             }
         } );
-        int issueCount = getPart().countChecklistIssues( getAnalyst(), getPlanService() );
+        int issueCount = getPart().countChecklistIssues( getAnalyst(), getCommunityService() );
         checklistIcon.add( new AttributeModifier(
                 "src",
                 issueCount == 0

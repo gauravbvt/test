@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -31,12 +33,13 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Part part = (Part)modelObject;
         Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>(  );
@@ -53,7 +56,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
                         }
                     }
             )) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                 issue.setDescription( "No checklist step has precondition '" + condition.getLabel() + "'" );
                 issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Make '" + condition.getLabel() + "' a condition for at least one of the steps");
@@ -75,7 +78,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
                         }
                     }
             )) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                 issue.setDescription( "No checklist step has outcome '" + outcome.getLabel() + "'" );
                 issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Make '" + outcome.getLabel() + "' an outcome for at least one of the steps");

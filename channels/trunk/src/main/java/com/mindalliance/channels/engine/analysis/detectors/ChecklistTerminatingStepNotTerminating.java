@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -26,12 +28,13 @@ public class ChecklistTerminatingStepNotTerminating extends AbstractIssueDetecto
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Part part = (Part) modelObject;
         Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();
@@ -42,7 +45,7 @@ public class ChecklistTerminatingStepNotTerminating extends AbstractIssueDetecto
                         if ( !otherStep.equals( step ) ) {
                             List prerequisites = checklist.listPrerequisiteStepsFor( otherStep );
                             if ( prerequisites.contains( step ) ) {
-                                Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+                                Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
                                 issue.setDescription( "The step \""
                                         + step.getLabel()
                                         + "\" in the checklist is a terminating step yet step \""

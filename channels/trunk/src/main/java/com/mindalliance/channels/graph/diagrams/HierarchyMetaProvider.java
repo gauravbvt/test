@@ -41,8 +41,8 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
     private static final String ENTITY_FONT_SIZE = "10";
 
     public HierarchyMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
-                                  QueryService queryService ) {
-        super( outputFormat, imageDirectory, analyst, queryService );
+                                  CommunityService communityService ) {
+        super( outputFormat, imageDirectory, analyst, communityService );
     }
 
     @Override
@@ -151,12 +151,12 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
+            if ( getAnalyst().hasUnwaivedIssues( communityService,
                     (ModelObject) vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
             }
-            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, communityService.getPlanService() ) ) );
+            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, communityService ) ) );
             return list;
         }
 
@@ -189,12 +189,12 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         }
     }
 
-    private String getTooltip( Hierarchical vertex, QueryService queryService ) {
+    private String getTooltip( Hierarchical vertex, CommunityService communityService ) {
         if ( vertex instanceof ModelEntity && ( (ModelEntity) vertex ).isType() ) {
             String definition = ( (ModelEntity) vertex ).getDescription();
             return sanitize( definition.isEmpty() ? "No definition" : definition );
         } else {
-            return sanitize( getAnalyst().getIssuesOverview( queryService,
+            return sanitize( getAnalyst().getIssuesOverview( communityService,
                     (ModelObject) vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
         }

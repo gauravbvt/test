@@ -7,8 +7,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -35,7 +37,8 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Flow need = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( !need.getName().isEmpty() && need.isNeed() ) {
@@ -43,7 +46,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
             List<Flow> sharings = queryService.findAllSharingsAddressingNeed( need );
             if ( sharings.isEmpty() ) {
                 // Open ended need is satisifed by any synonymous commitment.
-                DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, need );
+                DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, need );
                 if ( need.isCritical() )
                     issue.setSeverity( queryService.computePartPriority( (Part) need.getTarget() ) );
                 else
@@ -74,7 +77,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                                 }
                             } );
                     if ( !unsatisfiedEOIs.isEmpty() ) {
-                        DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, need );
+                        DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, need );
                         if ( need.isCritical() )
                             issue.setSeverity( queryService.computePartPriority( (Part) need.getTarget() ) );
                         else
@@ -98,7 +101,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

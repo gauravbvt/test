@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -22,12 +24,12 @@ import java.util.List;
  */
 public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
             if ( part.isAutoStarted() || part.isTriggered() ) {
-                DetectedIssue issue = makeIssue( queryService,
+                DetectedIssue issue = makeIssue( communityService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
@@ -35,7 +37,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
                 issues.add( issue );
             }
             if ( part.isTerminatesEventPhase() ) {
-                DetectedIssue issue = makeIssue( queryService,
+                DetectedIssue issue = makeIssue( communityService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task can terminate the segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
@@ -43,7 +45,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
-                DetectedIssue issue = makeIssue( queryService,
+                DetectedIssue issue = makeIssue( communityService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is terminated during segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
@@ -55,7 +57,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

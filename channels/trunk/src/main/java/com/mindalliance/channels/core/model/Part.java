@@ -1401,9 +1401,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                 } );
     }
 
-    public int countChecklistIssues( Analyst analyst, PlanService planService ) {
+    public int countChecklistIssues( Analyst analyst, CommunityService communityService ) {
         return CollectionUtils.select(
-                analyst.listIssues( planService, this, true, false ),
+                analyst.listIssues( communityService, this, true, false ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

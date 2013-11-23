@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -27,13 +29,14 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( queryService.isInvolvementExpected( org ) ) {
             Assignments assignments = queryService.getAssignments().with( org );
             if ( assignments.isEmpty() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, org );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( "Organization \""
                         + org.getName()
@@ -50,7 +53,7 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

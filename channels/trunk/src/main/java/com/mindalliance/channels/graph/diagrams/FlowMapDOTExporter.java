@@ -493,7 +493,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private boolean isVisible( Part part ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         return !metaProvider.isHidingNoop()
-                || !metaProvider.getAnalyst().isEffectivelyConceptual( metaProvider.getQueryService(),
+                || !metaProvider.getAnalyst().isEffectivelyConceptualInPlan( metaProvider.getCommunityService(),
                 part );
     }
 

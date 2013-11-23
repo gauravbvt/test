@@ -152,7 +152,7 @@ public class Questionnaire extends AbstractChannelsDocument {
             } else {
                 // TODO : Apparently, cache bug raises exception
                 try {
-                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( communitysService.getPlanService(), mo, false );
+                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( communitysService, mo, false );
                     obsolete = !CollectionUtils.exists(
                             unwaivedIssues,
                             new Predicate() {
@@ -190,13 +190,13 @@ public class Questionnaire extends AbstractChannelsDocument {
     }
 
     public static String makeRemediationName( Issue issue ) {
-        ModelObject mo = issue.getAbout();
+        ModelObject mo = (ModelObject)issue.getAbout();
         return "Remediating \""
                 + issue.getDetectorLabel()
                 + "\"- for "
                 + issue.getAbout().getTypeName()
                 + " \""
-                + issue.getAbout().getLabel()
+                + ((ModelObject)issue.getAbout()).getLabel()
                 + "\""
                 // + "[" + mo.getId() + "]"
                 + ( mo.isSegmentObject()

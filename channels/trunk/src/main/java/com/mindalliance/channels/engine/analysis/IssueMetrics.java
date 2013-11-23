@@ -31,15 +31,15 @@ public class IssueMetrics implements Serializable {
     private Map<String, IssueTypeMetrics> issueTypeMetrics; // type  -> IssueTypeMetrics - type in {VALIDITY, COMPLETENESS, ROBUSTNESS}
 
     public IssueMetrics( CommunityService communityService ) {
-        computeMetrics( communityService.getPlanService(), communityService.getAnalyst() );
+        computeMetrics( communityService, communityService.getAnalyst() );
     }
 
-    private void computeMetrics( PlanService planService, Analyst analyst ) {
-        allWaivedIssues = analyst.findAllWaivedIssues( planService );
-        allUnwaivedIssues = analyst.findAllUnwaivedIssues( planService );
+    private void computeMetrics( CommunityService communityService, Analyst analyst ) {
+        allWaivedIssues = analyst.findAllWaivedIssues( communityService );
+        allUnwaivedIssues = analyst.findAllUnwaivedIssues( communityService );
         issueTypeMetrics = new HashMap<String, IssueTypeMetrics>(  );
         for ( String type : Issue.TYPES ) {
-            issueTypeMetrics.put( type, new IssueTypeMetrics( type, planService, analyst ) );
+            issueTypeMetrics.put( type, new IssueTypeMetrics( type, communityService, analyst ) );
         }
     }
 
@@ -128,13 +128,13 @@ public class IssueMetrics implements Serializable {
         private List<Issue> issuesOfType;
 
 
-        public IssueTypeMetrics( String issueType, PlanService planService, Analyst analyst ) {
+        public IssueTypeMetrics( String issueType, CommunityService communityService, Analyst analyst ) {
             this.issueType = issueType;
-            computeTypeMetrics( planService, analyst );
+            computeTypeMetrics(  );
         }
 
         @SuppressWarnings( "unchecked" )
-        private void computeTypeMetrics( PlanService planService, Analyst analyst ) {
+        private void computeTypeMetrics(  ) {
             issuesOfType =
                     (List<Issue>) CollectionUtils.select( getAllUnwaivedIssues(),
                             new Predicate() {

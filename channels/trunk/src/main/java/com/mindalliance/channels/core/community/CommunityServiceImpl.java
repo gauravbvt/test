@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -30,6 +31,7 @@ import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,6 +270,41 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<ChannelsUser> getCommunityPlanners() {
         return userRecordService.getCommunityPlanners( getPlanCommunity().getUri() );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<String> getCommunityPlannerUsernames() {
+        return (List<String>) CollectionUtils.collect(
+                getCommunityPlanners(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ((ChannelsUser)input).getUsername();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public List<UserIssue> findAllUserIssues( Identifiable identifiable ) {
+        return getDao().findAllUserIssues( identifiable );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends Identifiable> List<T> listIdentifiables( Class<T> clazz ) {
+        List<T> results = new ArrayList<T>(  );
+        if ( clazz.isAssignableFrom( PlanCommunity.class ) ) {
+            results.add( (T)getPlanCommunity() );
+        } if (clazz.isAssignableFrom(  ModelObject.class ) ) {
+            results.addAll( (List<T> )list( ModelObject.class ) );
+        } if ( clazz.isAssignableFrom( Agency.class ) ) {
+            results.addAll( (List<T> )getParticipationManager().getAllKnownAgencies( this ) );
+        } if ( clazz.isAssignableFrom( Agent.class ) ) {
+            results.addAll( (List<T> )getParticipationManager().getAllKnownAgents( this ) );
+        }
+        return results;
     }
 
     @Override

@@ -50,10 +50,9 @@ public class IssuesData  implements Serializable {
 
     private void initIssues( CommunityService communityService ) {
         issues = new ArrayList<IssueData>();
-        PlanService planService = communityService.getPlanService();
         Analyst analyst = communityService.getAnalyst();
-        for ( ModelObject mo : planService.list( ModelObject.class ) ) {
-            for ( Issue issue : analyst.listIssues( planService, mo, true ) ) {
+        for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
+            for ( Issue issue : analyst.listIssues( communityService, mo, true ) ) {
                 issues.add( new IssueData( issue, mo ) );
             }
         }

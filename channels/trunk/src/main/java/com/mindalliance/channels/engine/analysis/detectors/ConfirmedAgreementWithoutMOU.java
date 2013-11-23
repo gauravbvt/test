@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Issue;
@@ -26,12 +28,13 @@ public class ConfirmedAgreementWithoutMOU extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         for ( Agreement agreement : org.getAgreements() ) {
             if ( !agreement.hasMOU() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, org );
                 issue.setDescription( agreement.getSummary( org ) + " is not backed by an MOU." );
                 issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Attach an MOU to the sharing agreement\nor unconfirm the sharing agreement" );
@@ -44,7 +47,7 @@ public class ConfirmedAgreementWithoutMOU extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

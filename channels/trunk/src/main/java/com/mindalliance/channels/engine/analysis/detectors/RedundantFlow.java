@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Flow;
@@ -31,7 +33,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 
@@ -59,7 +61,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Iterator<Flow> otherFlows;
@@ -74,7 +76,7 @@ public class RedundantFlow extends AbstractIssueDetector {
             redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
-            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, flow );
+            DetectedIssue issue = makeIssue( communityService, DetectedIssue.COMPLETENESS, flow );
             issue.setDescription( "This " + flowKind( flow ) + " is redundant." );
             issue.setRemediation( "Change the name of information transmitted\nor "
                     + ( flow.isSharing() ? "break up" : "remove" )

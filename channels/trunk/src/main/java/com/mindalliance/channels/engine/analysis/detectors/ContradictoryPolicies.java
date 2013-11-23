@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -26,10 +28,12 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
+        QueryService queryService = communityService.getPlanService();
+        ModelObject modelObject = (ModelObject)identifiable;
         List<Issue> issues = new ArrayList<Issue>();
         if ( ((Prohibitable)modelObject).isProhibited() && modelObject.hasMandatingPolicy() ) {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, modelObject );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, modelObject );
             issue.setDescription( "Mandating policy attached to prohibited "
                     + modelObject.getKindLabel()
                     + "." );
@@ -44,7 +48,7 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Prohibitable;
     }
 

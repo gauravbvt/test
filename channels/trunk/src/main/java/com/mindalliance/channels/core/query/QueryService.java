@@ -500,14 +500,6 @@ public interface QueryService {
     List<ResourceSpec> findAllContacts( Specable specable, Boolean isSelf );
 
     /**
-     * Find all user issues about a model object
-     *
-     * @param identifiable an object with an id
-     * @return list of issues
-     */
-    List<UserIssue> findAllUserIssues( ModelObject identifiable );
-
-    /**
      * Find all relevant channels for a given resource spec.
      *
      * @param spec the spec

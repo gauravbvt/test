@@ -86,7 +86,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessImage() {
-        boolean isComplete = getAnalyst().isComplete( getQueryService(), getPlan() );
+        boolean isComplete = getAnalyst().isComplete( getCommunityService(), getPlan() );
         return isComplete ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -96,7 +96,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessLabel() {
-        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.COMPLETENESS );
+        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.COMPLETENESS );
         return count == 0 ? "Complete" : ( "Not yet complete (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -106,7 +106,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessTitle() {
-        boolean isComplete = getAnalyst().isComplete( getQueryService(), getPlan() );
+        boolean isComplete = getAnalyst().isComplete( getCommunityService(), getPlan() );
         return isComplete ? "Complete" : "Not complete";
     }
 
@@ -116,7 +116,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessImage() {
-        boolean isRobust = getAnalyst().isRobust( getQueryService(), getPlan() );
+        boolean isRobust = getAnalyst().isRobust( getCommunityService(), getPlan() );
         return isRobust ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -126,7 +126,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessLabel() {
-        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.ROBUSTNESS );
+        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.ROBUSTNESS );
         return count == 0 ? "Robust" : ( "Not yet robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -136,7 +136,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessTitle() {
-        boolean isRobust = getAnalyst().isRobust( getQueryService(), getPlan() );
+        boolean isRobust = getAnalyst().isRobust( getCommunityService(), getPlan() );
         return isRobust ? "Robust" : "Not yet robust";
     }
 
@@ -146,7 +146,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityImage() {
-        boolean isValid = getAnalyst().isValid( getQueryService(), getPlan() );
+        boolean isValid = getAnalyst().isValid( getCommunityService(), getPlan() );
         return isValid ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -156,7 +156,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityLabel() {
-        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.VALIDITY );
+        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.VALIDITY );
         return count == 0 ? "Valid" : ( "Not yet valid (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -166,7 +166,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityTitle() {
-        boolean isValid = getAnalyst().isValid( getQueryService(), getPlan() );
+        boolean isValid = getAnalyst().isValid( getCommunityService(), getPlan() );
         return isValid ? "Valid" : "Not valid";
     }
 

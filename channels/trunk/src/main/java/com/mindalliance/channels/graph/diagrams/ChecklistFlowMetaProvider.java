@@ -85,9 +85,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                       String outputFormat,
                                       Resource imageDirectory,
                                       Analyst analyst,
-                                      PlanService planService,
+                                      CommunityService communityService,
                                       boolean interactive ) {
-        super( outputFormat, imageDirectory, analyst, planService );
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.part = part;
         this.interactive = interactive;
     }

@@ -495,7 +495,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         terminatesSegmentCheckBox.setEnabled( lockedByUser );
         initiatedEventField.setEnabled( lockedByUser );
         partDescription.setEnabled( lockedByUser );
-        boolean partHasIssues = getAnalyst().hasIssues( getQueryService(), part, false );
+        boolean partHasIssues = getAnalyst().hasIssues( getCommunityService(), part, false );
         makeVisible( partIssuesPanel, partHasIssues );
     }
 
@@ -1229,7 +1229,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( !change.isDisplay() && !change.isCopied() ) {
                 makeVisible( target,
                         partIssuesPanel,
-                        getAnalyst().hasIssues( getQueryService(), getPart(), false ) );
+                        getAnalyst().hasIssues( getCommunityService(), getPart(), false ) );
                 target.add( partIssuesPanel );
             }
         }

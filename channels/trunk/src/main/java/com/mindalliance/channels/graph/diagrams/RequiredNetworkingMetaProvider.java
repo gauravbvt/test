@@ -51,7 +51,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             String outputFormat,
             Resource imageDirectory,
             CommunityService communityService ) {
-        super( outputFormat, imageDirectory, communityService.getAnalyst(), communityService.getPlanService() );
+        super( outputFormat, imageDirectory, communityService.getAnalyst(), communityService );
         this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
         this.timing = timing;

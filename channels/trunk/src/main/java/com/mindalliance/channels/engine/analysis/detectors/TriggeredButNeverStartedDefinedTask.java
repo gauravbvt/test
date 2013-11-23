@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -24,7 +26,8 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() ) {
@@ -32,7 +35,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                 if ( part.isTriggered() ) {
                     boolean started = queryService.findIfPartStarted( part );
                     if ( !started ) {
-                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                         issue.setDescription( "This task is triggered but any flow that triggers it"
                                 + "  comes from a task that is itself never started." );
                         issue.setRemediation( "Make sure a triggering flow comes from a task that is started." );
@@ -43,7 +46,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
             } else {
                 boolean started = queryService.findIfSegmentStarted( part.getSegment() );
                 if ( part.isStartsWithSegment() && !started ) {
-                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+                    Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                     issue.setDescription( "This task starts with the segment but no task"
                             + " is ever started that causes the segment to happen.");
                     issue.setRemediation( "Make sure the event phase of the segment can start " +
@@ -58,7 +61,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

@@ -382,7 +382,7 @@ public class Requirement extends ModelObject implements Countable {
                 .findRealizabilityProblems(
                         communityService.getPlan(),
                         communityCommitment.getCommitment(),
-                        communityService.getPlanService() ).isEmpty();
+                        communityService ).isEmpty();
     }
 
     /**

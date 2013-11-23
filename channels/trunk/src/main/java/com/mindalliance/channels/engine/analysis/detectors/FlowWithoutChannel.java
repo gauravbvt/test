@@ -6,8 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -27,7 +29,8 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
 
         Flow flow = (Flow) modelObject;
@@ -35,7 +38,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
             // There is no channel in a flow that requires one
             List<Channel> flowChannels = flow.getEffectiveChannels();
             if ( flowChannels.isEmpty() )
-                issues.add( createIssue( queryService,
+                issues.add( createIssue( communityService,
                                          modelObject,
                                          getSeverity( flow, queryService ),
                                          "At least one channel is required.",
@@ -48,9 +51,9 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         return flow.isSharing() ? computeSharingFailureSeverity( queryService, flow ) : Level.Low;
     }
 
-    private DetectedIssue createIssue( QueryService queryService, ModelObject modelObject, Level severity,
+    private DetectedIssue createIssue( CommunityService communityService, Identifiable modelObject, Level severity,
                                        String description, String remediation ) {
-        DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, modelObject );
+        DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, modelObject );
         issue.setDescription( description );
         issue.setRemediation( remediation );
         issue.setSeverity( severity );
@@ -58,7 +61,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

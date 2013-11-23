@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -31,7 +33,8 @@ public class CircularSupervision extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Organization organization = (Organization) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
@@ -41,7 +44,7 @@ public class CircularSupervision extends AbstractIssueDetector {
                 for ( Employment employment : allSupervised ) {
                     Actor supervised = employment.getActor();
                     if ( supervised.equals( supervisor ) ) {
-                        Issue issue = makeIssue( queryService, Issue.VALIDITY, organization );
+                        Issue issue = makeIssue( communityService, Issue.VALIDITY, organization );
                         issue.setDescription(
                                 job.getLabel()
                                         + " directly or indirectly supervizes "
@@ -67,7 +70,7 @@ public class CircularSupervision extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

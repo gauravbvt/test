@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
@@ -25,12 +25,12 @@ import java.util.List;
 public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement, ChecklistElementRelationship> {
 
     private final Part part;
-    private final PlanService planService;
+    private final CommunityService communityService;
     private final Analyst analyst;
 
-    public ChecklistFlowGraphBuilder( Part part, PlanService planService, Analyst analyst ) {
+    public ChecklistFlowGraphBuilder( Part part, CommunityService communityService, Analyst analyst ) {
         this.part = part;
-        this.planService = planService;
+        this.communityService = communityService;
         this.analyst = analyst;
     }
 

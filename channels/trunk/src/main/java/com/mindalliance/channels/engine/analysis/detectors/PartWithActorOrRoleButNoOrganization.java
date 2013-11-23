@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -33,12 +35,12 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( (part.hasActualRole() || part.hasActualActor() )
                 && part.getOrganization() == null ) {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
             issue.setDescription( "The task names "
                     + (part.hasActualRole() ? "a role" : "")
                     + (part.hasActualRole() && part.hasActualActor() ? " and " : "")
@@ -54,7 +56,7 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

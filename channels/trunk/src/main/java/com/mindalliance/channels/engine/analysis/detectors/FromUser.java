@@ -6,8 +6,9 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class FromUser extends AbstractIssueDetector {
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return true;
     }
 
@@ -30,11 +31,11 @@ public class FromUser extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Issue reported by template developer";
+        return "Issue reported by a person";
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
-        return queryService.findAllUserIssues( modelObject );
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
+        return communityService.findAllUserIssues( identifiable );
     }
 }

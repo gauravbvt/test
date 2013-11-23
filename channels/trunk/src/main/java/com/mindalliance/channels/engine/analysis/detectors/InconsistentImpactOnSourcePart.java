@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -33,12 +35,12 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow commitment = (Flow) modelObject;
         for ( Flow similar : getSimilarFlows( commitment ) ) {
             if ( similar.isTriggeringToSource() != commitment.isTriggeringToSource() ) {
-                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, commitment );
+                DetectedIssue issue = makeIssue( communityService, Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
                         + commitment.getReceiveTitle()
                         + "' triggers '"
@@ -50,7 +52,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTerminatingToSource() != commitment.isTerminatingToSource() ) {
-                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, commitment );
+                DetectedIssue issue = makeIssue( communityService, Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
                         + commitment.getReceiveTitle()
                         + "' terminates '"
@@ -84,7 +86,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow && ( (Flow) modelObject ).isSharing();
     }
 

@@ -42,9 +42,8 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, analyst, planService );
+                new EntityNetworkGraphBuilder( entity, analyst, communityService );
         Graph<ModelEntity, EntityRelationship> graph = entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer = diagramFactory.getGraphRenderer().cloneSelf();
         graphRenderer.setAlgo( "neato" );
@@ -54,7 +53,7 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
             graphRenderer.highlightEdge( selectedEntityRel );
         EntityNetworkMetaProvider metaProvider =
                 new EntityNetworkMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst,
-                        planService );
+                        communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )

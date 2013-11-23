@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -27,7 +29,8 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isUseful() ) {
@@ -35,7 +38,7 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
             if ( assignments.size() == 1 ) {
                 Actor actor = assignments.get( 0 ).getActor();
                 if ( actor.isSingularParticipation() ) {
-                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+                    Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
                     issue.setDescription( actor.getName()
                             + " can only be represented by one participant " +
                             "and is the only known agent assigned to critical task \""
@@ -55,7 +58,7 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

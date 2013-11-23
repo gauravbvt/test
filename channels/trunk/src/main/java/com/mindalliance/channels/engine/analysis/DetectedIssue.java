@@ -1,8 +1,9 @@
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -63,10 +64,10 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * Constructor.
      *
      * @param type -- the type of issue
-     * @param mo   -- the ModelObject the issue is about
+     * @param identifiable   -- what the issue is about
      */
-    public DetectedIssue( String type, ModelObject mo ) {
-        super( mo );
+    public DetectedIssue( String type, Identifiable identifiable ) {
+        super( identifiable );
         this.type = type;
     }
 
@@ -74,11 +75,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * Constructor.
      *
      * @param type     -- the type of issue
-     * @param mo       -- the ModelObject the issue is about
+     * @param identifiable       -- what the issue is about
      * @param property -- the problematic property
      */
-    public DetectedIssue( String type, ModelObject mo, String property ) {
-        super( mo, property );
+    public DetectedIssue( String type, Identifiable identifiable, String property ) {
+        super( identifiable, property );
         this.type = type;
     }
 
@@ -284,7 +285,8 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * @return a boolean
      */
     public boolean isWaived() {
-        return getAbout().isWaived( getKind() );
+        return AbstractIssueDetector.isWaived( getAbout(), getKind() );
     }
+
 
 }

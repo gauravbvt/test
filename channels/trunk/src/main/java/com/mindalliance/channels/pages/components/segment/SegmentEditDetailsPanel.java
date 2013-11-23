@@ -121,7 +121,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
         issuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "segment" ), getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
     }
 
 
@@ -174,13 +174,13 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
         target.add( issuesPanel );
         super.updateWith( target, change, updated );
     }
 
     public void refresh( AjaxRequestTarget target ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
         target.add( issuesPanel );
     }
 }

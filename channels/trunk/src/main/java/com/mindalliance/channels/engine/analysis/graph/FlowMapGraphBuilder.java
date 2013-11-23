@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.EventTiming;
@@ -9,7 +11,6 @@ import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 
@@ -29,11 +30,11 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     /** Whether to include needs and capabilities. */
     private final boolean includeConnectors;
 
-    private final QueryService queryService;
+    private final CommunityService communityService;
 
-    public FlowMapGraphBuilder( Segment segment, QueryService queryService, boolean includeConnectors ) {
+    public FlowMapGraphBuilder( Segment segment, CommunityService communityService, boolean includeConnectors ) {
         this.segment = segment;
-        this.queryService = queryService;
+        this.communityService = communityService;
         this.includeConnectors = includeConnectors;
     }
 
@@ -61,7 +62,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     private void populateSegmentGraph( DirectedMultiGraphWithProperties<Node, Flow> graph ) {
-
+        QueryService queryService = communityService.getPlanService();
         // add nodes as vertices
         Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
@@ -107,6 +108,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     private void findOverridden( List<Flow> overriddenFlows, List<Part> overriddenParts ) {
+        QueryService queryService = communityService.getPlanService();
         for ( Part part : segment.listParts() ) {
             if ( queryService.isOverridden( part ) ) {
                 overriddenParts.add( part );

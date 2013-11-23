@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -27,7 +29,8 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         ModelEntity entity = (ModelEntity) modelObject;
         List<ModelEntity> types = entity.getAllTypes();
@@ -36,7 +39,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {
             if ( !type.validates( entity, locale ) ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, entity );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getKindLabel()
                         + " is categorized as a " + type.getName()
                         + " but is not consistent with its definition." );
@@ -57,7 +60,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return ModelEntity.class.isAssignableFrom( modelObject.getClass() )
                 && ( (ModelEntity) modelObject ).hasTypes();
     }

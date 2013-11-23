@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
@@ -85,18 +86,22 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     private Analyst analyst;
 
-    private QueryService queryService;
+    private CommunityService communityService;
 
     public AbstractMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
-                                 QueryService queryService ) {
+                                 CommunityService communityService ) {
         this.outputFormat = outputFormat;
         this.imageDirectory = imageDirectory;
         this.analyst = analyst;
-        this.queryService = queryService;
+        this.communityService = communityService;
     }
 
     public QueryService getQueryService() {
-        return queryService;
+        return communityService.getPlanService();
+    }
+
+    public CommunityService getCommunityService() {
+        return communityService;
     }
 
     public String getOutputFormat() {

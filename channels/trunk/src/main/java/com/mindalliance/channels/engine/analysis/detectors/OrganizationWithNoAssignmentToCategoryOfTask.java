@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -30,7 +32,8 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( queryService.isInvolvementExpected( org ) ) {
@@ -39,7 +42,7 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
             if ( !assignments.isEmpty() ) {
                 for ( Part.Category category : Part.Category.values() ) {
                     if ( !isCategoryCovered( assignments, category ) ) {
-                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
+                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, org );
                         issue.setSeverity( Level.Low );
                         issue.setDescription( "Organization \""
                                 + org.getName()
@@ -71,7 +74,7 @@ public class OrganizationWithNoAssignmentToCategoryOfTask extends AbstractIssueD
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
@@ -37,7 +38,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
 
     private final ModelEntity focusEntity;
 
-    private QueryService queryService;
+    private CommunityService communityService;
 
     public ChecklistsMapGraphBuilder( Segment segment, boolean summarizeByOrgType, boolean summarizedByOrg,
                                       boolean summarizedByRole, ModelEntity focusEntity ) {
@@ -80,7 +81,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() )
-            commitments.addAll( queryService.findAllCommitments( flow, true ) );
+            commitments.addAll( communityService.getPlanService().findAllCommitments( flow, true ) );
 
         List<Commitment> results = new ArrayList<Commitment>();
         for ( Commitment commitment : commitments )
@@ -104,7 +105,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     }
 
     private boolean isFocusedOnOrganization( Assignment assignment ) {
-        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, queryService.getPlanLocale() );
+        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, communityService.getPlanService().getPlanLocale() );
     }
 
     private Commitment summarize( Commitment commitment ) {
@@ -173,10 +174,10 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     }
 
     private List<Flow> findAllFlows() {
-        return queryService.findAllSharingFlows( segment );
+        return communityService.getPlanService().findAllSharingFlows( segment );
     }
 
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
+    public void setCommunityService( CommunityService communityService ) {
+        this.communityService = communityService;
     }
 }

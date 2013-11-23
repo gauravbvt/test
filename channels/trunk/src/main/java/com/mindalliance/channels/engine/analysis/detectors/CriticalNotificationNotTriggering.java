@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
@@ -23,21 +25,22 @@ public class CriticalNotificationNotTriggering extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow
                 && ((Flow)modelObject).isSharing()
                 && ((Flow)modelObject).isNotification();
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>(  );
         Flow flow = (Flow)modelObject;
         if ( flow.isSharing()
                 && flow.isNotification()
                 && !flow.isTriggeringToTarget()
                 && flow.isCritical() ) {
-            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+            Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
             issue.setDescription( "The information \"" + flow.getName()
                     + "\" is critical but it is is a non-triggering notification (no guarantee it will be received when needed by the task)." );
             issue.setRemediation( "Make it a triggering notification " +

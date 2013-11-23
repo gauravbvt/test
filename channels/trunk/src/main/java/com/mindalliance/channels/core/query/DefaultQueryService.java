@@ -2232,11 +2232,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<UserIssue> findAllUserIssues( ModelObject identifiable ) {
-        return getDao().findAllUserIssues( identifiable );
-    }
-
-    @Override
     public List<Part> findCausesOf( Event event ) {
         List<Part> causes = new ArrayList<Part>();
         for ( Segment segment : list( Segment.class ) ) {

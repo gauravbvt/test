@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -29,12 +31,12 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node target = flow.getTarget();
         if ( target.isPart() && ( (Part) target ).isEmpty() ) {
-            DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject, "target" );
+            DetectedIssue issue = makeIssue( communityService, DetectedIssue.VALIDITY, modelObject, "target" );
             issue.setDescription( "The target task is not defined." );
             issue.setRemediation( "Name the agent of the target task\nor name the role\nor name the organization." );
             issue.setSeverity( Level.Medium );
@@ -46,7 +48,7 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

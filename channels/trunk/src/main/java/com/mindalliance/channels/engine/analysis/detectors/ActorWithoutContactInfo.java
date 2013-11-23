@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -26,11 +28,12 @@ public class ActorWithoutContactInfo extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Actor actor = (Actor) modelObject;
         if ( actor.isActual() && !actor.isUnknown() && actor.getEffectiveChannels().isEmpty() ) {
-            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, actor );
             issue.setDescription( actor.getName() + " has no contact channel." );
             issue.setRemediation( "Add a channel via which to contact " + actor.getName() );
             issue.setSeverity( Level.High );
@@ -42,7 +45,7 @@ public class ActorWithoutContactInfo extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Actor;
     }
 

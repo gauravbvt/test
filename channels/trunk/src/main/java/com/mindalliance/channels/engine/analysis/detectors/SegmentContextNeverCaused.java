@@ -6,8 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -28,7 +30,8 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         List<EventTiming> eventTimings = segment.getContext();
@@ -37,7 +40,7 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
             Timing phaseTiming = eventTiming.getTiming();
             if ( phaseTiming == Timing.Concurrent ) {
                 if ( !canStart( queryService, event ) ) {
-                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
+                    Issue issue = makeIssue( communityService, Issue.COMPLETENESS, segment );
                     issue.setDescription(
                             "The segment context \"" + eventTiming + "\" may never come to be because event \"" + event
                             + "\" never happens." );
@@ -50,7 +53,7 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
                 assert phaseTiming == Timing.PostEvent;
                 if ( !canTerminate( queryService, event ) ) {
                     if ( canStart( queryService, event ) ) {
-                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
+                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, segment );
                         issue.setDescription(
                                 "The segment context \"" + eventTiming + "\" may never come to be because event \""
                                 + event + "\" never terminates." );
@@ -59,7 +62,7 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
                         issue.setSeverity( Level.Medium );
                         issues.add( issue );
                     } else {
-                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
+                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, segment );
                         issue.setDescription(
                                 "The segment context \"" + eventTiming + "\" may never come to be because event \""
                                 + event + "\" never happens and thus can't terminate." );
@@ -85,7 +88,7 @@ public class SegmentContextNeverCaused extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Segment;
     }
 

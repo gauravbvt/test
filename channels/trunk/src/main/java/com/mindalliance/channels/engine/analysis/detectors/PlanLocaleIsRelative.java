@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -26,14 +28,15 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
     public PlanLocaleIsRelative() {
     }
 
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
         Place locale = queryService.getPlanLocale();
         if ( locale != null ) {
             PlaceReference ref = locale.getMustBeContainedIn();
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The template's locale ("
                         + locale.getName()
@@ -46,7 +49,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             }
             ref = locale.getMustContain();
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The template's locale ("
                         + locale.getName()
@@ -60,7 +63,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             Place within = locale.getWithin();
             if ( within != null ) {
                 if ( !within.isAbsolute( locale ) ) {
-                    Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
+                    Issue issue = makeIssue( communityService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The template's locale ("
                             + locale.getName()
@@ -79,7 +82,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             for ( ModelEntity type : locale.getAllTypes() ) {
                 Place placeType = (Place) type;
                 if ( !placeType.isAbsolute( locale ) ) {
-                    Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
+                    Issue issue = makeIssue( communityService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The template's locale ("
                             + locale.getName()
@@ -99,7 +102,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
         return issues;
     }
 
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Plan;
     }
 

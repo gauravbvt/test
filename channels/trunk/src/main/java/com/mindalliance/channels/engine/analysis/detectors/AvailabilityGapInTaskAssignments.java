@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Availability;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -29,7 +31,8 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
@@ -44,7 +47,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         if ( !availabilities.isEmpty() ) {
             List<TimeGap> gaps = findGaps( availabilities );
             for ( TimeGap gap : gaps ) {
-                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "No one is available to do task \"" + part.getTask() + "\" on " + gap + "." );
                 issue.setSeverity( this.computeTaskFailureSeverity( queryService, part ) );
                 issue.setRemediation( "Change the availabilities of assigned agents so that they leave no gap" +
@@ -91,7 +94,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

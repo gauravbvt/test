@@ -38,13 +38,13 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
     private Map<String, Serializable> graphProperties;
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                QueryService queryService ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, false, queryService );
+                                CommunityService communityService ) {
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, false, communityService );
     }
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                 boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
-                                QueryService queryService ) {
+                                CommunityService communityService ) {
         super( modelObject,
                 outputFormat,
                 imageDirectory,
@@ -53,7 +53,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 showingConnectors,
                 hidingNoop,
                 simplified,
-                queryService );
+                communityService );
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             @Override
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
-                    if ( isHidingNoop() && getAnalyst().isEffectivelyConceptual( getQueryService(), (Part) node ) )
+                    if ( isHidingNoop() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), (Part) node ) )
                         return null;
                     else {
                         Object[] args = {node.getSegment().getId(), node.getId()};
@@ -100,7 +100,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             @Override
             public String getEdgeURL( Flow edge ) {
                 // Plan id = 0 for now sice there is only one plan
-                if ( isHidingNoop() && getAnalyst().isEffectivelyConceptual( getQueryService(), edge ) )
+                if ( isHidingNoop() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), edge ) )
                     return null;
                 else {
                     Object[] args = {0, edge.getId()};
@@ -226,10 +226,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !isInvisible( vertex ) ) {
-                if ( !isSimplified() && indicateError( vertex, communityService.getPlanService() ) ) {
+                if ( !isSimplified() && indicateError( vertex, communityService ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                            sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
+                            sanitize( getAnalyst().getIssuesOverview( communityService,
                                     vertex,
                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
@@ -254,7 +254,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( !isHidingNoop() || !getAnalyst().isEffectivelyConceptual( communityService.getPlanService(),
+                if ( !isHidingNoop() || !getAnalyst().isEffectivelyConceptualInPlan( communityService,
                         connector.getInnerFlow() ) ) {
                     if ( externalFlows.hasNext() )
                         list.add( new DOTAttribute( "tooltip",
@@ -270,16 +270,16 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             return list;
         }
 
-        private boolean indicateError( Node vertex, QueryService queryService ) {
-            return getAnalyst().hasUnwaivedIssues( queryService, vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        private boolean indicateError( Node vertex, CommunityService communityService ) {
+            return getAnalyst().hasUnwaivedIssues( communityService, vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
-        private boolean indicateError( Flow edge, QueryService queryService ) {
-            return getAnalyst().hasUnwaivedIssues( queryService, edge, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        private boolean indicateError( Flow edge, CommunityService communityService ) {
+            return getAnalyst().hasUnwaivedIssues( communityService, edge, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean isInvisible( Node vertex ) {
-            return vertex.isPart() && isHidingNoop() && getAnalyst().isEffectivelyConceptual( getQueryService(),
+            return vertex.isPart() && isHidingNoop() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(),
                     (Part) vertex );
         }
 
@@ -299,7 +299,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
         @Override
         public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Flow edge, boolean highlighted ) {
-            boolean conceptual = getAnalyst().isEffectivelyConceptual( communityService.getPlanService(), edge );
+            boolean conceptual = getAnalyst().isEffectivelyConceptualInPlan( communityService, edge );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "label", getEdgeLabel( edge, highlighted ) ) );
             list.add( new DOTAttribute( "color",
@@ -373,7 +373,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             }
             // Issue coloring
             if ( !isInvisible( edge ) ) {
-                boolean hasErrors = indicateError( edge, communityService.getPlanService() );
+                boolean hasErrors = indicateError( edge, communityService );
                 if ( !isSimplified() && hasErrors ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
@@ -388,7 +388,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 String edgeTooltip;
                 if ( !isSimplified() && hasErrors ) {
                     edgeTooltip =
-                            sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
+                            sanitize( getAnalyst().getIssuesOverview( communityService,
                                     edge,
                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
                 } else {
@@ -417,7 +417,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean isInvisible( Flow edge ) {
-            return isHidingNoop() && getAnalyst().isEffectivelyConceptual( getQueryService(), edge );
+            return isHidingNoop() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), edge );
         }
     }
 

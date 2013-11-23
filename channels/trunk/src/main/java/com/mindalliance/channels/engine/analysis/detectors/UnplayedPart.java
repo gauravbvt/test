@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -26,13 +28,14 @@ public class UnplayedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( part.hasNonActualActorResource() ) {
             List<Assignment> assignments = queryService.findAllAssignments( part, false );
             if ( assignments.isEmpty() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                 issue.setDescription( "The task is assigned to no one." );
                 issue.setRemediation( "Explicitly assign an agent to the task"
                         + "\nor profile an agent to match the task specifications"
@@ -48,7 +51,7 @@ public class UnplayedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return Part.class.isAssignableFrom( modelObject.getClass() );
     }
 

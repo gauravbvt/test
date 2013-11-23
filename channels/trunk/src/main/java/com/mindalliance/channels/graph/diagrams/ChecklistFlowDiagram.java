@@ -42,30 +42,29 @@ public class ChecklistFlowDiagram extends AbstractDiagram<ChecklistElement, Chec
                         DiagramFactory diagramFactory,
                         CommunityService communityService ) throws DiagramException {
         GraphRenderer<ChecklistElement, ChecklistElementRelationship> renderer = diagramFactory.getGraphRenderer();
-        PlanService planService = communityService.getPlanService();
         renderer.render( communityService,
-                createGraph( planService, analyst ),
-                createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, planService ),
+                createGraph( communityService, analyst ),
+                createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, communityService ),
                 outputFormat,
                 ticket,
                 outputStream );
     }
 
-    private DirectedGraph<ChecklistElement, ChecklistElementRelationship> createGraph( PlanService planService,
+    private DirectedGraph<ChecklistElement, ChecklistElementRelationship> createGraph( CommunityService communityService,
                                                                                        Analyst analyst ) {
-        return new ChecklistFlowGraphBuilder( part, planService, analyst ).buildDirectedGraph();
+        return new ChecklistFlowGraphBuilder( part, communityService, analyst ).buildDirectedGraph();
     }
 
     private ChecklistFlowDOTExporter createExporter( String outputFormat,
                                                      Resource imageDirectory,
                                                      Analyst analyst,
-                                                     PlanService planService ) {
+                                                     CommunityService communityService ) {
         ChecklistFlowMetaProvider metaProvider = new ChecklistFlowMetaProvider(
                 part,
                 outputFormat,
                 imageDirectory,
                 analyst,
-                planService,
+                communityService,
                 interactive );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null )

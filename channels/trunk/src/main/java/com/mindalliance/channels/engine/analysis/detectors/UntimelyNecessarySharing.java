@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
@@ -31,7 +33,8 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing()
@@ -43,7 +46,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
                 for ( Flow criticalNeed : criticalNeeds ) {
                     if ( criticalNeed.isTimeSensitive()
                             && commitmentDelay.compareTo( criticalNeed.getMaxDelay() ) > 0 ) {
-                        DetectedIssue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                        DetectedIssue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                         issue.setDescription(
                                 "The needed information \""
                                         + criticalNeed.getName()
@@ -89,7 +92,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

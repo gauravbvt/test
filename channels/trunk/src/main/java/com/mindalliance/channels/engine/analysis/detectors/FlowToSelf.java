@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
@@ -28,7 +30,7 @@ public class FlowToSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 
@@ -57,14 +59,15 @@ public class FlowToSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
             Part source = (Part) flow.getSource();
             Part target = (Part) flow.getTarget();
             if ( ModelObject.areIdentical( source.getActor(), target.getActor() ) ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, flow );
                 issue.setDescription( source.getActor() + " is both the source and target." );
                 issue.setRemediation( " Change either the source\n or change target of this flow." );
                 issue.setSeverity( Level.Low );
@@ -75,7 +78,7 @@ public class FlowToSelf extends AbstractIssueDetector {
                 if ( possibleSourceActors.size() == 1
                         && possibleTargetActors.size() == 1
                         && possibleSourceActors.get( 0 ) == possibleTargetActors.get( 0 ) ) {
-                    Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
+                    Issue issue = makeIssue( communityService, Issue.VALIDITY, flow );
                     issue.setDescription( possibleSourceActors.get( 0 )
                             + " is both the only potential source and target." );
                     issue.setRemediation( "Change the source"

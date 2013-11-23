@@ -543,7 +543,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         restrictedCheckBox.setEnabled( lockedByUser );
         flowDescription.setEnabled(
                 ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() ) && isLockedByUser( getFlow() ) );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getFlow(), false ) );
         makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
@@ -570,7 +570,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         flowDescription.setEnabled(
                 ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() ) && isLockedByUser( getFlow() ) );
         target.add( flowDescription );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getFlow(), false ) );
         target.add( issuesPanel );
         addRestrictionsSummary();
         target.add( restrictionsContainer );

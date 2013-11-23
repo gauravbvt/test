@@ -135,7 +135,7 @@ public class AdminPage extends AbstractChannelsWebPage {
         };
 
         boolean invalid = CollectionUtils.exists(
-                getAnalyst().findAllUnwaivedIssues( getQueryService() ),
+                getAnalyst().findAllUnwaivedIssues( getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

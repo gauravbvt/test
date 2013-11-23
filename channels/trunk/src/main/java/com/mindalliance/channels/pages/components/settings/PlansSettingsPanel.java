@@ -329,7 +329,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
 
     private boolean isDevelopmentVersionInvalid() {
         return CollectionUtils.exists(
-                getAnalyst().findAllUnwaivedIssues( getQueryService() ),
+                getAnalyst().findAllUnwaivedIssues( getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

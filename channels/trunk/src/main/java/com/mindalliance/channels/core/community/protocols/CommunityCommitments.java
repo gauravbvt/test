@@ -188,7 +188,7 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
                     .findRealizabilityProblems(
                             communityService.getPlan(),
                             communityCommitment.getCommitment(),
-                            communityService.getPlanService() ).isEmpty();
+                            communityService ).isEmpty();
             if ( realizable ) {
                 result.add( communityCommitment );
             }

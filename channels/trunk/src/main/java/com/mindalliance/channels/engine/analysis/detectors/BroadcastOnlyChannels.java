@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
@@ -28,7 +30,8 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
@@ -45,7 +48,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
                                     }
                             );
             if ( allBroadcast ) {
-                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                 issue.setDescription( "There is no guarantee the information will be received because sharing is done only over broadcast channels." );
                 issue.setRemediation( "Add an alternate, non-broadcast channel to the flow." );
                 issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
@@ -58,7 +61,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

@@ -1,8 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
@@ -32,7 +34,8 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
     }
 
     @Override
-    public List<Issue> detectIssues( final QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( final CommunityService communityService, Identifiable modelObject ) {
+        final QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
@@ -45,11 +48,11 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                         allProblems.addAll( getAnalyst().findRealizabilityProblems(
                                 queryService.getPlan(),
                                 commitment,
-                                queryService ) );
+                                communityService ) );
                     }
                     if ( flow.isAll() && commitments.size() > 1 ) {
                         if ( !allProblems.isEmpty() ) {
-                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "\""
                                     + actor.getName()
                                     + "\" can not fulfill all commitments as required"
@@ -71,12 +74,12 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                         return getAnalyst().findRealizabilityProblems(
                                                 queryService.getPlan(),
                                                 (Commitment) object,
-                                                queryService ).isEmpty();
+                                                communityService ).isEmpty();
                                     }
                                 }
                         );
                         if ( noneRealizable ) {
-                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "\""
                                     + actor.getName()
                                     + "\" can not fulfill any commitment"
@@ -113,7 +116,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Flow;
     }
 

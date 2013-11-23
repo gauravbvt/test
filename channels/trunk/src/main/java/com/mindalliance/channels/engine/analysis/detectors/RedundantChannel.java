@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -28,7 +30,8 @@ public class RedundantChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
@@ -39,7 +42,7 @@ public class RedundantChannel extends AbstractIssueDetector {
                     Channel channel = channels.get( i );
                     Channel other = channels.get( j );
                     if ( channel.narrowsOrEquals( other, locale ) ) {
-                        Issue issue = makeIssue( queryService, Issue.VALIDITY, (ModelObject) channelable );
+                        Issue issue = makeIssue( communityService, Issue.VALIDITY, (ModelObject) channelable );
                         issue.setDescription( "Channel \""
                                 + channel.getLabel()
                                 + "\" is a redundant with \""
@@ -62,7 +65,7 @@ public class RedundantChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Channelable;
     }
 

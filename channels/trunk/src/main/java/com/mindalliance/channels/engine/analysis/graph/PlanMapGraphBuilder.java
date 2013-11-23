@@ -6,8 +6,8 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
@@ -27,15 +27,15 @@ public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelatio
     private final List<Segment> segments;
 
     /**
-     * Query service.
+     * Community service.
      */
-    private final QueryService queryService;
+    private final CommunityService communityService;
 
     private final Analyst analyst;
 
-    public PlanMapGraphBuilder( List<Segment> segments, QueryService queryService, Analyst analyst ) {
+    public PlanMapGraphBuilder( List<Segment> segments, CommunityService communityService, Analyst analyst ) {
         this.segments = segments;
-        this.queryService = queryService;
+        this.communityService = communityService;
         this.analyst = analyst;
     }
 
@@ -59,7 +59,7 @@ public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelatio
         for ( Segment segment : segments ) {
             for ( Segment other : segments ) {
                 if ( !segment.equals( other ) ) {
-                    SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( communityService, segment, other );
                     if ( scRel != null )
                         digraph.addEdge( segment, other, scRel );
                 }

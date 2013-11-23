@@ -7,6 +7,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -30,7 +32,7 @@ public class RedundantPart extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 
@@ -50,13 +52,14 @@ public class RedundantPart extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         List<Part> equivalentParts = findEquivalentTo( part, queryService.getPlanLocale() );
         int count = equivalentParts.size();
         if ( count > 0 ) {
-            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
+            DetectedIssue issue = makeIssue( communityService, DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "This task is restated " + ( count == 1 ? "once." : count + " times." ) );
             issue.setRemediation( "Remove redundant task\nor specify one of the tasks differently." );
             issue.setSeverity( Level.Low );

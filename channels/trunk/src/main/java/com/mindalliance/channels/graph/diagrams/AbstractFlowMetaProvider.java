@@ -131,8 +131,8 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     protected AbstractFlowMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                         boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
-                                        QueryService queryService ) {
-        super( outputFormat, imageDirectory, analyst, queryService );
+                                        CommunityService communityService ) {
+        super( outputFormat, imageDirectory, analyst, communityService );
         this.context = modelObject;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
@@ -234,7 +234,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                     || flow.isCapability() && flow.isSatisfying();
 
             iconName = imagesDirName +
-                    ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), flow ) ? "/connector_blank"
+                    ( hidingNoop && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), flow ) ? "/connector_blank"
                             : ( isSimplified() || satisfaction ) ? "/connector"
                             : "/connector_red" );
         }
@@ -244,10 +244,10 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             String[] lines = getNodeLabel( node ).split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            if ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) )
+            if ( hidingNoop && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), part ) )
                 iconName = "blank";
             else {
-                negated = !isSimplified() && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) // todo - this has failed with NullPointerException on timed update - why?
+                negated = !isSimplified() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), part ) // todo - this has failed with NullPointerException on timed update - why?
                         ? ImagingService.NEGATED
                         : "";
                 iconName = imagingService.findIconName(

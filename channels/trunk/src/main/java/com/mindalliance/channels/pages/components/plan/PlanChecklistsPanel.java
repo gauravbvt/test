@@ -137,7 +137,7 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
     }
 
     public int countChecklistIssues( Part part ) {
-        return part.countChecklistIssues( getAnalyst(), getPlanService() );
+        return part.countChecklistIssues( getAnalyst(), getCommunityService() );
     }
 
 

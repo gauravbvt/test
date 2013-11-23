@@ -6,7 +6,9 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -54,18 +56,19 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
      * Detects one or more actors who play parts where they are bottlenecks. A bottleneck is an "articulation vertex" (a
      * point connecting otherwise disjoint subgraphs) with a large enough out degree (count of sends).
      *
-     * @param queryService the query service
+     * @param communityService the community service
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
         Set<Actor> spofActors = detectSignificantCutpoints( queryService );
         // Found single points of failure?
         for ( Actor actor : spofActors ) {
-            DetectedIssue issue = makeIssue( queryService, Issue.ROBUSTNESS, plan );
+            DetectedIssue issue = makeIssue( communityService, Issue.ROBUSTNESS, plan );
             issue.setDescription( actor.getName() + " appears to be a single point of failure." );
             issue.setRemediation( " Generalize task specifications so that " + actor.getName()
                                   + " is not the only agent assigned to a critical task"
@@ -77,7 +80,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Plan;
     }
 

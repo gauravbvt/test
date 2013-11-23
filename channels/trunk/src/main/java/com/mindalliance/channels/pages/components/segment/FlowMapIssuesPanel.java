@@ -217,12 +217,12 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
     public List<? extends Issue> getIssues() {
         SegmentObject about = getSelectedSegmentObject();
         List<Issue> issues = new ArrayList<Issue>();
-        for ( Issue issue : getAnalyst().listIssues( getQueryService(), (ModelObject) about, true, includeWaived ) ) {
+        for ( Issue issue : getAnalyst().listIssues( getCommunityService(), (ModelObject) about, true, includeWaived ) ) {
             issues.add( issue );
         }
         if ( isPeripheralIssuesIncluded() ) {
             for ( ModelObject peripheral : findPeripheralModelObjects( about ) ) {
-                for ( Issue issue : getAnalyst().listIssues( getQueryService(), peripheral, true, includeWaived ) ) {
+                for ( Issue issue : getAnalyst().listIssues( getCommunityService(), peripheral, true, includeWaived ) ) {
                     issues.add( issue );
                 }
             }

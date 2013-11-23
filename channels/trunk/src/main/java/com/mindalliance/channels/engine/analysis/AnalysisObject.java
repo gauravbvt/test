@@ -1,11 +1,12 @@
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 
 import java.io.Serializable;
 
 /**
- * Analysis about a model object, possibly specific to one of its property.
+ * Analysis about an identifiable, possibly specific to one of its property.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -15,9 +16,9 @@ import java.io.Serializable;
 public abstract class AnalysisObject implements Serializable {
 
     /**
-     * What model object the analysis is about
+     * What the analysis is about
      */
-    private ModelObject about;
+    private Identifiable about;
 
     /**
      * The analysis
@@ -34,10 +35,10 @@ public abstract class AnalysisObject implements Serializable {
     /**
      * Constructor
      *
-     * @param mo -- the ModelObject the issue is about
+     * @param identifiable -- what the issue is about
      */
-    public AnalysisObject( ModelObject mo ) {
-        this.about = mo;
+    public AnalysisObject( Identifiable identifiable ) {
+        this.about = identifiable;
     }
 
     /**
@@ -46,16 +47,16 @@ public abstract class AnalysisObject implements Serializable {
      * @param about    -- the ModelObject the issue is about
      * @param property -- the problematic property
      */
-    public AnalysisObject( ModelObject about, String property ) {
+    public AnalysisObject( Identifiable about, String property ) {
         this( about );
         this.property = property;
     }
 
-    public ModelObject getAbout() {
+    public Identifiable getAbout() {
         return about;
     }
 
-    public void setAbout( ModelObject about ) {
+    public void setAbout( Identifiable about ) {
         this.about = about;
     }
 

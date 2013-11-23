@@ -6,7 +6,9 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -29,12 +31,13 @@ public class ExternalSupervisor extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Organization organization = (Organization) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
             if ( hasExternalSupervisor( job, organization, queryService ) ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, organization );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, organization );
                 issue.setDescription( job.getLabel() + " is supervized by " + job.getSupervisor().getName()
                                       + " who works for an external organization." );
                 issue.setRemediation( "Transfer the supervisor to " + organization.getName() + " or its parent (if any)"
@@ -65,7 +68,7 @@ public class ExternalSupervisor extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

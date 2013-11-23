@@ -1,6 +1,8 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -47,13 +49,14 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         List<Organization> employers = queryService.findEmployers( actor );
         if ( employers.size() != 1 ) {
             if ( employers.size() == 0 ) {
-                DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
+                DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, actor );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the agent\n "
@@ -71,7 +74,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                                 }
                             } );
                     for ( Organization ancestor : ancestors ) {
-                        DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, actor );
+                        DetectedIssue issue = makeIssue( communityService, Issue.VALIDITY, actor );
                         issue.setSeverity( Level.Low );
                         issue.setDescription( actor
                                 + " belongs to " + org.getName()
@@ -90,7 +93,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Actor && ( (ModelEntity) modelObject ).isActual();
     }
 

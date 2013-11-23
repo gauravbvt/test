@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -26,13 +28,13 @@ public class OrganizationWithMultiParticipationHasLinkedJobs extends AbstractIss
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization
                 && ( (Organization) modelObject ).isActual();
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = ( (Organization) modelObject );
         if ( org.isPlaceHolder() && !org.isSingleParticipation() ) {
@@ -46,7 +48,7 @@ public class OrganizationWithMultiParticipationHasLinkedJobs extends AbstractIss
                     }
             );
             if ( hasLinkedJobs ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, org );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, org );
                 issue.setDescription( "Placeholder organization " + org.getName() + " has linked jobs even though " +
                         "it allows more than one participation. This may lead to unintended participation by users " +
                         "as the agents with the linked jobs." );

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -26,12 +28,12 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         Place loopy = place.getLoopyContainingPlace();
         if ( loopy != null ) {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, place );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, place );
             issue.setSeverity( Level.Medium );
             issue.setDescription( place.getName()
                     + " is within "
@@ -48,7 +50,7 @@ public class PlaceContainedInSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Place;
     }
 

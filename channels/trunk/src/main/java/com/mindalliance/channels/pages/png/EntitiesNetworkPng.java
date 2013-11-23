@@ -61,7 +61,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.get( "connection" ).toString() );
             selectedEntityRel = new EntityRelationship();
-            selectedEntityRel.setId( scRelId, communityService.getPlanService() );
+            selectedEntityRel.setId( scRelId, communityService );
         }
        DiagramFactory<ModelEntity, EntityRelationship> factory = diagramFactory;
         return factory.newEntitiesNetworkDiagram(

@@ -51,11 +51,10 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
                         DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
         GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder = new EntitiesNetworkGraphBuilder(
-                getEntities( planService ),
-                getEntityRels( planService, analyst ),
-                planService );
+                getEntities( communityService ),
+                getEntityRels( communityService, analyst ),
+                communityService );
         Graph<ModelEntity, EntityRelationship> graph = entitiesNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer = diagramFactory.getGraphRenderer().cloneSelf();
         graphRenderer.setAlgo( "neato" );
@@ -65,7 +64,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider( outputFormat,
                                                                                 diagramFactory.getImageDirectory(),
                                                                                 analyst,
-                planService );
+                communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
@@ -75,32 +74,32 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<ModelEntity> getEntities( QueryService queryService ) {
+    private List<ModelEntity> getEntities( CommunityService communityService ) {
         return segment == null ?
-               (List<ModelEntity>) CollectionUtils.select( queryService.listActualEntities( entityClass ),
+               (List<ModelEntity>) CollectionUtils.select( communityService.listActualEntities( entityClass, true ),
                                                            new Predicate() {
                                                                @Override
                                                                public boolean evaluate( Object object ) {
                                                                    return !( (ModelEntity) object ).isUnknown();
                                                                }
                                                            } ) :
-               queryService.listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
+                communityService.getPlanService().listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
     }
 
-    private List<EntityRelationship> getEntityRels( QueryService queryService, Analyst analyst ) {
+    private List<EntityRelationship> getEntityRels( CommunityService communityService, Analyst analyst ) {
         List<EntityRelationship> entityRels = new ArrayList<EntityRelationship>();
-        List<ModelEntity> entities = getEntities( queryService );
+        List<ModelEntity> entities = getEntities( communityService );
         for ( ModelEntity entity : entities ) {
             for ( ModelEntity other : entities ) {
                 if ( entity != other ) {
                     EntityRelationship<ModelEntity> entityRel = segment == null ?
-                                                                analyst.findEntityRelationship( queryService,
+                                                                analyst.findEntityRelationship( communityService,
                                                                                                 entity,
                                                                                                 other ) :
-                                                                analyst.findEntityRelationship( queryService,
-                                                                                                entity,
-                                                                                                other,
-                                                                                                segment );
+                                                                analyst.findEntityRelationshipInPlan( communityService,
+                                                                        entity,
+                                                                        other,
+                                                                        segment );
                     if ( entityRel != null )
                         entityRels.add( entityRel );
                 }

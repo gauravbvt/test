@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -27,12 +29,12 @@ public class UnsupervisedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         Organization organization = (Organization) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
             if ( job.getSupervisor() == null ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, organization );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, organization );
                 issue.setDescription( "No supervisor for " + job.getLabel() + "." );
                 issue.setRemediation( "Add a supervisor to the job\nor remove the job" );
                 issue.setSeverity( Level.Low );
@@ -45,7 +47,7 @@ public class UnsupervisedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization;
     }
 

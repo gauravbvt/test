@@ -248,7 +248,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
             Map<String,String> extras,
             AjaxRequestTarget target ) {
         SegmentRelationship scRel = new SegmentRelationship();
-        scRel.setId( Long.valueOf( edgeId ), getQueryService(), getAnalyst() );
+        scRel.setId( Long.valueOf( edgeId ), getCommunityService(), getAnalyst() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, scRel );
         change.setScript( js );

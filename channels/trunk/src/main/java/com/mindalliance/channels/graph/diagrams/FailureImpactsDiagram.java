@@ -59,7 +59,7 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
                                                                                   outputFormat,
                                                                                   diagramFactory.getImageDirectory(),
                                                                                   analyst,
-                planService );
+                communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )

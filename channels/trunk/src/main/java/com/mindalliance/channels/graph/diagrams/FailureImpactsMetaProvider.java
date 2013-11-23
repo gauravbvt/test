@@ -6,17 +6,17 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.springframework.core.io.Resource;
 
 public class FailureImpactsMetaProvider extends FlowMapMetaProvider {
 
     public FailureImpactsMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory,
-                                       Analyst analyst, QueryService queryService ) {
-        super( modelObject, outputFormat, imageDirectory, analyst, queryService );
+                                       Analyst analyst, CommunityService communityService ) {
+        super( modelObject, outputFormat, imageDirectory, analyst, communityService );
     }
 
     @Override

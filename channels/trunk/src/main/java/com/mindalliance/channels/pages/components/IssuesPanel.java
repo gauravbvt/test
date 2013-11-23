@@ -110,7 +110,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
     public List<Issue> getModelObjectIssues() {
         List<Issue> issues;
         if ( getPlanCommunity().isDomainCommunity() ) {
-                issues = new ArrayList<Issue>( getAnalyst().listIssues( getQueryService(), model.getObject(), false ) );
+                issues = new ArrayList<Issue>( getAnalyst().listIssues( getCommunityService(), model.getObject(), false ) );
         } else {  // no analyst-detected issues in non-domain plan community
             issues = getCommunityService().listUserIssues( model.getObject() );
         }

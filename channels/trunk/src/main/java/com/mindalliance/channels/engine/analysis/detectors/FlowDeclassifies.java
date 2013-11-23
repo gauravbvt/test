@@ -6,9 +6,11 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -31,7 +33,8 @@ public class FlowDeclassifies extends AbstractIssueDetector {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
@@ -42,7 +45,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
                     if ( inEOI.isClassified() ) {
                         for ( ElementOfInformation outEOI : flow.getEffectiveEois() ) {
                             if ( declassifies( outEOI, flow, inEOI, receive, queryService ) ) {
-                                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                                 Subject inSubject = new Subject( receive.getName(), inEOI.getContent() );
                                 Subject outSubject = new Subject( flow.getName(), outEOI.getContent() );
                                 issue.setDescription( "Received element of information " + inSubject
@@ -74,7 +77,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return Flow.class.isAssignableFrom( modelObject.getClass() );
     }
 

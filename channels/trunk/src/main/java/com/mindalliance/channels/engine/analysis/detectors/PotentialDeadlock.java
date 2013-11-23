@@ -1,7 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -55,15 +57,15 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * Detect cycles where all flows are critical.
      *
      *
-     * @param queryService
+     * @param communityService
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         GraphBuilder<Node,Flow> graphBuilder =
-                new FlowMapGraphBuilder( segment, queryService, false );
+                new FlowMapGraphBuilder( segment, communityService, false );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );
@@ -94,7 +96,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, segment );
+                        Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, segment );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getReceiveDescriptions( criticalReceiveInCycle )
                                 + " fails." );
@@ -157,7 +159,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Segment;
     }
 

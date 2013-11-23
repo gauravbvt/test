@@ -43,7 +43,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
 
     private void addConceptual() {
         WebMarkupContainer conceptualImage = new WebMarkupContainer( "conceptual" );
-        List<String> causes = getAnalyst().findConceptualCauses( getQueryService(), flow );
+        List<String> causes = getAnalyst().findConceptualCausesInPlan( getCommunityService(), flow );
         conceptualImage.setVisible( !causes.isEmpty() );
         if ( !causes.isEmpty() ) {
             addTipTitle(

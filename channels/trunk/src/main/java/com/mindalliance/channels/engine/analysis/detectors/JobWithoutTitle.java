@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -25,12 +27,12 @@ public class JobWithoutTitle extends AbstractIssueDetector {
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayListStack<Issue>();
         Organization org = (Organization) modelObject;
         for ( Job job : org.getJobs() ) {
             if ( job.getTitle().isEmpty() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, org );
                 issue.setDescription( "Agent \""
                         + job.getActorName()
                         + "\" is employed by \""
@@ -47,7 +49,7 @@ public class JobWithoutTitle extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Organization
                 && ( (Organization) modelObject ).isActual();
     }

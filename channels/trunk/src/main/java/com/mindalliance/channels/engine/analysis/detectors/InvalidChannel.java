@@ -6,9 +6,11 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -24,7 +26,7 @@ import java.util.List;
 public class InvalidChannel extends AbstractIssueDetector {
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
@@ -46,17 +48,18 @@ public class InvalidChannel extends AbstractIssueDetector {
                     remediation = "Provide a correct address for " + medium + ".";
             }
             if ( problem != null ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, modelObject );
+                Issue issue = makeIssue( communityService, Issue.VALIDITY, modelObject );
                 issue.setDescription( channel.toString() + ": " + problem );
                 issue.setRemediation( remediation );
-                issue.setSeverity( getSeverity( channelable, queryService ) );
+                issue.setSeverity( getSeverity( channelable, communityService ) );
                 issues.add( issue );
             }
         }
         return issues;
     }
 
-    private static Level getSeverity( Channelable channelable, QueryService queryService ) {
+    private static Level getSeverity( Channelable channelable, CommunityService communityService ) {
+        QueryService queryService = communityService.getPlanService();
         if ( channelable instanceof Flow ) {
             Node target = ( (Flow) channelable ).getTarget();
             return target.isPart() ? queryService.computePartPriority( (Part) target ) : Level.Low;
@@ -65,7 +68,7 @@ public class InvalidChannel extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Channelable;
     }
 

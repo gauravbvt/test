@@ -6,8 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -27,7 +29,8 @@ public class UselessActor extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         Assignments assignments = queryService.getAssignments().with( actor );
@@ -37,7 +40,7 @@ public class UselessActor extends AbstractIssueDetector {
                     queryService.getAssignments( false ),
                     queryService.findAllFlows() );
             if ( commitments.isEmpty() ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, actor );
                 issue.setDescription( actor.getName()
                         + " is not assigned any task "
                         + "nor is it the beneficiary of any communication commitment" );
@@ -53,7 +56,7 @@ public class UselessActor extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return Actor.class.isAssignableFrom( modelObject.getClass() )
                 && ((Actor)modelObject).isActual();
     }

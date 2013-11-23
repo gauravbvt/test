@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -27,11 +29,11 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         if ( segment.getGoals().isEmpty() ) {
-            DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
+            DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, segment );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The segment does not have any goal." );
             issue.setRemediation( "Add a goal to the segment"
@@ -44,7 +46,7 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Segment;
     }
 

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -24,17 +26,18 @@ public class EntityNotInvolvedAgainstExpectation extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
-        return modelObject.isEntity();
+    public boolean appliesTo( Identifiable identifiable ) {
+        return (( ModelObject )identifiable).isEntity();
     }
 
     @Override
-    public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
+        QueryService queryService = communityService.getPlanService();
         List<Issue> issues = new ArrayList<Issue>(  );
         ModelEntity entity = (ModelEntity)modelObject;
         if ( queryService.isInvolvementExpected( entity ) ) {
             if ( !queryService.isInvolved( entity, queryService.getAssignments(), queryService.getAllCommitments() ) ) {
-                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, entity );
+                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, entity );
                 issue.setDescription( "The " + entity.getTypeName() + " \"" + entity.getName() + "\" is expected to be involved but is not." );
                 issue.setSeverity( Level.Medium );
                 issue.setRemediation( (entity instanceof Specable

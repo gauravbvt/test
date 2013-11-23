@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -13,6 +14,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
@@ -89,6 +91,19 @@ public interface CommunityService {
     Boolean isCommunityPlanner( ChannelsUser user );
 
     List<ChannelsUser> getCommunityPlanners( );
+
+    List<String> getCommunityPlannerUsernames();
+
+
+    /**
+     * Find all user issues about a model object
+     *
+     * @param identifiable an object with an id
+     * @return list of issues
+     */
+    List<UserIssue> findAllUserIssues( Identifiable identifiable );
+
+    <T extends Identifiable> List<T> listIdentifiables( Class<T> clazz );
 
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
@@ -188,4 +203,5 @@ public interface CommunityService {
      * @return the resolved place
      */
     Place resolveLocation( Place place );
+
 }

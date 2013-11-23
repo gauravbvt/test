@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -36,11 +38,11 @@ public class PartWithoutRole extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getActor() != null && part.getOrganization() != null && part.getRole() == null  ) {
-            DetectedIssue issue = makeIssue( queryService,
+            DetectedIssue issue = makeIssue( communityService,
                                              DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
             issue.setDescription( "The role for the task is missing." );
             issue.setRemediation( "Name a role for the task." );
@@ -51,7 +53,7 @@ public class PartWithoutRole extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

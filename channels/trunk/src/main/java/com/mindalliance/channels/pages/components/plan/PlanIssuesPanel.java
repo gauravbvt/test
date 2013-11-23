@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -210,9 +211,9 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     public List<? extends Issue> getIssues() {
         // Get issues by about and waived
         ModelObject about = getAbout();
-        List<? extends Issue> issues = about != null ? getAnalyst().listIssues( getQueryService(), about, true, includeWaived ) :
-                             includeWaived ? getAnalyst().findAllIssues( getQueryService() )
-                                           : getAnalyst().findAllUnwaivedIssues( getQueryService() );
+        List<? extends Issue> issues = about != null ? getAnalyst().listIssues( getCommunityService(), about, true, includeWaived ) :
+                             includeWaived ? getAnalyst().findAllIssues( getCommunityService() )
+                                           : getAnalyst().findAllUnwaivedIssues(getCommunityService());
 
         issues = filterByType( issues, getIssueType() );
         issues = filterBySegment( issues );
@@ -241,7 +242,7 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
                 issues,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
-                        ModelObject about = ( (Issue) obj ).getAbout();
+                        Identifiable about = ( (Issue) obj ).getAbout();
                         return segment == null ||
                                 about instanceof SegmentObject
                                         && ( (SegmentObject) about ).getSegment().equals( segment );

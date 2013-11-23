@@ -1,5 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -27,7 +29,7 @@ public class PartTerminatedByManySends extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+    public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
         List<Issue> issues = new ArrayList<Issue>(  );
         Part part = (Part)modelObject;
         int count = CollectionUtils.countMatches(
@@ -40,7 +42,7 @@ public class PartTerminatedByManySends extends AbstractIssueDetector {
                 }
         );
         if ( count > 1 ) {
-            Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
             issue.setDescription( "This task is ambiguously terminated by " + count + " sends." );
             issue.setRemediation( "Have the task terminated by at most one send." );
             issue.setSeverity( Level.Medium );
@@ -50,7 +52,7 @@ public class PartTerminatedByManySends extends AbstractIssueDetector {
     }
 
     @Override
-    public boolean appliesTo( ModelObject modelObject ) {
+    public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
     }
 

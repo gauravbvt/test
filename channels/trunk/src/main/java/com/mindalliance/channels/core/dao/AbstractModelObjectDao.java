@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Function;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
@@ -519,10 +520,10 @@ public abstract class AbstractModelObjectDao {
         return new HashSet<Attachable>( list( ModelObject.class ) );
     }
 
-    public List<UserIssue> findAllUserIssues( ModelObject modelObject ) {
+    public List<UserIssue> findAllUserIssues( Identifiable identifiable ) {
         List<UserIssue> foundIssues = new ArrayList<UserIssue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout().getId() == modelObject.getId() )
+            if ( userIssue.getAbout().getId() == identifiable.getId() )
                 foundIssues.add( userIssue );
         }
         return foundIssues;
