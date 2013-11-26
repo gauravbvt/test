@@ -140,15 +140,56 @@
             <topic id="collaboration-plan">
                 <name>Collaboration plan</name>
                 <item>
-                    <description>A collaboration plan prescribes how organizations and individuals working for them are expected to collaborate in one or more planning scenarios.
+                    <description>A collaboration plan captures and disseminates how individuals in positions of responsibility within organizations
+                        are expected to act and communicate in anticipated planning scenarios.
 
-                        The collaboration is to be realized via the execution of tasks assigned to individuals, based on their organizational roles, and coordinated through communications and information sharing.
+                        The purpose of collaboration plans is to help even strangers become successful collaborators at the very onset of crises
+                        or the dawn of opportunities.
 
-                        Checklists document how to execute each assigned task, including which which communications to make, when how and to who.
+                        A collaboration plan is based on a production version of a collaboration template. The template defines
 
-                        A collaboration plan is based on a collaboration template that defines the planning scenarios, the kinds of collaborators, the tasks, the communications that coordinate them, and the checklists for executing the collaboration.
+                        * the planning scenarios,
+                        * the collaborators and their organizations,
+                        * the tasks that directly or indirectly mitigate risks or achieve goals,
+                        * the communications that coordinate and inform the tasks,
+                        * and the checklists detailing when and how to execute the tasks and communicate.
+
+                        The collaboration template is defined using "placeholders" for
+
+                        * organizations (organization placeholders),
+                        * people and systems (agents)
+                        * and places (location placeholders).
+
+                        A collaboration plan adopting a template identifies
+
+                        * the locations of location placeholders,
+                        * the organizations participating as organization placeholders,
+                        * and users (and systems) participating in positions of responsibility within participating organizations.
+
+                        As placeholders from the collaboration template are "filled in" by users and organizations in the collaboration plan,
+                        checklists are personalized with contact information and are assigned to users based on their responsibilities.
+
+                        Any authorized user of Channels can create a collaboration plan based on a published
+                        collaboration template. This user automatically becomes a planner for this plan
+                        and has ultimate authority over the registration of organizations into the plan, their participation
+                        and the participation of users in positions of responsibility within these organizations.
+
+                        A collaboration planner can define requirements on the plan that are to be fulfilled via adequate participation
+                        by organizations and users. A planner can also view (but not modify) the collaboration template
+                        upon which the plan is based and can see all issues detected in the plan.
+
+                        Non-planners can elect to participate in a collaboration plan. Those who participate as agents that supervise
+                        other agents have authority over the participation of users as these agents.
+
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-template"/>
+                <next section="plan-concepts" topic="plan-placeholder"/>
+                <next section="plan-concepts" topic="plan-organization"/>
+                <next section="plan-concepts" topic="plan-position"/>
+                <next section="plan-concepts" topic="plan-planner"/>
+                <next section="plan-concepts" topic="plan-participant"/>
+                <next section="plan-concepts" topic="plan-participation"/>
                 <next section="plan-concepts" topic="collaboration-vs-process"/>
             </topic>
             <topic id="plan-template">
@@ -432,6 +473,10 @@
                         As a planner, you can register organizations for potential participation into the plan (or in
                         all plans), in addition to the known organizations defined by the plan's template (they automatically participate). You can also
                         assign users to positions known to the plan.
+
+                        As a planner, you can define requirements on the collaboration and visualize the extent they are fulfilled given the current participation.
+
+                        As a planner, you can view all issues detected in and reported about the collaboration plan.
 
                         If, as a participant, you are assigned to a position where you supervise other positions, you can assign
                         users to these positions, subject to some constraints, and subject to they accepting the
@@ -1551,12 +1596,14 @@
         <section id="issues-page">
             <name>Issues page</name>
             <topic id="about-issues-page">
-                <name>Issues summary report</name>
+                <name>Issues report</name>
                 <item>
-                    <description>The issues summary report provides metrics on all the issues found in a collaboration
-                        template.
+                    <description>The issues report provides metrics on all the issues found in a collaboration
+                        template or plan.
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
+
+                        Individual issues are revealed by clicking on the text of an issue kind.
                     </description>
                 </item>
                 <next section="concepts" topic="issue"/>
