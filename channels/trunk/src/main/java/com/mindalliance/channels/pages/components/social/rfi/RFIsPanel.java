@@ -665,6 +665,11 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return userInfo.isModifiableInProduction();
         }

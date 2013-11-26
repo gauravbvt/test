@@ -193,6 +193,11 @@ public class RequirementRelationship implements Identifiable {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public String toString() {
         return label;
     }

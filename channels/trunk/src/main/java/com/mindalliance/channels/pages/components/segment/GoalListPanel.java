@@ -548,6 +548,11 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             return confirmed;
         }
 
+        @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
         /**
          * Can risk be deleted?
          *

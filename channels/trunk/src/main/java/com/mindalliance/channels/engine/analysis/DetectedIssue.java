@@ -92,6 +92,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return classLabel();
     }
 
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
     /**
      * {@inheritDoc}
      */

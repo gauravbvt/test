@@ -44,6 +44,11 @@ public class Contact implements Identifiable {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public long getId() {
         long id = agent.getId();
         if ( user != null ) {

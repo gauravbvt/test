@@ -167,6 +167,12 @@ public class Classification implements Identifiable, Comparable<Classification> 
         return system + '/' + name;
     }
 
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+
     /**
      * Whether at least one in a list of classifications is stronger than a classification.
      *

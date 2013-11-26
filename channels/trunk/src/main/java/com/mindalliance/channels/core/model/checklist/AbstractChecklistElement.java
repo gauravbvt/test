@@ -90,4 +90,10 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     public String getContext() {
         return "";
     }
+
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
 }

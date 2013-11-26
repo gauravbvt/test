@@ -235,7 +235,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
                 "gotoIssues",
                 "",
                 IssuesPage.class,
-                IssuesPage.createParameters( uri, plan.getVersion() ),
+                IssuesPage.createParameters( communityService ),
                 null,
                 plan );
         if ( isInCommunityContext() ) {

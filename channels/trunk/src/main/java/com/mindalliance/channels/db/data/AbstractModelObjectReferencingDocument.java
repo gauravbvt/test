@@ -116,4 +116,10 @@ public class AbstractModelObjectReferencingDocument extends AbstractChannelsDocu
         return segment;
     }
 
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+
 }

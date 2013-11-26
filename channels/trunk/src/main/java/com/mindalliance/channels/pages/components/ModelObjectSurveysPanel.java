@@ -339,6 +339,11 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return true;
         }

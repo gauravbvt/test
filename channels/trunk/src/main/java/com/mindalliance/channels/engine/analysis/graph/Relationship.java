@@ -165,5 +165,9 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         return fromIdentifiable != null && toIdentifiable != null;
     }
 
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
 
 }

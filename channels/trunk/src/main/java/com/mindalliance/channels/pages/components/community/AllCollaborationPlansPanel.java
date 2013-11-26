@@ -201,6 +201,11 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public long getId() {
             return collaborationPlan.getId();
         }

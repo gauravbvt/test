@@ -271,4 +271,10 @@ public class SegmentRelationship implements Identifiable {
     public void clearExternalFlows() {
         externalFlows = new ArrayList<ExternalFlow>();
     }
+
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
 }

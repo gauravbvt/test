@@ -74,6 +74,11 @@ public class Agent implements Nameable, Identifiable {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public long getId() {
         return actor.getId();
     }

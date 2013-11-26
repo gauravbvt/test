@@ -1,12 +1,9 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -20,74 +17,37 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Plan issues panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jun 1, 2009
- * Time: 11:43:52 AM
+ * Date: 11/26/13
+ * Time: 8:53 AM
  */
-public class PlanIssuesPanel extends AbstractIssueTablePanel {
+public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
+
     /**
      * Maximum number of rows of issues to show at a time.
      */
-    private static final int MAX_ROWS = 10;
+    private static final int MAX_ROWS = 7;
     /**
      * Whether to show waived issues.
      */
     private boolean includeWaived = false;
-    /**
-     * Segment filtered on, or null.
-     */
-    private Segment segment;
     private Level severity;
     private List<String> kindHints = new ArrayList<String>();
     private static final String ANY = "Any";
 
-    public PlanIssuesPanel( String id ) {
+    public CollaborationPlanIssuesPanel( String id ) {
         super( id, null, MAX_ROWS );
     }
 
     protected void addFilters() {
         addIncludeWaived();
-        addInSegment();
         addOfSeverity();
         addOfKind();
-    }
-
-    private void addInSegment() {
-        DropDownChoice<String> segmentChoice = new DropDownChoice<String>(
-                "segment",
-                new PropertyModel<String>( this, "segmentName" ),
-                getSegmentsNames()
-        );
-        segmentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateIssuesTable( target );
-            }
-        } );
-        add( segmentChoice );
-    }
-
-    private List<String> getSegmentsNames() {
-        List<String> segmentNames = new ArrayList<String>();
-        segmentNames.add( ANY );
-        List<String> sorted = new ArrayList<String>();
-        for ( Segment seg : getSegments() ) {
-            sorted.add( StringUtils.abbreviate( seg.getName(), 20 ) );
-        }
-        Collections.sort( sorted );
-        segmentNames.addAll( sorted );
-        return segmentNames;
-    }
-
-    private List<? extends Segment> getSegments() {
-        return new ArrayList<Segment>( getPlan().getSegments() );
     }
 
     private void addOfSeverity() {
@@ -149,28 +109,6 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
         this.includeWaived = includeWaived;
     }
 
-    public String getSegmentName() {
-        return segment == null ? ANY : segment.getName();
-    }
-
-    public void setSegmentName( final String val ) {
-        if ( val.equals( ANY ) ) {
-            segment = null;
-        } else {
-            segment = (Segment) CollectionUtils.find(
-                    getSegments(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (Segment) object ).getName().equals( val );
-                        }
-                    }
-            );
-
-        }
-    }
-
-
     public String getSeverityName() {
         return severity == null ? ANY : severity.getNegativeLabel();
     }
@@ -212,11 +150,10 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
         // Get issues by about and waived
         Identifiable about = getAbout();
         List<? extends Issue> issues = about != null ? getAnalyst().listIssues( getCommunityService(), about, true, includeWaived ) :
-                             includeWaived ? getAnalyst().findAllIssues( getCommunityService() )
-                                           : getAnalyst().findAllUnwaivedIssues(getCommunityService());
+                includeWaived ? getAnalyst().findAllIssues( getCommunityService() )
+                        : getAnalyst().findAllUnwaivedIssues(getCommunityService());
 
         issues = filterByType( issues, getIssueType() );
-        issues = filterBySegment( issues );
         issues = filterBySeverity( issues );
         issues = filterByKind( issues );
 
@@ -231,21 +168,6 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
                     public boolean evaluate( Object obj ) {
                         return ( issueType.equals( ALL )
                                 || ( (Issue) obj ).getType().equals( issueType ) );
-                    }
-                }
-        );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<? extends Issue> filterBySegment( List<? extends Issue> issues ) {
-        return (List<? extends Issue>) CollectionUtils.select(
-                issues,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Identifiable about = ( (Issue) obj ).getAbout();
-                        return segment == null ||
-                                about instanceof SegmentObject
-                                        && ( (SegmentObject) about ).getSegment().equals( segment );
                     }
                 }
         );
@@ -273,5 +195,6 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
             }
         } );
     }
+
 
 }

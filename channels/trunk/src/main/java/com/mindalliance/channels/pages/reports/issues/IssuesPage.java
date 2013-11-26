@@ -1,10 +1,14 @@
 package com.mindalliance.channels.pages.reports.issues;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -25,10 +29,16 @@ public class IssuesPage extends AbstractChannelsBasicPage {
         super( parameters );
     }
 
-    public static PageParameters createParameters( String uri, int version ) {
+    public static PageParameters createParameters( CommunityService communityService ) {
         PageParameters result = new PageParameters();
-        result.set( "plan", uri );
-        result.set( "v", version );
+        if ( communityService.isForDomain() ) {
+            Plan plan = communityService.getPlan();
+            result.set( TEMPLATE_PARM, plan.getUri() );
+            result.set( VERSION_PARM, plan.getVersion() );
+        } else {
+            PlanCommunity planCommunity = communityService.getPlanCommunity();
+            result.set( COLLAB_PLAN_PARM, planCommunity.getUri() );
+        }
         return result;
     }
 
@@ -43,6 +53,7 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     }
 
     protected void addContent() {
+        addTitle();
         IssueMetrics issueMetrics = new IssueMetrics( getCommunityService() );
         addIssuesSummary( issueMetrics );
         addIssueMetrics( issueMetrics );
@@ -66,6 +77,15 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     @Override
     protected String getDefaultUserRoleId() {
         return "planner";
+    }
+
+    private void addTitle() {
+        CommunityService communityService = getCommunityService();
+        String context = communityService.isForDomain()
+                ? "template " + communityService.getPlan().getVersionedName()
+                : "plan " + communityService.getPlanCommunity().getName();
+        Label title = new Label("context", context );
+        getContainer().add( title );
     }
 
     private void addIssuesSummary( IssueMetrics issueMetrics ) {

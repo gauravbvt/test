@@ -307,6 +307,11 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return false;
         }

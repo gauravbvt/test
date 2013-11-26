@@ -143,4 +143,10 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
                     }
                 } );
     }
+
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
 }

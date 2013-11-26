@@ -42,5 +42,11 @@ public interface Identifiable extends Nameable {
      */
     String getClassLabel();
 
+    /**
+     * Get UI-friendly type of object.
+     *
+     * @return a string
+     */
+    String getKindLabel();
 
 }

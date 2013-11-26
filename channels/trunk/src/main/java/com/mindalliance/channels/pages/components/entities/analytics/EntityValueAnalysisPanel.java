@@ -184,6 +184,13 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
         public String getName() {
             return "Analysis of value to task " + part.getLabel();
         }
+
+        @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+
     }
 
     private class ValueAnalysisTable extends AbstractTablePanel<ValueAnalysis> {

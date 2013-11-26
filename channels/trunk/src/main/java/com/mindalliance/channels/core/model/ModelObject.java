@@ -7,6 +7,8 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -476,7 +478,7 @@ public abstract class ModelObject
      * @return a string
      */
     public String getKindLabel() {
-        return getTypeName();
+        return WordUtils.capitalize( getTypeName() );
     }
 
     /**

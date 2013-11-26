@@ -544,6 +544,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return true;
         }

@@ -114,6 +114,11 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
         return getActor().isUnknown() ? getOrganization() : getActor();
     }
 
+    @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
     /**
      * Whether an entity is used in defining the assignment.
      *

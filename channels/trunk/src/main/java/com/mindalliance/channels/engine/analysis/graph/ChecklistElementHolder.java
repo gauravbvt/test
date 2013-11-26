@@ -106,6 +106,11 @@ public class ChecklistElementHolder implements ChecklistElement {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public String toString() {
         return checklistElement + "[" + id + "]";
     }

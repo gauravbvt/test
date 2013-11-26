@@ -184,7 +184,7 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     public String getDetectorLabel() {
-        return "Issue reported by template developer";
+        return "Issue reported by someone";
     }
 
     @Override

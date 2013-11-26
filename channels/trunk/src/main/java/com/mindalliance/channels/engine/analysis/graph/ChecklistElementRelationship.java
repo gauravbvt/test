@@ -38,6 +38,11 @@ public class ChecklistElementRelationship implements Identifiable {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public long getId() {
         String toId = Long.toString( toElement.getId() );
         toId = StringUtils.leftPad( toId, 9, '0' );

@@ -304,6 +304,11 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return true;
         }

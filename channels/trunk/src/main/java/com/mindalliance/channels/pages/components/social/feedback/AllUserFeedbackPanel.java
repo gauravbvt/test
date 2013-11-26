@@ -444,6 +444,11 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return feedback.isModifiableInProduction();
         }

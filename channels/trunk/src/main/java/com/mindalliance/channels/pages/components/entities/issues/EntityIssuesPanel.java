@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages.components.entities.issues;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Function;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Issue;
@@ -83,7 +84,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
     public List<Issue> getIssues() {
         Set<ModelObject> scope = new HashSet<ModelObject>();
         List<Issue> issues = new ArrayList<Issue>();
-        ModelObject about = getAbout();
+        ModelObject about = (ModelObject)getAbout();
         final String issueType = getIssueType();
         Analyst analyst = getAnalyst();
         if ( about == null ) {

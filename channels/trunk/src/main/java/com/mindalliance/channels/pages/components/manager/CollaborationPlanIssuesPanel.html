@@ -6,8 +6,14 @@
         xml:lang="en"
         lang="en">
 <body>
-<wicket:panel>
-    <table wicket:id="participationIssuesTable" class="data-table">[table]</table>
-</wicket:panel>
+<wicket:extend>
+    of severity
+    <select wicket:id="severity">
+        <option>severe</option>
+    </select>
+    and kind
+    <input wicket:id="kind" type="text" class="phrase"/>
+    <input wicket:id="includeWaived" type="checkbox"/> Include waived issues
+</wicket:extend>
 </body>
 </html>

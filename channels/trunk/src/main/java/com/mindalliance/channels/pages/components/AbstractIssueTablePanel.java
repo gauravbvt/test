@@ -54,9 +54,9 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     private String issueType = ALL;
 
     /**
-     * Model objects filtered on (show only where so and so is the actor etc.).
+     * Identifibale filtered on (show only where so and so is the actor etc.).
      */
-    private ModelObject about;
+    private Identifiable about;
 
     /**
      * Issues table.
@@ -120,7 +120,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         return choices;
     }
 
-    protected ModelObject getAbout() {
+    protected Identifiable getAbout() {
         return about;
     }
 
@@ -146,7 +146,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     @Override
     public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
         // only about is filtered; property is ignored
-        about = identifiable == about ? null : (ModelObject) identifiable;
+        about = identifiable == about ? null : (Identifiable) identifiable;
         addIssuesTable();
         target.add( issuesTable );
     }
@@ -196,7 +196,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             columns.add( makeColumn( "Issue", "detectorLabel", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "About",
                     "about",
-                    "about.label",
+                    "about.name",
                     EMPTY,
                     AbstractIssueTablePanel.this ) );
             columns.add( makeColumn( "Severity", "severity.negativeLabel", null, EMPTY, null, "severity.ordinal" ) );

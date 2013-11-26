@@ -150,7 +150,8 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
             // columns
             columns.add( makeColumn( "About", "about.kindLabel", EMPTY ) );
             columns.add( makeColumn( "Named", "about.name", EMPTY ) );
-            columns.add( makeColumn( "In Segment", "about.segmentName", EMPTY ) );
+            if ( getCommunityService().isForDomain() )
+                columns.add( makeColumn( "In Segment", "about.segmentName", EMPTY ) );
             columns.add( makeColumn( "Severity", "severity.negativeLabel", null, EMPTY, null, "severity.ordinal" ) );
             columns.add( makeColumn( "Description", "description", EMPTY ) );
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );

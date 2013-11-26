@@ -462,6 +462,11 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return questionnaire.isModifiableInProduction();
         }

@@ -183,6 +183,11 @@ public class AbstractChannelsDocument implements ChannelsDocument {
     }
 
     @Override
+    public String getKindLabel() {
+        return getTypeName();
+    }
+
+    @Override
     public boolean equals( Object obj ) {
         return obj != null
                 && obj.getClass().isAssignableFrom( getClass() )

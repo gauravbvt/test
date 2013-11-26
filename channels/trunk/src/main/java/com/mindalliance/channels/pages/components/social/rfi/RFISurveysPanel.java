@@ -460,6 +460,11 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         @Override
+        public String getKindLabel() {
+            return getTypeName();
+        }
+
+        @Override
         public String getName() {
             return rfiSurvey.getName();
         }

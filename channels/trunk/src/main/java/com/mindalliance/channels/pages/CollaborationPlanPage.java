@@ -24,6 +24,7 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.community.CollaborationPlanDetailsPanel;
 import com.mindalliance.channels.pages.components.community.CollaborationPlanStatusPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
+import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -341,6 +342,21 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
                 gotoRequirementsLink,
                 "View the collaboration requirements" );
 
+        //Issues
+        BookmarkablePageLink gotoIssuesLink = newTargetedLink(
+                "gotoIssues",
+                "",
+                IssuesPage.class,
+                IssuesPage.createParameters( communityService ),
+                null,
+                getPlanCommunity() );
+        if ( isInCommunityContext() ) {
+            addInCommunityContextParameter( gotoIssuesLink, getCommunityInContext() );
+        }
+        addTipTitle(
+                gotoIssuesLink,
+                "View a summary of all issues automatically found by Channels or reported by planners" );
+
 
         // gotos
         gotoIconsContainer.add(
@@ -375,7 +391,14 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
                 new WebMarkupContainer( "requirements" )
                         .add( gotoRequirementsLink )
                         .setVisible( collaborationPlanner )
+                        .setOutputMarkupId( true ),
+
+                // Goto issues report
+                new WebMarkupContainer( "issues" )
+                        .add( gotoIssuesLink )
+                        .setVisible( isCollaborationPlanner() )
                         .setOutputMarkupId( true )
+
         );
 
     }

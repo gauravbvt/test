@@ -227,11 +227,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     protected AbstractColumn<T> makeParticipationAnalystColumn( String name,
-                                                  final String property,
-                                                  final String labelMethodName,
-                                                  final String defaultText,
-                                                  final String titleMethodName,
-                                                  final Object... extras ) {
+                                                                final String property,
+                                                                final String labelMethodName,
+                                                                final String defaultText,
+                                                                final String titleMethodName,
+                                                                final Object... extras ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -244,7 +244,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 String text = "" + invokeParticipationAnalyst( labelMethodName, bean, extras );
                 String title = "";
                 if ( titleMethodName != null && !titleMethodName.isEmpty() ) {
-                     title = "" + invokeParticipationAnalyst( titleMethodName, bean, extras );
+                    title = "" + invokeParticipationAnalyst( titleMethodName, bean, extras );
                 }
                 String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
                 Label label = new Label( id, new Model<String>( labelText ) );
@@ -261,7 +261,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             if ( extras.length > 0 ) {
                 Class[] argTypes = {argument.getClass(), extras.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, extras, getCommunityService() };
+                Object[] args = {argument, extras, getCommunityService()};
                 return method.invoke( analyst, args );
             } else {
                 Class[] argTypes = {argument.getClass(), CommunityService.class};
@@ -276,10 +276,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     protected AbstractColumn<T> makeAnalystColumn( String name,
-                                                                final String property,
-                                                                final String methodName,
-                                                                final String defaultText,
-                                                                final Object... extras ) {
+                                                   final String property,
+                                                   final String methodName,
+                                                   final String defaultText,
+                                                   final Object... extras ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -303,7 +303,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             if ( extras.length > 0 ) {
                 Class[] argTypes = {argument.getClass(), extras.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, extras, getCommunityService() };
+                Object[] args = {argument, extras, getCommunityService()};
                 return method.invoke( analyst, args );
             } else {
                 Class[] argTypes = {argument.getClass(), CommunityService.class};
@@ -382,17 +382,17 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             String defaultText,
             Filterable filterable,
             boolean isMoRefString ) {
-        ModelObject mo = null;
+        Identifiable identifiable = null;
         if ( isMoRefString ) {
             String moString = (String) ChannelsUtils.getProperty( bean, moProperty, null );
             if ( moString != null ) {
                 ModelObjectRef moRef = ModelObjectRef.fromString( moString );
-                mo = (ModelObject) moRef.resolve( getCommunityService() );
+                identifiable = (Identifiable) moRef.resolve( getCommunityService() );
             }
         } else {
-            mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );
+            identifiable = (Identifiable) ChannelsUtils.getProperty( bean, moProperty, null );
         }
-        if ( mo != null ) {
+        if ( identifiable != null ) {
             String defaultTextValue = findStringValue( bean, defaultText );
             String labelText = (String) ChannelsUtils.getProperty(
                     bean,
@@ -401,28 +401,40 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             labelText = ( labelText == null || labelText.isEmpty() )
                     ? ( defaultTextValue == null ? "" : defaultTextValue )
                     : labelText;
-            if ( filterable != null ) {
-                return new FilterableModelObjectLink(
-                        id,
-                        new Model<ModelObject>( mo ),
-                        new Model<String>( labelText ),
-                        "", // hint
-                        moProperty,
-                        filterable
-                );
-            } else {
-                if ( mo.isEntity() ) {
-                    if ( mo.isUnknown() ) {
-                        return new Label( id, new Model<String>( mo.getName() ) );
-                    } else {
-                        return new EntityLink( id, new Model<ModelEntity>( (ModelEntity) mo ) );
-                    }
-                } else {
-                    return new ModelObjectLink(
+            if ( identifiable instanceof ModelObject ) {
+                ModelObject mo = (ModelObject) identifiable;
+                if ( filterable != null ) {
+                    return new FilterableModelObjectLink(
                             id,
                             new Model<ModelObject>( mo ),
-                            new Model<String>( labelText ) );
+                            new Model<String>( labelText ),
+                            "", // hint
+                            moProperty,
+                            filterable
+                    );
+                } else {
+                    if ( mo.isEntity() ) {
+                        if ( mo.isUnknown() ) {
+                            return new Label( id, new Model<String>( mo.getName() ) );
+                        } else {
+                            return new EntityLink( id, new Model<ModelEntity>( (ModelEntity) mo ) );
+                        }
+                    } else {
+                        return new ModelObjectLink(
+                                id,
+                                new Model<ModelObject>( mo ),
+                                new Model<String>( labelText ) );
+                    }
                 }
+            } else {
+                return cellFilteredContent(
+                        id,
+                        bean,
+                        moProperty,
+                        labelProperty,
+                        defaultText,
+                        null,
+                        filterable );
             }
         } else {
             String defaultTextValue = findStringValue( bean, defaultText );
@@ -586,7 +598,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             String name,
             final String urlProperty,
             final String labelProperty,
-            final String defaultText ,
+            final String defaultText,
             final boolean newPage ) {
         return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -1085,7 +1097,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     private String resolveString( String string, T bean ) {
         if ( string.startsWith( "@" ) ) {
             String actualString = string.substring( 1 );
-            return (String)ChannelsUtils.getProperty( bean, actualString, actualString );
+            return (String) ChannelsUtils.getProperty( bean, actualString, actualString );
         } else {
             return string;
         }

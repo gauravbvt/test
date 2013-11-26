@@ -31,7 +31,7 @@ public class FromUser extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Issue reported by a person";
+        return "Issue reported by someone";
     }
 
     @Override
