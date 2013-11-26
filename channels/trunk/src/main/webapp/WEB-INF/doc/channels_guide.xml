@@ -164,9 +164,11 @@
 
                         * the locations of location placeholders,
                         * the organizations participating as organization placeholders,
-                        * and users (and systems) participating in positions of responsibility within participating organizations.
+                        * and users (and systems) participating as agents in positions of responsibility within participating organizations.
 
-                        As placeholders from the collaboration template are "filled in" by users and organizations in the collaboration plan,
+                        More than one collaboration plan can adopt a given collaboration template.
+
+                        As placeholders from the collaboration template are identified in  collaboration plan by users and organizations,
                         checklists are personalized with contact information and are assigned to users based on their responsibilities.
 
                         Any authorized user of Channels can create a collaboration plan based on a published
@@ -393,9 +395,9 @@
                 <name>Collaborations vs. business processes</name>
                 <item>
                     <description>
-                        Business processes (aka workflows) and collaborations are very different concepts, and a collaboration
-                        is not necessarily a business process. In fact, bona fide business processes represent the
-                        exception rather than the rule.
+                        Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
+                        can be captured as business processes, most collaborations can not. Furthermore, while business processes have
+                        "owners", no one can be said to own a collaboration.
 
                         A ''business process'' is a close orchestration of people and systems within an (extended) organization,
                         all working harmoniously according to a known and repeatable script in order to accomplish a common goal.
