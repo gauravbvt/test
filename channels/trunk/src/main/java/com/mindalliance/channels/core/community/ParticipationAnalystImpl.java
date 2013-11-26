@@ -1,11 +1,7 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
-import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
@@ -16,7 +12,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,71 +24,7 @@ import java.util.List;
  */
 public class ParticipationAnalystImpl implements ParticipationAnalyst {
 
-    private List<ParticipationIssueDetector> issueDetectors;
-
     public ParticipationAnalystImpl() {
-    }
-
-    public List<ParticipationIssueDetector> getIssueDetectors() {
-        return issueDetectors;
-    }
-
-    public void setIssueDetectors( List<ParticipationIssueDetector> issueDetectors ) {
-        this.issueDetectors = issueDetectors;
-    }
-
-    @Override
-    public List<ParticipationIssue> detectAllIssues( CommunityService communityService ) {
-        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
-        Iterator<Identifiable> scope = issueAnalysisScope( communityService );
-        while ( scope.hasNext() ) {
-            Identifiable identifiable = scope.next();
-            issues.addAll( detectIssues( identifiable, communityService ) );
-        }
-        return issues;
-    }
-
-    @Override
-    public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
-        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
-        for ( ParticipationIssueDetector detector : issueDetectors ) {
-            if ( detector.appliesTo( identifiable ) ) {
-                issues.addAll( detector.detectIssues( identifiable, communityService ) );
-            }
-        }
-        return issues;
-    }
-
-    @Override
-    public boolean hasIssues( final Identifiable identifiable, final CommunityService communityService ) {
-        for ( ParticipationIssueDetector detector : issueDetectors ) {
-            if ( detector.appliesTo( identifiable ) ) {
-                if ( !detector.detectIssues( identifiable, communityService ).isEmpty() )
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String getIssuesOverview( Identifiable identifiable, CommunityService communityService ) {
-        List<ParticipationIssue> issues = detectIssues( identifiable, communityService );
-        if ( issues.isEmpty() )
-            return "";
-        else {
-            int count = issues.size();
-            return count + ( count > 1 ? " issues" : " issue" );
-        }
-    }
-
-    private Iterator<Identifiable> issueAnalysisScope( CommunityService communityService ) {
-        List<Identifiable> scope = new ArrayList<Identifiable>();
-        scope.add( communityService.getPlanCommunity() );
-        scope.addAll( findAllOrganizationPlaceholders( communityService ) );
-        scope.addAll( communityService.getParticipationManager().getAllKnownAgencies( communityService ) );
-        scope.addAll( communityService.getParticipationManager().getAllKnownAgents( communityService ) );
-        scope.addAll( communityService.getPlanService().listActualEntities( Actor.class, true ) );
-        return scope.iterator();
     }
 
     @SuppressWarnings( "unchecked" )

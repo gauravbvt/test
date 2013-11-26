@@ -522,7 +522,7 @@ public abstract class AbstractModelObjectDao {
 
     public List<UserIssue> findAllUserIssues( Identifiable identifiable ) {
         List<UserIssue> foundIssues = new ArrayList<UserIssue>();
-        for ( UserIssue userIssue : list( UserIssue.class ) ) {
+        for ( UserIssue userIssue : listLocal( UserIssue.class ) ) {
             if ( userIssue.getAbout().getId() == identifiable.getId() )
                 foundIssues.add( userIssue );
         }

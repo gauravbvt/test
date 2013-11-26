@@ -1,9 +1,7 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -19,42 +17,6 @@ import java.util.List;
  * Time: 9:11 AM
  */
 public interface ParticipationAnalyst {
-
-    /**
-     * Detect all issues.
-     *
-     * @param communityService a plan community service
-     * @return a list of participation issues
-     */
-    List<ParticipationIssue> detectAllIssues( CommunityService communityService );
-
-    /**
-     * Detect all issues of a given identifiable.
-     *
-     * @param identifiable  an identifiable
-     * @param communityService a plan community service
-     * @return a list of participation issues
-     */
-    List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService );
-
-    /**
-     * Whether a given identifiable has issues.
-     *
-     * @param identifiable  an identifiable
-     * @param communityService a plan community service
-     * @return a boolean
-     */
-    boolean hasIssues( Identifiable identifiable, CommunityService communityService );
-
-    /**
-     * Get an overview of the issues of a given identifiable.
-     *
-     * @param identifiable  an identifiable
-     * @param communityService a plan community service
-     * @return a string, empty if no issues
-     */
-    String getIssuesOverview( Identifiable identifiable, CommunityService communityService );
-
 
     /**
      * Find requirement relationships between organizations.

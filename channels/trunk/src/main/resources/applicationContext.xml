@@ -37,7 +37,7 @@ CONFIGURATION NOTES:
     <mongo:db-factory id="mongoDbFactory" host="${mongodb.host}" port="${mongodb.port}" dbname="channels"/>
 
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg ref="mongoDbFactory" />
+        <constructor-arg ref="mongoDbFactory"/>
     </bean>
 
     <mongo:repositories base-package="com.mindalliance.channels.db.repositories"/>
@@ -150,7 +150,8 @@ CONFIGURATION NOTES:
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
-        <property name="timeout" value="10000"/> <!-- 10 secs -->
+        <property name="timeout" value="10000"/>
+        <!-- 10 secs -->
         <property name="maxAttempts" value="2"/>
         <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
@@ -176,8 +177,9 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
-        <property name="timeout" value="300"/>  <!-- 300 secs -->
-     </bean>
+        <property name="timeout" value="300"/>
+        <!-- 300 secs -->
+    </bean>
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
           destroy-method="destroy">
@@ -196,7 +198,7 @@ CONFIGURATION NOTES:
         <constructor-arg ref="surveysDao"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
-    
+
     <bean id="communityService" class="com.mindalliance.channels.core.community.CommunityServiceImpl" scope="prototype">
     </bean>
 
@@ -204,142 +206,147 @@ CONFIGURATION NOTES:
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>
 
-    <bean id="detective" class="com.mindalliance.channels.engine.analysis.CollaborationTemplateDetective">
+    <bean id="collaborationPlanDetective" class="com.mindalliance.channels.engine.analysis.CollaborationTemplateDetective">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FromUser"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSegmentRespondsToIncident"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentWithoutGoal"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.StartedOrTerminatedTaskIsUnnamed"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithoutRole"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithActorOrRoleButNoOrganization"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithoutChannel"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InvalidChannel"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptyChannelAddress"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnnamedFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithUndefinedSource"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithUndefinedTarget"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithInvalidTiming"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrphanedPart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantPart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnconnectedConnector"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnconfirmedJob"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowToSelf"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.GeonameButNoLocation"/>
-                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithRoleWithNoKnownActor"/>-->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentNeverEnds"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NeverTriggeredSpecifiedTask"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AutoStartPartAlsoTriggered"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentEventNeverCaused"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentNeverStarts"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.CyclicTriggering"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSourceRedundancy"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PotentialDeadlock"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorNotInOneOrganization"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentWithSameGoal"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UselessPart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnverifiedPostalCode"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceInheritsDifferentPostalCode"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceInheritsDifferentStreetAddress"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceContainedInSelf"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantPlace"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptyNeedOrCapability"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnsatisfiedNeed"/>
-              <!--  <bean class="com.mindalliance.channels.engine.analysis.detectors.CommitmentWithoutRequiredAgreement"/>-->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyDissemination"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyNecessarySharing"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnTargetPart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnSourcePart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SinglePointOfFailure"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSegmentForEventPhase"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnplayedPart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UselessActor"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InvalidEntityTyping"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowDeclassifies"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SharingWithoutCommitments"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InsufficientClearance"/>
-               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>-->
-               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>-->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.MediumWithoutMode"/>
-                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>--> <!-- TODO Apply to plan community -->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowOverUndersecuredMedium"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.BroadcastOnlyChannels"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumDelegation"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlanLocaleIsRelative"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AlarmNotANotification"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithoutAssignments"/>
-                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->
-                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptySharingFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithoutContactInfo"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorIsTaskBottleneck"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskHasTooManyCommitments"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithTooManyInputs"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.MeaninglessFlowRestriction"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SharingContradictsCapability"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantChannel"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantEOI"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ContradictoryPolicies"/>
-               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.ConfirmedAgreementWithoutMOU"/>-->
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SingleAssignmentToImportantTask"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AvailabilityGapInTaskAssignments"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithoutFailureProtocol"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantSegmentContext"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AmbiguousSharingFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartTerminatedByManySends"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartIsOngoingAndStartsWithSegment"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoIntermediateToBypass"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NonPlaceholderOrganizationHasPlaceholderParent"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistIsEmpty"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasCircularPrerequisites"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasContradictoryConditions"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistUnconfirmed"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistTerminatingStepNotTerminating"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FunctionIsEmpty"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FunctionMissingEois"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartDoesNotImplementFunction"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.CommandWithoutAuthority"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistNotFullyConnectedToTaskContext"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistStepsNotInProperOrder"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasPrimaryJobsWithManyOrgs"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorOnlyHasLinkedJobs"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithMultiParticipationHasLinkedJobs"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationGivesActorMultipleTitles"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasSupervisorOutsideOwnOrganization"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.EntityNotInvolvedAgainstExpectation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.InvalidAgencyParent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.MissingOrganizationParticipation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.MissingUserParticipation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.TooManyUsersParticipatingAsAgent"/>
             </list>
         </property>
     </bean>
 
-    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.ParticipationAnalystImpl">
+
+    <bean id="collaborationTemplateDetective" class="com.mindalliance.channels.engine.analysis.CollaborationTemplateDetective">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
-                 <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.InvalidAgencyParent"/>
-                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingUserParticipation"/>
-                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingOrganizationParticipation"/>
-                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.TooManyUsersParticipatingAsAgent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FromUser"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NoSegmentRespondsToIncident"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentWithoutGoal"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.StartedOrTerminatedTaskIsUnnamed"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartWithoutRole"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartWithActorOrRoleButNoOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InvalidChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EmptyChannelAddress"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnnamedFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowWithUndefinedSource"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowWithUndefinedTarget"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartWithInvalidTiming"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrphanedPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnconnectedConnector"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnconfirmedJob"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowToSelf"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.GeonameButNoLocation"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithRoleWithNoKnownActor"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentNeverEnds"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TriggeredButNeverStartedDefinedTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NeverTriggeredSpecifiedTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AutoStartPartAlsoTriggered"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentEventNeverCaused"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentNeverStarts"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.CyclicTriggering"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NoSourceRedundancy"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PotentialDeadlock"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorNotInOneOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentWithSameGoal"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UselessPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnverifiedPostalCode"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlaceInheritsDifferentPostalCode"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlaceInheritsDifferentStreetAddress"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlaceContainedInSelf"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantPlace"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EmptyNeedOrCapability"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnsatisfiedNeed"/>
+                <!--  <bean class="com.mindalliance.channels.engine.analysis.detectors.CommitmentWithoutRequiredAgreement"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UntimelyDissemination"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UntimelyNecessarySharing"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InconsistentImpactOnTargetPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InconsistentImpactOnSourcePart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NoSegmentForEventPhase"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnplayedPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UselessActor"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InvalidEntityTyping"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowDeclassifies"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SharingWithoutCommitments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InsufficientClearance"/>
+                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>-->
+                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.MediumWithoutMode"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>--> <!-- TODO Apply to plan community -->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowOverUndersecuredMedium"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.BroadcastOnlyChannels"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.IncorrectMediumDelegation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlanLocaleIsRelative"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AlarmNotANotification"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationWithoutAssignments"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->
+                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EmptySharingFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorWithoutContactInfo"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorIsTaskBottleneck"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskHasTooManyCommitments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskWithTooManyInputs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.MeaninglessFlowRestriction"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SharingContradictsCapability"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantEOI"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ContradictoryPolicies"/>
+                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.ConfirmedAgreementWithoutMOU"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SingleAssignmentToImportantTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AvailabilityGapInTaskAssignments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskWithoutFailureProtocol"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantSegmentContext"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SegmentContextNeverCaused"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AmbiguousSharingFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartTerminatedByManySends"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NeedWithNoTimeSensitiveEOI"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AgentWithoutSupervisorCommitsToOne"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AgentUnqualifiedForMedium"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AgentCanNotFulfillSharingResponsibilities"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.IncorrectMediumSynchronicity"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartIsOngoingAndStartsWithSegment"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NoIntermediateToBypass"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssignedTaskLocationNotCommunicated"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.JobWithoutTitle"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SupervisedParticipationActorWithoutSupervisors"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InfoProductWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlaceholderOrganizationWithoutCustodian"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NonPlaceholderOrganizationHasPlaceholderParent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistIsEmpty"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistHasCircularPrerequisites"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistHasContradictoryConditions"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistUnconfirmed"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistTerminatingStepNotTerminating"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FunctionIsEmpty"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FunctionMissingEois"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartDoesNotImplementFunction"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.CommandWithoutAuthority"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.CriticalNotificationNotTriggering"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistNotFullyConnectedToTaskContext"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ChecklistStepsNotInProperOrder"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorHasPrimaryJobsWithManyOrgs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorOnlyHasLinkedJobs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationWithMultiParticipationHasLinkedJobs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationGivesActorMultipleTitles"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorHasSupervisorOutsideOwnOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EntityNotInvolvedAgainstExpectation"/>
             </list>
         </property>
     </bean>
+
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.ParticipationAnalystImpl"/>
 
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
-        <property name="userIconDirectory" value="${channels.home}${file.separator}public${file.separator}users${file.separator}photos${file.separator}cache"/>
+        <property name="userIconDirectory"
+                  value="${channels.home}${file.separator}public${file.separator}users${file.separator}photos${file.separator}cache"/>
     </bean>
 
     <!-- =========================== Transmission Media -->

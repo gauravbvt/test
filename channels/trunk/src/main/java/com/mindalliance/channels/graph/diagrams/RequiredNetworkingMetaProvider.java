@@ -154,12 +154,13 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ORG_FONT ) );
-            if ( communityService.getParticipationAnalyst().hasIssues( vertex, communityService ) ) {
+            if ( communityService.getAnalyst().hasIssues( communityService, vertex, true ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( communityService.getParticipationAnalyst().getIssuesOverview(
+                        sanitize( communityService.getAnalyst().getIssuesOverview(
+                                communityService,
                                 vertex,
-                                communityService ) ) ) );
+                                true ) ) ) );
             } else {
                 list.add( new DOTAttribute( "tooltip", vertex.getDescription() ) );
             }

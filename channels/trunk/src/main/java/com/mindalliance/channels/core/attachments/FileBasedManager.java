@@ -647,6 +647,16 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
                 LOG.error( "Unable to save attachments for plan " + planDao.getPlan().getUri(), e );
             }
         }
+
+        @Override
+        public void created( PlanCommunity planCommunity ) {
+            // Do nothing
+        }
+
+        @Override
+        public void loaded( CommunityDao communityDao ) {
+            // Do nothing
+        }
     }
 
     /**

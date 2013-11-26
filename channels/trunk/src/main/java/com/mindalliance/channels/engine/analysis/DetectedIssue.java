@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -129,6 +130,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     @Override
     public boolean hasTag( String tag ) {
         return getDetectorTags().contains( tag );
+    }
+
+    @Override
+    public List<String> getRemediationOptions() {
+        return Arrays.asList( getRemediation().split( "\\n" ) );
     }
 
     public void setDetectorLabel( String detectorLabel ) {

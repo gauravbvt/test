@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
@@ -14,13 +15,12 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import org.slf4j.Logger;
@@ -89,7 +89,7 @@ public class IssueScanner implements Scanner, PlanListener {
     @Override
     public void terminate() {
         LOG.debug( "Terminating issue scans" );
-        synchronized ( daemons  ) {
+        synchronized ( daemons ) {
             for ( String uri : daemons.keySet() )
                 terminate( uri );
         }
@@ -142,10 +142,22 @@ public class IssueScanner implements Scanner, PlanListener {
         scan( planCommunityManager.getDomainPlanCommunity( plan ) );
     }
 
+
+    @Override
+    public void created( PlanCommunity planCommunity ) {
+        scan( planCommunity );
+    }
+
     @Override
     public void loaded( PlanDao planDao ) {
         created( planDao.getPlan() );
     }
+
+    @Override
+    public void loaded( CommunityDao communityDao ) {
+        created( communityDao.getPlanCommunity() );
+    }
+
 
     @Override
     public void productized( Plan plan ) {
@@ -164,14 +176,16 @@ public class IssueScanner implements Scanner, PlanListener {
     }
 
     //===============================================================
+
     /**
      * Background analysis daemon.
      */
     public class Daemon extends Thread {
 
         /**
-         * The plan being analyzed.
+         * The plan community being analyzed.
          */
+        private final PlanCommunity planCommunity;
         private final Plan plan;
 
         private final CommunityService communityService;
@@ -183,26 +197,21 @@ public class IssueScanner implements Scanner, PlanListener {
 
         public Daemon( CommunityService communityService ) {
             this.communityService = communityService;
+            this.planCommunity = communityService.getPlanCommunity();
             this.plan = communityService.getPlan();
-
             setDaemon( true );
             setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
         }
 
-        /**
-         * Get the plan.
-         *
-         * @return a plan
-         */
-        public Plan getPlan() {
-            return plan;
+        public PlanCommunity getPlanCommunity() {
+            return planCommunity;
         }
 
         /**
          * Activate scan.
          */
         public synchronized void activate() {
-            LOG.info( "Activating issue sweep on plan {}", plan );
+            LOG.info( "Activating issue sweep on plan {}", planCommunity.getUri() );
             active = true;
             super.start();
         }
@@ -211,7 +220,7 @@ public class IssueScanner implements Scanner, PlanListener {
          * Abort scan.
          */
         public synchronized void terminate() {
-            LOG.info( "Terminating issue sweep on plan {}", plan );
+            LOG.info( "Terminating issue sweep on plan {}", planCommunity.getUri() );
             active = false;
         }
 
@@ -222,55 +231,48 @@ public class IssueScanner implements Scanner, PlanListener {
         public void run() {
             ChannelsUser user = setupUser();
             try {
-                LOG.debug( "Current user = {}, plan = {}", user, plan );
+                LOG.debug( "Current user = {}, plan = {}", user, planCommunity.getUri() );
                 long startTime = System.currentTimeMillis();
                 if ( !active ) return;
                 for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
                     if ( !active ) return;
                     // Garbage-collect unreferenced and undefined entities.
                     communityService.getDao().cleanup( mo.getClass(), mo.getName() );
-                    if ( !active ) return;
-                    scanIssues( mo );
                 }
                 if ( !active ) return;
-                for ( Segment segment : communityService.list( Segment.class ) ) {
-                    if ( !active ) return;
-                    Iterator<Part> parts = segment.parts();
-                    while ( parts.hasNext() ) {
+                if ( planCommunity.isDomainCommunity() ) {
+                    for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
                         if ( !active ) return;
-                        Part part = parts.next();
-                        scanIssues( part );
+                        scanIssues( mo );
                     }
-                    if ( !active ) return;
-                    Iterator<Flow> flows = segment.flows();
-                    while ( flows.hasNext() ) {
-                        Flow flow = flows.next();
-                        scanIssues( flow );
+                    for ( Segment segment : communityService.list( Segment.class ) ) {
+                        if ( !active ) return;
+                        Iterator<Part> parts = segment.parts();
+                        while ( parts.hasNext() ) {
+                            if ( !active ) return;
+                            Part part = parts.next();
+                            scanIssues( part );
+                        }
+                        if ( !active ) return;
+                        Iterator<Flow> flows = segment.flows();
+                        while ( flows.hasNext() ) {
+                            Flow flow = flows.next();
+                            scanIssues( flow );
+                        }
+                    }
+                } else {
+                    for ( Identifiable identifiable : communityService.listIdentifiables( Identifiable.class ) ) {
+                        if ( !active ) return;
+                        scanIssues( identifiable );
                     }
                 }
 //                if ( !active ) return;
 //                analyst.findAllIssues();
                 if ( !active ) return;
-
                 analyst.findAllUnwaivedIssues( communityService );
-                if ( !active ) return;
-                analyst.isValid( communityService, plan );
-                if ( !active ) return;
-                analyst.isComplete( communityService, plan );
-                if ( !active ) return;
-                analyst.isRobust( communityService, plan );
-                if ( !active ) return;
-                analyst.countTestFailures( communityService, plan, Issue.VALIDITY );
-                if ( !active ) return;
-                analyst.countTestFailures( communityService, plan, Issue.COMPLETENESS );
-                if ( !active ) return;
-                analyst.countTestFailures( communityService, plan, Issue.ROBUSTNESS );
-                if ( !active ) return;
-                // Find all commitments
-                // queryService.findAllCommitments();
-                long endTime = System.currentTimeMillis();
-                LOG.info( "Issue sweep completed on " + plan + " in "
-                          + ( endTime - startTime ) + " msecs" );
+                 long endTime = System.currentTimeMillis();
+                LOG.info( "Issue sweep completed on " + planCommunity.getUri() + " in "
+                        + ( endTime - startTime ) + " msecs" );
 
             } catch ( Throwable e ) {
                 LOG.error( "Deamon failed", e );
@@ -282,19 +284,20 @@ public class IssueScanner implements Scanner, PlanListener {
             ChannelsUser principal = new ChannelsUser(
                     new UserRecord( "_channels_", "daemon", "Issue Scanner", "", UserAccess.UserRole.Admin ) );
             principal.setPlan( plan );
+            principal.setPlanCommunityUri( planCommunity.getUri() );
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );
             SecurityContextHolder.getContext().setAuthentication(
-                new AnonymousAuthenticationToken( "daemon", principal, authorities ) );
+                    new AnonymousAuthenticationToken( "daemon", principal, authorities ) );
             return principal;
         }
 
-        private void scanIssues( ModelObject mo ) {
+        private void scanIssues( Identifiable identifiable ) {
             if ( !active ) return;
 
             // Model object can be null when deleted when scan was in progress
-            if ( mo != null )
-                analyst.listIssues( communityService, mo, true );
+            if ( identifiable != null )
+                analyst.listIssues( communityService, identifiable, true );
         }
     }
 }

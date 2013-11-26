@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -17,9 +17,9 @@ import org.apache.wicket.model.IModel;
  */
 public class ParticipationIssueDetailsPanel extends AbstractUpdatablePanel {
 
-    private IModel<ParticipationIssue> participationIssueModel;
+    private IModel<Issue> participationIssueModel;
 
-    public ParticipationIssueDetailsPanel( String id, IModel<ParticipationIssue> participationIssueModel ) {
+    public ParticipationIssueDetailsPanel( String id, IModel<Issue> participationIssueModel ) {
         super( id );
         this.participationIssueModel = participationIssueModel;
         init();
@@ -32,7 +32,7 @@ public class ParticipationIssueDetailsPanel extends AbstractUpdatablePanel {
     }
 
     private void addKind() {
-        add(  new Label( "kind", getIssue().getKind() ) );
+        add(  new Label( "kind", getIssue().getDetectorLabel() ) );
     }
 
     private void addDescription() {
@@ -52,7 +52,7 @@ public class ParticipationIssueDetailsPanel extends AbstractUpdatablePanel {
         add( remediationListView );
     }
 
-    private ParticipationIssue getIssue() {
+    private Issue getIssue() {
         return participationIssueModel.getObject();
     }
 }

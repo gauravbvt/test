@@ -59,9 +59,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private static final String DESCRIPTION_SEPARATOR = " -- ";
 
     /**
-     * The detective service.
+     * The collaboration template detective.
      */
-    private Detective detective;
+    private Detective collaborationTemplateDetective;
+
+    /**
+     * The collaboration plan detective.
+     */
+    private Detective collaborationPlanDetective;
 
     /**
      * Low priority, multi-threaded issues scanner.
@@ -79,13 +84,29 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
-     * Set the detective to use.
+     * Set the detective to use for templates.
      *
      * @param detective an issue detector manager
      */
-    public void setDetective( Detective detective ) {
-        this.detective = detective;
+    public void setCollaborationTemplateDetective( Detective detective ) {
+        this.collaborationTemplateDetective = detective;
     }
+
+    /**
+     * Set the detective to use for collaboration plans (aka communities).
+     *
+     * @param detective an issue detector manager
+     */
+    public void setCollaborationPlanDetective( Detective detective ) {
+        this.collaborationPlanDetective = detective;
+    }
+
+    public Detective getDetective( CommunityService communityService) {
+        return communityService.isForDomain()
+                ? collaborationTemplateDetective
+                : collaborationPlanDetective;
+    }
+
 
     @Override
     public void setIssueScanner( IssueScanner issueScanner ) {
@@ -455,6 +476,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     private List<Issue> detectAllIssues( CommunityService communityService, Identifiable identifiable, String property,
                                          boolean includingPropertySpecific ) {
+        Detective detective = getDetective( communityService );
         List<Issue> issues = new ArrayList<Issue>();
         if ( property != null ) {
             issues.addAll( detective.detectUnwaivedPropertyIssues( communityService, identifiable, property ) );
@@ -472,6 +494,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     private List<? extends Issue> detectUnwaivedIssues( CommunityService communityService, Identifiable identifiable, String property,
                                                         boolean includingPropertySpecific ) {
+        Detective detective = getDetective( communityService );
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
             if ( includingPropertySpecific )
@@ -504,6 +527,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     private List<? extends Issue> detectWaivedIssues( CommunityService communityService, Identifiable identifiable, String property,
                                                       boolean includingPropertySpecific ) {
+        Detective detective = getDetective( communityService );
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
             if ( includingPropertySpecific )

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,9 +33,9 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
     private static final int MAX_ROWS = 8;
 
     @SpringBean
-    private ParticipationAnalyst participationAnalyst;
+    private Analyst analyst;
 
-    private ParticipationIssue issueShown;
+    private Issue issueShown;
 
     private Component issueDetailsPanel;
 
@@ -53,7 +53,7 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
         ParticipationIssuesTable participationIssuesTable;
         participationIssuesTable = new ParticipationIssuesTable(
                 "issuesTable",
-                new PropertyModel<List<ParticipationIssue>>(this, "participationIssues")
+                new PropertyModel<List<Issue>>(this, "participationIssues")
                 );
         add( participationIssuesTable );
     }
@@ -62,7 +62,7 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
         if ( issueShown != null ) {
             issueDetailsPanel = new ParticipationIssueDetailsPanel(
                     "issue",
-                    new Model<ParticipationIssue>( issueShown) );
+                    new Model<Issue>( issueShown) );
         }
         else {
             issueDetailsPanel = new Label( "issue", "" );
@@ -72,13 +72,13 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
         addOrReplace( issueDetailsPanel );
     }
 
-    public List<ParticipationIssue> getParticipationIssues() {
-        return participationAnalyst.detectAllIssues( getCommunityService() );
+    public List<Issue> getParticipationIssues() {
+        return analyst.findAllIssues( getCommunityService() );
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof ParticipationIssue ) {
-            ParticipationIssue issue = (ParticipationIssue) object;
+        if ( object instanceof Issue ) {
+            Issue issue = (Issue) object;
             if ( issueShown != null && issueShown.equals( issue ) ) {
                 issueShown = null;
             } else {
@@ -94,9 +94,9 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
 
     private class ParticipationIssuesTable extends AbstractFilterableTablePanel {
 
-        private IModel<List<ParticipationIssue>> issuesModel;
+        private IModel<List<Issue>> issuesModel;
 
-        private ParticipationIssuesTable( String id, IModel<List<ParticipationIssue>> issuesModel ) {
+        private ParticipationIssuesTable( String id, IModel<List<Issue>> issuesModel ) {
             super( id, MAX_ROWS );
             this.issuesModel = issuesModel;
             initTable();
@@ -104,10 +104,15 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            final List<IColumn<ParticipationIssue>> columns = new ArrayList<IColumn<ParticipationIssue>>();
+            final List<IColumn<Issue>> columns = new ArrayList<IColumn<Issue>>();
             columns.add(  makeColumn(
                     "Issue",
-                    "kind",
+                    "detectorLabel",
+                    EMPTY
+            ) );
+            columns.add(  makeColumn(
+                    "Type",
+                    "type",
                     EMPTY
             ) );
             columns.add( makeFilterableColumn(
@@ -127,10 +132,10 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
                     ParticipationIssuesPanel.this ) );
 
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<ParticipationIssue>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<Issue>(
                     "participationIssuesTable",
                     columns,
-                    new SortableBeanProvider<ParticipationIssue>(
+                    new SortableBeanProvider<Issue>(
                             getFilteredParticipationIssues(),
                             "kind" ),
                     getPageSize() ) );
@@ -138,8 +143,8 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
         }
 
         @SuppressWarnings( "unchecked" )
-        private List<ParticipationIssue> getFilteredParticipationIssues() {
-            return (List<ParticipationIssue>) CollectionUtils.select(
+        private List<Issue> getFilteredParticipationIssues() {
+            return (List<Issue>) CollectionUtils.select(
                     issuesModel.getObject(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {

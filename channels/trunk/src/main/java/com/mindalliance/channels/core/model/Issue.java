@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Detected or user issue
@@ -183,4 +184,10 @@ public interface Issue extends Identifiable, Serializable {
      * @return a boolean
      */
     boolean hasTag( String tag );
+
+    /**
+     * Get a list of remediation options
+     * @return a list of strings
+     */
+    List<String> getRemediationOptions();
 }

@@ -3,6 +3,8 @@
 
 package com.mindalliance.channels.dao;
 
+import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.PlanListener;
@@ -65,6 +67,14 @@ public class TestPlanManager {
         }
 
         public void aboutToUnload( PlanDao planDao ) {
+        }
+
+        @Override
+        public void created( PlanCommunity planCommunity ) {
+        }
+
+        @Override
+        public void loaded( CommunityDao communityDao ) {
         }
     }
 }

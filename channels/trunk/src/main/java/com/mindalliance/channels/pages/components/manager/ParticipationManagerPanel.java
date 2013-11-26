@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -34,7 +34,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     private UserParticipationService userParticipationService;
 
     @SpringBean
-    private ParticipationAnalyst participationAnalyst;
+    private Analyst analyst;
 
     @SpringBean
     private ParticipationManager participationManager;
@@ -110,7 +110,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     }
 
     public String getIssuesTitle() {
-        int issuesCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
+        int issuesCount = analyst.findAllIssues( getCommunityService() ).size();
         return "Issues (" + issuesCount +")";
     }
 

@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
@@ -18,6 +17,7 @@ import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -75,7 +75,7 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
     private UserParticipationService userParticipationService;
 
     @SpringBean
-    private ParticipationAnalyst participationAnalyst;
+    private Analyst analyst;
 
     @SpringBean
     private PlanManager planManager;
@@ -325,7 +325,7 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
                 planCommunity );
         int toConfirmCount = participationManager
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
-        int issueCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
+        int issueCount = analyst.findAllIssues( getCommunityService() ).size();
         addTipTitle(
                 participationManagerLink,
                 "Manage plan participation ("

@@ -6,6 +6,8 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -207,10 +209,15 @@ public class UserIssue extends ModelObject implements Issue {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Tag)object).getName().equals( tag );
+                        return ( (Tag) object ).getName().equals( tag );
                     }
                 }
         );
+    }
+
+    @Override
+    public List<String> getRemediationOptions() {
+        return Arrays.asList( getRemediation().split( "\\n" ) );
     }
 
     /**
