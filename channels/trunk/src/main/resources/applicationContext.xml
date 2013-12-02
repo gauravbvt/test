@@ -214,6 +214,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.MissingOrganizationParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.MissingUserParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.TooManyUsersParticipatingAsAgent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.RequirementNotSatisfied"/>
             </list>
         </property>
     </bean>

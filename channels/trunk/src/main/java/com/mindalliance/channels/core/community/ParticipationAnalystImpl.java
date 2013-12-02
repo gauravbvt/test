@@ -63,7 +63,8 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
         return rels;
     }
 
-    private List<RequirementRelationship> findRequirementRelationships( Requirement requirement,
+    @Override
+    public List<RequirementRelationship> findRequirementRelationships( Requirement requirement,
                                                                         CommunityService communityService ) {
         List<RequirementRelationship> rels = new ArrayList<RequirementRelationship>();
         List<Agency> allAgencies = communityService.getParticipationManager().getAllKnownAgencies( communityService );
@@ -139,6 +140,8 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
         Event event = (Event) extras[1];
         return requirement.measureSatisfaction( timing, event, communityService );
     }
+
+
 
     @Override
     public int requiredCommitmentsCount( Requirement requirement, Object[] extras, CommunityService communityService ) {

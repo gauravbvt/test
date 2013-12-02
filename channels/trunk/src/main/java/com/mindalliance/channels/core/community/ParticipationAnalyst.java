@@ -32,6 +32,15 @@ public interface ParticipationAnalyst {
             CommunityService communityService );
 
     /**
+     * Find requirement relationships for a given requirement.
+     * @param requirement a requirement
+     * @param communityService a community service
+     * @return a list of requirement relationships
+     */
+    List<RequirementRelationship> findRequirementRelationships( Requirement requirement,
+                                                                CommunityService communityService );
+
+    /**
      * Find requirement relationship from one organization to another.
      *
      * @param fromAgency    an agency
