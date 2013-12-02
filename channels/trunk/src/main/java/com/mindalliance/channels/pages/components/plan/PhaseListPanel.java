@@ -87,7 +87,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
             }
         };
         nameField.setOutputMarkupId( true );
-        makeVisible( nameField, isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
+        makeVisible( nameField, isPlanner() && getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();

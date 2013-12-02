@@ -42,6 +42,14 @@ public interface ImagingService {
     int[] getImageSize( CommunityService communityService,  String url );
 
     /**
+     * Whether the url points to a valid image.
+     * @param url a url string
+     * @param communityService a community service
+     * @return a boolean
+     */
+    boolean isPicture( String url, CommunityService communityService );
+
+    /**
      * Create/update PNG icons for model object from image at given url.
      *
      *
@@ -144,4 +152,5 @@ public interface ImagingService {
      * @return a string
      */
     String getImageDirPath();
-}
+
+ }

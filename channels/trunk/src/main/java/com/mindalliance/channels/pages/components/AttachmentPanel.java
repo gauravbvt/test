@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import org.apache.commons.validator.UrlValidator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -40,12 +41,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
  * File attachments for a given model object.
  */
 public class AttachmentPanel extends AbstractCommandablePanel {
+
+    private final static Logger LOG = LoggerFactory.getLogger( AttachmentPanel.class );
 
     /**
      * Submit button.
@@ -294,13 +298,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
- /*               refresh( target );
-                update( target, new Change(
-                        Change.Type.Updated,
-                        getAttachee(),
-                        "attachmentTickets"
-                ) );
-*/
+                // do nothing
             }
         } );
         controlsContainer.addOrReplace( urlField );
@@ -520,8 +518,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         } );
                 // Only add non-redundant attachment.
                 if ( attachment != null ) {
-                    doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
-                    postProcess( attachment );
+                    if ( isContentValid( attachment.getUrl() ) ) {
+                        doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
+                        postProcess( attachment );
+                    }
                 }
             }
         }
@@ -561,29 +561,49 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * @param value the url string
      */
     public void setUrl( String value ) {
-        this.url = value;
+        String newUrl = validateUrl( value );
+        if ( newUrl != null )
+            this.url = newUrl;
+    }
+
+    private String validateUrl( String value ) {
+        String wellFormedUrl = null;
+        try {
+            new URL( value );
+            wellFormedUrl = value;
+
+        } catch ( MalformedURLException e ) {
+            LOG.warn( "Invalid URL: " + value );
+            if ( !value.contains( "://" ) ) {
+                wellFormedUrl = "http://" + value;
+            }
+        }
+        if ( wellFormedUrl != null ) {
+            if ( new UrlValidator().isValid( wellFormedUrl ) )
+                return wellFormedUrl;
+            else
+                return null;
+        }
+        return wellFormedUrl;
+    }
+
+    private boolean isContentValid( String wellFormedUrl ) {
+        return getSelectedType() != Type.Image || imagingService.isPicture( wellFormedUrl, getCommunityService() );
     }
 
     private void attachUrl() {
         if ( url != null && !url.isEmpty() ) {
-            Logger logger = LoggerFactory.getLogger( getClass() );
-            ModelObject mo = getAttachee();
-            logger.info( "Attaching URL to {}", mo );
-            // URL url;
-            try {
-                new URL( url );
+            if ( isContentValid( url ) ) {
+                ModelObject mo = getAttachee();
+                LOG.info( "Attaching URL to {}", mo );
                 Attachment attachment = new AttachmentImpl( url, getSelectedType(), getName() );
                 doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
                 postProcess( attachment );
-                this.url = null;
-                this.name = "";
-            } catch ( MalformedURLException e ) {
-                logger.warn( "Invalid URL: " + url );
-                if ( url.indexOf( "://" ) < 0 ) {
-                    setUrl( "http://" + url );
-                    attachUrl();
-                }
+            } else {
+                LOG.info( "Invalid content at " + url );
             }
+            this.url = null;
+            this.name = "";
         }
     }
 

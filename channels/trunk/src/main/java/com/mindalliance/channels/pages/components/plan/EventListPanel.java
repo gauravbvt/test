@@ -117,7 +117,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             }
         };
         nameField.setOutputMarkupId( true );
-        makeVisible( nameField, isLockedByUser( Channels.ALL_EVENTS ) && wrapper.isMarkedForCreation() );
+        makeVisible( nameField, isPlanner() && getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
 /*

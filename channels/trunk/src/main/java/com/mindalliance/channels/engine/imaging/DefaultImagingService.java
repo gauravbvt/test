@@ -141,6 +141,17 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return size;
     }
 
+    @Override
+    public boolean isPicture( String url, CommunityService communityService ) {
+        try {
+            getImage( communityService, url );
+            return true;
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to get image for " + url );
+            return false;
+        }
+    }
+
     private BufferedImage getImage( CommunityService communityService, String url ) throws IOException {
         BufferedImage image = null;
         File uploadedFile = attachmentManager.getUploadedFile( communityService, url );
