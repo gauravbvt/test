@@ -36,7 +36,7 @@
       	<path location="${classes.dir}"/>  
 	</path>  
   
-	<echo>Running JUnit Test Suite...</echo>  
+	<echo>Running JUnit Channels Automation Test Suite...</echo>  
 	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">  
 		<delete dir="${junit.out.dir.xml}"/>  
  		<mkdir  dir="${junit.out.dir.xml}"/>  
@@ -57,6 +57,7 @@
    		</junitreport>
    </target>
 	
+	<echo>Running JUnit Test Suite...</echo>
 	<target name="testsuiteAutomationBVT" depends="compile" description="Running Test Suite">  
 			<delete dir="${junit.out.dir.xml}"/>  
 	 		<mkdir  dir="${junit.out.dir.xml}"/>  
