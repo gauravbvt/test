@@ -67,7 +67,7 @@
 				<formatter type="xml"/>  
 				<batchtest fork="yes" todir="${junit.out.dir.xml}">  
 					<fileset dir="${classes.dir}" 
-							includes="	**/Home.class" />  
+							includes="	**/AutomationBVTHome.class" />  
 				</batchtest>  
 	    	</junit> 	
 	   		<junitreport todir="Reports">
