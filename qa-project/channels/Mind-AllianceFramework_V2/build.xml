@@ -37,7 +37,7 @@
 	</path>  
   
 	<echo>Running JUnit Test Suite...</echo>  
-	<target name="testsuite" depends="compile" description="Running Test Suite">  
+	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">  
 		<delete dir="${junit.out.dir.xml}"/>  
  		<mkdir  dir="${junit.out.dir.xml}"/>  
 		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
@@ -56,4 +56,24 @@
 	   	    <report format="frames" todir="Reports"/>
    		</junitreport>
    </target>
+	
+	<target name="testsuiteAutomationBVT" depends="compile" description="Running Test Suite">  
+			<delete dir="${junit.out.dir.xml}"/>  
+	 		<mkdir  dir="${junit.out.dir.xml}"/>  
+			<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
+				<classpath refid="classpath.test"/>  
+				<sysproperty key="ant.home" value="${ant.home}"/>  
+				<formatter type="xml"/>  
+				<batchtest fork="yes" todir="${junit.out.dir.xml}">  
+					<fileset dir="${classes.dir}" 
+							includes="	**/Home.class" />  
+				</batchtest>  
+	    	</junit> 	
+	   		<junitreport todir="Reports">
+	   	  		<fileset dir="target">
+		  			<include name="TEST-*.xml"/>
+				</fileset>
+		   	    <report format="frames" todir="Reports"/>
+	   		</junitreport>
+	   </target>
 </project>  
