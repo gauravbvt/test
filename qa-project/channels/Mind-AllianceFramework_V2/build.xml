@@ -1,5 +1,5 @@
 <?xml version="1.0"?>  
-<project name="Mind-Alliance Framework" default="testsuite">  
+<project name="Mind-Alliance Framework">  
 	
 	<property name="project.name" value="Mind-Alliance Framework"/>  
  	<property name="src.dir" value="src"/>  
