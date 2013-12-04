@@ -50,17 +50,17 @@ public class ChannelsAdmin {
 	}
 	
 	/**
-	 * Enters plan name in 'Plan Owner' text box.
+	 * Enters owner name in 'Plan Owner' text box.
 	 * @throws UIAutomationException 
 	 */
-	//public void enterPlanOwnerName(String ownerName)throws UIAutomationException
-	//{
-		//UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		//elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		//xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
-		//UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		//UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-	//}
+	public void enterPlanOwnerName(String ownerName)throws UIAutomationException
+	{
+		UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
+		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+	}
 	
 	
 	/**
@@ -131,10 +131,10 @@ public class ChannelsAdmin {
 	 */
 	public void selectPlan(String planName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Select Plan",GlobalVariables.configuration.getAttrSearchList(),"Select Plan");
-		xPath=dataController.getPageDataElements(fileName,"Select Plan","Xpath");
-		Select categoryDropDownList = new Select(GlobalVariables.configuration.getWebElement());
-		Configuration.getConfigurationObject().setSelect(categoryDropDownList);
-		UIActions.selectByText(planName);
+		UIActions.click(fileName,"Select Plan",GlobalVariables.configuration.getAttrSearchList(),"Select Plan");
+		Select planDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(planDropDownList);
+		UIActions.selectByTextAndClick(planName);
 	}
 	
 
@@ -184,6 +184,42 @@ public class ChannelsAdmin {
 			
 		// Assertion: Verify that "User 1" is added
 	}
+	
+	
+	/**
+	 * Add user to plan
+	 * @param userName
+	 * @throws UIAutomationException
+	 */
+	public void verifySameUserNotification() throws UIAutomationException{
+		String samePlanAlert=null;
+		
+		samePlanAlert=dataController.getPageDataElements(fileName, "Alert Window Title Of Same Plan", "Title");
+		UIActions.assertAlert(samePlanAlert);
+			
+	}
+	 
+	/**
+	 * Add user to plan/template
+	 * @param userRole
+	 * @throws UIAutomationException
+	 */
+	public String selectOptionFromTemplateDropDown(String userRole) throws UIAutomationException{
+		
+		elementController.requireElementSmart(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(),"User Role Drop Down");
+		UIActions.click(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(),"User Role Drop Down");
+		Select adminDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(adminDropDownList);
+		UIActions.selectByTextAndClick(userRole);
+			
+		elementController.requireElementSmart(fileName,"Apply Button For User Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
+		UIActions.click(fileName,"Apply Button User For Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
+		return "yes";
+	
+	}
+	
+	
+	
 	
 	/**
 	 * Add user to plan
@@ -245,6 +281,28 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"Delete User Submit",GlobalVariables.configuration.getAttrSearchList(), "Delete User Submit");
 			
 	}
+	
+	/**
+	 * Disable user 
+	 * @param userName
+	 * @param isDisabled
+	 * @throws UIAutomationException
+	 */
+	public void disableUser(String userName,String isDisabled) throws UIAutomationException{
+		getUser(userName);
+		
+		elementController.requireElementSmart(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		UIActions.click(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		Select disabledDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(disabledDropDownList);
+		UIActions.selectByTextAndClick(isDisabled);
+			
+		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
+		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
+	}
+	
+	
+	
 	
 	/**
 	 * Gets username from list of usernname
