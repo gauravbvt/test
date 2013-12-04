@@ -11,6 +11,11 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Alert Window Title Of Same Plan</GivenName>
+ 		<Title>Failed: User_21 is already taken. </Title>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Same Plan Notification</GivenName>
  		<Title>Invalid template identifier - New collaboration template not added.</Title>
  	</Element>
@@ -135,8 +140,8 @@
  	
 	<Element>
     	<GivenName>Select Plan</GivenName>
-    	<Xpath>//select[contains(@name,'plan-sel')]</Xpath>
-      	<Name>plan-sel</Name>
+    	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div/div/select</Xpath>
+      	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
@@ -205,13 +210,14 @@
  	
  	<Element>
     	<GivenName>Table Of Users</GivenName>
-    	<Xpath>/html/body/div/div[3]/div/form/div[5]/table/tbody</Xpath>
+    	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div/div[2]/ul/li[2]/a/span[2]</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
  	
  	<Element>
     	<GivenName>First XPath </GivenName>
@@ -254,8 +260,28 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>User Role Drop Down</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Apply Button For User Details</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/div/a[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Apply Button For User Role</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div[2]/div/a[2]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
