@@ -68,7 +68,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 			loadTestData();
 			
 			// Loads Test Data
-			Log4J.getlogger(this.getClass()).info(testCaseId +" test case started");
 			description = "Testcase: " + testCaseId + " execution started";
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
@@ -76,6 +75,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			Log4J.getlogger(this.getClass()).info(testCaseId +" test case execution started");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
