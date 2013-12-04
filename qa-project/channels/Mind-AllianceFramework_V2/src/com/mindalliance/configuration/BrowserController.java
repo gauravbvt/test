@@ -23,7 +23,6 @@ public class BrowserController{
 	 * @throws UIAutomationException 
 	*/
 	
-	@SuppressWarnings("deprecation")
 	public void initializeDriver() throws UIAutomationException	{
 		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
 		try{
@@ -35,6 +34,7 @@ public class BrowserController{
 		    	
 		    	//Maximize the Browser
 		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
+		    	
 				break;
 			case "Internet Explorer":
 				driver=null;
