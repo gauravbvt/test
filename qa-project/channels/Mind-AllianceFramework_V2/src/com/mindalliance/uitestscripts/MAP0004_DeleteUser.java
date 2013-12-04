@@ -45,10 +45,11 @@ public class MAP0004_DeleteUser extends TestCase{
 	public String passed="Pass";
 	public String failed="FAIL";
 	public String blank=""; 
-	public String scriptException;public String browser="";
+	public String scriptException;
+	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -89,7 +90,7 @@ public class MAP0004_DeleteUser extends TestCase{
 	}
 	
 	/**
-	 * This method adds user to the plan, delets the user and verify if the user is delete
+	 * This method adds user to the plan, deletes the user and verify if the user is delete
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

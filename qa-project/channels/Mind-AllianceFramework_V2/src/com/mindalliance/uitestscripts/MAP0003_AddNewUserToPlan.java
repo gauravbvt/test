@@ -129,6 +129,9 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
  			stepNo++;
  			ChannelsAdmin ca=new ChannelsAdmin();
  			ca.clickUsersTab();
+ 		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
 			// Add user
 			stepNo++;
@@ -136,7 +139,6 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));
 			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"), testData.get("isAdministrator"),testData.get("isDisabled"));
-			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

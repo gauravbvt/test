@@ -49,7 +49,7 @@ public class MAP0017_deleteEvent extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -160,9 +160,15 @@ public class MAP0017_deleteEvent extends TestCase{
 			
 			// Select Responding from Phase dropdown list
 			planPage.selectFromPhaseDropdown(testData.get("Responding"));
+			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
 			
 			// Enter event
 			planPage.enterEventInAboutPlanSegment(testData.get("Event"));
+			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
 			
 			// Select Low from first Rated dropdown list
 			planPage.selectFromFirstRatedDropdown(testData.get("Low"));
@@ -176,6 +182,10 @@ public class MAP0017_deleteEvent extends TestCase{
  		    // Enter second event
  			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
  			
+ 			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			
  	    	// Select High from second Rated dropdown list
  		    planPage.selectFromSecondRatedDropdown(testData.get("High"));
  			// Write log
