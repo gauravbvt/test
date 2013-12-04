@@ -12,7 +12,7 @@ import org.junit.Test;
 public class MABVT0003_VerifyJavaVersion extends TestCase {
 
 	@Test
-	public void test() {
+	public void testMABVT0003_VerifyJavaVersion() {
 		String javaVersion=System.getProperty("java.version");
 		System.out.println("The Java version is :"+javaVersion);
 		
