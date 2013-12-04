@@ -79,6 +79,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     public void setLinked( boolean linked ) {
         this.linked = linked;
+        this.accepted = true;
     }
 
     public UserRecord getParticipant( CommunityService communityService ) {
@@ -195,7 +196,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         }
     }
 
-    public String getUserFullName( CommunityService communityService ) {
+    public String getParticipantFullName( CommunityService communityService ) {
         return getParticipant( communityService ).getFullName();
     }
 

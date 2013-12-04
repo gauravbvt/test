@@ -59,7 +59,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private static final int COMMAND_CHAINS_DIALOG_HEIGHT = 800;
 
-    private static final double[] COMMAND_CHAINS_DIAGRAM_SIZE = { COMMAND_CHAINS_DIALOG_WIDTH - 10 , COMMAND_CHAINS_DIALOG_HEIGHT - 30 };
+    private static final double[] COMMAND_CHAINS_DIAGRAM_SIZE = {COMMAND_CHAINS_DIALOG_WIDTH - 10, COMMAND_CHAINS_DIALOG_HEIGHT - 30};
 
     @SpringBean
     private ChannelsUser user;
@@ -176,7 +176,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private void addOpenAndConfirmedParticipation() {
-        List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
+        List<ParticipationWrapper> participationWrappers = openOrConfirmedOrLinkedParticipationWrappers();
         Collections.sort(
                 participationWrappers,
                 new Comparator<ParticipationWrapper>() {
@@ -251,7 +251,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private void addNewParticipation() {
-        List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
+        List<ParticipationWrapper> participationWrappers = openOrConfirmedOrLinkedParticipationWrappers();
         WebMarkupContainer newParticipationContainer = new WebMarkupContainer( "newParticipationContainer" );
         newParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
         userParticipationContainer.add( newParticipationContainer );
@@ -270,21 +270,14 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         newParticipationContainer.add( makeHelpIcon( "helpNewParticipation", "what-i-do", "adding-participation", "images/help_guide_gray.png" ) );
     }
 
-    private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
+    private List<ParticipationWrapper> openOrConfirmedOrLinkedParticipationWrappers() {
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
         if ( !getPlanCommunity().isDomainCommunity() ) {
             Set<UserParticipation> participationSet = new HashSet<UserParticipation>();
-            for ( UserParticipation participation : unconstrainedUnacceptedParticipations() ) {
-                participationSet.add( participation );
-            }
-            final List<UserParticipation> unsupervisedParticipations = unsupervisedParticipations();
-            for ( UserParticipation participation : unsupervisedParticipations ) {
-                participationSet.add( participation );
-            }
-            final List<UserParticipation> confirmedSupervisedParticipations = confirmedSupervisedParticipations();
-            for ( UserParticipation participation : confirmedSupervisedParticipations ) {
-                participationSet.add( participation );
-            }
+            participationSet.addAll( unconstrainedUnacceptedParticipations() );
+            participationSet.addAll( unsupervisedPrimaryParticipations() );
+            participationSet.addAll( linkedParticipations() );
+            participationSet.addAll( confirmedSupervisedPrimaryParticipations() );
             for ( UserParticipation participation : participationSet ) {
                 wrappers.add( new ParticipationWrapper( participation ) );
             }
@@ -305,6 +298,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return wrappers;
     }
 
+    private List<UserParticipation> linkedParticipations() {
+        return getCommunityService().getParticipationManager().findAllLinkedUserParticipations(
+                getUser(),
+                getCommunityService() );
+    }
+
     private List<UserParticipation> unconstrainedUnacceptedParticipations() {
         Set<UserParticipation> participations = new HashSet<UserParticipation>();
         PlanCommunity planCommunity = getPlanCommunity();
@@ -322,12 +321,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return new ArrayList<UserParticipation>( participations );
     }
 
-    @SuppressWarnings("unchecked")
-    private List<UserParticipation> unsupervisedParticipations() {
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> unsupervisedPrimaryParticipations() {
+        List<UserParticipation> userParticipations = getCommunityService().getParticipationManager().getPrimaryUserParticipations(
+                getUser(),
+                getCommunityService() );
         return (List<UserParticipation>) CollectionUtils.select(
-                getCommunityService().getParticipationManager().getUserParticipations(
-                        getUser(),
-                        getCommunityService() ),
+                userParticipations,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -336,12 +336,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 } );
     }
 
-    @SuppressWarnings("unchecked")
-    private List<UserParticipation> confirmedSupervisedParticipations() {
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> confirmedSupervisedPrimaryParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService
                 = getCommunityService().getUserParticipationConfirmationService();
         return (List<UserParticipation>) CollectionUtils.select(
-                getCommunityService().getParticipationManager().getUserParticipations(
+                getCommunityService().getParticipationManager().getPrimaryUserParticipations(
                         getUser(),
                         getCommunityService() ),
                 new Predicate() {
@@ -523,7 +523,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return agents;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Agency> agenciesWithAvailableParticipation(
             final List<ParticipationWrapper> participationWrappers ) {
         List<Agency> agencies = (List<Agency>) CollectionUtils.select(
@@ -583,7 +583,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return wrappers;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unconfirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService =
                 getCommunityService().getUserParticipationConfirmationService();
@@ -684,7 +684,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
             resetAll();
             selectedAvailableParticipationAgency = null;
-            // getPlanManager().clearCache(); // Must manually clear the cache
         }
 
 

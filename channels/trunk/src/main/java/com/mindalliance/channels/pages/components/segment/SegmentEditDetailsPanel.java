@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -118,10 +119,11 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
 
 
     private void addIssuesPanel() {
+        Doctor doctor = getCommunityService().getDoctor();
         issuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "segment" ), getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
+        makeVisible( issuesPanel, doctor.hasIssues( getCommunityService(), getSegment(), false ) );
     }
 
 
@@ -174,13 +176,15 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
+        Doctor doctor = getCommunityService().getDoctor();
+        makeVisible( target, issuesPanel, doctor.hasIssues( getCommunityService(), getSegment(), false ) );
         target.add( issuesPanel );
         super.updateWith( target, change, updated );
     }
 
     public void refresh( AjaxRequestTarget target ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getCommunityService(), getSegment(), false ) );
+        Doctor doctor = getCommunityService().getDoctor();
+        makeVisible( target, issuesPanel, doctor.hasIssues( getCommunityService(), getSegment(), false ) );
         target.add( issuesPanel );
     }
 }

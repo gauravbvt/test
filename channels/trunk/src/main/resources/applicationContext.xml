@@ -156,8 +156,19 @@ CONFIGURATION NOTES:
         <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
 
+    <bean id="collaborationPlanDoctor" class="com.mindalliance.channels.engine.analysis.DefaultCollaborationPlanDoctor">
+        <property name="detective" ref="collaborationPlanDetective"/>
+    </bean>
+
+    <bean id="collaborationTemplateDoctor" class="com.mindalliance.channels.engine.analysis.DefaultCollaborationTemplateDoctor">
+        <property name="detective" ref="collaborationTemplateDetective"/>
+    </bean>
+
+
     <bean id="analyst" class="com.mindalliance.channels.engine.analysis.DefaultAnalyst" init-method="start"
-          destroy-method="stop"/>
+          destroy-method="stop">
+        <property name="doctor" ref="collaborationTemplateDoctor"/>
+    </bean>
 
     <bean id="imagingService" class="com.mindalliance.channels.engine.imaging.DefaultImagingService">
         <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
@@ -215,6 +226,10 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.MissingUserParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.TooManyUsersParticipatingAsAgent"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.RequirementNotSatisfied"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserSupervisesSelf"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.NoSupervisingUser"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UnacceptedParticipation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UnconfirmedParticipation"/>
             </list>
         </property>
     </bean>
@@ -341,7 +356,9 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.ParticipationAnalystImpl"/>
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.CollaborationPlanAnalystImpl">
+        <property name="doctor" ref="collaborationPlanDoctor"/>
+    </bean>
 
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">

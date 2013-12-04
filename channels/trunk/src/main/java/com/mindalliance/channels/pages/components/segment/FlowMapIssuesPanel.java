@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -217,12 +218,13 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
     public List<? extends Issue> getIssues() {
         SegmentObject about = getSelectedSegmentObject();
         List<Issue> issues = new ArrayList<Issue>();
-        for ( Issue issue : getAnalyst().listIssues( getCommunityService(), (ModelObject) about, true, includeWaived ) ) {
+        Doctor doctor = getCommunityService().getDoctor();
+        for ( Issue issue : doctor.listIssues( getCommunityService(), (ModelObject) about, true, includeWaived ) ) {
             issues.add( issue );
         }
         if ( isPeripheralIssuesIncluded() ) {
             for ( ModelObject peripheral : findPeripheralModelObjects( about ) ) {
-                for ( Issue issue : getAnalyst().listIssues( getCommunityService(), peripheral, true, includeWaived ) ) {
+                for ( Issue issue : doctor.listIssues( getCommunityService(), peripheral, true, includeWaived ) ) {
                     issues.add( issue );
                 }
             }

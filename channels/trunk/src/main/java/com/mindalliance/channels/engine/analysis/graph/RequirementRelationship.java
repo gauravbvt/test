@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.CollaborationPlanAnalyst;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -90,7 +90,7 @@ public class RequirementRelationship implements Identifiable {
 
     public void setRelationshipId( String id, CommunityService communityService ) {
         this.relationshipId = id;
-        ParticipationAnalyst analyst = communityService.getParticipationAnalyst();
+        CollaborationPlanAnalyst analyst = communityService.getCollaborationPlanAnalyst();
         RequirementRelationship reqRel =
                 analyst.findRequirementRelationship(
                         getFromAgency( communityService ),

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
@@ -345,13 +346,15 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         String titleString;
         Identifiable identifiable = getObject();
         if ( identifiable instanceof ModelObject ) {
+            Doctor doctor = getCommunityService().getDoctor();
+
             ModelObject mo = (ModelObject) identifiable;
             boolean waived = false;
             String summary =
-                    getAnalyst().getIssuesSummary( getCommunityService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                    doctor.getIssuesSummary( getCommunityService(), mo, Doctor.INCLUDE_PROPERTY_SPECIFIC );
             if ( !summary.isEmpty() ) {
                 titleString = summary;
-            } else if ( getAnalyst().hasIssues( getCommunityService(), mo, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            } else if ( doctor.hasIssues( getCommunityService(), mo, Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 waived = true;
                 titleString = "All issues waived";
             } else {

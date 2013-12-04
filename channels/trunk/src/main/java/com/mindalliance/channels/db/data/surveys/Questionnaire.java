@@ -143,16 +143,16 @@ public class Questionnaire extends AbstractChannelsDocument {
         reindexQuestions();
     }
 
-    public boolean isObsolete( CommunityService communitysService, Analyst analyst ) {
+    public boolean isObsolete( CommunityService communityService, Analyst analyst ) {
         boolean obsolete = false;
         if ( isIssueRemediation() ) {
-            ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, communitysService );
+            ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, communityService );
             if ( mo == null ) {
                 obsolete = true;
             } else {
                 // TODO : Apparently, cache bug raises exception
                 try {
-                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( communitysService, mo, false );
+                    List<? extends Issue> unwaivedIssues = communityService.getDoctor().listUnwaivedIssues( communityService, mo, false );
                     obsolete = !CollectionUtils.exists(
                             unwaivedIssues,
                             new Predicate() {

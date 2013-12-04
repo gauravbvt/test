@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -154,10 +155,11 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ORG_FONT ) );
-            if ( communityService.getAnalyst().hasIssues( communityService, vertex, true ) ) {
+            Doctor doctor = getCommunityService().getDoctor();
+            if ( doctor.hasIssues( communityService, vertex, true ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( communityService.getAnalyst().getIssuesOverview(
+                        sanitize( doctor.getIssuesOverview(
                                 communityService,
                                 vertex,
                                 true ) ) ) );

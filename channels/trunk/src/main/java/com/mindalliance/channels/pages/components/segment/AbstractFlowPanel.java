@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.model.IModel;
@@ -93,13 +94,13 @@ public class AbstractFlowPanel extends AbstractCommandablePanel {
     }
 
     protected boolean hasIssues() {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.hasIssues( getCommunityService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        Doctor doctor = getCommunityService().getDoctor();
+        return doctor.hasIssues( getCommunityService(), getFlow(), Doctor.INCLUDE_PROPERTY_SPECIFIC );
     }
 
     protected String getErrorSummary() {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.getIssuesSummary( getCommunityService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        Doctor doctor = getCommunityService().getDoctor();
+        return doctor.getIssuesSummary( getCommunityService(), getFlow(), Doctor.INCLUDE_PROPERTY_SPECIFIC );
     }
 
     public String getCssClasses() {

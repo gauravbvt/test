@@ -22,6 +22,7 @@ import com.mindalliance.channels.db.services.communities.UserParticipationConfir
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 
 import java.util.Date;
 import java.util.List;
@@ -84,7 +85,7 @@ public interface CommunityService {
 
     RegisteredOrganizationService getRegisteredOrganizationService();
 
-    ParticipationAnalyst getParticipationAnalyst();
+    CollaborationPlanAnalyst getCollaborationPlanAnalyst();
 
     UserUploadService getUserUploadService();
 
@@ -204,4 +205,9 @@ public interface CommunityService {
      */
     Place resolveLocation( Place place );
 
+    /**
+     * Get the appropriate doctor.
+     * @return a doctor
+     */
+    Doctor getDoctor();
 }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -50,9 +51,9 @@ public class IssuesData  implements Serializable {
 
     private void initIssues( CommunityService communityService ) {
         issues = new ArrayList<IssueData>();
-        Analyst analyst = communityService.getAnalyst();
+        Doctor doctor = communityService.getDoctor();
         for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
-            for ( Issue issue : analyst.listIssues( communityService, mo, true ) ) {
+            for ( Issue issue : doctor.listIssues( communityService, mo, true ) ) {
                 issues.add( new IssueData( issue, mo ) );
             }
         }

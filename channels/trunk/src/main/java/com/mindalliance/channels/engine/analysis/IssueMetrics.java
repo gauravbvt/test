@@ -35,8 +35,9 @@ public class IssueMetrics implements Serializable {
     }
 
     private void computeMetrics( CommunityService communityService, Analyst analyst ) {
-        allWaivedIssues = analyst.findAllWaivedIssues( communityService );
-        allUnwaivedIssues = analyst.findAllUnwaivedIssues( communityService );
+        Doctor doctor = communityService.getDoctor();
+        allWaivedIssues = doctor.findAllWaivedIssues( communityService );
+        allUnwaivedIssues = doctor.findAllUnwaivedIssues( communityService );
         issueTypeMetrics = new HashMap<String, IssueTypeMetrics>(  );
         for ( String type : Issue.TYPES ) {
             issueTypeMetrics.put( type, new IssueTypeMetrics( type, communityService, analyst ) );

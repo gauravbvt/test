@@ -206,7 +206,7 @@ public class UserParticipationConfirmationServiceImpl
     }
 
     @Override
-    public Boolean isConfirmationByUserRequired(
+    public Boolean isConfirmationByUserRequested(
             final UserParticipation userParticipation,
             ChannelsUser user,
             CommunityService communityService ) {

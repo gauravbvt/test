@@ -30,6 +30,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractFloatingTabbedCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -727,8 +728,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private String getSegmentIssuesSummary() {
-        Analyst analyst = getApp().getAnalyst();
-        return analyst.getIssuesSummary( getCommunityService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        Doctor doctor = getApp().getAnalyst().getDoctor();
+        return doctor.getIssuesSummary( getCommunityService(), segment, Doctor.INCLUDE_PROPERTY_SPECIFIC );
     }
 
 

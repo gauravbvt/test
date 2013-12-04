@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -149,9 +150,10 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
     public List<? extends Issue> getIssues() {
         // Get issues by about and waived
         Identifiable about = getAbout();
-        List<? extends Issue> issues = about != null ? getAnalyst().listIssues( getCommunityService(), about, true, includeWaived ) :
-                includeWaived ? getAnalyst().findAllIssues( getCommunityService() )
-                        : getAnalyst().findAllUnwaivedIssues(getCommunityService());
+        Doctor doctor = getCommunityService().getDoctor();
+        List<? extends Issue> issues = about != null ? doctor.listIssues( getCommunityService(), about, true, includeWaived ) :
+                includeWaived ? doctor.findAllIssues( getCommunityService() )
+                        : doctor.findAllUnwaivedIssues(getCommunityService());
 
         issues = filterByType( issues, getIssueType() );
         issues = filterBySeverity( issues );

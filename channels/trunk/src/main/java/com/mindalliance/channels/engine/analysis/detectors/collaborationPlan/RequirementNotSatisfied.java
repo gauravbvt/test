@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors.collaborationPlan;
 
+import com.mindalliance.channels.core.community.CollaborationPlanAnalyst;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -9,8 +9,6 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ public class RequirementNotSatisfied extends AbstractIssueDetector {
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
         Requirement requirement = (Requirement) identifiable;
         requirement.initialize( communityService );
-        ParticipationAnalyst participationAnalyst = communityService.getParticipationAnalyst();
+        CollaborationPlanAnalyst participationAnalyst = communityService.getCollaborationPlanAnalyst();
         List<Issue> issues = new ArrayList<Issue>();
         Place locale = communityService.getPlanCommunity().getLocale( communityService );
         for ( RequirementRelationship reqRel :

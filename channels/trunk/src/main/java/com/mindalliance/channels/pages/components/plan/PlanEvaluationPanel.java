@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
@@ -86,7 +87,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessImage() {
-        boolean isComplete = getAnalyst().isComplete( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isComplete = doctor.isComplete( getCommunityService(), getPlan() );
         return isComplete ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -96,7 +98,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessLabel() {
-        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.COMPLETENESS );
+        Doctor doctor = getCommunityService().getDoctor();
+        int count = doctor.countTestFailures( getCommunityService(), getPlan(), Issue.COMPLETENESS );
         return count == 0 ? "Complete" : ( "Not yet complete (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -106,7 +109,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessTitle() {
-        boolean isComplete = getAnalyst().isComplete( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isComplete = doctor.isComplete( getCommunityService(), getPlan() );
         return isComplete ? "Complete" : "Not complete";
     }
 
@@ -116,7 +120,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessImage() {
-        boolean isRobust = getAnalyst().isRobust( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isRobust = doctor.isRobust( getCommunityService(), getPlan() );
         return isRobust ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -126,7 +131,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessLabel() {
-        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.ROBUSTNESS );
+        Doctor doctor = getCommunityService().getDoctor();
+        int count = doctor.countTestFailures( getCommunityService(), getPlan(), Issue.ROBUSTNESS );
         return count == 0 ? "Robust" : ( "Not yet robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -136,7 +142,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessTitle() {
-        boolean isRobust = getAnalyst().isRobust( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isRobust = doctor.isRobust( getCommunityService(), getPlan() );
         return isRobust ? "Robust" : "Not yet robust";
     }
 
@@ -146,7 +153,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityImage() {
-        boolean isValid = getAnalyst().isValid( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isValid = doctor.isValid( getCommunityService(), getPlan() );
         return isValid ? PASS_IMAGE : FAIL_IMAGE;
     }
 
@@ -156,7 +164,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityLabel() {
-        int count = getAnalyst().countTestFailures( getCommunityService(), getPlan(), Issue.VALIDITY );
+        Doctor doctor = getCommunityService().getDoctor();
+        int count = doctor.countTestFailures( getCommunityService(), getPlan(), Issue.VALIDITY );
         return count == 0 ? "Valid" : ( "Not yet valid (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
@@ -166,7 +175,8 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
      * @return a string
      */
     public String getValidityTitle() {
-        boolean isValid = getAnalyst().isValid( getCommunityService(), getPlan() );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean isValid = doctor.isValid( getCommunityService(), getPlan() );
         return isValid ? "Valid" : "Not valid";
     }
 

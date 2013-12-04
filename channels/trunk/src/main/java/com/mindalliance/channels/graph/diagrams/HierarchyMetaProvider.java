@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -151,9 +152,9 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( communityService,
+            if ( getCommunityService().getDoctor().hasUnwaivedIssues( communityService,
                     (ModelObject) vertex,
-                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
             }
             list.add( new DOTAttribute( "tooltip", getTooltip( vertex, communityService ) ) );
@@ -194,9 +195,9 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String definition = ( (ModelEntity) vertex ).getDescription();
             return sanitize( definition.isEmpty() ? "No definition" : definition );
         } else {
-            return sanitize( getAnalyst().getIssuesOverview( communityService,
+            return sanitize( getCommunityService().getDoctor().getIssuesOverview( communityService,
                     (ModelObject) vertex,
-                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
+                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) );
         }
     }
 

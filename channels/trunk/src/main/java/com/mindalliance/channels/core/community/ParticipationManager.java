@@ -25,6 +25,10 @@ public interface ParticipationManager {
     List<UserParticipation> getUserParticipations( ChannelsUser user,
                                                    CommunityService communityService );
 
+    List<UserParticipation> getPrimaryUserParticipations( ChannelsUser user, CommunityService communityService );
+
+    List<UserParticipation> findAllLinkedUserParticipations( ChannelsUser user, CommunityService communityService );
+
     List<UserParticipation> getActiveUserParticipations( ChannelsUser user,
                                                          CommunityService communityService );
 
@@ -69,7 +73,7 @@ public interface ParticipationManager {
      *
      * @return a participation analyst
      */
-    ParticipationAnalyst getParticipationAnalyst();
+    CollaborationPlanAnalyst getParticipationAnalyst();
 
     /**
      * Get the list of all known agencies (all fixed and registered organizations) to a community.
@@ -460,4 +464,22 @@ public interface ParticipationManager {
      * @return a list of supervised agents
      */
     List<Agent> findAllSupervisedBy( Agent agent, CommunityService communityService );
+
+    /**
+     * Whether a user participation is awaiting confirmation.
+     *
+     * @param userParticipation a user participation
+     * @param communityService  a community service
+     * @return a boolean
+     */
+    boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService );
+
+    /**
+     * Find all user who need to confirm a user participation but have not yet done so.
+     * @param communityService a community service
+     * @return a list of Channels users
+     */
+    List<ChannelsUser> findAllUsersRequestedToConfirm( UserParticipation userParticipation,
+                                                       CommunityService communityService );
+
 }

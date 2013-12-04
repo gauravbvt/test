@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 
 import java.util.List;
@@ -16,7 +17,13 @@ import java.util.List;
  * Date: 1/8/13
  * Time: 9:11 AM
  */
-public interface ParticipationAnalyst {
+public interface CollaborationPlanAnalyst {
+
+    /**
+     * Get the plan doctor.
+     * @return a doctor
+     */
+    Doctor getDoctor();
 
     /**
      * Find requirement relationships between organizations.

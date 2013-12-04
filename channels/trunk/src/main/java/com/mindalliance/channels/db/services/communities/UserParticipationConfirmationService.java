@@ -43,7 +43,7 @@ public interface UserParticipationConfirmationService  extends DataService<UserP
 
     Boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, CommunityService communityService );
 
-    Boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, CommunityService communityService );
+    Boolean isConfirmationByUserRequested( UserParticipation userParticipation, ChannelsUser user, CommunityService communityService );
 
     List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
             ChannelsUser user,

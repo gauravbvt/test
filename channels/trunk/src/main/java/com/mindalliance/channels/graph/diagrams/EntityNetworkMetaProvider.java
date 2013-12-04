@@ -148,13 +148,13 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
 /*
             if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
                                                                             vertex,
-                                                                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
+                                                                            Doctor.INCLUDE_PROPERTY_SPECIFIC ) )
             {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
                                             sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                                     vertex,
-                                                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                                                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
 */
             return list;

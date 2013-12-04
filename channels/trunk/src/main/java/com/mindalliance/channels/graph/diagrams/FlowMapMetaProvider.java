@@ -17,6 +17,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -229,9 +230,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 if ( !isSimplified() && indicateError( vertex, communityService ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                            sanitize( getAnalyst().getIssuesOverview( communityService,
+                            sanitize( getCommunityService().getDoctor().getIssuesOverview( communityService,
                                     vertex,
-                                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
                     String tooltip;
                     if ( vertex.isPart() ) {
@@ -271,11 +272,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean indicateError( Node vertex, CommunityService communityService ) {
-            return getAnalyst().hasUnwaivedIssues( communityService, vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            return communityService.getDoctor().hasUnwaivedIssues( communityService, vertex, Doctor.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean indicateError( Flow edge, CommunityService communityService ) {
-            return getAnalyst().hasUnwaivedIssues( communityService, edge, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            return communityService.getDoctor().hasUnwaivedIssues( communityService, edge, Doctor.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean isInvisible( Node vertex ) {
@@ -388,9 +389,9 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 String edgeTooltip;
                 if ( !isSimplified() && hasErrors ) {
                     edgeTooltip =
-                            sanitize( getAnalyst().getIssuesOverview( communityService,
+                            sanitize( communityService.getDoctor().getIssuesOverview( communityService,
                                     edge,
-                                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
+                                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) );
                 } else {
                     edgeTooltip = edge.isAskedFor()
                             ? "Answer with "

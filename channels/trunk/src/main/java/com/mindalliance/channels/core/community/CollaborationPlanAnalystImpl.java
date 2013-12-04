@@ -7,6 +7,8 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanDoctor;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -22,10 +24,21 @@ import java.util.List;
  * Date: 1/8/13
  * Time: 9:18 AM
  */
-public class ParticipationAnalystImpl implements ParticipationAnalyst {
+public class CollaborationPlanAnalystImpl implements CollaborationPlanAnalyst { // todo - implement lifecycle and rescan issues on changes
 
-    public ParticipationAnalystImpl() {
+    private Doctor doctor;
+
+    public CollaborationPlanAnalystImpl() {
     }
+
+    public void setDoctor( Doctor doctor ) {
+        this.doctor = doctor;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
 
     @SuppressWarnings( "unchecked" )
     private List<Organization> findAllOrganizationPlaceholders( CommunityService communityService ) {

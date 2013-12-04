@@ -234,7 +234,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
     }
 
     protected void adjustComponents() {
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getPlan(), false ) );
+        makeVisible( issuesPanel, getCommunityService().getDoctor().hasIssues( getCommunityService(), getPlan(), false ) );
     }
 
     /**

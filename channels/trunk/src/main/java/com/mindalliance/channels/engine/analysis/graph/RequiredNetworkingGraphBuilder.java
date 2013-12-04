@@ -69,7 +69,7 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, Requ
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    communityService.getParticipationAnalyst().findRequirementRelationships( timing, event, communityService ),
+                    communityService.getCollaborationPlanAnalyst().findRequirementRelationships( timing, event, communityService ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {

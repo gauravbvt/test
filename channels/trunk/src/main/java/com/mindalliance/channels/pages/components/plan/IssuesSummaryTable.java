@@ -135,13 +135,14 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
     }
 
     private String issuesSummary( IssueMetrics.Metrics metrics ) {
-        MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent}) , {3} kinds" );
+        MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent}) , {3}" );
+        int kindsCount = metrics.getKindsCount();
         Object[] args = {
                 metrics.getCount(),
                 metrics.isWaived() ? "waived" : "unresolved",
                 Math.max( metrics.getPercent(), metrics.getPercent() > 0 ? 0.01 : 0.0 ),
-                metrics.getKindsCount()};
-        return mf.format( args );
+                kindsCount};
+        return mf.format( args ) + ( kindsCount > 1 ? " kinds" : " kind" );
     }
 
 
@@ -155,4 +156,4 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         return mf.format( args );
     }
 
- }
+}

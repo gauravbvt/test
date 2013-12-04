@@ -1,5 +1,6 @@
 package com.mindalliance.channels.db.data;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.commons.lang.StringUtils;
@@ -185,6 +186,12 @@ public class AbstractChannelsDocument implements ChannelsDocument {
     @Override
     public String getKindLabel() {
         return getTypeName();
+    }
+
+    @Override
+    public String getUserFullName( CommunityService communityService ) {
+        ChannelsUser user = communityService.getUserRecordService().getUserWithIdentity( getUsername() );
+        return user == null ? "?" : user.getFullName();
     }
 
     @Override

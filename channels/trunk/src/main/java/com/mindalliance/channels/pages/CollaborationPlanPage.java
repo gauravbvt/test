@@ -326,7 +326,7 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
                 planCommunity );
         int toConfirmCount = participationManager
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
-        int issueCount = analyst.findAllIssues( getCommunityService() ).size();
+        int issueCount = communityService.getDoctor().findAllIssues( getCommunityService() ).size();
         addTipTitle(
                 participationManagerLink,
                 "Manage plan participation ("

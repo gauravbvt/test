@@ -29,6 +29,7 @@ import com.mindalliance.channels.db.services.communities.UserParticipationConfir
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -258,7 +259,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
 
-    public ParticipationAnalyst getParticipationAnalyst() {
+    public CollaborationPlanAnalyst getCollaborationPlanAnalyst() {
         return getParticipationManager().getParticipationAnalyst();
     }
 
@@ -391,6 +392,13 @@ public class CommunityServiceImpl implements CommunityService {
         } else {
             return place;
         }
+    }
+
+    @Override
+    public Doctor getDoctor() {
+        return isForDomain()
+                ? getAnalyst().getDoctor()
+                : getCollaborationPlanAnalyst().getDoctor();
     }
 
     private void beforeRemove( ModelObject object ) {

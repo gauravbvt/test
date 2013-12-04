@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CollaborationPlanAnalyst;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -257,7 +257,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     private Object invokeParticipationAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
-            ParticipationAnalyst analyst = getCommunityService().getParticipationAnalyst();
+            CollaborationPlanAnalyst analyst = getCommunityService().getCollaborationPlanAnalyst();
             if ( extras.length > 0 ) {
                 Class[] argTypes = {argument.getClass(), extras.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );

@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,7 +190,7 @@ public class SegmentRelationship implements Identifiable {
         boolean hasIssues = false;
         Iterator<ExternalFlow> iterator = externalFlows.iterator();
         while ( !hasIssues && iterator.hasNext() )
-            hasIssues = analyst.hasUnwaivedIssues( communityService, iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            hasIssues = communityService.getDoctor().hasUnwaivedIssues( communityService, iterator.next(), Doctor.INCLUDE_PROPERTY_SPECIFIC );
         return hasIssues;
     }
 
@@ -203,9 +204,9 @@ public class SegmentRelationship implements Identifiable {
     public String getIssuesSummary( Analyst analyst, CommunityService communityService ) {
         int count = 0;
         for ( ExternalFlow externalFlow : externalFlows )
-            count += analyst.listUnwaivedIssues( communityService,
+            count += communityService.getDoctor().listUnwaivedIssues( communityService,
                                                  externalFlow,
-                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
+                                                 Doctor.INCLUDE_PROPERTY_SPECIFIC ).size();
         return count + ( count > 1 ? " issues" : " issue" );
     }
 

@@ -110,7 +110,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     }
 
     public String getIssuesTitle() {
-        int issuesCount = analyst.findAllIssues( getCommunityService() ).size();
+        int issuesCount = getCommunityService().getDoctor().findAllIssues( getCommunityService() ).size();
         return "Issues (" + issuesCount +")";
     }
 

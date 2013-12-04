@@ -17,6 +17,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -198,13 +199,14 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( getAnalyst().hasUnwaivedIssues( getCommunityService(),
-                                                       vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            Doctor doctor = getCommunityService().getDoctor();
+            if ( doctor.hasUnwaivedIssues( getCommunityService(),
+                                                       vertex, Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview(
+                list.add( new DOTAttribute( "tooltip", sanitize( doctor.getIssuesOverview(
                         getCommunityService(),
                         vertex,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                        Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 String tooltip = vertex.getTitle();
                 if ( vertex.isPart() ) {
@@ -286,13 +288,14 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( getAnalyst().hasUnwaivedIssues( getCommunityService(),
-                                                       flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            Doctor doctor = getCommunityService().getDoctor();
+            if ( doctor.hasUnwaivedIssues( getCommunityService(),
+                                                       flow, Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getCommunityService(),
+                list.add( new DOTAttribute( "tooltip", sanitize( doctor.getIssuesOverview( getCommunityService(),
                         flow,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                        Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
             }

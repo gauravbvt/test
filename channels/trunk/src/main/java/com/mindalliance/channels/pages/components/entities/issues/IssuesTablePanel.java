@@ -64,7 +64,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         columns.add( makeColumn( "Reported by", "reportedBy", "reportedBy", EMPTY ) );
 
         // provider and table
-        List<Issue> issues = analyst.findAllIssuesFor( getCommunityService(), resourceSpec, specific );
+        List<Issue> issues = getCommunityService(  ).getDoctor().findAllIssuesFor( getCommunityService(), resourceSpec, specific );
         add( new AjaxFallbackDefaultDataTable( "issues-table",
                                                columns,
                                                new SortableBeanProvider<Issue>( issues, "about.name" ),

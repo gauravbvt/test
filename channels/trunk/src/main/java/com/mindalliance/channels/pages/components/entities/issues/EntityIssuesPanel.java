@@ -25,6 +25,7 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
@@ -86,7 +87,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
         List<Issue> issues = new ArrayList<Issue>();
         ModelObject about = (ModelObject)getAbout();
         final String issueType = getIssueType();
-        Analyst analyst = getAnalyst();
+        Doctor doctor = getCommunityService().getDoctor();
         if ( about == null ) {
             scope.add( getEntity() );
             if ( includeFromSegments )
@@ -108,7 +109,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             scope.add( about );
 
         for ( ModelObject mo : scope )
-            issues.addAll( analyst.listIssues( getCommunityService(), mo, true, includeWaived ) );
+            issues.addAll( doctor.listIssues( getCommunityService(), mo, true, includeWaived ) );
 
         return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
             @Override

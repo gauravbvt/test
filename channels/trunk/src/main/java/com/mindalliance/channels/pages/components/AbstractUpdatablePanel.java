@@ -31,6 +31,7 @@ import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Channels;
@@ -423,13 +424,14 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
+        Doctor doctor = getCommunityService().getDoctor();
         String summary = property == null ?
-                analyst.getIssuesSummary( getCommunityService(), object, false ) :
-                analyst.getIssuesSummary( getCommunityService(), object, property );
+                doctor.getIssuesSummary( getCommunityService(), object, false ) :
+                doctor.getIssuesSummary( getCommunityService(), object, property );
 
         boolean hasIssues = property == null ?
-                analyst.hasIssues( getCommunityService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
-                analyst.hasIssues( getCommunityService(), object, property );
+                doctor.hasIssues( getCommunityService(), object, Doctor.INCLUDE_PROPERTY_SPECIFIC ) :
+                doctor.hasIssues( getCommunityService(), object, property );
 
         if ( summary.isEmpty() ) {
             component.add( new AttributeModifier( "class",
@@ -597,11 +599,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property,
                                         String errorClass ) {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        Doctor doctor = getCommunityService().getDoctor();
         String summary = property == null ?
-                analyst.getIssuesSummary( getCommunityService(), object, false ) :
-                analyst.getIssuesSummary( getCommunityService(), object, property );
-        boolean hasIssues = analyst.hasIssues( getCommunityService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                doctor.getIssuesSummary( getCommunityService(), object, false ) :
+                doctor.getIssuesSummary( getCommunityService(), object, property );
+        boolean hasIssues = doctor.hasIssues( getCommunityService(), object, Doctor.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
             component.add( new AttributeModifier( "class", new Model<String>( errorClass ) ) );
             addTipTitle( component, new Model<String>( summary ) );

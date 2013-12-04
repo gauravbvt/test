@@ -62,7 +62,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     private CommunityServiceFactory communityServiceFactory;
 
     @Autowired
-    private ParticipationAnalyst participationAnalyst;
+    private CollaborationPlanAnalyst participationAnalyst;
 
     @Autowired
     private UserRecordService userRecordService;
@@ -88,6 +88,13 @@ public class ParticipationManagerImpl implements ParticipationManager {
         Set<UserParticipation> allUserParticipations = new HashSet<UserParticipation>();
         allUserParticipations.addAll( userParticipationService.getUserParticipations( user, communityService ) );
         allUserParticipations.addAll( findAllLinkedUserParticipations( user, communityService ) ); // always active
+        return new ArrayList<UserParticipation>( allUserParticipations );
+    }
+
+    @Override
+    public List<UserParticipation> getPrimaryUserParticipations( ChannelsUser user, CommunityService communityService ) {
+        Set<UserParticipation> allUserParticipations = new HashSet<UserParticipation>();
+        allUserParticipations.addAll( userParticipationService.getUserParticipations( user, communityService ) );
         return new ArrayList<UserParticipation>( allUserParticipations );
     }
 
@@ -265,7 +272,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
             ChannelsUser user,
             final CommunityService communityService ) {
         final List<UserParticipationConfirmation> allConfirmations =
-                communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
+                userParticipationConfirmationService.getParticipationConfirmations( communityService );
         final List<Agent> userAgents = listAgentsUserParticipatesAs(
                 user,
                 communityService );
@@ -292,6 +299,26 @@ public class ParticipationManagerImpl implements ParticipationManager {
                     }
                 } );
 
+    }
+
+    @Override
+    public boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService ) {
+        return userParticipation.isSupervised( communityService )
+        && !userParticipationConfirmationService.isConfirmedByAllSupervisors( userParticipation, communityService );
+    }
+
+    @Override
+    public List<ChannelsUser> findAllUsersRequestedToConfirm( UserParticipation userParticipation, CommunityService communityService ) {
+        List<ChannelsUser> users = new ArrayList<ChannelsUser>(  );
+        for ( ChannelsUser user : communityService.getUserRecordService().getAllEnabledUsers() ) {
+            if ( userParticipationConfirmationService.isConfirmationByUserRequested(
+                    userParticipation,
+                    user,
+                    communityService ) ) {
+                users.add( user );
+            }
+        }
+        return users;
     }
 
     @Override
@@ -395,7 +422,8 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
 
     @SuppressWarnings( "unchecked" )
-    private List<UserParticipation> findAllLinkedUserParticipations( ChannelsUser user,
+    @Override
+    public List<UserParticipation> findAllLinkedUserParticipations( ChannelsUser user,
                                                                      CommunityService communityService ) {
         final String username = user.getUsername();
         return (List<UserParticipation>) CollectionUtils.select(
@@ -450,11 +478,11 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 : results.get( 0 );
     }
 
-    public ParticipationAnalyst getParticipationAnalyst() {
+    public CollaborationPlanAnalyst getParticipationAnalyst() {
         return participationAnalyst;
     }
 
-    public void setParticipationAnalyst( ParticipationAnalyst participationAnalyst ) {
+    public void setParticipationAnalyst( CollaborationPlanAnalyst participationAnalyst ) {
         this.participationAnalyst = participationAnalyst;
     }
 

@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -260,15 +261,16 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
             list.add( new DOTAttribute( "fontname", SEGMENT_FONT ) );
             list.add( new DOTAttribute( "tooltip",
                                         sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
-            if ( getAnalyst().hasUnwaivedIssues( communityService,
+            Doctor doctor = getCommunityService().getDoctor();
+            if ( doctor.hasUnwaivedIssues( communityService,
                                                                             vertex,
-                                                                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
+                                                                            Doctor.INCLUDE_PROPERTY_SPECIFIC ) )
             {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( getAnalyst().getIssuesOverview( communityService,
+                                            sanitize( doctor.getIssuesOverview( communityService,
                                                     vertex,
-                                                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                                                    Doctor.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }

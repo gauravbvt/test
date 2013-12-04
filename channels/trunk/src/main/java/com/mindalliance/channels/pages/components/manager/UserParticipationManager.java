@@ -376,7 +376,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     private List<ChannelsUser> getRegisteredParticipants( Agent agent ) {
         List<ChannelsUser> participants = new ArrayList<ChannelsUser>();
         if ( agent != null ) {
-            participants = participationManager.findAllUsersParticipatingAs( agent, getCommunityService() );
+            participants = new ArrayList<ChannelsUser>( participationManager.findAllUsersParticipatingAs( agent, getCommunityService() ) );
             Collections.sort( participants, new Comparator<ChannelsUser>() {
                 @Override
                 public int compare( ChannelsUser u1, ChannelsUser u2 ) {

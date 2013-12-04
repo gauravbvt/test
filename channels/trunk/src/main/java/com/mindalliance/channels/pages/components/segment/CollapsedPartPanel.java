@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import org.apache.wicket.AttributeModifier;
@@ -86,7 +87,8 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     }
 
     private void adjustFields() {
-        boolean partHasIssues = getAnalyst().hasIssues( getCommunityService(), getPart(), false );
+        Doctor doctor = getCommunityService().getDoctor();
+        boolean partHasIssues = doctor.hasIssues( getCommunityService(), getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
     }
 

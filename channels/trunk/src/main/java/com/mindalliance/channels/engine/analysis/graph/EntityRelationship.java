@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Doctor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,9 +66,9 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     public String getIssuesSummary( Analyst analyst, CommunityService communityService ) {
         int count = 0;
         for ( Flow flow : flows )
-            count += analyst.listUnwaivedIssues( communityService,
+            count += analyst.getDoctor().listUnwaivedIssues( communityService,
                                                  flow,
-                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
+                                                 Doctor.INCLUDE_PROPERTY_SPECIFIC ).size();
         return count + ( count > 1 ? " issues" : " issue" );
     }
 
@@ -82,9 +83,9 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
         boolean hasIssues = false;
         Iterator<Flow> iterator = flows.iterator();
         while ( !hasIssues && iterator.hasNext() ) {
-            hasIssues = analyst.hasUnwaivedIssues( communityService,
+            hasIssues = analyst.getDoctor().hasUnwaivedIssues( communityService,
                                                    iterator.next(),
-                                                   Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                                                   Doctor.INCLUDE_PROPERTY_SPECIFIC );
         }
         return hasIssues;
     }

@@ -273,7 +273,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    communityService.getParticipationAnalyst().findRequirementRelationships(
+                    communityService.getCollaborationPlanAnalyst().findRequirementRelationships(
                             selectedTiming,
                             selectedEvent,
                             communityService ),

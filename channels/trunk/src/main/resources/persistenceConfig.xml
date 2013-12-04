@@ -87,7 +87,7 @@
                      advice-ref="cacheSet" order="1"/>
         <aop:advisor pointcut="execution(Integer com.mindalliance.channels.core.query.QueryService.*(..))"
                      advice-ref="cacheSet" order="1"/>
-        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.Detective.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.CollaborationTemplateDoctor.*(..))"
                      advice-ref="cacheSet" order="1"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.Analyst.*(..))"
                      advice-ref="cacheSet" order="1"/>
@@ -101,9 +101,9 @@
                      advice-ref="cacheSet" order="1"/>
 
         <!-- Community caching -->
-        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityAssignments com.mindalliance.channels.core.community.CommunityService.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.core.community.ParticipationManager.*(..))"
                      advice-ref="communitySet" order="1"/>
-        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.CollaborationPlanDoctor.*(..))"
                      advice-ref="communitySet" order="1"/>
             <!--DB services -->
         <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.is*(..))"
@@ -116,7 +116,6 @@
                      advice-ref="communitySet" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.list*(..))"
                      advice-ref="communitySet" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.is*(..))"
                      advice-ref="communitySet" order="1"/>
@@ -163,7 +162,8 @@
                      advice-ref="communitySet" order="1"/>
 
 
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))"
+                     advice-ref="communityClear" order="1"/>
 
 
         <!-- Temporary cache clearing triggers -->

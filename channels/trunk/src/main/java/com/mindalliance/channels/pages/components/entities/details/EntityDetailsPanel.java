@@ -212,7 +212,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         makeVisible( image, getEntity().hasImage() );
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getCommunityService(), getEntity(), false ) );
+        makeVisible( issuesPanel, getCommunityService().getDoctor().hasIssues( getCommunityService(), getEntity(), false ) );
     }
 
     //-------------------------------

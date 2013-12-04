@@ -20,7 +20,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import org.slf4j.Logger;
@@ -58,24 +57,12 @@ public class IssueScanner implements Scanner, PlanListener {
     private final Map<String, Daemon> daemons =
             Collections.synchronizedMap( new HashMap<String, Daemon>() );
 
-    /**
-     * Analyst.
-     */
-    private Analyst analyst;
-
-    private PlanServiceFactory planServiceFactory;
-
     private CommunityServiceFactory communityServiceFactory;
 
     private PlanCommunityManager planCommunityManager;
 
     //-------------------------------
     public IssueScanner() {
-    }
-
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
-        analyst.setIssueScanner( this );
     }
 
  /*   public void scan() {
@@ -161,10 +148,6 @@ public class IssueScanner implements Scanner, PlanListener {
 
     @Override
     public void productized( Plan plan ) {
-    }
-
-    public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {
-        this.planServiceFactory = planServiceFactory;
     }
 
     public void setCommunityServiceFactory( CommunityServiceFactory communityServiceFactory ) {
@@ -266,10 +249,8 @@ public class IssueScanner implements Scanner, PlanListener {
                         scanIssues( identifiable );
                     }
                 }
-//                if ( !active ) return;
-//                analyst.findAllIssues();
                 if ( !active ) return;
-                analyst.findAllUnwaivedIssues( communityService );
+                communityService.getDoctor().findAllUnwaivedIssues( communityService );
                  long endTime = System.currentTimeMillis();
                 LOG.info( "Issue sweep completed on " + planCommunity.getUri() + " in "
                         + ( endTime - startTime ) + " msecs" );
@@ -297,7 +278,7 @@ public class IssueScanner implements Scanner, PlanListener {
 
             // Model object can be null when deleted when scan was in progress
             if ( identifiable != null )
-                analyst.listIssues( communityService, identifiable, true );
+                communityService.getDoctor().listIssues( communityService, identifiable, true );
         }
     }
 }
