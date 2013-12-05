@@ -81,7 +81,7 @@ CONFIGURATION NOTES:
         <property name="userPhotoURL" value="photo"/>
     </bean>
 
-    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager">
+    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager" depends-on="planManager">
         <property name="uploadPath" value="uploads/"/>
         <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
         <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
