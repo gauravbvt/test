@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A scheduled notification service.
@@ -107,6 +108,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private List<MessagingService> messagingServices;
 
+    
+    private AtomicBoolean initializing = new AtomicBoolean( true );
+    
     private static final long WARNING_DELAY = 1000 * 60 * 60 * 24; // 1 day in msecs
 
     @Override
@@ -114,6 +118,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         messagingServices = new ArrayList<MessagingService>();
         messagingServices.add( emailMessagingService );
         messagingServices.add( channelsMessagingService );
+        initializing.set( false );
     }
 
     //// USER MESSAGES ////
@@ -121,12 +126,19 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
     public void notifyOfUserMessages() {
+        if ( isInitializing() )
+            return;
+        
         LOG.debug( "Sending out user messages" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
             sendPendingMessages( userMessageService, communityService );
             sendPendingMessages( feedbackService, communityService );
         }
+    }
+
+    private boolean isInitializing() {
+        return initializing.get();
     }
 
     private void sendPendingMessages( MessageOutboxService messageOutboxService, CommunityService communityService ) {
@@ -150,6 +162,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
      public void notifyOfUrgentFeedback() {
+        if ( isInitializing() )
+            return;
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -173,6 +187,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
     public void reportOnNewFeedback() {
+        if ( isInitializing() )
+            return;
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
@@ -207,6 +223,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
     public void notifyOfSurveys() {
+        if ( isInitializing() )
+            return;
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
                 // to survey participants
@@ -266,6 +284,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
     public void reportOnSurveys() {
+        if ( isInitializing() )
+            return;
         LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -283,6 +303,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
     public void notifyOnUserAccessChange() {
+        if ( isInitializing() )
+            return;
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
             String uri = communityService.getPlanCommunity().getUri();
@@ -308,6 +330,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
     public void notifyOfParticipationConfirmation() {
+        if ( isInitializing() )
+            return;
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -332,12 +356,16 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled(fixedDelay = 86400000)   // each day
     public void reportOnParticipationConfirmation() {
+        if ( !initializing.get() )
+            return;
         // todo
     }
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
     public void notifyOfParticipationRequest() {
+        if ( !initializing.get() )
+            return;
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -365,6 +393,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
     public void reportOnParticipationRequests() {
+        if ( !initializing.get() )
+            return;
         //Todo
     }
 
