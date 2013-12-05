@@ -50,6 +50,15 @@ public class Requirement extends ModelObject implements Countable {
 
     public static Requirement UNKNOWN;
 
+    public String getCommitterAgencyName() {
+        Agency agency = getCommitterSpec().getAgency();
+        return agency != null ? agency.getName() : "?";
+    }
+
+    public String getBeneficiaryAgencyName() {
+        Agency agency = getBeneficiarySpec().getAgency();
+        return agency != null ? agency.getName() : "?";
+    }
 
     /**
      * Degree of satisfaction.

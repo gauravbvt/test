@@ -48,11 +48,11 @@ public class RequirementNotSatisfied extends AbstractIssueDetector {
                 if ( satisfaction == Requirement.Satisfaction.Impossible ) {
                     Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, requirement );
                     issue.setDescription( "The requirement \""
-                            + requirement.getLabel()
+                            + appliedReq.getLabel()
                             + "\" could not possibly be satisfied based on the template by "
-                            + appliedReq.getCommitterSpec().getAgency().getName()
+                            + appliedReq.getCommitterAgencyName()
                             + " toward "
-                            +  appliedReq.getBeneficiarySpec().getAgency().getName()
+                            +  appliedReq.getBeneficiaryAgencyName()
                     );
                     issue.setSeverity( Level.High );
                     issue.setRemediation( "Change the definition of the requirement so that it does not apply\n"
@@ -63,9 +63,9 @@ public class RequirementNotSatisfied extends AbstractIssueDetector {
                     issue.setDescription( "The requirement \""
                             + requirement.getLabel()
                             + "\" is not satisfied by "
-                            + appliedReq.getCommitterSpec().getAgency().getName()
+                            + appliedReq.getCommitterAgencyName()
                             + " toward "
-                            +  appliedReq.getBeneficiarySpec().getAgency().getName()
+                            +  appliedReq.getBeneficiaryAgencyName()
                     );
                     issue.setSeverity( Level.High );
                     issue.setRemediation( "Change the definition of the requirement so that it does not apply\n"
