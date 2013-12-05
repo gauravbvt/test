@@ -486,7 +486,7 @@ public class AbstractDoctor implements Doctor {
     public List<Issue> findAllIssues( CommunityService communityService ) {
         List<Issue> allIssues = new ArrayList<Issue>();
         if ( communityService.isForDomain() ) {
-            for ( Identifiable identifiable : communityService.listIdentifiables( ModelObject.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ModelObject.class ) )
                 allIssues.addAll( listIssues( communityService, identifiable, true ) );
             for ( Segment segment : communityService.list( Segment.class ) ) {
                 Iterator<Part> parts = segment.parts();
@@ -497,7 +497,7 @@ public class AbstractDoctor implements Doctor {
                     allIssues.addAll( listIssues( communityService, flows.next(), true ) );
             }
         } else {
-            for ( Identifiable identifiable : communityService.listIdentifiables( Identifiable.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allIssues.addAll( listIssues( communityService, identifiable, true ) );
         }
         return allIssues;
@@ -507,7 +507,7 @@ public class AbstractDoctor implements Doctor {
     public List<Issue> findAllUnwaivedIssues( CommunityService communityService ) {
         List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
         if ( communityService.isForDomain() ) {
-            for ( Identifiable identifiable : communityService.listIdentifiables( ModelObject.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ModelObject.class ) )
                 allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, identifiable, true ) );
             for ( Segment segment : communityService.list( Segment.class ) ) {
                 Iterator<Part> parts = segment.parts();
@@ -518,7 +518,7 @@ public class AbstractDoctor implements Doctor {
                     allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, flows.next(), true ) );
             }
         } else {
-            for ( Identifiable identifiable : communityService.listIdentifiables( Identifiable.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, identifiable, true ) );
         }
         return allUnwaivedIssues;
@@ -528,7 +528,7 @@ public class AbstractDoctor implements Doctor {
     public List<Issue> findAllWaivedIssues( CommunityService communityService ) {
         List<Issue> allWaivedIssues = new ArrayList<Issue>();
         if ( communityService.isForDomain() ) {
-            for ( Identifiable identifiable : communityService.listIdentifiables( ModelObject.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ModelObject.class ) )
                 allWaivedIssues.addAll( listWaivedIssues( communityService, identifiable, true ) );
             for ( Segment segment : communityService.list( Segment.class ) ) {
                 Iterator<Part> parts = segment.parts();
@@ -539,7 +539,7 @@ public class AbstractDoctor implements Doctor {
                     allWaivedIssues.addAll( listWaivedIssues( communityService, flows.next(), true ) );
             }
         } else {
-            for ( Identifiable identifiable : communityService.listIdentifiables( Identifiable.class ) )
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allWaivedIssues.addAll( listWaivedIssues( communityService, identifiable, true ) );
         }
         return allWaivedIssues;

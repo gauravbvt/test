@@ -1,5 +1,7 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;
@@ -7,8 +9,6 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.CollaborationPlanDoctor;
-import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

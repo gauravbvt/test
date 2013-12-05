@@ -9,6 +9,7 @@ import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 
 import java.util.List;
 

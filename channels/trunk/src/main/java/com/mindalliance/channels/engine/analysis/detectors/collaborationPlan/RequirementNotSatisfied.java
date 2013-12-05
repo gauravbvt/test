@@ -1,6 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors.collaborationPlan;
 
-import com.mindalliance.channels.core.community.CollaborationPlanAnalyst;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;

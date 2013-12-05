@@ -18,6 +18,7 @@ import com.mindalliance.channels.db.services.communities.RegisteredOrganizationS
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -22,6 +22,7 @@ import com.mindalliance.channels.db.services.communities.UserParticipationConfir
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 
 import java.util.Date;
@@ -104,7 +105,7 @@ public interface CommunityService {
      */
     List<UserIssue> findAllUserIssues( Identifiable identifiable );
 
-    <T extends Identifiable> List<T> listIdentifiables( Class<T> clazz );
+    <T extends Identifiable> List<T> listKnownIdentifiables( Class<T> clazz );
 
     <T extends ModelObject> List<T> list( Class<T> clazz );
 

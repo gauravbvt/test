@@ -1,5 +1,7 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;

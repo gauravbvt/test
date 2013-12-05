@@ -29,6 +29,7 @@ import com.mindalliance.channels.db.services.communities.UserParticipationConfir
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -281,7 +282,7 @@ public class CommunityServiceImpl implements CommunityService {
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return ((ChannelsUser)input).getUsername();
+                        return ( (ChannelsUser) input ).getUsername();
                     }
                 }
         );
@@ -294,19 +295,23 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends Identifiable> List<T> listIdentifiables( Class<T> clazz ) {
-        List<T> results = new ArrayList<T>(  );
+    public <T extends Identifiable> List<T> listKnownIdentifiables( Class<T> clazz ) {
+        List<T> results = new ArrayList<T>();
         if ( clazz.isAssignableFrom( PlanCommunity.class ) ) {
-            results.add( (T)getPlanCommunity() );
-        } if (clazz.isAssignableFrom(  ModelObject.class ) ) {
-            results.addAll( (List<T> )list( ModelObject.class ) );
-        } if ( clazz.isAssignableFrom( Agency.class ) ) {
-            results.addAll( (List<T> )getParticipationManager().getAllKnownAgencies( this ) );
-        } if ( clazz.isAssignableFrom( Agent.class ) ) {
-            results.addAll( (List<T> )getParticipationManager().getAllKnownAgents( this ) );
+            results.add( (T) getPlanCommunity() );
+        }
+        if ( clazz.isAssignableFrom( ModelObject.class ) ) {
+            for ( T mo : (List<T>) list( ModelObject.class ) )
+                if ( !( (ModelObject) mo ).isUnknown() ) results.add( mo );
+        }
+        if ( clazz.isAssignableFrom( Agency.class ) ) {
+            results.addAll( (List<T>) getParticipationManager().getAllKnownAgencies( this ) );
+        }
+        if ( clazz.isAssignableFrom( Agent.class ) ) {
+            results.addAll( (List<T>) getParticipationManager().getAllKnownAgents( this ) );
         }
         if ( clazz.isAssignableFrom( ChannelsUser.class ) ) {
-            results.addAll( (List<T> )getParticipationManager().findAllActivelyParticipatingUsers( this ) );
+            results.addAll( (List<T>) getParticipationManager().findAllActivelyParticipatingUsers( this ) );
         }
         return results;
     }
@@ -375,7 +380,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<Place> findUnboundLocationPlaceholders() {
         List<Place> boundPlaceholders = getPlanCommunity().getBoundLocationPlaceholders();
-        List<Place> unboundPlaceholders = new ArrayList<Place>(  );
+        List<Place> unboundPlaceholders = new ArrayList<Place>();
         for ( Place place : listActualEntities( Place.class, true ) ) {
             if ( place.isPlaceholder() && !boundPlaceholders.contains( place ) ) {
                 unboundPlaceholders.add( place );
@@ -388,8 +393,7 @@ public class CommunityServiceImpl implements CommunityService {
     public Place resolveLocation( Place place ) {
         if ( place == null ) {
             return null;
-        }
-        else if ( place.isPlaceholder() ) {
+        } else if ( place.isPlaceholder() ) {
             Place boundLocation = getPlanCommunity().getLocationBoundTo( place );
             return boundLocation == null ? place : boundLocation;
         } else {

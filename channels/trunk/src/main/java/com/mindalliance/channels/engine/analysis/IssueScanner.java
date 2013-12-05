@@ -244,7 +244,7 @@ public class IssueScanner implements Scanner, PlanListener {
                         }
                     }
                 } else {
-                    for ( Identifiable identifiable : communityService.listIdentifiables( Identifiable.class ) ) {
+                    for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) ) {
                         if ( !active ) return;
                         scanIssues( identifiable );
                     }

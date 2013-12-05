@@ -358,7 +358,7 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.CollaborationPlanAnalystImpl">
+    <bean name="participationAnalyst" class="com.mindalliance.channels.engine.analysis.CollaborationPlanAnalystImpl">
         <property name="doctor" ref="collaborationPlanDoctor"/>
     </bean>
 
