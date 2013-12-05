@@ -81,7 +81,7 @@ CONFIGURATION NOTES:
         <property name="userPhotoURL" value="photo"/>
     </bean>
 
-    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager" depends-on="planManager">
+    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager" depends-on="planManager"> <!-- depends-on prevents random timing issue during initialization -->
         <property name="uploadPath" value="uploads/"/>
         <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
         <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
@@ -230,6 +230,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.NoSupervisingUser"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UnacceptedParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UnconfirmedParticipation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserIsSinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.OverParticipationByUser"/>
             </list>
         </property>
     </bean>
@@ -283,7 +285,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UntimelyNecessarySharing"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InconsistentImpactOnTargetPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InconsistentImpactOnSourcePart"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorIsSinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.NoSegmentForEventPhase"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnplayedPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UselessActor"/>

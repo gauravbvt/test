@@ -190,4 +190,10 @@ public interface Issue extends Identifiable, Serializable {
      * @return a list of strings
      */
     List<String> getRemediationOptions();
+
+    /**
+     * Waivability label.
+     * @return "Yes" if can be waived, else "No".
+     */
+    String getWaivability();
 }

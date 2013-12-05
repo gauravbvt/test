@@ -142,6 +142,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return Arrays.asList( getRemediation().split( "\\n" ) );
     }
 
+    @Override
+    public String getWaivability() {
+        return isCanBeWaived() ? "Yes" : "No";
+    }
+
     public void setDetectorLabel( String detectorLabel ) {
         this.detectorLabel = detectorLabel;
     }

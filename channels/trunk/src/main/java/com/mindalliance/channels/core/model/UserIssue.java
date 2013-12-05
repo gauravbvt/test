@@ -220,6 +220,11 @@ public class UserIssue extends ModelObject implements Issue {
         return Arrays.asList( getRemediation().split( "\\n" ) );
     }
 
+    @Override
+    public String getWaivability() {
+        return "No";
+    }
+
     /**
      * {@inheritDoc}
      */

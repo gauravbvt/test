@@ -302,7 +302,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService ) {
+    public Boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService ) {
         return userParticipation.isSupervised( communityService )
         && !userParticipationConfirmationService.isConfirmedByAllSupervisors( userParticipation, communityService );
     }
@@ -319,6 +319,15 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         return users;
+    }
+
+    @Override
+    public List<ChannelsUser> findAllActivelyParticipatingUsers( CommunityService communityService ) {
+        Set<ChannelsUser> allParticipatingUsers = new HashSet<ChannelsUser>();
+        for (Agent agent : getAllKnownAgents( communityService ) ) {
+            allParticipatingUsers.addAll( findAllUsersParticipatingAs( agent, communityService ) );
+        }
+        return new ArrayList<ChannelsUser>( allParticipatingUsers );
     }
 
     @Override
@@ -577,7 +586,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isParticipationAvailable( Agent agent, ChannelsUser user, CommunityService communityService ) {
+    public Boolean isParticipationAvailable( Agent agent, ChannelsUser user, CommunityService communityService ) {
         List<UserParticipation> currentParticipations = getUserParticipations(
                 user,
                 communityService );
@@ -591,25 +600,45 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isParticipationSelfAssignable( Agent agent, ChannelsUser user, CommunityService communityService ) {
+    public Boolean isParticipationSelfAssignable( Agent agent, ChannelsUser user, CommunityService communityService ) {
         return agent.isParticipationUserAssignable()
                 && isParticipationAvailable( agent, user, communityService );
     }
 
     @Override
-    public boolean meetsPreEmploymentConstraint(
+    public Boolean meetsPreEmploymentConstraint(
             Agent agent,
             List<UserParticipation> activeParticipations,
-            CommunityService communityService ) {
+            final CommunityService communityService ) {
         if ( !agent.isParticipationRestrictedToEmployed() ) return true;
         List<Agency> agentEmployers = findAllEmployersOfAgent( agent, communityService );
-        List<Agency> participationEmployers = new ArrayList<Agency>();
+        final List<Agency> participationEmployers = new ArrayList<Agency>();
         for ( UserParticipation participation : activeParticipations ) {
             Agent participationAgent = participation.getAgent( communityService );
             if ( participationAgent != null && !participationAgent.isOpenParticipation() )
                 participationEmployers.addAll( findAllEmployersOfAgent( participationAgent, communityService ) );
         }
-        return !Collections.disjoint( agentEmployers, participationEmployers );
+        // Meet constraint for the agent if at least one of the user participations is for an employer of the given agent or parent.
+        return CollectionUtils.exists(
+                agentEmployers,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Agency agentEmployer = (Agency)object;
+                        return participationEmployers.contains( agentEmployer ) ||
+                                CollectionUtils.exists(
+                                        participationEmployers,
+                                        new Predicate() {
+                                            @Override
+                                            public boolean evaluate( Object object ) {
+                                                Agency participationEmployer = (Agency)object;
+                                                return participationEmployer.ancestors( communityService ).contains( agentEmployer );
+                                            }
+                                        }
+                                );
+                    }
+                }
+        );
     }
 
     @Override
@@ -700,7 +729,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean areCollaborators(   // todo
+    public Boolean areCollaborators(   // todo
                                        CommunityService communityService,
                                        final ChannelsUser user,
                                        final ChannelsUser otherUser ) {  // Does one have commitments or co-assignments with the other?
@@ -708,7 +737,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isSupervisorOf(
+    public Boolean isSupervisorOf(
             final CommunityService communityService,
             ChannelsUser user,
             ChannelsUser otherUser ) {
@@ -728,7 +757,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isSupervisedBy(
+    public Boolean isSupervisedBy(
             final CommunityService communityService,
             ChannelsUser user,
             ChannelsUser otherUser ) {
@@ -736,7 +765,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean areColleagues(   // have a common employer
+    public Boolean areColleagues(   // have a common employer
                                     CommunityService communityService,
                                     ChannelsUser user,
                                     ChannelsUser otherUser ) {
@@ -754,7 +783,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean hasAuthorityOverParticipation(
+    public Boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
             ChannelsUser user,
             UserParticipation userParticipation ) {
@@ -767,7 +796,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean hasAuthorityOverParticipation(
+    public Boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
             ChannelsUser user,
             UserRecord participantInfo,
@@ -885,7 +914,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isAgencyReferenced( final Agency agency, final CommunityService communityService ) {
+    public Boolean isAgencyReferenced( final Agency agency, final CommunityService communityService ) {
         boolean participates = agency.isLocal()
                 ? !organizationParticipationService.findAllParticipationBy( agency.getRegisteredOrganization(), communityService ).isEmpty()
                 : !organizationParticipationService.findAllParticipationByGlobal( agency.getRegisteredOrganization() ).isEmpty();
@@ -963,6 +992,15 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
+    public List<ChannelsUser> findAllUsersActivelyParticipatingAs( Agent agent, CommunityService communityService ) {
+        List<ChannelsUser> participants = new ArrayList<ChannelsUser>();
+        for ( UserRecord userRecord : findUsersActivelyParticipatingAs( agent, communityService ) ) {
+            participants.add( new ChannelsUser( userRecord ) );
+        }
+        return participants;
+    }
+
+    @Override
     public Boolean userHasJoinedCommunity( ChannelsUser user, CommunityService communityService ) {
         String uri = communityService.getPlanCommunity().getUri();
         return user.getUserRecord().getCommunitiesJoined().contains( uri ) // legacy - implied participation if planner
@@ -1015,7 +1053,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public boolean isLinked( Agent agent, CommunityService communityService ) {
+    public Boolean isLinked( Agent agent, CommunityService communityService ) {
         return !CollectionUtils.exists(
                findAllEmploymentsForAgent( agent, communityService ),
                 new Predicate() {

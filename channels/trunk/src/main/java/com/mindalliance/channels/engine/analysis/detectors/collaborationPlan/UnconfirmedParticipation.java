@@ -7,8 +7,12 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,30 +36,78 @@ public class UnconfirmedParticipation extends AbstractIssueDetector {
     }
 
     @Override
-    public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
-        List<Issue> issues = new ArrayList<Issue>(  );
+    @SuppressWarnings( "unchecked" )
+    public List<? extends Issue> detectIssues( final CommunityService communityService, Identifiable identifiable ) {
+        List<Issue> issues = new ArrayList<Issue>();
         Agent agent = (Agent) identifiable;
-        ParticipationManager participationManager = communityService.getParticipationManager();
+        final ParticipationManager participationManager = communityService.getParticipationManager();
         for ( UserParticipation userParticipation : participationManager.getParticipationsAsAgent( agent, communityService ) ) {
-            if ( userParticipation.isAccepted()  && userParticipation.isSupervised( communityService ) ) {
-                for ( ChannelsUser user
-                        : participationManager.findAllUsersRequestedToConfirm( userParticipation, communityService ) ) {
+            if ( userParticipation.isAccepted() && userParticipation.isSupervised( communityService ) ) {
+                if ( !communityService.getUserParticipationConfirmationService()
+                        .isConfirmedByAllSupervisors( userParticipation, communityService ) ) {
                     Issue issue = makeIssue( communityService, Issue.COMPLETENESS, agent );
                     issue.setDescription(
-                            user.getFullName()
-                            + " has not yet confirmed the participation of "
-                            + userParticipation.getParticipantFullName( communityService )
-                            + " as \""
-                            + userParticipation.getAgent( communityService ).getName()
-                            + "\""
+                            "The participation of "
+                                    + userParticipation.getParticipantFullName( communityService )
+                                    + " as \""
+                                    + userParticipation.getAgent( communityService ).getName()
+                                    + "\" is not confirmed by all supervisors"
                     );
                     issue.setSeverity( Level.High ); // todo - set to max failure impact of assigned tasks
-                    issue.setRemediation(
-                            "Remind "
-                                    + user.getFullName()
-                                    + " of the participation confirmation request\n"
-                                    + "or withdraw the participation request."
+                    // compose remediation
+                    List<Agent> emptySupervisorAgents = (List<Agent>) CollectionUtils.select(
+                            participationManager.findAllSupervisorsOf( agent, communityService ),
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return participationManager.findAllUsersParticipatingAs( ( (Agent) object ), communityService ).isEmpty();
+                                }
+                            }
                     );
+                    List<String> emptySupervisorAgentNames = (List<String>) CollectionUtils.collect(
+                            emptySupervisorAgents,
+                            new Transformer() {
+                                @Override
+                                public Object transform( Object input ) {
+                                    return ( (Agent) input ).getName();
+                                }
+                            }
+                    );
+                    List<String> supervisingUserNames = (List<String>) CollectionUtils.collect(
+                            participationManager.findAllUsersRequestedToConfirm( userParticipation, communityService ),
+                            new Transformer() {
+                                @Override
+                                public Object transform( Object input ) {
+                                    return ( (ChannelsUser) input ).getFullName();
+                                }
+                            }
+                    );
+                    StringBuilder sb = new StringBuilder();
+                    if ( !supervisingUserNames.isEmpty() ) {
+                        sb.append( "Remind " )
+                                .append( ChannelsUtils.listToString( supervisingUserNames, " and " ) )
+                                .append( " to confirm the participation of " )
+                                .append( userParticipation.getParticipantFullName( communityService ) )
+                                .append( " as " )
+                                .append( agent.getName() );
+                    }
+                    if ( !emptySupervisorAgentNames.isEmpty() ) {
+                        if ( !supervisingUserNames.isEmpty() )
+                            sb.append( " and request " );
+                        else
+                            sb.append( "Request user " );
+                        sb.append( "participation as supervisor " );
+                        sb.append( emptySupervisorAgentNames.size() > 1 ? "agents " : "agent " );
+                        sb.append( ChannelsUtils.listToString( emptySupervisorAgentNames, " and " ) );
+                    }
+                    if ( !supervisingUserNames.isEmpty() || !emptySupervisorAgentNames.isEmpty() )
+                        sb.append( "\nor " );
+                    sb.append( "cancel the unconfirmed participation by " )
+                            .append( userParticipation.getParticipantFullName( communityService ) )
+                            .append( " as " )
+                            .append( agent.getName() )
+                            .append( "." );
+                    issue.setRemediation( sb.toString() );
                     issues.add( issue );
                 }
             }

@@ -156,6 +156,7 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Description", "description", EMPTY ) );
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
             columns.add( makeColumn( "Reported by", "reportedBy", EMPTY ) );
+//            columns.add( makeColumn("Can be waived?", "waivability", EMPTY ));
 
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",

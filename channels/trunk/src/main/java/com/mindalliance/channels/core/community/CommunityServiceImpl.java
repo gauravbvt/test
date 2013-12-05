@@ -305,6 +305,9 @@ public class CommunityServiceImpl implements CommunityService {
         } if ( clazz.isAssignableFrom( Agent.class ) ) {
             results.addAll( (List<T> )getParticipationManager().getAllKnownAgents( this ) );
         }
+        if ( clazz.isAssignableFrom( ChannelsUser.class ) ) {
+            results.addAll( (List<T> )getParticipationManager().findAllActivelyParticipatingUsers( this ) );
+        }
         return results;
     }
 

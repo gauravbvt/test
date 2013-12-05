@@ -162,7 +162,7 @@ public interface ParticipationManager {
      * @param communityService a community service
      * @return a boolean
      */
-    boolean isParticipationAvailable( Agent agent, ChannelsUser user, CommunityService communityService );
+    Boolean isParticipationAvailable( Agent agent, ChannelsUser user, CommunityService communityService );
 
     /**
      * Whether a given user can self assign a participation as a given agent.
@@ -172,7 +172,7 @@ public interface ParticipationManager {
      * @param communityService a community service
      * @return a boolean
      */
-    boolean isParticipationSelfAssignable( Agent agent, ChannelsUser user, CommunityService communityService );
+    Boolean isParticipationSelfAssignable( Agent agent, ChannelsUser user, CommunityService communityService );
 
     /**
      * Whether participating as an agent meets pre-employment requirement given active participations.
@@ -182,7 +182,7 @@ public interface ParticipationManager {
      * @param communityService     a community service
      * @return a boolean
      */
-    boolean meetsPreEmploymentConstraint(
+    Boolean meetsPreEmploymentConstraint(
             Agent agent,
             List<UserParticipation> activeParticipations,
             CommunityService communityService );
@@ -204,7 +204,7 @@ public interface ParticipationManager {
      * @param otherUser        another user
      * @return a boolean
      */
-    boolean areCollaborators( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
+    Boolean areCollaborators( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Is first user supervised other?
@@ -214,7 +214,7 @@ public interface ParticipationManager {
      * @param otherUser        another user
      * @return a boolean
      */
-    boolean isSupervisedBy( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
+    Boolean isSupervisedBy( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Is first user supervisor of the other?
@@ -224,7 +224,7 @@ public interface ParticipationManager {
      * @param otherUser        another user
      * @return a boolean
      */
-    boolean isSupervisorOf( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
+    Boolean isSupervisorOf( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Do two users share a common employer?
@@ -234,7 +234,7 @@ public interface ParticipationManager {
      * @param otherUser        another user
      * @return a boolean
      */
-    boolean areColleagues( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
+    Boolean areColleagues( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Whether user has authority over a participation.
@@ -244,7 +244,7 @@ public interface ParticipationManager {
      * @param userParticipation a plan participation
      * @return a boolean
      */
-    boolean hasAuthorityOverParticipation(
+    Boolean hasAuthorityOverParticipation(
             CommunityService communityService,
             ChannelsUser user,
             UserParticipation userParticipation );
@@ -258,7 +258,7 @@ public interface ParticipationManager {
      * @param participationAgent the agent the participant participates as or would
      * @return a boolean
      */
-    boolean hasAuthorityOverParticipation(
+    Boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
             ChannelsUser user,
             UserRecord participantInfo,
@@ -343,7 +343,7 @@ public interface ParticipationManager {
      * @param communityService a community service
      * @return a boolean
      */
-    boolean isAgencyReferenced( Agency agency, CommunityService communityService );
+    Boolean isAgencyReferenced( Agency agency, CommunityService communityService );
 
     /**
      * Can an agency that is not local be made local?
@@ -391,6 +391,14 @@ public interface ParticipationManager {
      * @return a list of users
      */
     List<ChannelsUser> findAllUsersParticipatingAs( Agent agent, CommunityService communityService );
+
+    /**
+     * Find all user actively participating as a given agent.
+     * @param agent an agent
+     * @param communityService a community service
+     * @return a list of users
+     */
+    List<ChannelsUser> findAllUsersActivelyParticipatingAs( Agent agent, CommunityService communityService );
 
     /**
      * Whether a given user has joined a given plan community.
@@ -445,7 +453,7 @@ public interface ParticipationManager {
      * @param communityService a community service
      * @return a boolean
      */
-    boolean isLinked( Agent agent, CommunityService communityService );
+    Boolean isLinked( Agent agent, CommunityService communityService );
 
     /**
      * Find the top, possibly indirect, supervisors of a given agent.
@@ -472,7 +480,7 @@ public interface ParticipationManager {
      * @param communityService  a community service
      * @return a boolean
      */
-    boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService );
+    Boolean isAwaitingConfirmation( UserParticipation userParticipation, CommunityService communityService );
 
     /**
      * Find all user who need to confirm a user participation but have not yet done so.
@@ -481,5 +489,12 @@ public interface ParticipationManager {
      */
     List<ChannelsUser> findAllUsersRequestedToConfirm( UserParticipation userParticipation,
                                                        CommunityService communityService );
+
+    /**
+     * Find all users actively participating.
+     * @param communityService a community service
+     * @return a list of Channels users
+     */
+    List<ChannelsUser> findAllActivelyParticipatingUsers( CommunityService communityService );
 
 }

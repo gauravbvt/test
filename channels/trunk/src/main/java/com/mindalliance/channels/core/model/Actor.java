@@ -12,6 +12,7 @@ import org.apache.commons.collections.Predicate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Someone or something playing a part in a segment.
@@ -489,4 +490,35 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         }
     }
 
+    /**
+     * Whether at most one user can participate as this actor, taking into account placeholder employers.
+     * @param queryService a query service
+     * @return a boolean
+     */
+    public boolean isAbsoluteSingularParticipation( QueryService queryService ) {
+        if ( isSingularParticipation() ) {
+            Set<Organization> primaryEmployers = new HashSet<Organization>(  );
+            for ( Employment employment : queryService.findAllEmploymentsForActor( this ) ) {
+                if ( employment.getJob().isPrimary() )
+                    primaryEmployers.add( employment.getOrganization() );
+            }
+            // For the template to be valid, there should be at most one primary employer, but it might not be valid.
+            if ( primaryEmployers.size() > 0 ) { // verify none of the primary employers are placeholders with multiple participation
+                return !CollectionUtils.exists(
+                        primaryEmployers,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Organization organization = (Organization)object;
+                                return organization.isPlaceHolder() && !organization.isSingleParticipation();
+                            }
+                        }
+                );
+            } else {
+                return true; // no placeholder employer with participation > 1
+            }
+        } else {
+            return false;
+        }
+    }
 }

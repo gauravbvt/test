@@ -32,8 +32,15 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
      */
     private QueryService queryService;
 
+    private boolean allowCommitmentsToSelf = false;
+
     public ActorsNetworkGraphBuilder( QueryService queryService ) {
         this.queryService = queryService;
+    }
+
+    public ActorsNetworkGraphBuilder( QueryService queryService, boolean allowCommitmentsToSelf ) {
+        this.queryService = queryService;
+        this.allowCommitmentsToSelf = allowCommitmentsToSelf;
     }
 
     /**
@@ -77,7 +84,7 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
                     for ( Commitment commitment : commitments ) {
                         Actor fromActor = commitment.getCommitter().getActor();
                         Actor toActor = commitment.getBeneficiary().getActor();
-                        if ( !fromActor.equals( toActor ) ) {
+                        if ( allowCommitmentsToSelf || !fromActor.equals( toActor ) ) {
                             Map<Actor, List<Flow>> toFlows = relFlows.get( fromActor );
                             if ( toFlows == null ) {
                                 toFlows = new HashMap<Actor, List<Flow>>();
@@ -96,7 +103,7 @@ public class ActorsNetworkGraphBuilder implements GraphBuilder<Actor, EntityRela
         }
         for ( Actor fromActor : allActors ) {
             for ( Actor toActor : allActors ) {
-                if ( !fromActor.equals( toActor ) ) {
+                if ( allowCommitmentsToSelf || !fromActor.equals( toActor ) ) {
                     if ( relFlows.containsKey( fromActor ) && relFlows.get( fromActor ).containsKey( toActor ) ) {
                         List<Flow> flows = relFlows.get( fromActor ).get( toActor );
                         if ( !flows.isEmpty() ) {

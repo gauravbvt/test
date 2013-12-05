@@ -227,4 +227,12 @@ public class Employment implements GeoLocatable, Specable {
     public String getTitleOrRole() {
         return getTitle().isEmpty() ? getRole().getName() : getTitle();
     }
+
+    public boolean isPrimary() {
+        return getJob().isPrimary();
+    }
+
+    public boolean isLinked() {
+        return getJob().isLinked();
+    }
 }

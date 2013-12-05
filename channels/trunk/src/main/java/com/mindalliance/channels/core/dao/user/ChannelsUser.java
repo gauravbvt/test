@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -24,7 +25,7 @@ import java.util.List;
  * Time: 1:55 PM
  */
 
-public class ChannelsUser implements UserDetails {
+public class ChannelsUser implements UserDetails, Identifiable {
 
     public static final String ADMIN = "Admin";
     public static final String PLANNER = "Template developer";
@@ -446,6 +447,44 @@ public class ChannelsUser implements UserDetails {
     public boolean hasPhoto() {
         String photoUrl = getUserRecord().getPhoto();
         return photoUrl != null && !photoUrl.isEmpty();
+    }
+
+    // Identifiable
+
+
+    @Override
+    public String getClassLabel() {
+        return "User";
+    }
+
+    @Override
+    public long getId() {
+        return getUserRecord().getId();
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public String getTypeName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean isModifiableInProduction() {
+        return true;
+    }
+
+    @Override
+    public String getKindLabel() {
+        return getClassLabel();
+    }
+
+    @Override
+    public String getName() {
+        return getFullName();
     }
 }
 

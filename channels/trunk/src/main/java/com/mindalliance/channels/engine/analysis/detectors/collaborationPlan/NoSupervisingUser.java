@@ -36,10 +36,10 @@ public class NoSupervisingUser extends AbstractIssueDetector {
         Agent agent = (Agent) identifiable;
         if ( agent.isSupervisedParticipation() ) {
             ParticipationManager participationManager = communityService.getParticipationManager();
-            List<ChannelsUser> users = participationManager.findAllUsersParticipatingAs( agent, communityService );
+            List<ChannelsUser> users = participationManager.findAllUsersActivelyParticipatingAs( agent, communityService );
             if ( !users.isEmpty() ) {
                 for ( Agent supervisorAgent : participationManager.findAllSupervisorsOf( agent, communityService ) ) {
-                    if ( participationManager.findAllUsersParticipatingAs( supervisorAgent, communityService ).isEmpty() ) {
+                    if ( participationManager.findAllUsersActivelyParticipatingAs( supervisorAgent, communityService ).isEmpty() ) {
                         for ( ChannelsUser user : users ) {
                             Issue issue = makeIssue( communityService, Issue.COMPLETENESS, agent );
                             issue.setDescription(

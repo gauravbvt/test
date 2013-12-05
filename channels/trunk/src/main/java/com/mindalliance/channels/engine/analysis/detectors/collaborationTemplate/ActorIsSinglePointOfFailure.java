@@ -29,17 +29,17 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Detects single points of failure in a plan segment.
+ * Detects actors wjo are "single points of failure".
  */
 
-public class SinglePointOfFailure extends AbstractIssueDetector {
+public class ActorIsSinglePointOfFailure extends AbstractIssueDetector {
 
     /**
      * Minimum out degree of a part that is a bottleneck and thus a single point of failure.
      */
-    private static final int MINIMUM_DEGREE = 3;
+    private static final int MINIMUM_DEGREE = 1;
 
-    public SinglePointOfFailure() {
+    public ActorIsSinglePointOfFailure() {
     }
 
     @Override
@@ -49,12 +49,15 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Single point of failure";
+        return "Agent is single point of failure";
     }
 
     /**
      * Detects one or more actors who play parts where they are bottlenecks. A bottleneck is an "articulation vertex" (a
      * point connecting otherwise disjoint subgraphs) with a large enough out degree (count of sends).
+     *
+     * See http://ravi-bhide.blogspot.com/2011/05/experiments-in-graph-3-coloring-block.html for a discussion of
+     * block-cutpoint graphs.
      *
      * @param communityService the community service
      * @param modelObject -- the ModelObject being analyzed
@@ -72,6 +75,8 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
             issue.setDescription( actor.getName() + " appears to be a single point of failure." );
             issue.setRemediation( " Generalize task specifications so that " + actor.getName()
                                   + " is not the only agent assigned to a critical task"
+                                  + "\n or allow participation as this agent by more than one user"
+                                  + "\n or give this agent a job in placeholder organization with multi-participation"
                                   + "\nor add participating agents to the scope with the same role and organization" );
             issue.setSeverity( Level.Medium );
             issues.add( issue );
@@ -98,6 +103,7 @@ public class SinglePointOfFailure extends AbstractIssueDetector {
                     new BlockCutpointGraph<Actor, EntityRelationship<Actor>>( new AsUndirectedGraph<Actor, EntityRelationship<Actor>>( digraph ) );
             for ( Actor actor : bcg.getCutpoints() )
                 if ( digraph.outDegreeOf( actor ) >= MINIMUM_DEGREE && digraph.inDegreeOf( actor ) >= MINIMUM_DEGREE )
+                    if ( actor.isAbsoluteSingularParticipation( queryService ) )
                         cutpoints.add( actor );
         }
         return cutpoints;

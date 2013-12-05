@@ -89,6 +89,8 @@
                      advice-ref="cacheSet" order="1"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.CollaborationTemplateDoctor.*(..))"
                      advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.engine.analysis.CollaborationTemplateDoctor.*(..))"
+                     advice-ref="cacheSet" order="1"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.Analyst.*(..))"
                      advice-ref="cacheSet" order="1"/>
         <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.analysis.Analyst.*(..))"
@@ -103,9 +105,13 @@
         <!-- Community caching -->
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.core.community.ParticipationManager.*(..))"
                      advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.core.community.ParticipationManager.*(..))"
+                     advice-ref="communitySet" order="1"/>
         <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.CollaborationPlanDoctor.*(..))"
                      advice-ref="communitySet" order="1"/>
-            <!--DB services -->
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.engine.analysis.CollaborationPlanDoctor.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <!--DB services -->
         <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.is*(..))"
                      advice-ref="communitySet" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.can*(..))"
