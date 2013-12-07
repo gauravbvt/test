@@ -416,9 +416,10 @@ public class CommunityServiceImpl implements CommunityService {
 
     private void removeObsoleteIssueDetectionWaivers() {
         List<IssueDetectionWaiver> obsoleteWaivers = new ArrayList<IssueDetectionWaiver>(  );
+        List<Identifiable> knownIdentifiables = listKnownIdentifiables( Identifiable.class );
         for ( final IssueDetectionWaiver issueDetectionWaiver : planCommunity.getIssueDetectionWaivers() ) {
             boolean matched = CollectionUtils.exists(
-                    listKnownIdentifiables( Identifiable.class ),
+                    knownIdentifiables,
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
