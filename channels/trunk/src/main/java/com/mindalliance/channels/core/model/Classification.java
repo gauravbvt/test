@@ -172,6 +172,11 @@ public class Classification implements Identifiable, Comparable<Classification> 
         return getTypeName();
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
 
     /**
      * Whether at least one in a list of classifications is stronger than a classification.

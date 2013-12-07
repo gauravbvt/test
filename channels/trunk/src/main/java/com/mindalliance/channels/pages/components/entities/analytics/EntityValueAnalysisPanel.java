@@ -190,6 +190,11 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
             return getTypeName();
         }
 
+        @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
 
     }
 

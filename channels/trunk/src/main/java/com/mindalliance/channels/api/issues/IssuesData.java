@@ -54,7 +54,7 @@ public class IssuesData  implements Serializable {
         Doctor doctor = communityService.getDoctor();
         for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
             for ( Issue issue : doctor.listIssues( communityService, mo, true ) ) {
-                issues.add( new IssueData( issue, mo ) );
+                issues.add( new IssueData( issue, mo, communityService ) );
             }
         }
     }

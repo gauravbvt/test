@@ -309,6 +309,11 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return true;
         }

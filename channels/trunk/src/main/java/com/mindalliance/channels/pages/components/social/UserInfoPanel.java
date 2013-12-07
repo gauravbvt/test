@@ -549,6 +549,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return true;
         }

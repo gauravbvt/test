@@ -32,4 +32,8 @@ public class HierarchyRelationship<T extends Hierarchical> extends Relationship 
         return (Hierarchical) getToIdentifiable( communityService );
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
 }

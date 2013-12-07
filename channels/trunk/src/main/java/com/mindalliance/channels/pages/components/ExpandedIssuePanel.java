@@ -165,7 +165,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
             label = new Label( "issue-label", new AbstractReadOnlyModel() {
 
                 public Object getObject() {
-                    return issue.getLabel( IssuesPanel.MAX_LENGTH );
+                    return issue.getLabel( IssuesPanel.MAX_LENGTH, getCommunityService() );
                 }
             } );
             suggestion = new Label( "issue-suggestion", new AbstractReadOnlyModel() {

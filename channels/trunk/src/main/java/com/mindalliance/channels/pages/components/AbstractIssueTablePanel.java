@@ -6,10 +6,16 @@
 
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Waivable;
+import com.mindalliance.channels.core.util.AbstractIssueWrapper;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.db.services.surveys.RFISurveyService;
@@ -39,7 +45,7 @@ import java.util.List;
 /**
  * Abstract issue table panel.
  */
-public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel implements Filterable {
+public abstract class AbstractIssueTablePanel extends AbstractCommandablePanel implements Filterable {
 
     /**
      * The logger.
@@ -72,7 +78,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
      * Survey service.
      */
 
-    @SpringBean(name="surveysDao")
+    @SpringBean(name = "surveysDao")
     SurveysDAO surveysDAO;
 
     @SpringBean
@@ -138,7 +144,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     protected abstract void addFilters();
 
     private void addIssuesTable() {
-        issuesTable = new IssuesTable( "issuesTable", new PropertyModel<List<Issue>>( this, "issues" ) );
+        issuesTable = new IssuesTable( "issuesTable", new PropertyModel<List<IssueWrapper>>( this, "issueWrappers" ) );
         issuesTable.setOutputMarkupId( true );
         addOrReplace( issuesTable );
     }
@@ -149,6 +155,14 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         about = identifiable == about ? null : (Identifiable) identifiable;
         addIssuesTable();
         target.add( issuesTable );
+    }
+
+    public List<IssueWrapper> getIssueWrappers() {
+        List<IssueWrapper> issueWrappers = new ArrayList<IssueWrapper>();
+        for ( Issue issue : getIssues() ) {
+            issueWrappers.add( new IssueWrapper( issue ) );
+        }
+        return issueWrappers;
     }
 
     /**
@@ -173,6 +187,77 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         target.add( issuesTable );
     }
 
+    public class IssueWrapper extends AbstractIssueWrapper {
+
+        private static final int MAX_LENGTH = 40;
+
+        public IssueWrapper( Issue issue ) {
+            super( issue );
+        }
+
+        @Override
+        public String getWaivedString() {
+            return getIssue().getWaivedString( getCommunityService() );
+        }
+
+        @Override
+        public boolean isWaived() {
+            return getIssue().isWaived( getCommunityService() );
+        }
+
+        @Override
+        public String getLabel( int maxLength ) {
+            return getIssue().getLabel( maxLength, getCommunityService() );
+        }
+
+        public String getLabel() {
+            return getIssue().getLabel( MAX_LENGTH, getCommunityService() );
+        }
+
+        @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        public String getWaivedState() {
+            CommunityService communityService = getCommunityService();
+            Issue issue = getIssue();
+            if ( issue.getAbout() instanceof Waivable && issue.canBeWaived() )
+                return getIssue().isWaived( communityService )
+                        ? AbstractIssueWrapper.WAIVED
+                        : AbstractIssueWrapper.NOT_WAIVED;
+            else {
+                return AbstractIssueWrapper.NA_WAIVED;
+            }
+        }
+
+        public void setWaivedState( String waivedState ) {
+            boolean waive = waivedState.equals( AbstractIssueWrapper.WAIVED );
+            Identifiable about = getIssue().getAbout();
+            Command command;
+            if ( about instanceof Waivable && getIssue().canBeWaived() ) {
+                if ( about instanceof ModelObject ) { // the identifiable is persisted, store the waived detector name in it
+                    command = UpdateObject.makeCommand(
+                            getUser().getUsername(),
+                            getIssue().getAbout(),
+                            "waivedIssueDetections",
+                            getIssue().getKind(),
+                            waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+                } else { // the identifiable is not persistent so store the waiver in the plan community
+                    command = UpdateObject.makeCommand(
+                            getUser().getUsername(),
+                            getPlanCommunity(),
+                            "issueDetectionWaivers",
+                            new IssueDetectionWaiver( about, getIssue().getKind() ),
+                            waive
+                                    ? UpdateObject.Action.AddUnique
+                                    : UpdateObject.Action.Remove );
+                }
+                doCommand( command );
+            }
+        }
+    }
+
     /**
      * Issues table.
      */
@@ -181,9 +266,9 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         /**
          * Issue list model.
          */
-        private IModel<List<Issue>> issuesModel;
+        private IModel<List<IssueWrapper>> issuesModel;
 
-        public IssuesTable( String id, IModel<List<Issue>> issuesModel ) {
+        public IssuesTable( String id, IModel<List<IssueWrapper>> issuesModel ) {
             super( id, null, maxRows, null );
             this.issuesModel = issuesModel;
             initialize();
@@ -194,16 +279,31 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeColumn( "Issue", "detectorLabel", EMPTY ) );
-            columns.add( makeFilterableLinkColumn( "About",
-                    "about",
-                    "about.name",
-                    EMPTY,
-                    AbstractIssueTablePanel.this ) );
+            if ( getPlanCommunity().isDomainCommunity() ) {
+                columns.add( makeFilterableLinkColumn( "About",
+                        "about",
+                        "about.name",
+                        EMPTY,
+                        AbstractIssueTablePanel.this ) );
+            } else {
+                columns.add( makeFilterableColumn(
+                        "about",
+                        "about",
+                        "about.name",
+                        "about.description",
+                        null,
+                        AbstractIssueTablePanel.this ) );
+            }
             columns.add( makeColumn( "Severity", "severity.negativeLabel", null, EMPTY, null, "severity.ordinal" ) );
             columns.add( makeColumn( "Description", "description", EMPTY ) );
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
             columns.add( makeColumn( "Reported by", "reportedBy", EMPTY ) );
-            columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
+            columns.add( makeTernaryCheckBoxColumn(
+                    "Waived",
+                    "waivedState",
+                    IssueWrapper.WAIVED_STATES,
+                    AbstractIssueTablePanel.this ) );
+            // columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
 
             if ( getPlan().isDevelopment() ) {
                 columns.add( makeSurveyColumn( "Survey" ) );
@@ -211,7 +311,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
                     columns,
-                    new SortableBeanProvider<Issue>( issuesModel.getObject(), "kind" ),
+                    new SortableBeanProvider<IssueWrapper>( issuesModel.getObject(), "kind" ),
                     getPageSize() ) );
         }
 
@@ -239,14 +339,14 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             AjaxLink link = new AjaxLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
-                        RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(
-                                getUsername(),
-                                getCommunityService(),
-                                issue );
-                        // Open all surveys panel on this survey
-                        Change change = new Change( Change.Type.Expanded, survey );
-                        change.setId( RFISurvey.UNKNOWN.getId() );
-                        update( target, change );
+                    RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(
+                            getUsername(),
+                            getCommunityService(),
+                            issue );
+                    // Open all surveys panel on this survey
+                    Change change = new Change( Change.Type.Expanded, survey );
+                    change.setId( RFISurvey.UNKNOWN.getId() );
+                    update( target, change );
                 }
             };
             add( link );

@@ -1041,7 +1041,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 // register fixed organizations
                 for ( Organization organization : communityService.getPlanService().listActualEntities( Organization.class ) ) {
-                    if ( organization.isFixedOrganization() ) {
+                    if ( organization.isFixedOrganization() && !organization.isUnknown() ) {
                         registeredOrganizationService.findOrAdd(
                                 ChannelsUser.current(),
                                 organization.getName(),

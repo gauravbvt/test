@@ -27,4 +27,9 @@ public class CommandRelationship<T extends Agent> extends Relationship {
     public Contact getSupervisor() {
         return supervisor;
     }
+
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
 }

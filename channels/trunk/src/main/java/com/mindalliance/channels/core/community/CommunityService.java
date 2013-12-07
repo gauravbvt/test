@@ -211,4 +211,9 @@ public interface CommunityService {
      * @return a doctor
      */
     Doctor getDoctor();
+
+    /**
+     * Remove obsolete data.
+     */
+    void cleanUp();
 }

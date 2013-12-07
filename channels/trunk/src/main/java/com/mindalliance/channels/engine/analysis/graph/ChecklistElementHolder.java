@@ -111,6 +111,11 @@ public class ChecklistElementHolder implements ChecklistElement {
     }
 
     @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
+    @Override
     public String toString() {
         return checklistElement + "[" + id + "]";
     }

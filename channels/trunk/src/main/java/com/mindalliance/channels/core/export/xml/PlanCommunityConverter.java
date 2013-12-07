@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.export.xml;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.LocationBinding;
 import com.mindalliance.channels.core.community.PlanCommunity;
@@ -27,15 +28,15 @@ import java.util.Map;
  * Date: 2/5/13
  * Time: 11:54 AM
  */
-public class CommunityConverter extends AbstractChannelsConverter {
+public class PlanCommunityConverter extends AbstractChannelsConverter {
 
     /**
      * Class logger.
      */
-    public static final Logger LOG = LoggerFactory.getLogger( CommunityConverter.class );
+    public static final Logger LOG = LoggerFactory.getLogger( PlanCommunityConverter.class );
 
 
-    public CommunityConverter( XmlStreamer.Context context ) {
+    public PlanCommunityConverter( XmlStreamer.Context context ) {
         super( context );
     }
 
@@ -130,6 +131,12 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 writer.endNode();
                 writer.endNode();
             }
+        }
+        // Export issue detection waivers (for non-modelObjects)
+        for ( IssueDetectionWaiver waiver : planCommunity.getIssueDetectionWaivers() ) {
+            writer.startNode( "issueDetectionWaiver" );
+            context.convertAnother( waiver );
+            writer.endNode();
         }
     }
 
@@ -227,6 +234,10 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 context.convertAnother(
                         planCommunity,
                         Requirement.class );
+            } else if ( nodeName.equals( "issueDetectionWaiver" ) ) {
+                planCommunity.addIssueDetectionWaiver( (IssueDetectionWaiver)context.convertAnother(
+                        planCommunity,
+                        IssueDetectionWaiver.class ) );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

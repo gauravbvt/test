@@ -198,6 +198,11 @@ public class RequirementRelationship implements Identifiable {
     }
 
     @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
+    @Override
     public String toString() {
         return label;
     }

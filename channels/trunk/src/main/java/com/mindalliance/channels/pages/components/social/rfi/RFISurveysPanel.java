@@ -465,6 +465,11 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public String getName() {
             return rfiSurvey.getName();
         }

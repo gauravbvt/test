@@ -6,11 +6,19 @@
 
 package com.mindalliance.channels.pages.reports.issues;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Waivable;
+import com.mindalliance.channels.core.util.AbstractIssueWrapper;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
-import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -134,14 +142,51 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
         return mf.format( args );
     }
 
+    public class IssueWrapper extends AbstractIssueWrapper {
+
+        public IssueWrapper( Issue issue ) {
+            super( issue );
+        }
+
+        @Override
+        public String getWaivedString(  ) {
+            return getIssue().getWaivedString( getCommunityService() );
+        }
+
+        @Override
+        public boolean isWaived(  ) {
+            return getIssue().isWaived( getCommunityService() );
+        }
+
+        @Override
+        public String getLabel( int maxLength ) {
+            return getIssue().getLabel( maxLength, getCommunityService() );
+        }
+
+        @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+    }
+
+
     private class IssuesOfKindTable extends AbstractTablePanel<Issue> {
 
-        private List<Issue> issues;
+        private List<IssueWrapper> issues;
 
         private IssuesOfKindTable( String id, String kind ) {
             super( id, null, MAX_ROWS, null );
-            issues = issueTypeMetrics.getIssuesOfKind( kind );
+            issues = wrapIssues( issueTypeMetrics.getIssuesOfKind( kind ) );
             initialize();
+        }
+
+        private List<IssueWrapper> wrapIssues( List<Issue> issuesOfKind ) {
+            List<IssueWrapper> wrappedIssues = new ArrayList<IssueWrapper>(  );
+            for ( Issue issue : issuesOfKind ) {
+                wrappedIssues.add( new IssueWrapper( issue ) );
+            }
+            return wrappedIssues;
         }
 
         @SuppressWarnings( "unchecked" )
@@ -156,12 +201,12 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Description", "description", EMPTY ) );
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
             columns.add( makeColumn( "Reported by", "reportedBy", EMPTY ) );
-//            columns.add( makeColumn("Can be waived?", "waivability", EMPTY ));
+            columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
 
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
                     columns,
-                    new SortableBeanProvider<Issue>( issues, "kind" ),
+                    new SortableBeanProvider<IssueWrapper>( issues, "kind" ),
                     getPageSize() ) );
         }
 

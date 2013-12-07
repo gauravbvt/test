@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.AbstractWaivableIdentifiable;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
@@ -25,7 +26,7 @@ import java.util.List;
  * Time: 1:55 PM
  */
 
-public class ChannelsUser implements UserDetails, Identifiable {
+public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDetails, Identifiable {
 
     public static final String ADMIN = "Admin";
     public static final String PLANNER = "Template developer";
@@ -480,6 +481,11 @@ public class ChannelsUser implements UserDetails, Identifiable {
     @Override
     public String getKindLabel() {
         return getClassLabel();
+    }
+
+    @Override
+    public String getUid() {
+        return getUserRecord().getUid();
     }
 
     @Override

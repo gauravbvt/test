@@ -76,7 +76,7 @@ public abstract class AbstractDetective implements Detective {
             @Override
             public boolean evaluate( Object object ) {
                 IssueDetector issueDetector = (IssueDetector) object;
-                return issueDetector.isApplicable( identifiable, waived, propertySpecific );
+                return issueDetector.isApplicable( identifiable, waived, propertySpecific, communityService );
             }
         } );
     }
@@ -92,13 +92,13 @@ public abstract class AbstractDetective implements Detective {
     private List<IssueDetector> getDetectors( final Identifiable identifiable,
                                               final boolean waived,
                                               final String property,
-                                              CommunityService communityService ) {
+                                              final CommunityService communityService ) {
         return (List<IssueDetector>) CollectionUtils.select( issueDetectors, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 IssueDetector issueDetector = (IssueDetector) object;
                 return issueDetector.appliesTo( identifiable, property )
-                        && AbstractIssueDetector.isWaived( identifiable, issueDetector.getKind() ) == waived;
+                        && AbstractIssueDetector.isWaived( identifiable, issueDetector.getKind(), communityService ) == waived;
             }
         } );
     }

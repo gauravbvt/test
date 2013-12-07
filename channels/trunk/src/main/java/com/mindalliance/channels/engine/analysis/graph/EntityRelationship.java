@@ -121,4 +121,9 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     public void setFlows( List<Flow> flows ) {
         this.flows = flows;
     }
+
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
 }

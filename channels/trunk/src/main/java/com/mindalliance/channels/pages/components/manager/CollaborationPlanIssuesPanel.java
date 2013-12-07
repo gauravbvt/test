@@ -27,7 +27,7 @@ import java.util.List;
  * Date: 11/26/13
  * Time: 8:53 AM
  */
-public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
+public class CollaborationPlanIssuesPanel extends AbstractIssueTablePanel {
 
     /**
      * Maximum number of rows of issues to show at a time.
@@ -36,13 +36,18 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
     /**
      * Whether to show waived issues.
      */
-    private boolean includeWaived = false;
+    private boolean includeWaived;
     private Level severity;
     private List<String> kindHints = new ArrayList<String>();
     private static final String ANY = "Any";
 
     public CollaborationPlanIssuesPanel( String id ) {
         super( id, null, MAX_ROWS );
+    }
+
+    protected void init() {
+        includeWaived = true;
+        super.init();
     }
 
     protected void addFilters() {
@@ -151,9 +156,12 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
         // Get issues by about and waived
         Identifiable about = getAbout();
         Doctor doctor = getCommunityService().getDoctor();
-        List<? extends Issue> issues = about != null ? doctor.listIssues( getCommunityService(), about, true, includeWaived ) :
-                includeWaived ? doctor.findAllIssues( getCommunityService() )
-                        : doctor.findAllUnwaivedIssues(getCommunityService());
+        List<? extends Issue> issues =
+                about != null
+                        ? doctor.listIssues( getCommunityService(), about, true, includeWaived )
+                        : includeWaived
+                        ? doctor.findAllIssues( getCommunityService() )
+                        : doctor.findAllUnwaivedIssues( getCommunityService() );
 
         issues = filterByType( issues, getIssueType() );
         issues = filterBySeverity( issues );
@@ -162,7 +170,7 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
         return issues;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Issue> filterByType( List<? extends Issue> issues, final String issueType ) {
         return (List<Issue>) CollectionUtils.select(
                 issues,
@@ -175,7 +183,7 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<? extends Issue> filterBySeverity( List<? extends Issue> issues ) {
         return (List<? extends Issue>) CollectionUtils.select(
                 issues,
@@ -188,7 +196,7 @@ public class CollaborationPlanIssuesPanel  extends AbstractIssueTablePanel {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Issue> filterByKind( List<? extends Issue> issues ) {
         return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
             public boolean evaluate( Object obj ) {

@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import java.text.Collator;
@@ -24,7 +23,7 @@ import java.util.Map;
  */
 public abstract class ModelObject
         extends AbstractAttachable
-        implements Comparable<ModelObject>, Modelable, Taggable, ChannelsLockable {
+        implements Comparable<ModelObject>, Modelable, Taggable, ChannelsLockable, Waivable {
 
     public static final List<String> CLASS_LABELS;
 
@@ -299,7 +298,7 @@ public abstract class ModelObject
      *
      * @param detection a string
      */
-    public void waiveIssueDetection( String detection ) {
+    public void addWaiveIssueDetection( String detection ) {
         if ( !waivedIssueDetections.contains( detection ) )
             waivedIssueDetections.add( detection );
     }
@@ -309,13 +308,24 @@ public abstract class ModelObject
      *
      * @param detection a string
      */
-    public void unwaiveIssueDetection( String detection ) {
+    public void removeWaivedIssueDetection( String detection ) {
         waivedIssueDetections.remove( detection );
     }
 
-    public boolean isWaived( String detection ) {
+    public boolean isWaived( String detection, CommunityService communityService ) {
         return waivedIssueDetections.contains( detection );
     }
+
+    @Override
+    public void waiveIssueDetection( String detection, CommunityService communityService ) {
+        addWaiveIssueDetection( detection );
+    }
+
+    @Override
+    public void unwaiveIssueDetection( String detection, CommunityService communityService ) {
+        removeWaivedIssueDetection( detection );
+    }
+
 
     /**
      * Get a label
@@ -479,6 +489,11 @@ public abstract class ModelObject
      */
     public String getKindLabel() {
         return WordUtils.capitalize( getTypeName() );
+    }
+
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
     }
 
     /**

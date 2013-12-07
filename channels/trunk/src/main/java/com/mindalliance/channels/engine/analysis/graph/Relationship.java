@@ -170,4 +170,9 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         return getTypeName();
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
 }

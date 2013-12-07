@@ -88,4 +88,8 @@ public class RequirementNotSatisfied extends AbstractIssueDetector {
         return "Requirement not satisfied";
     }
 
+    @Override
+    public boolean canBeWaived() {
+        return false;
+    }
 }

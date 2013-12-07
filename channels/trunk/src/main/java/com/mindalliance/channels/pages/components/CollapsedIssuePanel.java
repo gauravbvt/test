@@ -6,12 +6,14 @@
 
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.db.services.surveys.RFISurveyService;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
@@ -36,7 +38,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
     /**
      * Survey service.
      */
-    @SpringBean( name="surveysDao" )
+    @SpringBean(name = "surveysDao")
     private SurveysDAO surveysDao;
 
     @SpringBean
@@ -65,14 +67,14 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
 
     private void addSurveying( final Issue issue ) {
         WebMarkupContainer surveyLinkContainer = new WebMarkupContainer( "surveyLinkContainer" );
-        surveyLinkContainer.setVisible( issue.isDetected() && !issue.isWaived() );
+        surveyLinkContainer.setVisible( issue.isDetected() && !issue.isWaived( getCommunityService() ) );
         add( surveyLinkContainer );
         IndicatingAjaxFallbackLink surveyLink = new IndicatingAjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
-                    RFISurvey survey = surveysDao.getOrCreateRemediationSurvey(
-                            getUsername(),
-                            getCommunityService(),
-                            issue );
+                RFISurvey survey = surveysDao.getOrCreateRemediationSurvey(
+                        getUsername(),
+                        getCommunityService(),
+                        issue );
                 // Open all surveys panel on this survey
                 Change change = new Change( Change.Type.Expanded, survey );
                 change.setId( RFISurvey.UNKNOWN.getId() );
@@ -146,7 +148,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
             label = new Label( "issue-label", new AbstractReadOnlyModel() {
 
                 public Object getObject() {
-                    return issue.getLabel( IssuesPanel.MAX_LENGTH );
+                    return issue.getLabel( IssuesPanel.MAX_LENGTH, getCommunityService() );
                 }
             } );
             suggestion = new Label( "issue-suggestion", new AbstractReadOnlyModel() {
@@ -172,7 +174,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      * @return a boolean
      */
     public boolean isWaived() {
-        return getIssue().isWaived();
+        return getIssue().isWaived( getCommunityService() );
     }
 
     /**
@@ -192,10 +194,25 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      * @param waive a boolean
      */
     public void setWaived( boolean waive ) {
-        Command command = UpdateObject.makeCommand( getUser().getUsername(), getIssue().getAbout(),
-                "waivedIssueDetections",
-                getIssue().getKind(),
-                waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
-        doCommand( command );
+        Identifiable about = getIssue().getAbout();
+        Command command;
+        if ( about instanceof Waivable ) {
+            if ( about instanceof ModelObject ) { // the identifiable is persisted, store the waived detector name in it
+                command = UpdateObject.makeCommand(
+                        getUser().getUsername(),
+                        getIssue().getAbout(),
+                        "waivedIssueDetections",
+                        getIssue().getKind(),
+                        waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+            } else { // the identifiable is not persistent so store the waiver in the plan community
+                command = UpdateObject.makeCommand(
+                        getUser().getUsername(),
+                        getPlanCommunity(),
+                        "issueDetectionWaivers",
+                        new IssueDetectionWaiver( about, getIssue().getKind() ),
+                        waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+            }
+            doCommand( command );
+        }
     }
 }

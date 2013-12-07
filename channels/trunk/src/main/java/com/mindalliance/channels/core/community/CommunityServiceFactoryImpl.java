@@ -46,6 +46,7 @@ public class CommunityServiceFactoryImpl implements CommunityServiceFactory, App
         result.setPlanService( planServiceFactory.getService(
                 planCommunity.getPlanUri(),
                 planCommunity.getPlanVersion() ) );
+        result.cleanUp( );
         services.put( planCommunity, result );
         return result;
     }

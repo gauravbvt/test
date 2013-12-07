@@ -2,11 +2,10 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.model.AbstractUnicastChannelable;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
-import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
@@ -30,7 +29,7 @@ import java.util.Set;
  * Date: 12/6/12
  * Time: 10:49 AM
  */
-public class Agency extends AbstractUnicastChannelable implements Nameable, Identifiable {
+public class Agency extends AbstractUnicastChannelable implements Waivable {
 
     public static final Agency UNKNOWN = new Agency();
     private RegisteredOrganization registeredOrganization;
@@ -489,5 +488,23 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                     }
                 } );
     }
+
+    // Waivable
+
+    @Override
+    public boolean isWaived( String detector, CommunityService communityService ) {
+        return communityService.getPlanCommunity().hasIssueDetectionWaiver( this, detector );
+    }
+
+    @Override
+    public void waiveIssueDetection( String detector, CommunityService communityService ) {
+        communityService.getPlanCommunity().addIssueDetectionWaiver( this, detector );
+    }
+
+    @Override
+    public void unwaiveIssueDetection( String detector, CommunityService communityService ) {
+        communityService.getPlanCommunity().removeIssueDetectionWaiver( this, detector );
+    }
+
 }
 

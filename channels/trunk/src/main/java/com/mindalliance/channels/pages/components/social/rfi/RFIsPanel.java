@@ -670,6 +670,11 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return userInfo.isModifiableInProduction();
         }

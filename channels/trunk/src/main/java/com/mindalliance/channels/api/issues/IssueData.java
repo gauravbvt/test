@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.issues;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -24,14 +25,20 @@ public class IssueData  implements Serializable {
 
     private Issue issue;
     private ModelObject modelObject;
+    private boolean waived;
 
     public IssueData() {
         // required
     }
 
-    public IssueData( Issue issue, ModelObject modelObject ) {
+    public IssueData( Issue issue, ModelObject modelObject, CommunityService communityService ) {
         this.issue = issue;
         this.modelObject = modelObject;
+        initData( communityService );
+    }
+
+    private void initData( CommunityService communityService ) {
+        waived = issue.isWaived( communityService );
     }
 
     @XmlElement
@@ -56,7 +63,7 @@ public class IssueData  implements Serializable {
 
     @XmlElement
     public boolean getWaived() {
-        return issue.isWaived();
+        return waived;
     }
 
     @XmlElement

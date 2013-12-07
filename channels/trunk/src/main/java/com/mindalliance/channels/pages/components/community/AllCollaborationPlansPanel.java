@@ -206,6 +206,11 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public long getId() {
             return collaborationPlan.getId();
         }

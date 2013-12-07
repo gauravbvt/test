@@ -8,6 +8,7 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.community.CommunityDao;
@@ -208,7 +209,7 @@ public class XmlStreamer implements ImportExportFactory {
 
         @SuppressWarnings({"OverlyLongMethod", "OverlyCoupledMethod"})
         private void registerConverters( XStream stream ) {
-            stream.registerConverter( new CommunityConverter( this ) );
+            stream.registerConverter( new PlanCommunityConverter( this ) );
             stream.registerConverter( new PlanConverter( this ) );
             stream.registerConverter( new EventConverter( this ) );
             stream.registerConverter( new JournalConverter( this ) );
@@ -239,6 +240,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new AgreementConverter( this ) );
             stream.registerConverter( new RequirementConverter( this ) );
             stream.registerConverter( new AssignedLocationConverter( this ) );
+            stream.registerConverter( new IssueDetectionWaiverConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -277,6 +279,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "infoproduct", InfoProduct.class );
             stream.alias( "function", Function.class );
             stream.alias( "format", InfoFormat.class );
+            stream.alias( "issuedetectionwaiver", IssueDetectionWaiver.class );
         }
 
         @Override

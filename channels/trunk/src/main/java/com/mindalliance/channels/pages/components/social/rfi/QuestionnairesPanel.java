@@ -467,6 +467,11 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return questionnaire.isModifiableInProduction();
         }

@@ -627,7 +627,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     protected AbstractColumn<T> makeTernaryCheckBoxColumn(
             String name,
             final String stateProperty,
-            final String[] allowedStates
+            final String[] allowedStates, // 3 states mapping to false, true, and disabled
+            final Updatable updatable
     ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -637,7 +638,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         id,
                         model,
                         stateProperty,
-                        allowedStates );
+                        allowedStates,
+                        updatable );
                 cellItem.add( cellContent );
             }
         };
@@ -1182,8 +1184,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         public TernaryCheckBoxPanel(
                 String id,
                 IModel<T> model,
-                String stateProperty,
-                String[] allowedStates ) {
+                final String stateProperty,
+                String[] allowedStates,
+                final Updatable updatable ) {
             super( id );
             this.stateProperty = stateProperty;
             this.allowedStates = allowedStates;
@@ -1191,10 +1194,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             CheckBox checkBox = new CheckBox( "checkBox", new PropertyModel<Boolean>( this, "checked" ) );
             checkBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                 protected void onUpdate( AjaxRequestTarget target ) {
-                    // Do nothing
+                    updatable.update( target, bean, stateProperty );
                 }
             } );
             checkBox.setEnabled( !hasDisabledState() );
+            if ( hasDisabledState() ) {
+                addTipTitle( this, "Not applicable" );
+            }
             add( checkBox );
         }
 
@@ -1205,7 +1211,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
         public boolean getChecked() {
             String state = (String) ChannelsUtils.getProperty( bean, stateProperty, "" );
-            return state.equals( allowedStates[1] ) || state.equals( allowedStates[2] );
+            return state.equals( allowedStates[1] );
         }
 
         public void setChecked( boolean val ) {

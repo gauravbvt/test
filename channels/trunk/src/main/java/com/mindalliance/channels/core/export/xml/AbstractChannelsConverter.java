@@ -293,7 +293,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             String nodeName = reader.getNodeName();
             assert ( nodeName.equals( "detection" ) );
             String detection = reader.getValue();
-            modelObject.waiveIssueDetection( detection );
+            modelObject.addWaiveIssueDetection( detection );
             reader.moveUp();
         }
     }

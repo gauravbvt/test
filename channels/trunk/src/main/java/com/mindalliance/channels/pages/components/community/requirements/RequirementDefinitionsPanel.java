@@ -312,6 +312,11 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
         }
 
         @Override
+        public String getUid() {
+            return Long.toString( getId() );
+        }
+
+        @Override
         public boolean isModifiableInProduction() {
             return false;
         }

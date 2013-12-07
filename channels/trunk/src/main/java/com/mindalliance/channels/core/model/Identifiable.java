@@ -49,4 +49,9 @@ public interface Identifiable extends Nameable {
      */
     String getKindLabel();
 
+    /**
+     * Get type-unique id as string.
+     * @return a string
+     */
+    String getUid();
 }

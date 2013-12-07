@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
@@ -406,6 +407,31 @@ public class CommunityServiceImpl implements CommunityService {
         return isForDomain()
                 ? getAnalyst().getDoctor()
                 : getCollaborationPlanAnalyst().getDoctor();
+    }
+
+    @Override
+    public void cleanUp() {
+        removeObsoleteIssueDetectionWaivers();
+    }
+
+    private void removeObsoleteIssueDetectionWaivers() {
+        List<IssueDetectionWaiver> obsoleteWaivers = new ArrayList<IssueDetectionWaiver>(  );
+        for ( final IssueDetectionWaiver issueDetectionWaiver : planCommunity.getIssueDetectionWaivers() ) {
+            boolean matched = CollectionUtils.exists(
+                    listKnownIdentifiables( Identifiable.class ),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return issueDetectionWaiver.matches( (Identifiable)object );
+                        }
+                    });
+            if ( !matched )
+                obsoleteWaivers.add( issueDetectionWaiver );
+        }
+        for ( IssueDetectionWaiver obsoleteWaiver : obsoleteWaivers ) {
+            planCommunity.removeIssueDetectionWaiver( obsoleteWaiver );
+        }
+        LOG.info( "Removed " + obsoleteWaivers.size() + " obsolete issue detection waivers" );
     }
 
     private void beforeRemove( ModelObject object ) {

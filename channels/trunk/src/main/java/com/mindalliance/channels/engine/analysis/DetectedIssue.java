@@ -1,11 +1,13 @@
 package com.mindalliance.channels.engine.analysis;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Waivable;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -88,6 +90,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return "issues";
     }
 
+    @Override
     public String getClassLabel() {
         return classLabel();
     }
@@ -97,9 +100,12 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return getTypeName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
+    @Override
     public String getTypeName() {
         return "detected issue";
     }
@@ -109,10 +115,12 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return false;
     }
 
+    @Override
     public String getKind() {
         return kind;
     }
 
+    @Override
     public String getDetectorLabel() {
         return detectorLabel;
     }
@@ -167,24 +175,16 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         this.detectorTags = detectorTags;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String waivedString() {
-        return isWaived() ? "waived" : "";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getWaivedString() {
-        return Boolean.toString( isWaived() );
+    @Override
+    public String getWaivedString( CommunityService communityService ) {
+        return Boolean.toString( isWaived( communityService ) );
     }
 
     public void setKind( String kind ) {
         this.kind = kind;
     }
 
+    @Override
     public String getType() {
         return type;
     }
@@ -201,11 +201,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         this.canBeWaived = canBeWaived;
     }
 
-    /**
-     * To String
-     *
-     * @return a string
-     */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getDescription() );
@@ -217,91 +213,77 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return sb.toString();
     }
 
+    @Override
     public String getRemediation() {
         return remediation;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReportedBy() {
         return "Channels";
     }
 
-    /**
-     * Set name of user who reported the issue
-     *
-     * @param reportedBy a user name
-     */
+    @Override
     public void setReportedBy( String reportedBy ) {
         throw new IllegalStateException( "Can't set the reporter of a detected issue " );
     }
 
+    @Override
     public void setRemediation( String remediation ) {
         this.remediation = remediation;
     }
 
-    public String getLabel() {
+    private String getLabel( CommunityService communityService ) {
         return "("
-                + ( isWaived() ? "Waived" : severity.getNegativeLabel() )
+                + ( isWaived( communityService ) ? "Waived" : severity.getNegativeLabel() )
                 + ") "
                 + getDescription();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getLabel( int maxLength ) {
-        return StringUtils.abbreviate( getLabel(), maxLength );
+    @Override
+    public String getLabel( int maxLength, CommunityService communityService ) {
+        return StringUtils.abbreviate( getLabel( communityService ), maxLength );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public String getLabel() {
+        return MessageFormat.format( "({0}) {1}",
+                severity.getNegativeLabel(), getDescription() );
+    }
+
+
+    @Override
     public boolean isDetected() {
         return true;
     }
 
-    /**
-     * Get transient id (unique among detected issues)
-     *
-     * @return an id
-     */
+    @Override
     public long getId() {
         return NEGATIVE_COUNTER--;
     }
 
-    /**
-     * Return a name
-     *
-     * @return a String
-     */
+    @Override
     public String getName() {
-        return getLabel( Integer.MAX_VALUE );
+        return getDescription();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Level getSeverity() {
         return severity;
     }
 
+    @Override
     public void setSeverity( Level severity ) {
         this.severity = severity;
     }
 
+    @Override
     public boolean canBeWaived() {
-        return canBeWaived;
+        return getAbout() instanceof Waivable && canBeWaived;
     }
 
-    /**
-     * Whether this issue is waived.
-     *
-     * @return a boolean
-     */
-    public boolean isWaived() {
-        return AbstractIssueDetector.isWaived( getAbout(), getKind() );
+    @Override
+    public boolean isWaived( CommunityService communityService) {
+        return AbstractIssueDetector.isWaived( getAbout(), getKind(), communityService );
     }
 
 

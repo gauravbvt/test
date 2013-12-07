@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.community.CommunityService;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -90,9 +92,10 @@ public interface Issue extends Identifiable, Serializable {
      * Get a string of maximum length describing the issue.
      *
      * @param maxLength maximum length
+     *                  *@param communityService a community service
      * @return a String
      */
-    String getLabel( int maxLength );
+    String getLabel( int maxLength, CommunityService communityService );
 
     /**
      * Whether the issue is automatically detected (versus added by a user).
@@ -118,9 +121,10 @@ public interface Issue extends Identifiable, Serializable {
     /**
      * Whether an issue is waived.
      *
+     * @param communityService a community service
      * @return a boolean
      */
-    boolean isWaived();
+    boolean isWaived( CommunityService communityService );
 
     /**
      * This issue is of a kind that can be waived.
@@ -137,18 +141,12 @@ public interface Issue extends Identifiable, Serializable {
     String getKind();
 
     /**
-     * Get a string denoting whether this issues is waived.
-     *
-     * @return a string
-     */
-    String waivedString();
-
-    /**
      * Get a "true" or "false" string denoting whether this issues is waived.
      *
+     * @param communityService a community service
      * @return a string
      */
-    String getWaivedString();
+    String getWaivedString( CommunityService communityService );
 
     /**
      * A label for the detector of the issue.
@@ -180,6 +178,7 @@ public interface Issue extends Identifiable, Serializable {
 
     /**
      * Whether an issue has a given tag
+     *
      * @param tag
      * @return a boolean
      */
@@ -187,12 +186,14 @@ public interface Issue extends Identifiable, Serializable {
 
     /**
      * Get a list of remediation options
+     *
      * @return a list of strings
      */
     List<String> getRemediationOptions();
 
     /**
      * Waivability label.
+     *
      * @return "Yes" if can be waived, else "No".
      */
     String getWaivability();

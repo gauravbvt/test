@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Nameable;
+import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -18,7 +19,7 @@ import java.util.List;
  * Date: 12/6/12
  * Time: 10:12 AM
  */
-public class Agent implements Nameable, Identifiable {
+public class Agent extends AbstractWaivableIdentifiable {
 
     private Actor actor;
     private Agency agency;
@@ -76,6 +77,11 @@ public class Agent implements Nameable, Identifiable {
     @Override
     public String getKindLabel() {
         return getTypeName();
+    }
+
+    @Override
+    public String getUid() {
+        return getRegisteredOrganizationUid() + "_" + getActorId();
     }
 
     @Override

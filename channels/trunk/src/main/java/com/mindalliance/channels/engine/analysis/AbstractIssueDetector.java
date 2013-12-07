@@ -108,7 +108,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     protected DetectedIssue makeIssue( CommunityService communityService, String type, Identifiable about ) {
         DetectedIssue issue = new DetectedIssue( type, about );
         initializeDetectedIssue( communityService, issue );
-        if ( !isWaived(about, getKind() ) )
+        if ( !isWaived(about, getKind(), communityService ) )
             LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' );
         return issue;
     }
@@ -127,7 +127,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     protected DetectedIssue makeIssue( CommunityService communityService, String type, Identifiable about, String property ) {
         DetectedIssue issue = new DetectedIssue( type, about, property );
         initializeDetectedIssue( communityService, issue );
-        if ( !isWaived(about, getKind() ) )
+        if ( !isWaived(about, getKind(), communityService ) )
             LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' + ':'
                        + issue.getProperty() );
         return issue;
@@ -177,13 +177,17 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     }
 
     @Override
-    public boolean isApplicable( Identifiable identifiable, boolean waived, boolean propertySpecific ) {
-        return appliesTo( identifiable ) && isWaived( identifiable, getKind() ) == waived
+    public boolean isApplicable( Identifiable identifiable, boolean waived, boolean propertySpecific, CommunityService communityService ) {
+        return appliesTo( identifiable ) && isWaived( identifiable, getKind(), communityService ) == waived
                && isPropertySpecific() == propertySpecific;
     }
 
-    public static boolean isWaived( Identifiable identifiable, String kind ) {
-        return identifiable instanceof ModelObject && ((ModelObject)identifiable).isWaived( kind );
+    public static boolean isWaived( Identifiable identifiable, String kind, CommunityService communityService ) {
+        if ( identifiable instanceof ModelObject )
+            return ((ModelObject)identifiable).isWaived( kind, communityService );
+        else {
+            return communityService.getPlanCommunity().hasIssueDetectionWaiver( identifiable, kind );
+        }
     }
 
 }

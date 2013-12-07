@@ -1,11 +1,14 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +52,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     private String communityCalendarPrivateTicket = "";
     private boolean development;
     private Date dateCreated;
+    private List<IssueDetectionWaiver> issueDetectionWaivers = new ArrayList<IssueDetectionWaiver>(  );
 
     public PlanCommunity() {
 
@@ -81,6 +85,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         communityCalendar = planCommunity.getCommunityCalendar();
         communityCalendarHost = planCommunity.getCommunityCalendarHost();
         communityCalendarPrivateTicket = planCommunity.getCommunityCalendarPrivateTicket();
+        issueDetectionWaivers = planCommunity.getIssueDetectionWaivers();
     }
 
     private List<LocationBinding> copyLocationBindings() {
@@ -147,6 +152,23 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
                 boundPlaces.add( locationBinding.getPlaceholder() );
         }
         return boundPlaces;
+    }
+
+    public List<IssueDetectionWaiver> getIssueDetectionWaivers() {
+        return issueDetectionWaivers;
+    }
+
+    public void setIssueDetectionWaivers( List<IssueDetectionWaiver> issueDetectionWaivers ) {
+        this.issueDetectionWaivers = issueDetectionWaivers;
+    }
+
+    public void addIssueDetectionWaiver( IssueDetectionWaiver waiver ) {
+        if ( !issueDetectionWaivers.contains( waiver ) )
+            issueDetectionWaivers.add( waiver );
+    }
+
+    public void removeIssueDetectionWaiver( IssueDetectionWaiver waiver ) {
+        issueDetectionWaivers.remove( waiver );
     }
 
     @Override
@@ -376,5 +398,19 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return templateLocale == null
                 || !templateLocale.isPlaceholder()
                 || getLocale( communityService ) != null;
+    }
+
+    // Issue detection waiver management
+
+    public boolean hasIssueDetectionWaiver( Identifiable identifiable, String detector ) {
+        return issueDetectionWaivers.contains( new IssueDetectionWaiver( identifiable, detector ) );
+    }
+
+    public void addIssueDetectionWaiver( Identifiable identifiable, String detector ) {
+        addIssueDetectionWaiver( new IssueDetectionWaiver( identifiable, detector ) );
+    }
+
+    public void removeIssueDetectionWaiver( Identifiable identifiable, String detector ) {
+        removeIssueDetectionWaiver( new IssueDetectionWaiver( identifiable, detector ) );
     }
 }

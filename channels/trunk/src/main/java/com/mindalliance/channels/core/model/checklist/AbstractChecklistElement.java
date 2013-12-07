@@ -96,4 +96,9 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
         return getTypeName();
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
 }

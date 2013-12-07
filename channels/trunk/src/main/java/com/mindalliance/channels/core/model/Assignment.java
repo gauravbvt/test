@@ -119,6 +119,11 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
         return getTypeName();
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
     /**
      * Whether an entity is used in defining the assignment.
      *

@@ -278,4 +278,9 @@ public class SegmentRelationship implements Identifiable {
         return getTypeName();
     }
 
+    @Override
+    public String getUid() {
+        return Long.toString( getId() );
+    }
+
 }

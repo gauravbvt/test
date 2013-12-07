@@ -18,6 +18,7 @@ public interface IssueDetector {
 
     /**
      * The detector's unique kind.
+     *
      * @return a string
      */
     String getKind();
@@ -25,9 +26,8 @@ public interface IssueDetector {
     /**
      * Detect an issue on a model object
      *
-     *
      * @param communityService a community service service
-     * @param identifiable -- the identifiable being analyzed
+     * @param identifiable     -- the identifiable being analyzed
      * @return a list of Issues
      */
     List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable );
@@ -44,7 +44,7 @@ public interface IssueDetector {
      * Tests whether the detector applies to the naed property of the model object
      *
      * @param identifiable -- the ModelObject being analyzed
-     * @param property    -- the name of a property of the model object
+     * @param property     -- the name of a property of the model object
      * @return whether the detector applies
      */
     boolean appliesTo( Identifiable identifiable, String property );
@@ -58,6 +58,7 @@ public interface IssueDetector {
 
     /**
      * Whether issues detected by this detectro can be waived.
+     *
      * @return a boolean
      */
     boolean canBeWaived();
@@ -71,10 +72,15 @@ public interface IssueDetector {
 
     /**
      * Test if this detector applies to an object.
-     * @param identifiable the object
-     * @param waived true if waiving was applied
-     * @param propertySpecific  true if specific to a property
+     *
+     * @param identifiable     the object
+     * @param waived           true if waiving was applied
+     * @param propertySpecific true if specific to a property
+     * @param communityService a community service
      * @return true if detector is applicable
      */
-    boolean isApplicable( Identifiable identifiable, boolean waived, boolean propertySpecific );
+    boolean isApplicable( Identifiable identifiable,
+                          boolean waived,
+                          boolean propertySpecific,
+                          CommunityService communityService );
 }

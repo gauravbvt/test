@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A user provided issue
+ * A user-reported issue
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -19,11 +19,6 @@ import java.util.Map;
  * Time: 11:57:45 AM
  */
 public class UserIssue extends ModelObject implements Issue {
-
-    /**
-     * Max length of name
-     */
-    private static final int MAX_LENGTH = 40;
 
     /**
      * The identifiable object the issue is about
@@ -118,15 +113,18 @@ public class UserIssue extends ModelObject implements Issue {
 
     @Override
     public String getName() {
-        return getLabel( MAX_LENGTH );
+        return getLabel( );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getLabel( int maxLength ) {
-        return StringUtils.abbreviate( MessageFormat.format( "({0}) {1}",
-                severity.getNegativeLabel(), getDescription() ), maxLength );
+   @Override
+    public String getLabel( int maxLength, CommunityService communityService ) {
+        return StringUtils.abbreviate( getLabel(), maxLength );
+    }
+
+    @Override
+    public String getLabel() {
+        return MessageFormat.format( "({0}) {1}",
+                severity.getNegativeLabel(), getDescription() );
     }
 
     /**
@@ -147,7 +145,7 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    public boolean isWaived() {
+    public boolean isWaived( CommunityService communityService) {
         return false;
     }
 
@@ -169,15 +167,8 @@ public class UserIssue extends ModelObject implements Issue {
     /**
      * {@inheritDoc}
      */
-    public String waivedString() {
-        return "";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getWaivedString() {
-        return Boolean.toString( isWaived() );
+    public String getWaivedString( CommunityService communityService ) {
+        return Boolean.toString( false );
     }
 
     /**
