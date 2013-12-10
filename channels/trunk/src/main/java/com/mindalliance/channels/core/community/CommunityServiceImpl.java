@@ -432,7 +432,10 @@ public class CommunityServiceImpl implements CommunityService {
         for ( IssueDetectionWaiver obsoleteWaiver : obsoleteWaivers ) {
             planCommunity.removeIssueDetectionWaiver( obsoleteWaiver );
         }
-        LOG.info( "Removed " + obsoleteWaivers.size() + " obsolete issue detection waivers" );
+        LOG.debug( "Removed "
+                + obsoleteWaivers.size()
+                + " obsolete issue detection waivers from "
+                + planCommunity.getUri() );
     }
 
     private void beforeRemove( ModelObject object ) {

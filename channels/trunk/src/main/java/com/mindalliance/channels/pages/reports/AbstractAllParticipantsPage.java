@@ -20,6 +20,7 @@ import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -83,12 +84,14 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
         boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
+        List<UserParticipation> participationList;
         if ( isPlanner ) {
-            visibleParticipations = participationManager.getAllActiveParticipations( communityService );
+            participationList = participationManager.getAllActiveParticipations( communityService );
         } else {
-            visibleParticipations = participationManager.getActiveUserParticipations( getUser(), communityService );
-            visibleParticipations.addAll( participationManager.getActiveUserSupervisedParticipations( getUser(), communityService ) );
+            participationList = participationManager.getActiveUserParticipations( getUser(), communityService );
+            participationList.addAll( participationManager.getActiveUserSupervisedParticipations( getUser(), communityService ) );
         }
+        visibleParticipations = new ArrayList<UserParticipation>( participationList );
         Collections.sort(
                 visibleParticipations,
                 new Comparator<UserParticipation>() {
@@ -112,7 +115,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     protected abstract void initComponents( QueryService service, CommunityService communityService );
 
     protected List<Agent> findAssignedAgents( ) {
-        return participationManager.getAllKnownAgents( getCommunityService() );
+        return new ArrayList<Agent>( participationManager.getAllKnownAgents( getCommunityService() ) );
     }
 
 }
