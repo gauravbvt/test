@@ -28,6 +28,7 @@ import com.mindalliance.channels.db.services.communities.OrganizationParticipati
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
@@ -76,6 +77,8 @@ public class CommunityServiceImpl implements CommunityService {
     private RegisteredOrganizationService registeredOrganizationService;
     @Autowired
     private UserUploadService userUploadService;
+    @Autowired
+    private FeedbackService feedbackService;
 
     private PlanCommunity planCommunity;
     private PlanService planService;
@@ -120,6 +123,11 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public OrganizationParticipationService getOrganizationParticipationService() {
         return organizationParticipationService;
+    }
+
+    @Override
+    public FeedbackService getFeedbackService() {
+        return feedbackService;
     }
 
     @Override
@@ -298,9 +306,6 @@ public class CommunityServiceImpl implements CommunityService {
     @SuppressWarnings( "unchecked" )
     public <T extends Identifiable> List<T> listKnownIdentifiables( Class<T> clazz ) {
         List<T> results = new ArrayList<T>();
-        if ( clazz.isAssignableFrom( PlanCommunity.class ) ) {
-            results.add( (T) getPlanCommunity() );
-        }
         if ( clazz.isAssignableFrom( ModelObject.class ) ) {
             for ( T mo : (List<T>) list( ModelObject.class ) )
                 if ( !( (ModelObject) mo ).isUnknown() ) results.add( mo );

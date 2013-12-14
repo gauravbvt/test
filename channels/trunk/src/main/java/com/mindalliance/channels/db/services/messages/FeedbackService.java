@@ -95,5 +95,4 @@ public interface FeedbackService extends DataService<Feedback>, MessageOutboxSer
      */
     void markFeedbackRepliesRead( Feedback feedback );
 
-
 }

@@ -232,6 +232,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UnconfirmedParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserIsSinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.OverParticipationByUser"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.ObsoleteTemplateVersion"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.ProblemReportedByParticipant"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserMissingContactInfo"/>
             </list>
         </property>
     </bean>

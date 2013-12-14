@@ -115,12 +115,6 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         init();
     }
 
-    @Override
-    // Use the domain community
-    public CommunityService getCommunityService() {
-        return getCommunityService( getDomainPlanCommunity() );
-    }
-
     private void init() {
         addHeading();
         addFilters();

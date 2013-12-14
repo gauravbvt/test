@@ -8,6 +8,7 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -15,10 +16,12 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.engine.geo.GeoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,8 @@ import java.util.List;
  * Abstract IssueDetector class.
  */
 public abstract class AbstractIssueDetector implements IssueDetector {
+
+    static private SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d yyyy HH:mm z" );
 
     /**
      * Logger.
@@ -46,6 +51,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      * Attachment manager.
      */
     private AttachmentManager attachmentManager;
+
+    private PlanManager planManager;
 
     @Override
     public abstract List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable );
@@ -89,12 +96,24 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         this.attachmentManager = attachmentManager;
     }
 
+    public PlanManager getPlanManager() {
+        return planManager;
+    }
+
+    public void setPlanManager( PlanManager planManager ) {
+        this.planManager = planManager;
+    }
+
     public GeoService getGeoService() {
         return geoService;
     }
 
     public void setGeoService( GeoService geoService ) {
         this.geoService = geoService;
+    }
+
+    public static SimpleDateFormat getDateFormat() {
+        return dateFormat;
     }
 
     /**

@@ -271,7 +271,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
     private boolean saveFeedback() {
         ChannelsUser currentUser = getUser();
-        Feedback feedback = new Feedback( currentUser.getUsername(), feedbackType(), getDomainPlanCommunity() );
+        Feedback feedback = new Feedback( currentUser.getUsername(), feedbackType(), getPlanCommunity() );
         feedback.setTopic( topic );
         feedback.setText( getContent() );
         feedback.setFromEmail( currentUser.getEmail() );
