@@ -243,6 +243,8 @@ public class IssueScanner implements Scanner, PlanListener {
                             scanIssues( flow );
                         }
                     }
+                    for ( Identifiable identifiable : communityService.listKnownIdentifiables( ChannelsUser.class ) )
+                        scanIssues( identifiable );
                 } else {
                     for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) ) {
                         if ( !active ) return;

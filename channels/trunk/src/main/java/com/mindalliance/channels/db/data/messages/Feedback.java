@@ -27,14 +27,14 @@ import java.util.List;
 public class Feedback extends UserStatement {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
-    public static final String CHECKLISTS = "Checklists";
-    public static final String SURVEYS = "Surveys";
-    public static final String TEMPLATES = "Templates";
-    public static final String PLANS = "Plans";
+    public static final String CHECKLISTS = "Checklist";
+    public static final String SURVEYS = "Survey";
+    public static final String TEMPLATES = "Template";
+    public static final String PLANS = "Plan";
     public static final String PARTICIPATION = "Participation";
-    public static final String ISSUES = "Issues";
+    public static final String ISSUES = "Issue";
     public static final String FEEDBACK = "Feedback";
-    public static final String REQUIREMENTS = "Requirements";
+    public static final String REQUIREMENTS = "Requirement";
     public static final String CHANNELS = "Channels";
 
 

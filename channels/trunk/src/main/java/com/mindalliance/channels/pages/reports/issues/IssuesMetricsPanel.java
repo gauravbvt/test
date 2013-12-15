@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.core.util.AbstractIssueWrapper;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -21,6 +22,8 @@ import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -56,17 +59,17 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
         issueTypeMetrics = issueMetrics.getIssueTypeMetrics( issueType );
         issueMetricsContainer.setVisible( !issueTypeMetrics.isEmpty() );
         add( issueMetricsContainer );
-        addKinds(  );
-        addNoIssues(  );
+        addKinds();
+        addNoIssues();
     }
 
-    private void addNoIssues(  ) {
+    private void addNoIssues() {
         WebMarkupContainer noIssuesContainer = new WebMarkupContainer( "no-issues" );
         noIssuesContainer.setVisible( issueTypeMetrics.isEmpty() );
         add( noIssuesContainer );
     }
 
-    private void addKinds(  ) {
+    private void addKinds() {
         issueMetricsContainer.add( new ListView<String>( "kinds", issueTypeMetrics.getIssueKinds() ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
@@ -76,7 +79,7 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
                 item.add( tableContainer );
                 addIssuesTable( tableContainer, kind );
                 IssueMetrics.Metrics metrics = issueTypeMetrics.getIssueTypeMetrics( kind );
-                AjaxLink<String> kindLink = new AjaxLink<String>( "kindLink") {
+                AjaxLink<String> kindLink = new AjaxLink<String>( "kindLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         toggleExpandedOrCollapsed( kind );
@@ -115,7 +118,7 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
                     );
                     tableContainer.addOrReplace( issuesOfKindTable );
                 } else {
-                    Label label = new Label( "table", "");
+                    Label label = new Label( "table", "" );
                     label.setOutputMarkupId( true );
                     tableContainer.addOrReplace( label );
                 }
@@ -149,12 +152,12 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
         }
 
         @Override
-        public String getWaivedString(  ) {
+        public String getWaivedString() {
             return getIssue().getWaivedString( getCommunityService() );
         }
 
         @Override
-        public boolean isWaived(  ) {
+        public boolean isWaived() {
             return getIssue().isWaived( getCommunityService() );
         }
 
@@ -182,20 +185,20 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
         }
 
         private List<IssueWrapper> wrapIssues( List<Issue> issuesOfKind ) {
-            List<IssueWrapper> wrappedIssues = new ArrayList<IssueWrapper>(  );
+            List<IssueWrapper> wrappedIssues = new ArrayList<IssueWrapper>();
             for ( Issue issue : issuesOfKind ) {
                 wrappedIssues.add( new IssueWrapper( issue ) );
             }
             return wrappedIssues;
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeColumn( "About", "about.kindLabel", EMPTY ) );
             columns.add( makeColumn( "Named", "about.name", EMPTY ) );
-            if ( getCommunityService().isForDomain() )
+            if ( getCommunityService().isForDomain() && isForSegmentObjects() )
                 columns.add( makeColumn( "In Segment", "about.segmentName", EMPTY ) );
             columns.add( makeColumn( "Severity", "severity.negativeLabel", null, EMPTY, null, "severity.ordinal" ) );
             columns.add( makeColumn( "Description", "description", EMPTY ) );
@@ -208,6 +211,18 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
                     columns,
                     new SortableBeanProvider<IssueWrapper>( issues, "kind" ),
                     getPageSize() ) );
+        }
+
+        private boolean isForSegmentObjects() {
+            return !CollectionUtils.exists(
+                    issues,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return !( ( (Issue) object ).getAbout() instanceof SegmentObject );
+                        }
+                    }
+            );
         }
 
     }

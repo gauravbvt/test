@@ -57,6 +57,7 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
         feedback.setText( text );
         feedback.setUrgent( urgent );
         getDb().insert( feedback );
+        communityService.clearCache();
     }
 
     @Override
@@ -74,6 +75,7 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
         feedback.setUrgent( urgent );
         feedback.setMoRef( about );
         getDb().insert( feedback );
+        communityService.clearCache();
     }
 
     @Override
@@ -93,6 +95,7 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
         feedback.setMoRef( about );
         feedback.setContext( context );
         getDb().insert( feedback );
+        communityService.clearCache();
     }
 
 
@@ -161,19 +164,24 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
         if ( username != null && !username.isEmpty() ) {
             bb.and( qFeedback.username.eq( username ) );
         }
+        if ( communityService.isForDomain() ) { // get feedback from collaboration template and plans based on it
+            bb.and(  qFeedback.planUri.eq( communityService.getPlanCommunity().getPlanUri() ) );
+        } else { // get feedback from collaboration plan
+            bb.and( qFeedback.communityUri.eq( communityService.getPlanCommunity().getUri() ) );
+        }
         return toList(
                 repository.findAll(
-                        qFeedback.communityUri.eq( communityService.getPlanCommunity().getUri() )
-                                .and( bb.getValue() ),
+                        bb.getValue(),
                         qFeedback.created.desc() )
         );
     }
 
     @Override
-    public void toggleResolved( Feedback feedback ) {
+    public void toggleResolved( CommunityService communityService, Feedback feedback ) {
         getDb().updateFirst( new Query( where( "_id" ).is( new ObjectId( feedback.getUid() ) ) ),
                 new Update().set( "resolved", !feedback.isResolved() ),
                 Feedback.class );
+        communityService.clearCache();
     }
 
     @Override

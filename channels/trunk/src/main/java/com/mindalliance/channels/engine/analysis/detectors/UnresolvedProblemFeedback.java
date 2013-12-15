@@ -1,4 +1,4 @@
-package com.mindalliance.channels.engine.analysis.detectors.collaborationPlan;
+package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A participant submitted a problem feedback that has not yet been resolved.
+ * A user submitted a problem feedback that has not yet been resolved.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 12/13/13
  * Time: 2:19 PM
  */
-public class ProblemReportedByParticipant extends AbstractIssueDetector {
+public class UnresolvedProblemFeedback extends AbstractIssueDetector {
 
-    public ProblemReportedByParticipant() {
+    public UnresolvedProblemFeedback() {
     }
 
     @Override
@@ -66,6 +66,6 @@ public class ProblemReportedByParticipant extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "A participant problem is not resolved";
+        return "Feedback about a problem is not resolved";
     }
 }

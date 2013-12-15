@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
@@ -86,14 +87,14 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         addResolve();
     }
 
-    private void addResolve() {
+    private void addResolve( ) {
         String resolvedValue = getFeedback().isResolved() ? "Mark as not resolved" : "Mark as resolved";
         resolvedContainer = new WebMarkupContainer( "resolvedContainer" );
         resolvedContainer.setOutputMarkupId( true );
         AjaxLink<String> resolvedButton = new AjaxLink<String>( "resolvedButton") {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                feedbackService.toggleResolved( getFeedback() );
+                feedbackService.toggleResolved( getCommunityService(), getFeedback() );
                 addResolve();
                 target.add( resolvedContainer );
                 update( target, new Change( Change.Type.Updated, getFeedback() ) );

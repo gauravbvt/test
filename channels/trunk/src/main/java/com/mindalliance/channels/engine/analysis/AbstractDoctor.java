@@ -1,6 +1,7 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
@@ -496,6 +497,8 @@ public class AbstractDoctor implements Doctor {
                 while ( flows.hasNext() )
                     allIssues.addAll( listIssues( communityService, flows.next(), true ) );
             }
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ChannelsUser.class ) )
+                allIssues.addAll( listIssues( communityService, identifiable, true ) );
         } else {
             for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allIssues.addAll( listIssues( communityService, identifiable, true ) );
@@ -517,6 +520,8 @@ public class AbstractDoctor implements Doctor {
                 while ( flows.hasNext() )
                     allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, flows.next(), true ) );
             }
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ChannelsUser.class ) )
+                allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, identifiable, true ) );
         } else {
             for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allUnwaivedIssues.addAll( listUnwaivedIssues( communityService, identifiable, true ) );
@@ -538,6 +543,8 @@ public class AbstractDoctor implements Doctor {
                 while ( flows.hasNext() )
                     allWaivedIssues.addAll( listWaivedIssues( communityService, flows.next(), true ) );
             }
+            for ( Identifiable identifiable : communityService.listKnownIdentifiables( ChannelsUser.class ) )
+                allWaivedIssues.addAll( listWaivedIssues( communityService, identifiable, true ) );
         } else {
             for ( Identifiable identifiable : communityService.listKnownIdentifiables( Identifiable.class ) )
                 allWaivedIssues.addAll( listWaivedIssues( communityService, identifiable, true ) );

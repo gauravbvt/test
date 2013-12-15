@@ -233,7 +233,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserIsSinglePointOfFailure"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.OverParticipationByUser"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.ObsoleteTemplateVersion"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.ProblemReportedByParticipant"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnresolvedProblemFeedback"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationPlan.UserMissingContactInfo"/>
             </list>
         </property>
@@ -357,6 +357,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationGivesActorMultipleTitles"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorHasSupervisorOutsideOwnOrganization"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EntityNotInvolvedAgainstExpectation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnresolvedProblemFeedback"/>
             </list>
         </property>
     </bean>

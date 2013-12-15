@@ -27,7 +27,7 @@ public class EntityNotInvolvedAgainstExpectation extends AbstractIssueDetector {
 
     @Override
     public boolean appliesTo( Identifiable identifiable ) {
-        return (( ModelObject )identifiable).isEntity();
+        return identifiable instanceof ModelEntity;
     }
 
     @Override

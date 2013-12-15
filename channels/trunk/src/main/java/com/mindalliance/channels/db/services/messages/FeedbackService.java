@@ -76,9 +76,10 @@ public interface FeedbackService extends DataService<Feedback>, MessageOutboxSer
     /**
      * Mark the feedback as resolved if unresolved, or unresolved if resolved.
      *
+     * @param communityService a community service
      * @param feedback a feedback
      */
-    void toggleResolved( Feedback feedback );
+    void toggleResolved(  CommunityService communityService, Feedback feedback );
 
     /**
      * Count the unresolved feedback of a user in a plan.

@@ -317,7 +317,7 @@ public class CommunityServiceImpl implements CommunityService {
             results.addAll( (List<T>) getParticipationManager().getAllKnownAgents( this ) );
         }
         if ( clazz.isAssignableFrom( ChannelsUser.class ) ) {
-            results.addAll( (List<T>) getParticipationManager().findAllActivelyParticipatingUsers( this ) );
+            results.addAll( (List<T>) getUserRecordService().getAllEnabledUsers() );
         }
         return results;
     }
