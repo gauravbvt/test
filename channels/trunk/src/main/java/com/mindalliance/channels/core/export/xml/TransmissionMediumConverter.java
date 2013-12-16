@@ -88,9 +88,13 @@ public class TransmissionMediumConverter extends EntityConverter {
             writer.setValue( medium.getCast().name() );
             writer.endNode();
         }
-        // Synchrone
+        // Synchronous
         writer.startNode( "synchronous" );
         writer.setValue( Boolean.toString( medium.isSynchronous() ) );
+        writer.endNode();
+        // For contact info
+        writer.startNode( "forContactInfo" );
+        writer.setValue( Boolean.toString( medium.isForContactInfo() ) );
         writer.endNode();
     }
 
@@ -142,6 +146,8 @@ public class TransmissionMediumConverter extends EntityConverter {
             medium.setQualification( qualification );
         } else if ( nodeName.equals(  "synchronous" )) {
             medium.setSynchronous( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals(  "forContactInfo" )) {
+            medium.setForContactInfo( reader.getValue().equals( "true" ) );
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }

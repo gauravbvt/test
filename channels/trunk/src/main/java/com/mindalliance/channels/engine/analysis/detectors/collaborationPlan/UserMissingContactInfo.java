@@ -44,74 +44,23 @@ public class UserMissingContactInfo extends AbstractIssueDetector {
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
         List<Issue> issues = new ArrayList<Issue>();
         ChannelsUser user = (ChannelsUser) identifiable;
-        Set<TransmissionMedium> knownMedia = new HashSet<TransmissionMedium>();
-        for ( ContactInfo contactInfo : user.getUserRecord().getContactInfoList() ) {
-            try {
-                knownMedia.add( communityService.find( TransmissionMedium.class, contactInfo.getTransmissionMediumId() ) );
-            } catch ( NotFoundException e ) {
-                // Ignore
-            }
-        }
-        List<Agent> userAgents = communityService.getParticipationManager().listAgentsUserParticipatesAs( user, communityService );
-        if ( !userAgents.isEmpty() ) {
-            Set<TransmissionMedium> requiredMedia = new HashSet<TransmissionMedium>();
-            CommunityCommitments communityCommitments = communityService.getAllCommitments( false );
-            for ( Agent agent : userAgents ) {
-                requiredMedia.addAll( findRequireMedia( communityCommitments.to( agent ), true ) ); // agent as beneficiary of notifications
-                requiredMedia.addAll( findRequireMedia( communityCommitments.from( agent ), false ) ); // agent as committer to reply to requests
-            }
-            for ( final TransmissionMedium requiredMedium : requiredMedia ) {
-                if ( requiredMedium.isUnicast() && requiredMedium.requiresAddress() ) {
-                    boolean known = CollectionUtils.exists(
-                            knownMedia,
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    TransmissionMedium knownMedium = (TransmissionMedium) object;
-                                    return knownMedium.narrowsOrEquals( requiredMedium );
-                                }
-                            }
-                    );
-                    if ( !known ) {
-                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, user );
-                        issue.setDescription( user.getFullName()
-                                + " has not provided "
-                                + requiredMedium.getName()
-                                + " contact information" );
-                        issue.setSeverity( Level.High );
-                        issue.setRemediation( "Have "
-                                + user.getFullName()
-                                + " provide "
-                                + requiredMedium.getName()
-                                + " contact information." );
-                        issues.add( issue );
-                    }
-                }
-            }
+        for ( TransmissionMedium requiredMedium : communityService.findMissingContactInfoMedia( user ) ) {
+            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, user );
+            issue.setDescription( user.getFullName()
+                    + " has not provided "
+                    + requiredMedium.getName()
+                    + " contact information" );
+            issue.setSeverity( Level.High );
+            issue.setRemediation( "Have "
+                    + user.getFullName()
+                    + " provide "
+                    + requiredMedium.getName()
+                    + " contact information." );
+            issues.add( issue );
         }
         return issues;
     }
 
-    private Set<TransmissionMedium> findRequireMedia( CommunityCommitments communityCommitments, boolean isBeneficiary ) {
-        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>();
-        for ( CommunityCommitment communityCommitment : communityCommitments ) {
-            Flow sharing = communityCommitment.getSharing();
-            if ( isBeneficiary ) {
-                if ( sharing.isNotification() ) {
-                    for ( Channel channel : sharing.getEffectiveChannels() ) {
-                        media.add( channel.getMedium() );
-                    }
-                }
-            } else {
-                if ( sharing.isAskedFor() ) {
-                    for ( Channel channel : sharing.getEffectiveChannels() ) {
-                        media.add( channel.getMedium() );
-                    }
-                }
-            }
-        }
-        return media;
-    }
 
     @Override
     public String getTestedProperty() {

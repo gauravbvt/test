@@ -78,6 +78,11 @@ public class TransmissionMedium extends ModelEntity {
      * Whether commmunication is done in "real-time" vs "store and forward".
      */
     private boolean synchronous = true;
+
+    /**
+     * Whether this is medium for contact info.
+     */
+    private boolean forContactInfo = false;
     /**
      * List of security classifications satisfied by this medium for the transmission of classified info.
      */
@@ -151,6 +156,14 @@ public class TransmissionMedium extends ModelEntity {
 
     public void setCast( String val ) {
         setCast( Cast.valueOf( val ) );
+    }
+
+    public boolean isForContactInfo() {
+        return forContactInfo;
+    }
+
+    public void setForContactInfo( boolean forContactInfo ) {
+        this.forContactInfo = forContactInfo;
     }
 
     public static TransmissionMedium getUNKNOWN() {

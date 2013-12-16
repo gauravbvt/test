@@ -380,6 +380,7 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="landline" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-950"/>
@@ -391,6 +392,7 @@ CONFIGURATION NOTES:
             </list>
         </property>
         <property name="cast" value="Unicast"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="fax" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-949"/>
@@ -405,6 +407,7 @@ CONFIGURATION NOTES:
         -->
         <property name="cast" value="Unicast"/>
         <property name="synchronous" value="false"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="cell" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-948"/>
@@ -416,6 +419,7 @@ CONFIGURATION NOTES:
             </list>
         </property>
         <property name="cast" value="Unicast"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="pager" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-947"/>
@@ -424,6 +428,7 @@ CONFIGURATION NOTES:
         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
         <property name="synchronous" value="false"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-946"/>
@@ -443,6 +448,7 @@ CONFIGURATION NOTES:
         <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
         <property name="cast" value="Unicast"/>
         <property name="synchronous" value="false"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <!--
         <bean id="web" class="com.mindalliance.channels.core.model.TransmissionMedium">
@@ -471,6 +477,7 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="chat" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-942"/>
@@ -515,6 +522,7 @@ CONFIGURATION NOTES:
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
         <property name="synchronous" value="false"/>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="faceToFace" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-936"/>
@@ -549,6 +557,7 @@ CONFIGURATION NOTES:
                 <ref bean="phone"/>
             </list>
         </property>
+        <property name="forContactInfo" value="true"/>
     </bean>
     <bean id="work" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="id" value="-932"/>
@@ -561,7 +570,7 @@ CONFIGURATION NOTES:
                 <ref bean="phone"/>
             </list>
         </property>
-
+        <property name="forContactInfo" value="true"/>
     </bean>
 
     <!-- REST API -->

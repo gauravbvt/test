@@ -221,7 +221,9 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         add( new ChannelListPanel(
                 "orgContact",
                 new Model<Channelable>( tempAgency ),
-                false ) );
+                false, // can't add new medium
+                true // restrict to contact info media
+        ) );
     }
 
     private void addErrorsList() {

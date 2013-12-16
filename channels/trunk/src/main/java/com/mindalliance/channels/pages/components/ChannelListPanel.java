@@ -72,7 +72,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private boolean canAddNewInfoFormat = true;
 
-    private boolean restrictToImmutableMedia = false;
+    private boolean restrictToContactInfoMedia = false;
 
     static {
         NewMediumType = new TransmissionMedium( "New medium" );
@@ -88,11 +88,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     public ChannelListPanel( String id,
                              IModel<? extends Channelable> model,
                              boolean canAddNewMediumAndFormat,
-                             boolean restrictToImmutableMedia ) {
+                             boolean restrictToContactInfoMedia ) {
         super( id, model, null );
         this.canAddNewMedium = canAddNewMediumAndFormat;
         this.canAddNewInfoFormat = canAddNewMediumAndFormat;
-        this.restrictToImmutableMedia = restrictToImmutableMedia;
+        this.restrictToContactInfoMedia = restrictToContactInfoMedia;
         init();
     }
 
@@ -424,7 +424,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             List<TransmissionMedium> candidates = new ArrayList<TransmissionMedium>();
             candidates.add( TransmissionMedium.UNKNOWN );
             for ( TransmissionMedium medium : getQueryService().listReferencedEntities( TransmissionMedium.class ) ) {
-                if ( !medium.isUnknown() && ( !restrictToImmutableMedia || medium.isImmutable() ) ) {
+                if ( !medium.isUnknown() && ( !restrictToContactInfoMedia || medium.isForContactInfo() ) ) {
                     candidates.add( medium );
                 }
             }

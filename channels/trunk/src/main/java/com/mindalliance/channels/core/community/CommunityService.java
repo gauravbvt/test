@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
@@ -219,4 +220,11 @@ public interface CommunityService {
      * Remove obsolete data.
      */
     void cleanUp();
+
+    /**
+     * Find all media for which contact info is required from the user to fulfill participation requirements.
+     * @param user a Channels user
+     * @return a list of transmission media
+     */
+    List<TransmissionMedium> findMissingContactInfoMedia( ChannelsUser user );
 }

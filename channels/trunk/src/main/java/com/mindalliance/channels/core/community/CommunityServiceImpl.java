@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -22,8 +23,10 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
@@ -42,7 +45,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Community service implementation.
@@ -417,6 +422,67 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public void cleanUp() {
         removeObsoleteIssueDetectionWaivers();
+    }
+
+    @Override
+    public List<TransmissionMedium> findMissingContactInfoMedia( ChannelsUser user ) {
+        List<TransmissionMedium> missingMedia = new ArrayList<TransmissionMedium>();
+        Set<TransmissionMedium> knownMedia = new HashSet<TransmissionMedium>();
+        for ( ContactInfo contactInfo : user.getUserRecord().getContactInfoList() ) {
+            try {
+                knownMedia.add( find( TransmissionMedium.class, contactInfo.getTransmissionMediumId() ) );
+            } catch ( NotFoundException e ) {
+                // Ignore
+            }
+        }
+        List<Agent> userAgents = getParticipationManager().listAgentsUserParticipatesAs( user, this );
+        if ( !userAgents.isEmpty() ) {
+            Set<TransmissionMedium> requiredMedia = new HashSet<TransmissionMedium>();
+            CommunityCommitments communityCommitments = getAllCommitments( false );
+            for ( Agent agent : userAgents ) {
+                requiredMedia.addAll( findRequireMedia( communityCommitments.to( agent ), true ) ); // agent as beneficiary of notifications
+                requiredMedia.addAll( findRequireMedia( communityCommitments.from( agent ), false ) ); // agent as committer to reply to requests
+            }
+            for ( final TransmissionMedium requiredMedium : requiredMedia ) {
+                if ( requiredMedium.isUnicast() && requiredMedium.requiresAddress() ) {
+                    boolean known = CollectionUtils.exists(
+                            knownMedia,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    TransmissionMedium knownMedium = (TransmissionMedium) object;
+                                    return knownMedium.narrowsOrEquals( requiredMedium );
+                                }
+                            }
+                    );
+                    if ( !known ) {
+                        missingMedia.add( requiredMedium );
+                    }
+                }
+            }
+        }
+        return missingMedia;
+    }
+
+    private Set<TransmissionMedium> findRequireMedia( CommunityCommitments communityCommitments, boolean isBeneficiary ) {
+        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>();
+        for ( CommunityCommitment communityCommitment : communityCommitments ) {
+            Flow sharing = communityCommitment.getSharing();
+            if ( isBeneficiary ) {
+                if ( sharing.isNotification() ) {
+                    for ( Channel channel : sharing.getEffectiveChannels() ) {
+                        media.add( channel.getMedium() );
+                    }
+                }
+            } else {
+                if ( sharing.isAskedFor() ) {
+                    for ( Channel channel : sharing.getEffectiveChannels() ) {
+                        media.add( channel.getMedium() );
+                    }
+                }
+            }
+        }
+        return media;
     }
 
     private void removeObsoleteIssueDetectionWaivers() {

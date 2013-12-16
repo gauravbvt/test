@@ -75,6 +75,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
      * Synchronous checkbox field.
      */
     private CheckBox synchronousCheckBox;
+    private CheckBox forContactInfoCheckBox;
 
 
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
@@ -102,6 +103,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         addCastLabel();
         addCastChoiceAndReset();
         addIsSynchronous();
+        addIsForContactInfo();
         addDelegatedToMedia();
         addSecurity();
         addQualificationLink();
@@ -110,11 +112,13 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     private void adjustFields() {
-        castChoice.setEnabled( isLockedByUser( getMedium() ) );
-        castResetLink.setVisible( isLockedByUser( getMedium() ) );
-        addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
-        qualificationField.setEnabled( isLockedByUser( getMedium() ) );
-        synchronousCheckBox.setEnabled( isLockedByUser( getMedium() ) );
+        TransmissionMedium medium = getMedium();
+        castChoice.setEnabled( isLockedByUser( medium ) );
+        castResetLink.setVisible( isLockedByUser( medium ) );
+        addressPatternField.setEnabled( isLockedByUser( medium ) );
+        qualificationField.setEnabled( isLockedByUser( medium ) );
+        synchronousCheckBox.setEnabled( isLockedByUser( medium ) );
+        forContactInfoCheckBox.setEnabled( isLockedByUser( medium ) );
     }
 
     private void addCastLabel() {
@@ -145,6 +149,18 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         } );
         moDetailsDiv.add( synchronousCheckBox );
     }
+
+    private void addIsForContactInfo() {
+        forContactInfoCheckBox = new CheckBox( "forContactInfo", new PropertyModel<Boolean>( this, "forContactInfo" ) );
+        forContactInfoCheckBox.setOutputMarkupId( true );
+        forContactInfoCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getMedium(), "forContactInfo" ) );
+            }
+        } );
+        moDetailsDiv.add( forContactInfoCheckBox );
+    }
+
 
 
     private void addCastChoice() {
@@ -312,7 +328,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     /**
      * Is medium synchronous?
      *
-     * @return a string
+     * @return a boolean
      */
     public boolean isSynchronous() {
         return getMedium().isSynchronous();
@@ -327,6 +343,27 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         TransmissionMedium medium = getMedium();
         if ( medium.isSynchronous() != value ) {
             doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "synchronous", value ) );
+        }
+    }
+
+    /**
+     * Is medium for contact info?
+     *
+     * @return a boolean
+     */
+    public boolean isForContactInfo() {
+        return getMedium().isForContactInfo();
+    }
+
+    /**
+     * Set if medium is for contact info.
+     *
+     * @param value a string
+     */
+    public void setForContactInfo( boolean value ) {
+        TransmissionMedium medium = getMedium();
+        if ( medium.isForContactInfo() != value ) {
+            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "forContactInfo", value ) );
         }
     }
 

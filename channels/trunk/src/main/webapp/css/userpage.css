@@ -3241,3 +3241,11 @@ div.manage-plan.admin div.select-plan select {
 .plan-selector {
     margin: 13px 0 20px 0;
 }
+
+.error-message {
+    color: darkred;
+}
+
+.error-message:before {
+    content:"* ";
+}

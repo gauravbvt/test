@@ -1,20 +1,27 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -36,7 +43,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,6 +78,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     @SpringBean
     private UserUploadService userUploadService;
 
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
+    @SpringBean
+    private CommunityServiceFactory communityServiceFactory;
+
 
     private Pattern emailPattern;
     private List<String> errors;
@@ -78,6 +94,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private FileUploadField uploadPhotoField;
     private AjaxSubmitLink uploadButton;
     private WebMarkupContainer updatedContactContainer;
+    private Label missingContactInfoLabel;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
@@ -269,8 +286,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<ContactInfo>findInvalidContactInfos() {
-        return (List<ContactInfo>)CollectionUtils.select(
+    private List<ContactInfo> findInvalidContactInfos() {
+        return (List<ContactInfo>) CollectionUtils.select(
                 temp.getUserRecord().getContactInfoList(),
                 new Predicate() {
                     @Override
@@ -283,6 +300,54 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private void addUserContactInfo() {
         updatedContactContainer = new WebMarkupContainer( "userContact" );
+        updatedContactContainer.setOutputMarkupId( true );
+        updatedContactContainer.add( makeHelpIcon( "helpContact", "about-me", "my-contact-info", "images/help_guide_gray.png" ) );
+        addMissingContactInfoMessageLabel();
+        addChannelsListPanel();
+        userInfoContainer.addOrReplace( updatedContactContainer );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void addMissingContactInfoMessageLabel() {
+        List<String> missingMediaNames = (List<String>) CollectionUtils.collect(
+                findMissingContactInfoMedia(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (TransmissionMedium) input ).getName().toLowerCase();
+                    }
+                }
+        );
+        String message = "";
+        Collections.sort( missingMediaNames );
+        if ( !missingMediaNames.isEmpty() ) {
+            message = "Please provide missing contact info for ";
+            message += ChannelsUtils.listToString( missingMediaNames, " and " );
+            message += ".";
+        }
+        missingContactInfoLabel = new Label( "missing", message );
+        missingContactInfoLabel.setOutputMarkupId( true );
+        if ( !message.isEmpty() ) {
+            missingContactInfoLabel.add( new AttributeModifier( "class", "error-message") );
+        }
+        makeVisible( missingContactInfoLabel, !message.isEmpty() );
+        updatedContactContainer.addOrReplace( missingContactInfoLabel );
+    }
+
+    private List<TransmissionMedium> findMissingContactInfoMedia() {
+        Set<TransmissionMedium> missingMedia = new HashSet<TransmissionMedium>();
+        List<PlanCommunity> planCommunities = planCommunityManager.getPlanCommunities();
+        ChannelsUser user = getUser();
+        for ( PlanCommunity planCommunity : planCommunities ) {
+            if ( !planCommunity.isDomainCommunity() ) {
+                CommunityService communityService = communityServiceFactory.getService( planCommunity );
+                missingMedia.addAll( communityService.findMissingContactInfoMedia( user ) );
+            }
+        }
+        return new ArrayList<TransmissionMedium>( missingMedia );
+    }
+
+    private void addChannelsListPanel() {
         updatedContactContainer.add(
                 new ChannelListPanel(
                         "contactInfo",
@@ -290,9 +355,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                                 temp.getUserRecord()
                         ) ),
                         false,     // don't allow adding new media
-                        true ) );  // restrict to immutable media
-        updatedContactContainer.add( makeHelpIcon( "helpContact", "about-me", "my-contact-info", "images/help_guide_gray.png" ) );
-        userInfoContainer.add( updatedContactContainer );
+                        true ) );  // restrict to contact info media
     }
 
 
@@ -388,7 +451,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         else if ( !isValidEmail( temp.getEmail() ) )
             errors.add( "The email address is invalid" );
         for ( ContactInfo contactInfo : findInvalidContactInfos() ) {
-            errors.add( contactInfo.asChannel( getCommunityService() ).getLabel() + " is not valid");
+            errors.add( contactInfo.asChannel( getCommunityService() ).getLabel() + " is not valid" );
         }
     }
 
@@ -427,7 +490,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     public void setEmail( String val ) {
         temp.getUserRecord().setEmail( val == null ? "" : val );
     }
-
 
     //////////////////////////////////////
 
