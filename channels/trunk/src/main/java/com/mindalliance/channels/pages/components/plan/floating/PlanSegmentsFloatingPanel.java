@@ -93,7 +93,7 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
 
     @Override
     protected String getTitle() {
-        return "Plan map";
+        return "All Segments";
     }
 
     private String getPlanImagePath() {

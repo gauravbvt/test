@@ -65,7 +65,7 @@ public class ElementOfInformation implements Classifiable {
     }
 
     public String getContent() {
-        return content;
+        return content == null ? "?" : content;
     }
 
     public void setContent( String content ) {
@@ -73,7 +73,7 @@ public class ElementOfInformation implements Classifiable {
     }
 
     public String getDescription() {
-        return description;
+        return description == null ? "" : description;
     }
 
     public void setDescription( String description ) {
@@ -81,7 +81,7 @@ public class ElementOfInformation implements Classifiable {
     }
 
     public String getSpecialHandling() {
-        return specialHandling;
+        return specialHandling == null ? "" : specialHandling;
     }
 
     public void setSpecialHandling( String specialHandling ) {
@@ -131,20 +131,20 @@ public class ElementOfInformation implements Classifiable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append( getLabel() );
-        if ( !description.isEmpty() ) {
+        if ( !getDescription().isEmpty() ) {
             sb.append( ": " );
-            sb.append( description );
+            sb.append( getDescription() );
         }
-        if ( !specialHandling.isEmpty() ) {
+        if ( !getSpecialHandling().isEmpty() ) {
             sb.append( " -" );
-            sb.append( specialHandling );
+            sb.append( getSpecialHandling() );
         }
         return sb.toString();
     }
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( content );
+        sb.append( getContent() );
         if ( !classifications.isEmpty() ) {
             sb.append( '[' );
             for ( Classification classification : classifications ) {
@@ -154,7 +154,7 @@ public class ElementOfInformation implements Classifiable {
             sb.deleteCharAt( sb.length() - 1 );
             sb.append( ']' );
         }
-        if ( !description.isEmpty() || !specialHandling.isEmpty() ) {
+        if ( !getDescription().isEmpty() || !getSpecialHandling().isEmpty() ) {
             sb.append( "..." );
         }
         return sb.toString();
@@ -164,7 +164,7 @@ public class ElementOfInformation implements Classifiable {
     public boolean equals( Object object ) {
         if ( object instanceof ElementOfInformation ) {
             ElementOfInformation other = (ElementOfInformation) object;
-            return content.equals( other.getContent() ) && transformation.equals( other.getTransformation() );
+            return getContent().equals( other.getContent() ) && transformation.equals( other.getTransformation() );
         } else {
             return false;
         }
@@ -175,7 +175,7 @@ public class ElementOfInformation implements Classifiable {
      */
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + content.hashCode();
+        hash = hash * 31 + getContent().hashCode();
         hash = hash * 31 + transformation.hashCode();
         return hash;
     }
