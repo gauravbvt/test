@@ -80,7 +80,7 @@ public class MAC0005_UndoAddNewTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
  			
 			
 		}
@@ -92,7 +92,6 @@ public class MAC0005_UndoAddNewTask extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
- 			
 		}
 	}
 	
