@@ -90,7 +90,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 			
 		}
 	}
@@ -149,7 +149,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
 				
 			// Close Segment window
 			stepNo++;
@@ -158,7 +158,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
 			
 			// Click on default task 
 			stepNo++;
@@ -264,7 +264,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser Quit");
 			
 			// Sign out from home page
 		    stepNo++;
