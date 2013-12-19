@@ -232,6 +232,7 @@ public class MAC0021_CopyTask extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser Quit");
 		}
 	}
 	
