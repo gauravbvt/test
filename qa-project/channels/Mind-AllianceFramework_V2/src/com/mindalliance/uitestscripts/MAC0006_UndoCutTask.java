@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -51,7 +52,7 @@ public class MAC0006_UndoCutTask extends TestCase {
 	public String browser="";
 
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -79,7 +80,7 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Initialized");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -88,6 +89,7 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Initialized");
 		}
 	}
 	
@@ -102,6 +104,7 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -111,7 +114,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+ 			
  	    	// Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -120,6 +124,7 @@ public class MAC0006_UndoCutTask extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
  			
 			// Plan Page
 		    stepNo++;
@@ -129,19 +134,28 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click Actions pop up menu and Add New Segment
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+ 			
+			// Click Actions pop up menu
  			stepNo++;
 			description="Add New Segment";
 			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+ 			
 			// Enter Segment Name
+ 			stepNo++;
+ 			description="Enter Segment Name";
 			planPage.enterSegmentName(testData.get("SegmentForUndoCutTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Segment Name");
+ 			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -149,20 +163,22 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+ 			
 			// Add New Task
 			stepNo++;
 			description="Add New Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));
-			// strench up forms
+			// Stretch up forms
 			planPage.clickStrenchUpForm();
 			// Enter Task Name
 			planPage.enterTaskName(testData.get("TaskName"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Task");
+ 			
 			// Click on Actions popup in Task Panel and also click on 'Cut Task'
 			stepNo++;
 			description="Cut Task";
@@ -171,7 +187,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Cut Task");
+ 			
 			// Undo Cut Task
 			stepNo++;
 			description="Undo Cut Task";
@@ -180,7 +197,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Cut Task");
+ 			
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -189,7 +207,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+ 			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -198,7 +217,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+ 			
  			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -207,7 +227,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -216,7 +237,8 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

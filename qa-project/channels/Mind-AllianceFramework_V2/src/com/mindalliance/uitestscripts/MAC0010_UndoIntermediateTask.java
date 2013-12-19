@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -88,6 +90,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 		}
 	}
 	
@@ -102,7 +106,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -111,7 +116,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+						
  		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -120,7 +126,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -129,6 +136,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 			// Click Actions pop up menu and Add New Segment
  			stepNo++;
@@ -141,7 +149,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+				
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -149,7 +158,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			// Click on default task 
 			stepNo++;
 			description="Default Task";
@@ -161,7 +171,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Default Task");
+			
 			// Click on the 'Add' button under 'Sends' panel
 			stepNo++;
 			description="Add Info Sends";
@@ -177,7 +188,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Sends");
+			
 			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
 			stepNo++;
 			description="Intermediate Task";
@@ -199,7 +211,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Intermediate Task");
+			
 			// Undo add intermediate
 			stepNo++;
 			description="Undo Intermediate Task";
@@ -221,7 +234,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Intermediate Task");
+			
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -230,7 +244,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+								
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -239,7 +254,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -248,7 +264,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -257,6 +274,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
