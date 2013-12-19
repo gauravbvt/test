@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -103,7 +104,8 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 			browserController.enterURL();
 			// Write log
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +" URL Entered");
 			    
 			// Login page
 			stepNo++;
@@ -112,7 +114,8 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Login successful");
 			
 			//Click on Collaboration Templates link
 			stepNo++;
@@ -122,8 +125,9 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Collaboration Templates");
 	 		
-	 		//Click on Send Feedback button Click on Send button
+	 		//Click on Send Feedback button 
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
@@ -131,6 +135,7 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Send Feedback");
 	 		
 	 		// Enter invalid feedback in the Feedback text area 
 	 		stepNo++;
@@ -139,14 +144,16 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Enter Feedback");
 
-	    	// Enter invalid feedback in the Feedback text area 
+	    	// Click on Send button
 	 		stepNo++;
 	 		description="Click Send Button";
 	 		headerController.clickSendButton();
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Button");
 	 		
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -156,6 +163,7 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 		    
 			// Sign out from home page
 		    stepNo++;
@@ -165,7 +173,8 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -184,6 +193,7 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Browser quit");
 		}
 	}
 	/**

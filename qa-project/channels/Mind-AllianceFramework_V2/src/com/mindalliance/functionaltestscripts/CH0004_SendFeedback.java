@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,6 +78,7 @@ public class CH0004_SendFeedback extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -84,7 +86,7 @@ public class CH0004_SendFeedback extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
-			
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	/**
@@ -103,7 +105,8 @@ public class CH0004_SendFeedback extends TestCase{
 			browserController.enterURL();
 			// Write log
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 			    
 			// Login page
 			stepNo++;
@@ -112,7 +115,8 @@ public class CH0004_SendFeedback extends TestCase{
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
 			
 			//Click on Collaboration Templates link
 			stepNo++;
@@ -122,6 +126,7 @@ public class CH0004_SendFeedback extends TestCase{
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 	 		
 	 		//Click on Send Feedback button, Enter feedback in the Feedback text area , Click on Send button
 	 		stepNo++;
@@ -131,6 +136,7 @@ public class CH0004_SendFeedback extends TestCase{
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Feedback");
 	 		
 	 		//Enter Feedback
 	 		stepNo++;
@@ -139,6 +145,7 @@ public class CH0004_SendFeedback extends TestCase{
 	    	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Feedback");
 	 		
 	 		//Click on Send Button
 	 		stepNo++;
@@ -147,8 +154,8 @@ public class CH0004_SendFeedback extends TestCase{
 	    	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Button");
 	 		
-
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -165,7 +172,8 @@ public class CH0004_SendFeedback extends TestCase{
 			headerController.signOut();
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -185,6 +193,7 @@ public class CH0004_SendFeedback extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Browser quit");
 		}
 	}
 	/**

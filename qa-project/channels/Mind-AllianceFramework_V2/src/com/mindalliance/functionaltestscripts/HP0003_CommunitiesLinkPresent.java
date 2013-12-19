@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -103,7 +104,8 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			browserController.enterURL();
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		    
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 			
 			// Login page
 			stepNo++;
@@ -112,16 +114,18 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
 				
-			// Click on Chanels Settings Link
+			// Click on Channels Settings Link
 			stepNo++;
 			description="Navigated to Admin page";
 			HomePage homePage=new HomePage();
 			homePage.verifyCommunitiesLink();
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Admin page");
 			
 			// Sign Out from 'Admin' page
 			stepNo++;
@@ -131,6 +135,7 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -140,6 +145,7 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 		    
 			// Sign out from home page
 		    stepNo++;
@@ -149,6 +155,7 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -169,6 +176,8 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 		}
 	}
 	

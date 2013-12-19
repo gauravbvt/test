@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -103,7 +104,8 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			browserController.enterURL();
 			// Write log
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 			    
 			// Login page
 			stepNo++;
@@ -112,7 +114,8 @@ public class CH0011_CancelSendFeedback extends TestCase{
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
 			
 			//Click on Collaboration Templates link
 			stepNo++;
@@ -122,15 +125,17 @@ public class CH0011_CancelSendFeedback extends TestCase{
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
 	 		
 	 		//Click on Send Feedback button 
 	 		stepNo++;
-	 		description="Send Feedback";
+	 		description="Click Send Feedback Button";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Feedback Button");
 	 		
 	 		// Enter feedback in the Feedback text area
 	 		stepNo++;
@@ -139,13 +144,16 @@ public class CH0011_CancelSendFeedback extends TestCase{
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Enter feedback");
 	 		
 	 		//Click Cancel button
 	 		stepNo++;
+	 		description="Click Cancel Button";
 	 		headerController.clickCancelButton();
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Cancel Button");
 	 			
 			// Sign Out from 'Home' page
 			stepNo++;
@@ -153,7 +161,8 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			headerController.signOut();
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -163,6 +172,7 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 		    
 			// Sign out from home page
 		    stepNo++;
@@ -172,6 +182,7 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -191,6 +202,7 @@ public class CH0011_CancelSendFeedback extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser quit");
 		}
 	}
 	/**
@@ -215,8 +227,7 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			Element eleCH0011_CancelSendFeedback=docCH0011_CancelSendFeedback.getDocumentElement();
 	              
 	        Element oXmlEleCH0011_CancelSendFeedback = (Element) eleCH0011_CancelSendFeedback;
-	                     	
-	        
+	                     	  
 			this.testData.put("ChannelsURL",oXmlEleCH0011_CancelSendFeedback.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleCH0011_CancelSendFeedback.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Feedback",oXmlEleCH0011_CancelSendFeedback.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());

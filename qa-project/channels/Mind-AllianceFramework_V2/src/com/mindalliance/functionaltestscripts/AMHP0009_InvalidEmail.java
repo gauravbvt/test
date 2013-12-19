@@ -23,9 +23,11 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.HomePage;
 
@@ -76,6 +78,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -85,6 +88,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	
@@ -99,6 +103,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -108,15 +113,17 @@ public class AMHP0009_InvalidEmail extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  			
  			//Enter invalid email address in Email text field in About me tab
  			stepNo++;
- 			description="Enter Email Address";
+ 			description="Enter invalid Email Address";
  			HomePage homePage=new HomePage();
  			homePage.enterEmailInAboutMe(testData.get("Email"));
  		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter invalid Email Address");
  			
  			//Click Apply button in About Me tab
  			stepNo++;
@@ -125,6 +132,17 @@ public class AMHP0009_InvalidEmail extends TestCase {
  		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Apply Button");
+ 			
+ 		    // Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
  			
  			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -134,22 +152,15 @@ public class AMHP0009_InvalidEmail extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
-//			// Sign out from home page
-//		    stepNo++;
-//		    description="Logout successful";
-//			HeaderController headerController=new HeaderController();
-//			headerController.signOut();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
-			Assert.fail(ue.getErrorMessage());		
+			Assert.fail(ue.getErrorMessage());	
+			
 		}
 	}
 	
@@ -162,6 +173,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" browser quit");
 		}
 	}
 	

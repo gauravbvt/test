@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,7 +80,7 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -88,6 +89,7 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	
@@ -102,7 +104,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			
 			// Login page
 			stepNo++;
 			description="Login successful";	
@@ -111,7 +114,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 		    // Write log
 			 LogFunctions.writeLogs(description);
 			 LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-					 		
+			 Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
+			 
 			// Domain Plans
 			stepNo++;
 			description="Domain Plans";
@@ -120,7 +124,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+			
 			// Click on 'Messages' tab under 'Social Panel' on 'Home Page'
 			stepNo++;
 			description="Messages tab opened";
@@ -129,6 +134,7 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Messages tab opened");
 			
 			//Select an option from To drop down
 			stepNo++;
@@ -137,6 +143,7 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Select an option");
 			
 			//Enter message in Message text area
 			stepNo++;
@@ -145,7 +152,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			 
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Message");
+			
 			 //Click on Send button
 			 stepNo++;
 			 description="Click Send Button"; 	
@@ -153,7 +161,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
              // Write log
 			 LogFunctions.writeLogs(description);
 			 LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			 			
+			 Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Button");
+			 
 			//Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -162,7 +171,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 		    // Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			 			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 			reporting.generateAutomationReport();
 		    
@@ -171,7 +181,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -180,7 +191,8 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -199,6 +211,7 @@ public class MSGS0008_SendMessageToEveryone extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
 		}
 	}
 	

@@ -24,6 +24,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -80,6 +81,9 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -87,6 +91,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 			
 		}
 	}
@@ -106,7 +111,8 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			browserController.enterURL();
 			// Write log
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 			    
 			// Login page
 			stepNo++;
@@ -115,7 +121,8 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
 			
 			//Click on Collaboration Templates link
 			stepNo++;
@@ -125,12 +132,14 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
 	 		
 	 		//Click on Send Feedback button, 
 	 		stepNo++;
 	 		description="Send Feedback";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Send Feedback button");
 	 		
 	 		//Enter feedback in the Feedback text area 
 	 		stepNo++;
@@ -139,6 +148,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	 	    // Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Feedback");
 	 		
 	 		// Select the Suggestion option
 	 		stepNo++;
@@ -147,14 +157,25 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	    	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Select Suggestion Option");
 	 		
 	 		//Click on Send button 
 	 		stepNo++;
-	 		description="Enter Feedback";
+	 		description="Click Send Button";
 	 		headerController.clickSendButton();
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Button");
+	 		
+	 	    // Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
 	 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -164,6 +185,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 		    
 			// Sign out from home page
 		    stepNo++;
@@ -173,7 +195,8 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -192,6 +215,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser quit");
 		}
 	}
 	/**
@@ -216,8 +240,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			Element eleCH0008_SendFeedbackAsSuggestion=docCH0008_SendFeedbackAsSuggestion.getDocumentElement();
 	              
 	        Element oXmlEleCH0008_SendFeedbackAsSuggestion = (Element) eleCH0008_SendFeedbackAsSuggestion;
-	                     	
-	        
+	                     	 
 			this.testData.put("ChannelsURL",oXmlEleCH0008_SendFeedbackAsSuggestion.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleCH0008_SendFeedbackAsSuggestion.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Feedback",oXmlEleCH0008_SendFeedbackAsSuggestion.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());

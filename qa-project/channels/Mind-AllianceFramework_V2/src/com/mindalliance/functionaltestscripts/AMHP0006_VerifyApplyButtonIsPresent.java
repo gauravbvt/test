@@ -25,13 +25,15 @@ import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.HomePage;
 
 /**
  * Testcase ID: AMHP0006_VerifyApplyButtonIsPresent
- * 	   Summary: Verify that invalid email cannot be saved for a user
+ * 	   Summary: Verify that Apply button is present
  * @author Afour
  *
  */
@@ -76,6 +78,7 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -85,6 +88,7 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	
@@ -99,6 +103,7 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -108,34 +113,50 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  			
- 			//Enter invalid email address in Email text field in About me tab
+ 			//Verify whether Apply button is present
  			stepNo++;
- 			description="Enter Email Address";
+ 			description="Apply button is present";
  			HomePage homePage=new HomePage();
  			homePage.verifyApplyButtonInAboutMe();
  			 // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Apply button is present");
  			
+ 			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");	
+			
  			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			stepNo++;
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
-//			// Sign out from home page
-//		    stepNo++;
-//		    description="Logout successful";
-//			HeaderController headerController=new HeaderController();
-//			headerController.signOut();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
+			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");	
+			
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -154,6 +175,7 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" browser quit");
 		}
 	}
 	

@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -76,6 +77,7 @@ public class AMHP0013_EditName extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser quit");
 			
 		}
 		catch(UIAutomationException ue){
@@ -85,6 +87,7 @@ public class AMHP0013_EditName extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +" Unable to initialize the driver");
 		}
 	}
 	
@@ -99,6 +102,7 @@ public class AMHP0013_EditName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -108,6 +112,7 @@ public class AMHP0013_EditName extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  			
  			//Edit name in Name text field in About me tab
  			stepNo++;
@@ -117,6 +122,7 @@ public class AMHP0013_EditName extends TestCase {
  		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Edit name");
  			
  			//Enter email address
  			description="Enter email address";
@@ -124,6 +130,7 @@ public class AMHP0013_EditName extends TestCase {
  		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter email address");
  			
  			//Click Apply button
  			stepNo++;
@@ -132,16 +139,17 @@ public class AMHP0013_EditName extends TestCase {
  	    	// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Apply Button");
  			
  			//Sign out from home page
  			stepNo++;
-		    description="Logout successful";
+		    description="Logout Successful";
  			HeaderController headerController=new HeaderController();
  			headerController.signOut();
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
  				
  			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -151,15 +159,18 @@ public class AMHP0013_EditName extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
-//			// Sign out from home page
-//		    stepNo++;
-//		    description="Logout successful";
-//			HeaderController headerController=new HeaderController();
-//			headerController.signOut();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+				
+			
+			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -179,6 +190,7 @@ public class AMHP0013_EditName extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Browser quit");
 		}
 	}
 	
