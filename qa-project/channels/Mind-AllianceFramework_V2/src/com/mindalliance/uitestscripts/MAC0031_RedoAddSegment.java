@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -88,6 +90,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	
@@ -102,6 +105,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -111,7 +115,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+ 			
  			 // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -120,6 +125,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
  			
 			// Plan Page
 		    stepNo++;
@@ -129,7 +135,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-					
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+ 			
 			// Click Actions pop up menu and Add New Segment
  			stepNo++;
 			description="Add New Segment";
@@ -139,6 +146,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
  			
 			// Enter Segment Name
 			stepNo++;
@@ -147,6 +155,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Update Segment");
  			
 			// Close Segment window
 			stepNo++;
@@ -155,6 +164,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
  			
 			// Click on 'Undo Update Segment'
 			stepNo++;
@@ -164,7 +174,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Update Segment");
+ 			
 			// Click on 'Redo update segment'
 			stepNo++;
 			description="Redo Update Segment";
@@ -175,6 +186,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Update Segment");
  			
 			//Click on Remove this segment
  			stepNo++;
@@ -184,7 +196,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+ 			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -193,7 +206,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+ 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -202,7 +216,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -211,7 +226,8 @@ public class MAC0031_RedoAddSegment extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -230,6 +246,7 @@ public class MAC0031_RedoAddSegment extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
 		}
 	}
 	
