@@ -185,7 +185,9 @@ public class OrganizationProfile extends AbstractCommandablePanel {
         Organization organization = getOrganization();
         contactContainer.add( new ChannelListPanel(
                 "channels",
-                new Model<Channelable>( organization ) ) );
+                new Model<Channelable>( organization ),
+                false,
+                true ) );
     }
 
 /*

@@ -561,9 +561,13 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * @param value the url string
      */
     public void setUrl( String value ) {
-        String newUrl = validateUrl( value );
-        if ( newUrl != null )
-            this.url = newUrl;
+        if ( value == null ) {
+            url = null;
+        } else {
+            String newUrl = validateUrl( value );
+            if ( newUrl != null )
+                this.url = newUrl;
+        }
     }
 
     private String validateUrl( String value ) {
@@ -579,6 +583,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             }
         }
         if ( wellFormedUrl != null ) {
+            wellFormedUrl = wellFormedUrl.replaceAll( "[^\000-\177]", "" ); // get rid of (often invisible) illegal characters
             if ( new UrlValidator().isValid( wellFormedUrl ) )
                 return wellFormedUrl;
             else

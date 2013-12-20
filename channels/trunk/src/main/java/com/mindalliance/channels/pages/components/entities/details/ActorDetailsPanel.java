@@ -88,7 +88,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         moDetailsDiv.add( contactContainer );
         contactContainer.add( new ChannelListPanel(
                 "channels",
-                new Model<Channelable>( getActor() ) ) );
+                new Model<Channelable>( getActor() ),
+                false,
+                true ) );
         contactContainer.setVisible( getActor().isActual() );
     }
 
