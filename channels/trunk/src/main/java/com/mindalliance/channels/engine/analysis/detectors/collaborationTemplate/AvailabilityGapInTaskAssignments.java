@@ -2,15 +2,14 @@ package com.mindalliance.channels.engine.analysis.detectors.collaborationTemplat
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.TimePeriod;
+import com.mindalliance.channels.core.model.WorkTime;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
-        List<Availability> availabilities = (List<Availability>) CollectionUtils.collect(
+        List<WorkTime> availabilities = (List<WorkTime>) CollectionUtils.collect(
                 assignments,
                 new Transformer() {
                     public Object transform( Object input ) {
@@ -45,12 +44,20 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
                 }
         );
         if ( !availabilities.isEmpty() ) {
-            List<TimeGap> gaps = findGaps( availabilities );
-            for ( TimeGap gap : gaps ) {
+            boolean noFullTime = !CollectionUtils.exists(
+                    availabilities,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ((WorkTime)object).isAlways();
+                        }
+                    }
+            );
+            if ( noFullTime ) {
                 Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
-                issue.setDescription( "No one is available to do task \"" + part.getTask() + "\" on " + gap + "." );
-                issue.setSeverity( this.computeTaskFailureSeverity( queryService, part ) );
-                issue.setRemediation( "Change the availabilities of assigned agents so that they leave no gap" +
+                issue.setDescription( "No one is available to do task \"" + part.getTask() + "\" full time." );
+                issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
+                issue.setRemediation( "Change the availabilities of assigned agents so that at least one agent is full time" +
                         "\nor change the specification of the task so that more agents are assigned to fill the gaps" );
                 issues.add( issue );
             }
@@ -58,11 +65,11 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         return issues;
     }
 
-    private List<TimeGap> findGaps( List<Availability> availabilities ) {
+  /*  private List<TimeGap> findGaps( List<WorkTime> availabilities ) {
         List<TimeGap> gaps = new ArrayList<TimeGap>();
-        for ( Availability availability : availabilities ) {
+        for ( WorkTime availability : availabilities ) {
             // Someone is 24/7, no gaps
-            if ( availability == null ) return gaps;
+            if ( availability.isAlways() ) return gaps;
         }
         for ( int day = 0; day < 7; day++ ) {
             gaps.addAll( findDayGaps( day, availabilities ) );
@@ -92,7 +99,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         }
         return results;
     }
-
+*/
     /** {@inheritDoc} */
     public boolean appliesTo( Identifiable modelObject ) {
         return modelObject instanceof Part;
@@ -111,26 +118,5 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         return true;
     }
 
-    private class TimeGap {
 
-        private int day;
-        private TimePeriod timePeriod;
-
-        TimeGap( int day, TimePeriod timePeriod ) {
-            this.day = day;
-            this.timePeriod = timePeriod;
-        }
-
-        public int getDay() {
-            return day;
-        }
-
-        public TimePeriod getTimePeriod() {
-            return timePeriod;
-        }
-
-        public String toString() {
-            return Availability.dayOfWeek( day ) + " " + timePeriod.toString();
-        }
-    }
 }

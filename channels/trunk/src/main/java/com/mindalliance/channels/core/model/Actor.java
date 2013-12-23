@@ -66,7 +66,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * The actor's time-based availability.
      * Null means 24/7.
      */
-    private Availability availability = new Availability();
+    private WorkTime availability = new WorkTime();
 
     /**
      * Clearances.
@@ -173,13 +173,13 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     }
 
     @Override
-    public Availability getAvailability() {
-        return availability;
+    public WorkTime getAvailability() {
+        return availability == null ? new WorkTime(  ) : availability;
     }
 
-    public void setAvailability( Availability val ) {
+    public void setAvailability( WorkTime val ) {
         availability = ( val == null )
-                ? new Availability()
+                ? new WorkTime()
                 : val;
     }
 

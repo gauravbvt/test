@@ -179,11 +179,18 @@ public class Agency extends AbstractUnicastChannelable implements Waivable {
             // or that has one or more jobs in a placeholder org the agency participates as
             // (each agent represents a copy of the actor)
             Set<Agent> results = new HashSet<Agent>();
-            for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
-                for ( Actor actor : organizationParticipation.getAllActors( communityService ) ) {
-                    Agent agent = new Agent( actor, registeredOrganization, communityService );
-                    results.add( agent );
+            List<Actor> actors = new ArrayList<Actor>(  );
+            if ( isFixedOrganization() ) {
+                Organization fixedOrg = getRegisteredOrganization().getFixedOrganization( communityService );
+                actors.addAll( communityService.getPlanService().findAllActorsEmployedBy( fixedOrg ) );
+            } else {
+                for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
+                    actors.addAll( organizationParticipation.getAllActors( communityService ) );
                 }
+            }
+            for ( Actor actor : actors ) {
+                Agent agent = new Agent( actor, registeredOrganization, communityService );
+                results.add( agent );
             }
             agents = Collections.unmodifiableList( new ArrayList<Agent>( results ) );
         }
@@ -412,7 +419,7 @@ public class Agency extends AbstractUnicastChannelable implements Waivable {
         return isFixedOrganization() || !getRegisteredOrganization().isLocal();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Job> getAllJobsFor( Agent agent, CommunityService communityService ) {
         final Actor actor = agent.getActor();
         return (List<Job>) CollectionUtils.select(

@@ -10,6 +10,6 @@ package com.mindalliance.channels.core.model;
  */
 public interface Available extends Identifiable {
 
-    Availability getAvailability();
+    WorkTime getAvailability();
     
 }

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.WorkTime;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -62,7 +63,7 @@ public class ActorConverter extends EntityConverter {
         writer.endNode();
         // max participation
         writer.startNode( "maxParticipation" );
-        writer.setValue( Integer.toString( actor.getMaxParticipation() )  );
+        writer.setValue( Integer.toString( actor.getMaxParticipation() ) );
         writer.endNode();
         // participation restricted to already employed
         writer.startNode( "participationRestrictedToEmployed" );
@@ -78,8 +79,8 @@ public class ActorConverter extends EntityConverter {
         writer.endNode();
         // availability
         if ( actor.getAvailability() != null ) {
-            writer.startNode( "availability" );
-            context.convertAnother( actor.getAvailability() );
+            writer.startNode( "workPeriod" );
+            writer.setValue( actor.getAvailability().getWorkPeriod().name() );
             writer.endNode();
         }
         // channels
@@ -138,7 +139,7 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "singularParticipation" ) ) {     // todo - obsolete
             actor.setSingularParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "maxParticipation" ) ) {
-            actor.setMaxParticipation( Integer.parseInt( reader.getValue()) );
+            actor.setMaxParticipation( Integer.parseInt( reader.getValue() ) );
         } else if ( nodeName.equals( "participationRestrictedToEmployed" ) ) {
             actor.setParticipationRestrictedToEmployed( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "supervisedParticipation" ) ) {
@@ -150,9 +151,12 @@ public class ActorConverter extends EntityConverter {
             actor.addClearance( clearance );
         } else if ( nodeName.equals( "language" ) ) {
             actor.addLanguage( reader.getValue() );
-        } else if ( nodeName.equals( "availability" ) ) {
-            Availability availability = (Availability) context.convertAnother( plan, Availability.class );
+        } else if ( nodeName.equals( "workPeriod" ) ) {
+            WorkTime availability = new WorkTime( WorkTime.WorkPeriod.valueOf( reader.getValue() ) );
             actor.setAvailability( availability );
+        } else if ( nodeName.equals( "availability" ) ) { // OBSOLETE - conversion
+            Availability availability = (Availability) context.convertAnother( plan, Availability.class );
+            actor.setAvailability( availability.isAlways() ? WorkTime.FullTime() : WorkTime.PartTime() );
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }

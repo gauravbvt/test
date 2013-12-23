@@ -5,10 +5,10 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Available;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.WorkTime;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -20,6 +20,8 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTe
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -77,7 +79,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         this.moDetailsDiv = moDetailsDiv;
         addIsSystem();
         addContactInfo();
-        addAvailabilityPanel();
+        addAvailability();
         addLanguages();
         addClearances();
     }
@@ -199,10 +201,35 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         return languages;
     }
 
-    private void addAvailabilityPanel() {
-        moDetailsDiv.add( new AvailabilityPanel(
+    private void addAvailability() {
+        DropDownChoice<WorkTime.WorkPeriod> availabilityChoice = new DropDownChoice<WorkTime.WorkPeriod>(
                 "availability",
-                new Model<Available>( getActor() ) ) );
+                new PropertyModel<WorkTime.WorkPeriod>(this, "availabilityWorkPeriod"),
+                WorkTime.allWorkPeriods(),
+                new IChoiceRenderer<WorkTime.WorkPeriod>(  ) {
+                    @Override
+                    public Object getDisplayValue( WorkTime.WorkPeriod workPeriod ) {
+                        return workPeriod.getLabel();
+                    }
+                    @Override
+                    public String getIdValue( WorkTime.WorkPeriod object, int index ) {
+                        return Integer.toString( index );
+                    }
+                });
+        availabilityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target,
+                        new Change(
+                                Change.Type.Updated,
+                                getActor(),
+                                "availability"
+                        ) );
+            }
+        });
+        availabilityChoice.setEnabled( isLockedByUser( getActor() ) );
+        availabilityChoice.setVisible( getActor().isActual() );
+        moDetailsDiv.add( availabilityChoice );
     }
 
     private void addClearances() {
@@ -247,6 +274,19 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         Actor actor = getActor();
         if ( actor.isSystem() != isSystem )
             doCommand( new UpdatePlanObject( getUser().getUsername(), actor, "system", isSystem ) );
+    }
+
+    public WorkTime.WorkPeriod getAvailabilityWorkPeriod() {
+        return getActor().getAvailability().getWorkPeriod();
+    }
+
+    public void setAvailabilityWorkPeriod( WorkTime.WorkPeriod workPeriod ) {
+        doCommand(
+                new UpdatePlanObject(
+                        getUser().getUsername(),
+                        getActor(),
+                        "availability",
+                        new WorkTime( workPeriod ) ) );
     }
 
     /**

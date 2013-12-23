@@ -25,7 +25,7 @@ public class AvailabilityDataPanel extends AbstractDataPanel {
     }
 
     private void init() {
-        ListView<TimePeriodData> timePeriodListView = new ListView<TimePeriodData>(
+       /* ListView<TimePeriodData> timePeriodListView = new ListView<TimePeriodData>(
                 "timePeriods",
                 availability.getTimePeriods()
         ) {
@@ -35,6 +35,6 @@ public class AvailabilityDataPanel extends AbstractDataPanel {
                 item.add( new Label("timePeriod", timePeriodData.getLabel( item.getIndex() )) );
             }
         };
-        add(  timePeriodListView );
+        add(  timePeriodListView );*/
     }
 }
