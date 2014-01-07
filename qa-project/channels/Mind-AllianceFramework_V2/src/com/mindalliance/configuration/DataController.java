@@ -35,8 +35,8 @@ public class DataController {
 	
 	/**
      * Checks for the key in the XML file
-     * @param config 	XMLConfiguration object 
-     * @param key 		The key string to be searched
+     * @param config XMLConfiguration object 
+     * @param key The key string to be searched
      * @return	The value of the key string
      */
     public String getRequiredConfig(XMLConfiguration config, String key)throws UIAutomationException{
