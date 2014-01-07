@@ -133,7 +133,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			stepNo++;
 			description="Enter Template name";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
