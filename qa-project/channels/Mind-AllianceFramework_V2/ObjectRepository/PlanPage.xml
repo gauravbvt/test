@@ -2729,15 +2729,15 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	//<Element>
-		//<GivenName>From Dropdown In Sends Panel</GivenName>
-		//<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
-		//<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-		//<ClassName></ClassName>
-	//</Element>
+	<Element>
+		<GivenName>From Dropdown In Sends Panel</GivenName>
+		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
+		<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
 	<Element>
 		<GivenName>Intent Dropdown In Receives Panel</GivenName>
@@ -2919,8 +2919,8 @@
 	
 	<Element>
 		<GivenName>Channels Dropdown In Receives Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium')]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[10]/td/ol/li/select</Xpath>
+		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -3282,7 +3282,7 @@
 	
 	<Element>
 		<GivenName>Phase In About Plan</GivenName>
-		<Xpath>//input[contains(@name,'allEvents:content:tabs:panel:phasesDiv:phase:1:name-container:name-input')]</Xpath>
+		<Xpath>//input[contains(@name,'allEvents:content:tabs:panel:phasesDiv:phase:2:name-container:name-input')]</Xpath>
 		<Name>allEvents:content:tabs:panel:phasesDiv:phase:1:name-container:name-input</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
