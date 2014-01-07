@@ -304,14 +304,21 @@ div.feedback {
 	float:right;
 }
 
-div.feedback-form-cont {
-background: none repeat scroll 0 0 #F6F6F6;
+span.feedback-container div.feedback-form-cont {
+    background: none repeat scroll 0 0 #F6F6F6;
     border: 1px solid #A7A9AC;
     display: block;
+    float: left;
     font-size: 11px;
-    margin: 19px 0 0;
+    margin: 0 8px 0 0;
     padding: 10px;
-    position: absolute;
+    position: relative;
+}
+
+span.feedback-container.home div.feedback-form-cont {
+    left: auto;
+    right: 0;
+    top: -1px;
 }
 
 div.feedback-urgency {
@@ -435,7 +442,6 @@ div.cancelSend {
 }
 
 div.cancelSend input {
-	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
 	border: 1px solid #A7A9AC;
 	color: #727272;
 	font-family: Arial,Helvetica,sans-serif;

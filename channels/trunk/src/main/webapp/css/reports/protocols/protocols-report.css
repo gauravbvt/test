@@ -774,11 +774,17 @@ table.checklist-step-outcomes {
     border: 1px solid #4A89DC;
     display: block;
     font-size: 11px;
-    margin: 27px 0 0;
-    padding: 10px;
-    position: absolute;
     line-height: 100%;
+    margin: 0 10px 0 0;
+    padding: 10px;
+    position: relative;
     text-transform: none;
+}
+
+.checklist div.feedback div.feedback-form-cont,
+.task-name div.feedback div.feedback-form-cont {
+	margin: 28px 0 0 0;
+	position: absolute;
 }
 
 .checklist span.checklist-confirmed {
@@ -806,7 +812,13 @@ table.checklist-step-outcomes {
 
 .checklist .checklist-step-title div.feedback div.feedback-form-cont,
 .protocols-contents .org-contacts h3 div.feedback div.feedback-form-cont {
-	margin: 17px 0 0 10px;
+	margin: 0 0 0 10px;
+}
+
+.checklist .checklist-step-title div.feedback div.feedback-form-cont,
+.protocols-contents .org-contacts h3 div.feedback div.feedback-form-cont {
+	margin: 18px 0 0 10px;
+	position: absolute;
 }
 
 div.protocols-contents div.expected-queries a.more {
