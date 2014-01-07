@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -78,6 +79,7 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -87,6 +89,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	
@@ -106,7 +110,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-      
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -115,7 +120,8 @@ public class MAP0005_DeletePlan extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+						
 			// Click on Channels Admin
 		    stepNo++;
 			description="Channels Admin Page";
@@ -124,24 +130,28 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels Admin Page");	
+			
 			// Enter Plan name
 			stepNo++;
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Plan Created");	
+			
  			//Click Save button 
  			stepNo++;
  			description="Click Save button";
+ 			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
 			channelsAdmin.clickSavePlanButton();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  		
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");	
+			
 			// Delete Plan
 			stepNo++;
 			description="Plan Deleted";
@@ -149,7 +159,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Plan Deleted");	
+			
 			// Sign Out from 'Admin' page
 			stepNo++;
 			description="SignOut Successful";
@@ -158,7 +169,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -167,7 +179,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -176,7 +189,8 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -195,6 +209,8 @@ public class MAP0005_DeletePlan extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	
