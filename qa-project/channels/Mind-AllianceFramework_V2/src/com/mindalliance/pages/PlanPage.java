@@ -577,7 +577,6 @@ public class PlanPage {
 				builder11.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
 				break;
 			
-			
 			case "Menu In Flow Issues In Sends Panel":
 				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
 				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
@@ -3354,11 +3353,13 @@ public class PlanPage {
 		// Select Organization
 		elementController.requireElementSmart(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
 		UIActions.click(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
+		UIActions.enterKey(Keys.TAB);
 		
 		Select organizationDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(organizationDropDownList);
 		UIActions.selectByTextAndClick(type);
-	
+		UIActions.enterKey(Keys.TAB);
+		
 		elementController.requireElementSmart(fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
 		UIActions.enterValueInTextBox(goalName,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
 		UIActions.enterKey(Keys.TAB);

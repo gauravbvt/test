@@ -274,7 +274,6 @@ public class HomePage {
 	public void clickApplyButtonInMyPassword() throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Apply Button In My Password",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In My Password");
 		UIActions.click(fileName,"Apply Button In My Password",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In My Password");
-		
 		UIActions.getText(fileName, "Password Changed Notification",GlobalVariables.configuration.getAttrSearchList() , "Password Changed Notification");
 		}
 	

@@ -33,20 +33,14 @@ public class ChannelsAdmin {
 	 * @throws UIAutomationException 
 	 */
 	
-	public void enterPlanName(String planName,String ownerName) throws UIAutomationException{
+	public void enterPlanName(String planName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
 		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 	
-		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "ADD");
-		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "ADD");
 		
-		UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
-		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		
 	}
 	
 	/**
@@ -64,13 +58,22 @@ public class ChannelsAdmin {
 	
 	
 	/**
+	 * Click the Add Plan button
+	 * @throws UIAutomationException 
+	 */
+	public void clickAddPlanButton() throws UIAutomationException
+	{
+		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		
+	}
+	
+	/**
 	 * Click the Save Plan button
 	 * @throws UIAutomationException 
 	 */
 	public void clickSavePlanButton() throws UIAutomationException
 	{
-		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
