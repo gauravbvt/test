@@ -89,7 +89,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	}
 	
 	/**
-	 * This method verify that login page is displayed after entering th URL of Channels
+	 * This method verify that login page is displayed after entering the URL of Channels
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

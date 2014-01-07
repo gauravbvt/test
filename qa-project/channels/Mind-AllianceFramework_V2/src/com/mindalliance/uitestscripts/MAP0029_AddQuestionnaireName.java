@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}catch(UIAutomationException ue){
 			stepNo++;
@@ -87,7 +89,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-		}
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			}
 	}
 	
 	@Test
@@ -101,7 +104,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -110,7 +114,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+							
  		   // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -119,7 +124,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -128,7 +134,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
+			
 			// Click on 'All Surveys' under 'Participations' pop up menu
  			stepNo++;
 			description="All Surveys";
@@ -138,7 +145,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"All Surveys");	
+			
 			// Click on 'Questionnaire' tab
 			stepNo++;
 			description="Questionnaire Tab";
@@ -146,6 +154,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Questionnaire Tab");	
 			
 			// Add Questionnaire
  			stepNo++;
@@ -156,6 +165,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Questionnaire");	
 			
 			// Verify Questionnaire is added
  			stepNo++;
@@ -164,6 +174,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Questionnaire Added");	
 			
 			// Delete Questionnaire added
  			stepNo++;
@@ -172,6 +183,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Delete Questionnaire");	
 			
 			// Close 'All Surveys' window
  			stepNo++;
@@ -180,7 +192,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close All Surveys");	
+						
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -189,7 +202,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -198,7 +212,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -207,7 +222,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -226,7 +242,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			}
 	}
 	/**
      * Loads Test Data for MAP0029_AddQuestionnaireName
