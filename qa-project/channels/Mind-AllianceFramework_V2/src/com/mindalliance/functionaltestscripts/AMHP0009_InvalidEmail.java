@@ -173,7 +173,7 @@ public class AMHP0009_InvalidEmail extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-			Log4J.getlogger(this.getClass()).info(testCaseId +" browser quit");
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Browser Quit");
 		}
 	}
 	
