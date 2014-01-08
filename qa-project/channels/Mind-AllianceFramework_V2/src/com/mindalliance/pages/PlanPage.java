@@ -1960,7 +1960,8 @@ public class PlanPage {
 		
 		Select firstRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(firstRatedDropDownList);
-
+		UIActions.selectByTextAndClick("Low");
+		UIActions.enterKey(Keys.ENTER);
 }
 	/**
 	 * Select option from second Rated dropdown
@@ -1973,7 +1974,8 @@ public class PlanPage {
 		
 		Select secondRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(secondRatedDropDownList);
-		UIActions.selectByText(High);
+		UIActions.selectByTextAndClick("High");
+		
 	}
 	/**
 	 * Select option from Occurring dropdown
