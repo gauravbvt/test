@@ -81,8 +81,7 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");		
 			
 		}
 		catch(UIAutomationException ue){
