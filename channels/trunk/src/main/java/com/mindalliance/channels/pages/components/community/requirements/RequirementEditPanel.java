@@ -67,7 +67,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
         addEditedBy();
         addName();
         addDescription();
-        addTags();
+        // addTags();
         addSectionHeaders();
         addSection();
         adjustFields();
@@ -116,7 +116,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
         add( descField );
     }
 
-    private void addTags() {
+ /*   private void addTags() {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -128,7 +128,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getRequirement() ) );
         add( tagsPanel );
     }
-
+*/
     private void addSectionHeaders() {
         sectionHeadersContainer = new WebMarkupContainer( "headersContainer" );
         sectionHeadersContainer.setOutputMarkupId( true );

@@ -233,7 +233,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     protected String getQuestionText() {
         Map<String, Object> extraContext = new HashMap<String, Object>();
         extraContext.put( "user", getUserFullName( getUsername() ) );
-        extraContext.put( "planner", getUserFullName( getRFI().getRfiSurvey( getCommunityService() ).getUsername() ) );
+        extraContext.put( "developer", getUserFullName( getRFI().getRfiSurvey( getCommunityService() ).getUsername() ) );
         return ChannelsUtils.convertTemplate(
                 getQuestion().getText(),
                 getRFI().getRfiSurvey( getCommunityService() ).getAbout( getCommunityService() ),

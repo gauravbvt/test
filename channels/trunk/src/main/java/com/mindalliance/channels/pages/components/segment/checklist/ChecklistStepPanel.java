@@ -298,6 +298,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         };
         editDoneLink.add( new AttributeModifier( "class", edited ? "less edit-step" : "more edit-step" ) );
         editDoneLink.add( new Label( "editDone", edited ? "Done" : "Edit" ) );
+        editDoneLink.setVisible( isLockedByUser( getChecklist().getPart() ) );
         stepContainer.add( editDoneLink );
     }
 

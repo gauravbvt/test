@@ -234,7 +234,7 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
             if ( collaborationPlanner.isAdmin() )
                 return "(Is administrator)";
               else {
-                ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
+                ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getCreatorUsername() );
                 return authorizedBy != null
                         ? authorizedBy.getUserRecord().equals( collaborationPlanner )
                         ? "(Is founder)"

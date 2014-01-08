@@ -566,6 +566,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         private boolean canBeRemoved() {
             return agency != null
                     && isPlanner()
+                    && !agency.isFixedOrganization()
                     && !getCommunityService().getParticipationManager().isAgencyReferenced( agency, getCommunityService() );
         }
 

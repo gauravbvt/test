@@ -307,7 +307,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             List<String> rels = new ArrayList<String>();
             if ( userParticipation != null ) {
                 CommunityService communityService = getCommunityService();
-                ChannelsUser user = getUser();
+                ChannelsUser user = UsersParticipationPanel.this.getUser();
                 UserRecord participantInfo = userParticipation.getParticipant( communityService );
                 if ( participantInfo == null ) {
                     return null;
