@@ -151,7 +151,7 @@ public class MAP0001_AddPlan extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save Button");	
 			
-			//Delete created plan
+			//Delete the created plan
 			stepNo++;
 			description="Delete created plan";
 			channelsAdmin.deletePlan(testData.get("AutomationTestPlan"));
