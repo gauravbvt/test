@@ -2729,15 +2729,6 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	<Element>
-		<GivenName>From Dropdown In Sends Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
-		<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
 	
 	<Element>
 		<GivenName>Intent Dropdown In Receives Panel</GivenName>
@@ -2938,7 +2929,7 @@
 		<GivenName>From Task Name In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
 	    <Name></Name>
-		<ClassName>node-secondchoice</ClassName>
+		<ClassName></ClassName>
 		<Id></Id>
 	</Element>
 	
@@ -2949,22 +2940,7 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Sender</GivenName>
-		//<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
-		//<Name></Name>
-		//<ClassName></ClassName>
-	//</Element>
 	
-	<Element>
-		<GivenName>From DropDown Receives Info</GivenName>
-		<Xpath>//*[@class="node-firstchoice"]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:other:firstChoice</Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName>node-firstchoice</ClassName>
-	</Element>
 	
 	<Element>
 		<GivenName>Segment Dropdown On Plan Page</GivenName>
