@@ -100,7 +100,7 @@ public class MAP0001_AddPlan extends TestCase {
 	@Test
 	public void testMAP0001_AddPlan() throws UIAutomationException, IOException{
 		try {
-			// Enter URL of Channels
+			// Enter the URL of Channels
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
