@@ -90,7 +90,7 @@ public class MSGS0007_SendBlankMessage extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Unable to initialize the driver");
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 		}
 	}
 	
@@ -173,7 +173,7 @@ public class MSGS0007_SendBlankMessage extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 			
 			// Sign out from home page
 		    stepNo++;

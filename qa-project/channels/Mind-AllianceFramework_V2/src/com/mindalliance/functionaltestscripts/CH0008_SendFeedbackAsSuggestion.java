@@ -135,10 +135,10 @@ public class CH0008_SendFeedbackAsSuggestion extends TestCase {
 	 		
 	 		//Click on Send Feedback button, 
 	 		stepNo++;
-	 		description="Send Feedback";
+	 		description="Click Send Feedback button";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Send Feedback button");
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Feedback button");
 	 		
 	 		//Enter feedback in the Feedback text area 
 	 		stepNo++;

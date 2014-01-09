@@ -132,13 +132,13 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 	 		
 	 		//Click on Send Feedback button
 	 		stepNo++;
-	 		description="Send Feedback";
+	 		description="Click Send Feedback button";
 	 	    HeaderController headerController=new HeaderController();
 	 		headerController.sendFeedback();
 	    	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Feedback button");
 	 		
 	 		// Enter feedback in the Feedback text area
 	 		stepNo++;
@@ -158,7 +158,6 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Select Question Option");
 	 		
-	 		
 	 		//Click on Send button
 	 		stepNo++;
 	 		description="Click Send Feedback";
@@ -166,7 +165,7 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 	 		// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Browser quit");	
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +" Click Send Feedback");	
 	
 			// Sign Out from 'Home' page
 			stepNo++;
@@ -214,6 +213,8 @@ public class CH0006_SendFeedBackAsQuestion extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 		}
 	}
 	/**

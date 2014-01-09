@@ -87,6 +87,7 @@ public class CT0005_ClickTemplateIssuesLink extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");		
 			
 		}
 	}

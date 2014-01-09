@@ -79,6 +79,8 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -87,6 +89,8 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, description, failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	/**
