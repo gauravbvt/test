@@ -102,7 +102,7 @@
  	</Element>
  	<Element>
  		<GivenName>Send Feedback DropDown</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
