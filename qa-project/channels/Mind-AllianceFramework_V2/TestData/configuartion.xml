@@ -8,7 +8,7 @@
 		<Browser>Mozilla Firefox</Browser>
 		<title>Channels - Sign in</title>
 	</Credentials>
-	<TimeOutForFindingElementSeconds>20</TimeOutForFindingElementSeconds>
+	<TimeOutForFindingElementSeconds>30</TimeOutForFindingElementSeconds>
 	<TimeOutForFindingElementSecondsForClick>60
 	</TimeOutForFindingElementSecondsForClick>
 </Configuration>
