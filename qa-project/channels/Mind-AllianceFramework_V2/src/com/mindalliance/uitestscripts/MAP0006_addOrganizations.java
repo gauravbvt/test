@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,6 +78,7 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -86,6 +88,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	
@@ -105,7 +109,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
  			stepNo++;
 			description="Login Successful";
@@ -114,7 +119,8 @@ public class MAP0006_addOrganizations extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+						
  		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -123,7 +129,8 @@ public class MAP0006_addOrganizations extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -132,7 +139,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
+			
 			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
  			stepNo++;
 			description="Organization in Scope";
@@ -142,7 +150,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Organization in Scope");	
+			
 			// Enter organization name
  			stepNo++;
 			description="Organization Created";
@@ -150,7 +159,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Organization Created");	
+			
 			// Close Organization Window
  			stepNo++;
 			description="Close Organization";
@@ -158,7 +168,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization");	
+						
 			// Sign Out from 'Plan' page
  			stepNo++;
 			description="Signout Successful";
@@ -167,7 +178,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Signout Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -176,7 +188,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -185,7 +198,8 @@ public class MAP0006_addOrganizations extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -204,6 +218,8 @@ public class MAP0006_addOrganizations extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	

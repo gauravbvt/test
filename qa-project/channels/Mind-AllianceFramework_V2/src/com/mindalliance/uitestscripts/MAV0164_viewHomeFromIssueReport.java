@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,6 +78,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -85,6 +88,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	
@@ -104,7 +109,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			  // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		 	    
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login successful";	
@@ -113,7 +119,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		 		
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
+			
 			// Domain Plans
 			stepNo++;
 			description="Domain Plans";
@@ -122,6 +129,7 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Click on 'Issue Report' link
 		    stepNo++;
@@ -130,7 +138,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		 	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Issue summary report page opened");	
+			
 			// Go to 'Home' page
 			stepNo++;
 			description="Navigated to home page";	
@@ -139,7 +148,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to home page");	
+				
 			//Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -147,7 +157,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -156,7 +167,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -165,7 +177,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -185,6 +198,8 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	/**

@@ -177,7 +177,7 @@ public class MAC0012_UndoMoveTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
  			
 			// Select Segment from drop down
 			stepNo++;

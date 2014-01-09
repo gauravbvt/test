@@ -81,7 +81,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser initialized");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -112,7 +112,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
-			Log4J.getlogger(this.getClass()).error(testCaseId +"URL Entered");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
 			 
 			// Login page
 			stepNo++;
@@ -122,7 +122,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
- 			Log4J.getlogger(this.getClass()).error(testCaseId +"Login successful");	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
 					 							
  			// Domain Plans
 			stepNo++;
@@ -132,7 +132,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Domain Plans");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Plan Page
 			stepNo++;
@@ -142,7 +142,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Navigated to Plan page");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
 			
 			// Click on 'About Plan Segment' under 'Show' pop up menu
 			stepNo++;
@@ -153,7 +153,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"About plan segment window opened");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"About plan segment window opened");	
 									
 			// Close 'About Plan Segment' Window
 			stepNo++;
@@ -162,7 +162,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"About plan segment window closed");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"About plan segment window closed");	
 						
 			// Sign Out from 'Plan' page
 			stepNo++;
@@ -172,7 +172,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -192,7 +192,7 @@ public class MAV0026_viewAboutPlanSegmentWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();

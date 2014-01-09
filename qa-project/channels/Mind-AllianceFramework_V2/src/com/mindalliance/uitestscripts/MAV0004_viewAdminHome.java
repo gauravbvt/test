@@ -86,7 +86,7 @@ public class MAV0004_viewAdminHome extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, description, failed, scriptException, blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
 			}
 	}
 	/**

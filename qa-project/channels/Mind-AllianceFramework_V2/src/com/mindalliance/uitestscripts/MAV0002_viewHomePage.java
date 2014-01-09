@@ -135,7 +135,8 @@ public class MAV0002_viewHomePage extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -144,7 +145,8 @@ public class MAV0002_viewHomePage extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
+
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

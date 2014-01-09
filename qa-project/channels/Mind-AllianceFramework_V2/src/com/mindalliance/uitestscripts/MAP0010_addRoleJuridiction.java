@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,7 +78,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+				
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -86,6 +88,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	
@@ -105,7 +109,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -114,7 +119,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+							
  			 // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -123,7 +129,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -132,7 +139,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
+			
 //			//Click on 'Add New Segment' under 'Actions' pop up menu
  			
 // 			stepNo++;
@@ -163,7 +171,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Organization In Scope");	
+			
 			// Enter organization name
  			stepNo++;
 			description="Organization Name";
@@ -171,7 +180,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Organization Name");	
+				
 			// Click on 'Organization'
  			stepNo++;
 			description="Open Organization Created";
@@ -179,7 +189,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Open Organization Created");	
+			
  			// Click on Structure Tab
  			stepNo++;
 			description="Structure Tab";
@@ -187,7 +198,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Structure Tab");	
+			
 			// Enter Agent
  			stepNo++;
 			description="Role Jurisdiction Created";
@@ -205,7 +217,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Role Jurisdiction Created");	
+			
 			// Close Actual organization window
  			stepNo++;
 			description="Close Organization Window";
@@ -213,7 +226,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
+			
 			// Click on 'Organization'
  			stepNo++;
 			description="Remove Organization Details";
@@ -224,7 +238,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Organization Details");	
+			
 			// Close Actual organization window
  			stepNo++;
 			description="Close Organization Window";
@@ -233,7 +248,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
+			
 			// Close Actual organization window
  			stepNo++;
 			description="Close Actual Organization Window";
@@ -241,7 +257,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Actual Organization Window");	
+			
 			// Remove expectation
  			stepNo++;
 			description="Remove Organization";
@@ -249,7 +266,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Organization");	
+			
 			// Close Organization Window
  			stepNo++;
 			description="Close Organization Window";
@@ -257,7 +275,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
+			
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -266,7 +285,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");	
+								
 			// Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -275,7 +295,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -284,7 +305,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -293,7 +315,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -312,6 +335,8 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	

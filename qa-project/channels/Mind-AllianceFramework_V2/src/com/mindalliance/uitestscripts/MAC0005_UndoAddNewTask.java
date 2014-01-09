@@ -116,7 +116,7 @@ public class MAC0005_UndoAddNewTask extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  							
  	    	// Domain Plans
  		    stepNo++;

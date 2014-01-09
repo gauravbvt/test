@@ -117,8 +117,8 @@ public class MAV0247_NewRequirement extends TestCase{
  			stepNo++;
  			description="Plan Created";
  			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
- 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
- 					
+ 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
+ 			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
  			channelsAdmin.clickSavePlanButton();
  			channelsAdmin.clickProductizePlanButton();
  			channelsAdmin.clickHomeLink();			

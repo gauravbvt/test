@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,7 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -88,6 +90,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 		}
 	}
 	
@@ -102,7 +106,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -111,7 +116,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+				
  			 // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -120,7 +126,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -129,7 +136,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+					
 			// Click on 'Add New Segment' under 'Actions' pop up menu
  			stepNo++;
 			description="Paste Task";
@@ -141,7 +149,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Paste Task");
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment";
@@ -149,7 +158,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+				
 			// Add New Task
  			stepNo++;
 			description="Add New Task";
@@ -158,7 +168,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Task");
+			
 			// Enter Task Name
  			stepNo++;
 			description="Update Task";
@@ -166,7 +177,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Update Task");
+			
 			// Click on 'About Plan segment' under 'Show' pop up menu
  			stepNo++;
 			description="About Plan Segment";
@@ -175,7 +187,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+			
 			// Open Task Mover
  			stepNo++;
 			description="Task Mover";
@@ -184,7 +197,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Verify Task is added
  			stepNo++;
 			description="Task Added Successfully";
@@ -192,7 +206,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
+			
 			// Close Task Mover window
  			stepNo++;
 			description="Close Task Mover";
@@ -200,7 +215,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment Window";
@@ -208,7 +224,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+			
 			// Click on Actions popup in Task Panel and also click on 'Duplicate Task'
  			stepNo++;
 			description="Duplicate Task";
@@ -217,7 +234,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Duplicate Task");
+			
 			// Verify task gets duplicated			
 			// Click on 'About Plan segment' under 'Show' pop up menu
  			stepNo++;
@@ -231,7 +249,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Duplicated");
+			
 			// Close Task Mover window
  			stepNo++;
 			description="Close Task Mover Window";
@@ -239,7 +258,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover Window");
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment";
@@ -247,7 +267,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 					
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover Window");
+			
 			// Undo Update Task
  			stepNo++;
 			description="Undo Duplicate Task";
@@ -260,7 +281,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Duplicate Task");
+			
 			// Open Task Mover
  			stepNo++;
 			description="Task Mover";
@@ -270,7 +292,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Close Task Mover window
  			stepNo++;
 			description="Close Task Mover Window";
@@ -278,7 +301,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment";
@@ -286,7 +310,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Click on 'Redo Add New Task' under actions pop up menu
  			stepNo++;
 			description="Redo Add New Task";
@@ -295,7 +320,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Add New Task");
+			
 			// Click on 'About Plan segment' under 'Show' pop up menu
  			stepNo++;
 			description="About Plan Segment";
@@ -304,7 +330,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+			
 			// Open Task Mover
  			stepNo++;
 			description="Task Mover";
@@ -314,7 +341,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Close Task Mover window
  			stepNo++;
 			description="Close Task Mover";
@@ -322,7 +350,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment";
@@ -330,7 +359,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+					
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -339,7 +369,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+								
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -348,7 +379,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -357,7 +389,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -366,6 +399,7 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -385,7 +419,8 @@ public class MAC0039_RedoDuplicateTask extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			}
 	}
 		
 	/**

@@ -80,7 +80,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser initialized");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -110,7 +110,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
-			Log4J.getlogger(this.getClass()).error(testCaseId +"URL Entered");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
 			
 			// Login page
 			stepNo++;
@@ -120,7 +120,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 		    // Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		   
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Login successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
 						
 			// Domain Plans
 			stepNo++;
@@ -130,7 +130,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Domain Plans");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Plan Page
 			stepNo++;
@@ -140,7 +140,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Navigated to Plan page");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
 			
 			// Click on 'User As Agent' under 'Participations' pop up menu
 			stepNo++;
@@ -151,7 +151,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Users As Agents window opened");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Users As Agents window opened");	
 			
 			// Close 'User As Agent' window
 			stepNo++;
@@ -160,7 +160,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Users As Agents window closed");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Users As Agents window closed");	
 			
 			// Sign Out from 'Plan' page
 			stepNo++;
@@ -170,7 +170,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -190,7 +190,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();

@@ -88,7 +88,7 @@ public class MAV0112_viewAllActivities extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Unable to initialize the driver");
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
 			
 		}
 	}

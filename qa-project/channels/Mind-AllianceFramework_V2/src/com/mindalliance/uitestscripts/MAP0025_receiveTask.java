@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,6 +78,7 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}catch(UIAutomationException ue){
 			stepNo++;
@@ -85,7 +87,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-		}
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			}
 	}
 	
 	@Test
@@ -99,7 +102,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -108,7 +112,8 @@ public class MAP0025_receiveTask extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+							
  		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -117,7 +122,8 @@ public class MAP0025_receiveTask extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -126,7 +132,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
+			
  			
  			// Click on 'Add New Segment' under 'Actions' pop up menu
  			stepNo++;
@@ -139,7 +146,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");	
+			
 			// Close Segment window
  			stepNo++;
 			description="Closed About Plan Segment Window";
@@ -147,7 +155,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Closed About Plan Segment Window");	
+				
 			// Click on 'About Plan Segment' under 'Show' pop up menu
  			stepNo++;
 			description="About Plan Segment";
@@ -156,7 +165,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");	
+			
 			// Enter file name
  			stepNo++;
 			description="Attach File";
@@ -168,7 +178,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Attach File");	
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -176,7 +187,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");	
+			
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -185,7 +197,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");	
+								
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -194,7 +207,8 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -203,7 +217,8 @@ public class MAP0025_receiveTask extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -212,6 +227,7 @@ public class MAP0025_receiveTask extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -231,7 +247,8 @@ public class MAP0025_receiveTask extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			}
 	}
 	
 	/**
@@ -255,7 +272,6 @@ public class MAP0025_receiveTask extends TestCase{
 	              
 	        Element oXmlEleMAP0025_receiveTask = (Element) eleMAP0025_receiveTask;
 	        
-	               	
 	        this.testData.put("Actions",oXmlEleMAP0025_receiveTask.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AddNewSegment",oXmlEleMAP0025_receiveTask.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SegmentForAttachFile",oXmlEleMAP0025_receiveTask.getElementsByTagName("segmentForAttachFile").item(0).getChildNodes().item(0).getNodeValue());

@@ -156,7 +156,6 @@ public class MAC0001_UndoAddSegment extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
 			
- 			
 			// Enter Segment Name
 			stepNo++;
 			description="Enter Segment Name";

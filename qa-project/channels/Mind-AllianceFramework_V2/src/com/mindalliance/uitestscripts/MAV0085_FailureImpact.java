@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 
 /**
  * TestCase Id: MAV0085_FailureImpact
- * Summary: Verify that failur impact window is displayed
+ * Summary: Verify that failure impact window is displayed
  * @author afour
  *
  */
@@ -192,7 +192,7 @@ public class MAV0085_FailureImpact extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());	
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
 			
 			// Sign out from home page
 		    stepNo++;

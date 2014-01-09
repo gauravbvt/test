@@ -149,7 +149,7 @@ public class MAV0110_viewActivitiesAllUsers extends TestCase{
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Activities tab opened");
 									
-			// Click on 'hide my activites' link
+			// Click on 'hide my activities' link
 			stepNo++;
 			description="Activities by user are shown";
 			planPage.clickHideActivities(testData.get("HideFlag"));

@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -78,6 +79,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -86,6 +89,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	/**
@@ -105,7 +110,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						     
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			    
 			// Login page
 			stepNo++;
 			description="Login successful";	
@@ -114,7 +120,8 @@ public class MAV0126_copyNeed extends TestCase{
 		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-		 			 
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
+			 
 			// Domain Plans
 			stepNo++;
 			description="Domain Plans";
@@ -123,6 +130,7 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Plan Page
 			stepNo++;
@@ -132,7 +140,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-						 
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
+				 
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Info sharing need is added";
@@ -141,7 +150,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						  
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Info sharing need is added");	
+					  
 			// Click on 'Copy Need' under 'Actions' pop up menu
 			stepNo++;
 			description="Info sharing need is copied";
@@ -150,7 +160,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						 	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Info sharing need is copied");	
+					 	
 			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
@@ -159,6 +170,7 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -168,7 +180,8 @@ public class MAV0126_copyNeed extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -177,7 +190,8 @@ public class MAV0126_copyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -197,6 +211,8 @@ public class MAV0126_copyNeed extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	/**

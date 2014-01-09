@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -88,6 +90,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	
@@ -102,7 +106,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -111,7 +116,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+				
  	    	// Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -120,7 +126,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -129,6 +136,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
 			
 			// Click Actions pop up menu and Add New Segment
  			stepNo++;
@@ -141,7 +149,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-					
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -149,6 +158,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
 			
 			// Click on default task 
 			stepNo++;
@@ -161,30 +171,39 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Default Task");
 			
 			// Click on 'Add' button under 'Sends' panel
 			stepNo++;
 			description="Add Info Sends";
 			planPage.clickAddInfoSendsPanel();
-			
 			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Sends");
+					
 			// Click on 'New Issue' under 'Actions' pop up menu in sends panel
 			stepNo++;
 			description="Intermediate Task Successfully";
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("NewIssueInSendsPanel"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Intermediate Task Successfully");
+ 			
             //Click on 'Remove Issue' under Menu in the 'Flow Issues' panel in the Sends panel	
 			stepNo++;
 			description="Remove Issue";
 			planPage.clickPopupMenu(testData.get("MenuInFlowIssuesInSendsPanel"));
 			planPage.clickSubmenu(testData.get("RemoveIssueFlowIssuesInSendsPanel"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Issue");
+ 			
 			//Click on Undo Remove Issue from Actions menu
  			stepNo++;
 			description="Undo remove Issue";
@@ -193,6 +212,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo remove Issue");
  			
  			//Click on Redo Remove Issue from Actions menu
  			stepNo++;
@@ -202,6 +222,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo remove Issue");
  			
 			//Click on Remove this segment
  			stepNo++;
@@ -211,7 +232,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+ 							
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -220,7 +242,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+ 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -229,7 +252,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -238,7 +262,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -257,6 +282,8 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 		}
 	}
 		

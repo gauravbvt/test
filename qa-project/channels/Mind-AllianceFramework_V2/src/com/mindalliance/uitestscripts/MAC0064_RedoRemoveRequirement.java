@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -78,6 +79,7 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -87,6 +89,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	
@@ -101,7 +105,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -110,7 +115,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+						
  			 // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -119,7 +125,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -128,6 +135,7 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
 			
  			// Click on 'Plan Requirements' under 'Scoping' pop up menu
  			stepNo++;
@@ -138,7 +146,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Plan Requirement");	
+			
  			// Click on 'New' button in requirement definition
 			stepNo++;
 			description="New Requirement";
@@ -146,6 +155,7 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"New Requirement");	
 			
 			// Remove requirement
 			stepNo++;
@@ -154,7 +164,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Requirement");	
+			
  			// Undo Remove Requirement
  			stepNo++;
  			description="Undo Remove Requirement";
@@ -163,7 +174,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Remove Requirement");	
+			
  			// Redo Remove Requirement
  			stepNo++;
  			description="Redo Remove Requirement";
@@ -172,7 +184,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Remove Requirement");	
+			
  			// Close Requirements window
  			stepNo++;
 			description="Close Requirement Window";
@@ -180,7 +193,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Requirement Window");	
+			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -189,7 +203,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -198,7 +213,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -207,7 +223,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -226,6 +243,8 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 		

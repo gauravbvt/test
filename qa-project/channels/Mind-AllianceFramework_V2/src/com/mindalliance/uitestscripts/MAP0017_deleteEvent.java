@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -77,6 +78,7 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}catch(UIAutomationException ue){
 			stepNo++;
@@ -85,7 +87,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-		}
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			}
 	}
 	
 	@Test
@@ -99,7 +102,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -108,7 +112,8 @@ public class MAP0017_deleteEvent extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");	
+							
  		   // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -117,7 +122,8 @@ public class MAP0017_deleteEvent extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -126,7 +132,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
+			
  			// Click on 'Add New Segment' under 'Actions' pop up menu
  			stepNo++;
 			description="Add New Segment";
@@ -135,6 +142,7 @@ public class MAP0017_deleteEvent extends TestCase{
 			planPage.clickSubmenu(testData.get("AddNewSegment"));			
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForDeleteEvent"));
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");	
 			
 			// Close Segment window
 			stepNo++;
@@ -149,7 +157,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			description="Add Event To The Plan Segment";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
- 			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Event To The Plan Segment");	
+			
  			//Click on Scenario tab in the 'About Plan Segment' window
 			stepNo++;
 			description="Scenario Tab in the About Plan Segment window";
@@ -157,41 +166,62 @@ public class MAP0017_deleteEvent extends TestCase{
 			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Scenario Tab in the About Plan Segment window");	
 			
 			// Select Responding from Phase dropdown list
+			stepNo++;
+			description="Select Option From Phase Dropdown List";
 			planPage.selectFromPhaseDropdown(testData.get("Responding"));
 			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Select Option From Phase Dropdown List");	
 			
 			// Enter event
+			stepNo++;
+			description="Enter Event";
 			planPage.enterEventInAboutPlanSegment(testData.get("Event"));
 			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Event");	
 			
 			// Select Low from first Rated dropdown list
+			stepNo++;
+			description="Select Option From First Rated Dropdown";
 			planPage.selectFromFirstRatedDropdown(testData.get("Low"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Select Option From First Rated Dropdown");	
+			
  		    // Select After from Occurring dropdown list
+ 			stepNo++;
+			description="Select Option From Occurring Dropdown";
  			planPage.selectFromOccurringDropdown(testData.get("After"));
- 				
- 		    // Enter second event
- 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
- 			
  			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Select Option From Occurring Dropdown");	
+				
+ 		    // Enter second event
+			stepNo++;
+			description="Enter Second Event";
+ 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
+ 			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Second Event");	
 			
  	    	// Select High from second Rated dropdown list
+			stepNo++;
+			description="Select Option From Second Rated Dropdown";
  		    planPage.selectFromSecondRatedDropdown(testData.get("High"));
  			// Write log
  		 	LogFunctions.writeLogs(description);
  		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
+ 		 	Log4J.getlogger(this.getClass()).info(testCaseId +"Select Option From Second Rated Dropdown");	
+						
 			// Verify event is added
  			stepNo++;
 			description="Event Is Added to The Plan Segment";
@@ -199,7 +229,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event Is Added to The Plan Segment");	
+			
 			// Delete Event
  			stepNo++;
 			description="Delete Event From The Plan Segment";
@@ -207,7 +238,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Delete Event From The Plan Segment");	
+			
 			// Verify event is deleted
  			stepNo++;
 			description="Add Event to The Plan Segment";
@@ -215,7 +247,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Event to The Plan Segment");	
+			
 			// Close Segment window
  			stepNo++;
 			description="Close About Plan Segment";
@@ -223,7 +256,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");	
+			
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -232,7 +266,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");	
+							
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -241,7 +276,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -250,7 +286,8 @@ public class MAP0017_deleteEvent extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -259,6 +296,7 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -278,6 +316,8 @@ public class MAP0017_deleteEvent extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			
 		}
 	}
 	

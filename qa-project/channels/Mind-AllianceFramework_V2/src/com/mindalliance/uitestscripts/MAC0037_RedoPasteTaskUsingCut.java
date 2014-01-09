@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -51,7 +52,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -79,6 +80,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -88,6 +90,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	@Test
@@ -101,7 +105,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -110,8 +115,9 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
- 		// Domain Plans
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+			
+ 		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
  			DomainPlanPage domainPlanPage= new DomainPlanPage();
@@ -119,7 +125,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -128,7 +135,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+			
 			// Click on Actions pop up and Add New Segment
  			stepNo++;
 			description="Add New Segment";
@@ -140,7 +148,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -148,7 +157,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Add New Task
 			stepNo++;
 			description="Add New Task";
@@ -159,7 +169,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Task");
+			
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			stepNo++;
 			description="Task Mover";
@@ -171,7 +182,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Verify Task is added
 			stepNo++;
 			description="Task Added Successfully";
@@ -179,7 +191,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
@@ -187,7 +200,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -195,8 +209,9 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Click 'Strench up form'
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
+			// Click 'Stretch up form'
 			stepNo++;
 			description="Cut Task";
 			planPage.clickStrenchUpForm();
@@ -214,7 +229,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Cut Task");
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
@@ -222,7 +238,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -230,7 +247,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Add New Segment, Click on Actions pop up and Add New Segment
 			stepNo++;
 			description="Add New Segment";
@@ -241,7 +259,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -249,8 +268,9 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Click Strench up forms
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
+			// Click Stretch up forms
 			planPage.clickStrenchUpForm();
 			// Click on Actions Menu and click on 'Paste Task'
 			stepNo++;
@@ -260,7 +280,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Paste Task");
+			
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			stepNo++;
 			description="Task Mover";
@@ -272,7 +293,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Verify Task is added
 			stepNo++;
 			description="Paste Task Successfully";
@@ -280,7 +302,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Paste Task Successfully");
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
@@ -288,7 +311,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -296,7 +320,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Click on Actions Menu and click on 'Undo Paste Task'
 			stepNo++;
 			description="Undo Paste Task";
@@ -305,7 +330,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Paste Task");
+			
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			stepNo++;
 			description="Task Mover";
@@ -317,7 +343,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Verify Task is removed
 			stepNo++;
 			description="Undo Paste Task Successfully Done";
@@ -325,7 +352,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Paste Task Successfully Done");
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
@@ -333,7 +361,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -341,7 +370,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 					
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Click on 'Redo Paste Task' under 'Actions' pop up menu
 			stepNo++;
 			description="Redo Paste Task";
@@ -350,7 +380,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Paste Task");
+				
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			stepNo++;
 			description="Task Mover";
@@ -362,7 +393,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+			
 			// Verify Task is removed
 			stepNo++;
 			description="Redo Paste Task Successfully";
@@ -370,7 +402,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Paste Task Successfully");
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
@@ -378,7 +411,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
@@ -386,7 +420,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+			
 			// Click on Remove this segment
 			stepNo++;
 			description="Remove This Segment";
@@ -395,6 +430,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
 			
 			//Click on Remove this segment
  			stepNo++;
@@ -404,7 +440,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+					
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -413,7 +450,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -422,7 +460,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -431,7 +470,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -450,6 +490,8 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 		}
 	}
 	

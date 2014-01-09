@@ -80,7 +80,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser initialized");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
 			
 		}
 		catch(UIAutomationException ue){
@@ -110,7 +110,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
-			Log4J.getlogger(this.getClass()).error(testCaseId +"URL Entered");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
 			    
 			// Login page
 			stepNo++;
@@ -120,7 +120,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 		    // Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		   
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Login successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
 								
 			// Domain Plans
 			stepNo++;
@@ -130,7 +130,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Domain Plans");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Plan Page
 			stepNo++;
@@ -140,7 +140,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Navigated to Plan page");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
 			
 			// Click on 'About Plan' under 'Show' pop up menu
 			stepNo++;
@@ -151,7 +151,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"About plan window opened");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"About plan window opened");	
 					
 			// Close About Plan Window
 			stepNo++;
@@ -160,7 +160,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
-			Log4J.getlogger(this.getClass()).error(testCaseId +"About plan window closed");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"About plan window closed");	
 				
 			// Sign Out from 'Plan' page
 			stepNo++;
@@ -170,7 +170,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -190,7 +190,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Logout successful");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -210,7 +210,7 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-			Log4J.getlogger(this.getClass()).error(testCaseId +"Browser Quit");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
 			
 		}
 	}

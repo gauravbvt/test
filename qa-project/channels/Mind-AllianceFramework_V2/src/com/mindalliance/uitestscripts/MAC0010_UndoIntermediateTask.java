@@ -106,7 +106,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 			
 			// Login page
 			stepNo++;
@@ -116,7 +116,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
 						
  		    // Domain Plans
  		    stepNo++;
@@ -126,7 +126,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
 			
 			// Plan Page
 		    stepNo++;
@@ -136,7 +136,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
 			
 			// Click Actions pop up menu and Add New Segment
  			stepNo++;
@@ -294,6 +294,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			
 		}
 	}
 	

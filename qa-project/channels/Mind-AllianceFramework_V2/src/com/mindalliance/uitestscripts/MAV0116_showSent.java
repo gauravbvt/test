@@ -179,7 +179,7 @@ public class MAV0116_showSent extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 			
 			// Sign out from home page
 		    stepNo++;

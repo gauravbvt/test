@@ -217,7 +217,7 @@ public class MAV0011_viewAllSecrecyclassificationsForm extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser quit");	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
 			}
 	}
 	/**
