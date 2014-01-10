@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -72,6 +73,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -80,6 +83,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	
@@ -94,7 +99,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -103,7 +109,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+							
 			// Domain Plans
 			stepNo++;
 			description="Domain Plans";
@@ -112,6 +119,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
 			
 			// Plan Page
 			stepNo++;
@@ -121,6 +129,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");
 			
 			// Add New Segment
  			stepNo++;
@@ -131,16 +140,18 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
 			
 			// Close segment window
 			stepNo++;
 			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
-			// Click on 'strench Up forms' icon 
+			// Click on 'stretch Up forms' icon 
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
 			
 			// Click on 'Add' in sends panel
 			stepNo++;
@@ -151,6 +162,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Sends");
 			
 			// Click on 'Tags' link in sends panel
 			stepNo++;
@@ -159,6 +171,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Tags - Sends Panel");
 			
 			// Close 'Searching' window
 			stepNo++;
@@ -167,6 +180,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Searching Window");
 			
 			// Click on 'Add' in receives panel
 			stepNo++;
@@ -177,6 +191,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Receives");
 			
 			// Click on 'Tags' link in receives panel
 			stepNo++;
@@ -185,6 +200,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Tags - Receives Panel");
 			
 			// Close 'Searching' window
 			stepNo++;
@@ -193,7 +209,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-					
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Searching Window");
+				
 			// Remove This segment
  			stepNo++;
 			description="Remove This Segment";
@@ -202,7 +219,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+					
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -211,7 +229,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Signout Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -220,7 +239,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -229,6 +249,7 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
 				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
@@ -248,7 +269,8 @@ public class MAV0200_AddInfoReceiveSendTagLink extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			}
 	}
 	
 	/**

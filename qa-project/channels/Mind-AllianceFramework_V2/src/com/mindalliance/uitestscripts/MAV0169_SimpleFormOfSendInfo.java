@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -81,6 +82,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");	
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -89,6 +92,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");	
+			
 		}
 	}
 	/**
@@ -107,7 +112,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");	
+			
 			// Login page
 		    stepNo++;
 			description="Login successful";	
@@ -116,6 +122,7 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");	
 			
 			// Domain Plans
 			stepNo++;
@@ -125,6 +132,7 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
 			
 			// Plan Page
 			stepNo++;
@@ -134,7 +142,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	  
- 			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
+			
 			// Click Actions pop up menu and Add New Segment
 			stepNo++;
 			description="Add new segment";
@@ -144,15 +153,17 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add new segment");	
+			
 			// Enter Segment Name
 			stepNo++;
-			description="Segment name enetered";
+			description="Segment name entered";
 			planPage.enterSegmentName(testData.get("SegmentForSimpleFormOfSendInfo"));
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Segment name entered");	
+			
 			// Close Segment window
 			stepNo++;
 			description="Segment window closed";
@@ -160,8 +171,9 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
-			// Click on 'Strench Up' form icon
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Segment window closed");	
+			
+			// Click on 'Stretch Up' form icon
 			stepNo++;
 			description="Strench up form";
 			planPage.clickStrenchUpForm();
@@ -176,7 +188,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add in sends panel");	
+			
 			// Click on 'Show Advanced Form' link
 			stepNo++;
 			description="Show aadvanced form in receives panel";
@@ -184,7 +197,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank); 
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Show aadvanced form in receives panel");	
+			
 			// Click on Remove this segment
 			stepNo++;
 			description="Remove segment";
@@ -193,7 +207,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove segment");	
+			
 			// Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -202,7 +217,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -211,7 +227,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());	
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -220,7 +237,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");	
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -240,7 +258,8 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");	
+			}
 	}
 	/**
      * Loads Test Data for MAV0169_SimpleFormOfSendInfo.

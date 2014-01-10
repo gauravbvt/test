@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -79,6 +80,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -87,6 +90,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	/**
@@ -105,7 +110,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			   
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			   
 			// Login page
 			stepNo++;
 			description="Login successful";	
@@ -114,7 +120,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 		    // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
+			
 			// Domain Plans
 			stepNo++;
 			description="Domain Plans";
@@ -123,6 +130,7 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
 			
 			// Plan Page
 			stepNo++;
@@ -132,16 +140,18 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	   
- 			
-			// Click on 'strench Up forms' icon 
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");
+			
+			// Click on 'stretch Up forms' icon 
  			stepNo++;
-			description="Strench up form";	
+			description="Stretch up form";	
 			PlanPage planPage = new PlanPage();
 			planPage.clickStrenchUpForm();
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Stretch up form");
+			
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
 			stepNo++;
 			description="Details in task panel";
@@ -150,7 +160,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Details in task panel");
+			
 			// Click on 'Show Advanced Form' link
 			stepNo++;
 			description="Advance form of task panel";
@@ -158,7 +169,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Advance form of task panel");
+				
 			// Click on 'Usually Completes After'in Task panel
 			stepNo++;
 			description="Click usually completes after";
@@ -166,7 +178,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click usually completes after");
+			
 			//Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -175,7 +188,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -184,7 +198,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -193,7 +208,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -213,7 +229,8 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+			}
 	}
 	/**
      * Loads Test Data for MAV0183_UsuallyCompletesAfterOption.
