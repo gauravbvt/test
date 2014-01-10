@@ -39,7 +39,7 @@ public class MABVT0001_VerifyBrowsersVersion extends TestCase{
 	}
 	
 	/**
-	 * This method wil identiy Firefox version
+	 * This method will identify Firefox version
 	 * @return version
 	 * @throws IOException
 	 */

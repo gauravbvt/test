@@ -17,7 +17,8 @@ public class MABVT0005_VerifyBrowsersInstalled extends TestCase {
 		if (Desktop.isDesktopSupported()) {
 			Desktop dt = Desktop.getDesktop();
 			if (dt.isSupported(Desktop.Action.BROWSE)) {
-				File f = new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+				File f1=new File("firefox.exe");
+				File f = new File(f1.getCanonicalPath().toString());
 				if (f.exists()) {
 					try {
 						Process p = Runtime.getRuntime().exec("firefox.exe");
