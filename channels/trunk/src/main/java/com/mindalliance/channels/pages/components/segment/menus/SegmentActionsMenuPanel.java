@@ -42,10 +42,10 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
         if ( isPlanner() )
             menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Move tasks..." ) );
         // Locked
-        Segment segment = getSegment();
+       /* Segment segment = getSegment();
         if ( !isLockedByUser( segment ) && getLockOwner( segment ) != null ) {
             menuItems.add( editedByLinkMenuItem( "menuItem", segment, getLockOwner( segment ) ) );
-        }
+        }*/
         return menuItems;
     }
 

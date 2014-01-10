@@ -35,7 +35,7 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
         return "actions-plan-details";
     }
 
-    @Override
+ /*   @Override
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = super.getMenuItems();
         Plan plan = getPlan();
@@ -44,7 +44,7 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
         }
         return menuItems;
     }
-
+*/
     /**
      * {@inheritDoc}
      */

@@ -526,7 +526,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected LinkMenuItem editedByLinkMenuItem( String id, final Identifiable identifiable, final String username ) {
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 "menuItem",
-                new Model<String>( "(Edited by " + getQueryService().findUserFullName( username ) + ")" ),
+                new Model<String>( "(" + getQueryService().findUserFullName( username ) + " is editing)" ),
                 new AjaxLink<String>( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {

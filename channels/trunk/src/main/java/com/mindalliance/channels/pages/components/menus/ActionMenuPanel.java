@@ -27,6 +27,7 @@ public abstract class ActionMenuPanel extends MenuPanel {
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( );
         synchronized ( getCommander() ) {
+            addLockedOutMenuItem( menuItems, "menuItem" );
             menuItems.add(  getSendMessageMenuItem( "menuItem" ) );
             if ( getPlan().isDevelopment() ) {
                 menuItems.add( getUndoMenuItem( "menuItem" ) );
@@ -36,6 +37,13 @@ public abstract class ActionMenuPanel extends MenuPanel {
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
          }
         return menuItems;
+    }
+
+    private void addLockedOutMenuItem( List<LinkMenuItem> menuItems, String id ) {
+        Identifiable identifiable = getIdentifiable();
+        if ( !isLockedByUser( identifiable ) && getLockOwner( identifiable ) != null ) {
+            menuItems.add( editedByLinkMenuItem( id, identifiable, getLockOwner( identifiable ) ) );
+        }
     }
 
     /**

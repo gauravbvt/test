@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.pages.components.guide.Guidable;
+import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -120,7 +121,14 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         init();
     }
 
-    protected abstract Component makeActionMenuOrLabel( String id );
+    /**
+     * Make action menu.
+     *
+     * @param menuId the menu's id
+     * @return a MenuPanel or some Component
+     */
+    protected abstract MenuPanel makeActionMenu( String menuId );
+
 
     protected abstract List<Tab> makeTabs();
 
@@ -234,7 +242,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     }
 
     protected void addActionsMenu() {
-        actionsMenu = makeActionMenuOrLabel( "actionMenu" );
+        actionsMenu = makeActionMenu( "actionMenu" );
         if ( actionsMenu == null ) {
             actionsMenu = new Label("actionMenu", "");
             actionsMenu.setVisible( false );

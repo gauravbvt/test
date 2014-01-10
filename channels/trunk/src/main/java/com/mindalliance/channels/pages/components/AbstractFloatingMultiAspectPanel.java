@@ -91,14 +91,6 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     protected abstract String getCssClass();
 
     /**
-     * Make action menu.
-     *
-     * @param menuId the menu's id
-     * @return a MenuPanel or some Component
-     */
-    protected abstract MenuPanel makeActionMenu( String menuId );
-
-    /**
      * Make the aspect sub-panel.
      *
      * @param aspect a string
@@ -164,8 +156,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                 : null;
     }
 
-    @Override
-    protected Component makeActionMenuOrLabel( String menuId ) {
+ /*    protected Component makeActionMenuOrLabel( String menuId ) {
         Component menu = makeActionMenu( menuId );
         if ( menu != null && getPlan().isDevelopment() && isAspectShownEditable() ) {
             LockManager lockManager = getLockManager();
@@ -183,7 +174,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         }
         return menu;
     }
-
+*/
 
     public void showAspect( String aspect, Change change, AjaxRequestTarget target ) {
         if ( change.isCollapsed() ) {
