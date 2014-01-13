@@ -242,7 +242,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * @return a boolean
      */
     public boolean isAbsolute( Place locale ) {
-        if ( mustContain.isSpecified( locale )
+        if ( isCircular( locale)
+                || mustContain.isSpecified( locale )
                 || mustBeContainedIn.isSpecified( locale )
                 || within != null && !within.isAbsolute( locale ) )
 
@@ -273,31 +274,26 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     private boolean isMustContainCircular( Set<Place> visited, Place locale ) {
         if ( visited.contains( this ) )
             return true;
-
         visited.add( this );
-
         Place content = mustContain.getReferencedPlace( locale );
         return content != null
-                && ( !mustContain.isPlanReferenced() || content.isAbsolute( locale ) )
+              //  && ( !mustContain.isPlanReferenced() || content.isAbsolute( locale ) )
                 && content.isMustContainCircular( visited, locale );
     }
 
     private boolean isMustBeContainedInCircular( Set<Place> visited, Place locale ) {
         if ( visited.contains( this ) )
             return true;
-
         visited.add( this );
-
         Place container = mustBeContainedIn.getReferencedPlace( locale );
         return container != null
-                && ( !mustBeContainedIn.isPlanReferenced() || container.isAbsolute( locale ) )
+               // && ( !mustBeContainedIn.isPlanReferenced() || container.isAbsolute( locale ) )
                 && container.isMustBeContainedInCircular( visited, locale );
     }
 
     private boolean isWithinCircular( Set<Place> visited ) {
         if ( visited.contains( this ) )
             return true;
-
         visited.add( this );
         return within != null && within.isWithinCircular( visited );
     }

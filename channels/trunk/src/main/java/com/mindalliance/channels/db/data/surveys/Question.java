@@ -62,6 +62,7 @@ public class Question extends AbstractChannelsDocument {
 
     public Question( String username, Questionnaire questionnaire ) {
         super( questionnaire.getCommunityUri(), questionnaire.getPlanUri(), questionnaire.getPlanVersion(), username);
+        setActivated( !questionnaire.isActive() ); // activate the question on creation if the questionnaire is deactivated
         questionnaireUid = questionnaire.getUid();
     }
 

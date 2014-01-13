@@ -641,7 +641,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     Command command = new UpdatePlanObject(
                             getUsername(),
                             getFunction(),
-                            property + "[" + infoIndex + "].eois.[" + eoiIndex + "].content",
+                            property + "[" + infoIndex + "].eois[" + eoiIndex + "].content",
                             value,
                             UpdateObject.Action.Set
                     );
