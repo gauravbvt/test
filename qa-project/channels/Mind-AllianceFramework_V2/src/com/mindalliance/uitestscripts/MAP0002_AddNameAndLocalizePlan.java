@@ -127,7 +127,7 @@ public class MAP0002_AddNameAndLocalizePlan extends TestCase {
 			stepNo++;
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
 			channelsAdmin.deletePlan(testData.get("PlanName"));
 			// Write log
 			LogFunctions.writeLogs(description);
