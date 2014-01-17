@@ -50,6 +50,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
      * Sizes of icons to generate.
      */
     private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100, 116};
+    private static final int THUMBNAIL_HEIGHT = 50;
 
     /**
      * Attachment manager.
@@ -77,6 +78,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     private Resource imageDirectory;
 
     /**
+     * Base directory of the web app.
+     */
+    private Resource baseDirectory;
+
+    /**
      * The webapp-relative path to generated icons.
      */
     private String iconPath;
@@ -101,6 +107,14 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         this.iconDirectory = iconDirectory;
     }
 
+    public Resource getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory( Resource baseDirectory ) {
+        this.baseDirectory = baseDirectory;
+    }
+
     public String getIconPath() {
         return iconPath;
     }
@@ -119,6 +133,68 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     public String getImageDirPath() {
         return imageDirPath();
+    }
+
+    @Override
+    public String getThumbnailPath( String imagePath, String imageName ) { // imagePath under WEB-INF/images/
+        try {
+            boolean thumbnailReady = getOrPrepareThumbnail( imagePath, imageName );
+            if ( thumbnailReady ) {
+                return "thumbnails"
+                        + File.separator
+                        + imagePath
+                        + ( imagePath.endsWith( File.separator ) ? "" : File.separator )
+                        + imageName;
+            } else {
+                return "no_image.png";
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to get thumbnail of " + imagePath + " " + imageName, e );
+        }
+
+        return null;
+    }
+
+    private boolean getOrPrepareThumbnail( String imagePath, String imageName ) throws IOException {
+        File thumbnailDir = getThumbnailDirectory( imagePath );
+        File thumbnailFile = new File( thumbnailDir, imageName );
+        if ( !thumbnailFile.exists() ) {
+            File imageFile = new File( getImageFilename( imagePath, imageName ) );
+            return makeThumbnail( imageFile, thumbnailFile );
+        } else {
+            return true;
+        }
+    }
+
+    private String getImageFilename( String imagePath, String imageName ) throws IOException {
+        return baseDirectory.getFile().getAbsolutePath()
+                + File.separator
+                + imagePath
+                + ( imagePath.endsWith( File.separator ) ? "" : File.separator )
+                + imageName;
+    }
+
+    private boolean makeThumbnail( File imageFile, File thumbnailFile ) {
+        try {
+            if ( imageFile.exists() ) {
+                BufferedImage image = ImageIO.read( imageFile );
+                BufferedImage resized;
+                if ( image.getHeight() > THUMBNAIL_HEIGHT ) {
+                    int height = THUMBNAIL_HEIGHT;
+                    int width = height * image.getWidth() / image.getHeight();
+                    resized = resize( image, width, height );
+                } else {
+                    resized = image;
+                }
+                ImageIO.write( resized, "png", thumbnailFile );
+                return true;
+            } else {
+                return false;
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to make a thumbnail of " + imageFile.getName(), e );
+            return false;
+        }
     }
 
     @Override
@@ -201,7 +277,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
             BufferedImage resized = resize( image, width, height );
             String filePath = imageFile.getAbsolutePath();
-            File iconFile =  new File( filePath.substring( 0, filePath.lastIndexOf( "." ) ) + iconPrefix + ".png" );
+            File iconFile = new File( filePath.substring( 0, filePath.lastIndexOf( "." ) ) + iconPrefix + ".png" );
             ImageIO.write( resized, "png", iconFile );
             createNumberedIcons( resized, width, iconFile );
 
@@ -216,7 +292,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     private boolean squarifyModelObjectImage( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
             BufferedImage image = ImageIO.read( new File( url ) );
-           // BufferedImage image = getImage( communityService, url );
+            // BufferedImage image = getImage( communityService, url );
             BufferedImage icon = doSquarify( image );
             ImageIO.write( icon, "png", getIconFile( communityService, modelObject, UserUploadService.SQUARED + ".png" ) );
             return true;
@@ -344,7 +420,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private void createNumberedIcons( CommunityService communityService, BufferedImage resized, int width, ModelObject modelObject )
             throws IOException {
-        createNumberedIcons( resized, width, getIconFile( communityService, modelObject, ".png") );
+        createNumberedIcons( resized, width, getIconFile( communityService, modelObject, ".png" ) );
     }
 
     private void createNumberedIcons( BufferedImage resized, int width, File iconFile ) throws IOException {
@@ -367,7 +443,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         String negatedIconUrl = getImageDirectory().getFile().getAbsolutePath() + NEGATED_ICON_URL;
         BufferedImage negatedIcon = ImageIO.read( new File( negatedIconUrl ) );
         graphics.drawImage( negatedIcon, 0, 0, null );
-        ImageIO.write( icon, "png", new File ( extended + number + NEGATED + ".png" ) );
+        ImageIO.write( icon, "png", new File( extended + number + NEGATED + ".png" ) );
         graphics.dispose();
     }
 
@@ -452,6 +528,19 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             LOG.info( "Created {}", iconDir );
 
         return iconDir;
+    }
+
+    private File getThumbnailDirectory( String imagePath ) throws IOException {
+        File thumbnailDir = new File( getThumbnailsDirectoryPath() + File.separator + imagePath );
+        if ( thumbnailDir.mkdirs() )
+            LOG.info( "Created {}", thumbnailDir );
+        return thumbnailDir;
+    }
+
+    private String getThumbnailsDirectoryPath() throws IOException {
+        return baseDirectory.getFile().getAbsolutePath()
+                + File.separator
+                + "thumbnails";
     }
 
     private String getIconsAbsolutePathFor( CommunityService communityService, ModelObject modelObject ) throws IOException {
@@ -610,6 +699,6 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     @Override
     public void afterPropertiesSet() {
         if ( iconDirectory == null || imageDirectory == null || attachmentManager == null )
-            throw new IllegalStateException( "Need attachmentManager, icon and image directories" );
+            throw new IllegalStateException( "Need attachmentManager, icon, thumbnail and image directories" );
     }
 }

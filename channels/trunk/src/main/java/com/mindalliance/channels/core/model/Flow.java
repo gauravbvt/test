@@ -1299,7 +1299,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isImportant() {
-        return isSharing()
+        return !isProhibited()
+                && isSharing()
                 && !isIfTaskFails()
                 && ( isCritical() || isTriggeringToTarget() );
     }

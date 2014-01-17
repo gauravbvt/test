@@ -73,16 +73,18 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
             graph.addVertex( (Part) segmentObject );
 
         for ( Flow flow : essentialFlows ) {
-            Node source = flow.getSource();
-            Node target = flow.getTarget();
-            graph.addVertex( source );
-            graph.addVertex( target );
-            graph.addEdge( source, target, flow );
+            Part source = (Part) flow.getSource();
+            Part target = (Part) flow.getTarget();
+            if ( !source.isProhibited() && !target.isProhibited() ) {
+                graph.addVertex( source );
+                graph.addVertex( target );
+                graph.addEdge( source, target, flow );
+            }
         }
     }
 
     private List<Flow> getEssentialFlows() {
-        List<Flow> essentialFlows = new ArrayList<Flow>(  );
+        List<Flow> essentialFlows = new ArrayList<Flow>();
         if ( segmentObject instanceof Part )
             essentialFlows.addAll( queryService.findEssentialFlowsFrom(
                     (Part) segmentObject,

@@ -153,4 +153,12 @@ public interface ImagingService {
      */
     String getImageDirPath();
 
+    /**
+     * Return path to thumbnail of an image, making the thumbnail if needed.
+     * @param imagePath the path of the full-sized image relative to the image directory
+     * @param imageName the image file name
+     * @return the path to the thumbnail
+     */
+    String getThumbnailPath( String imagePath, String imageName );
+
  }

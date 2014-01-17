@@ -781,7 +781,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @return a boolean
      */
     public boolean isUseful() {
-        return !goals.isEmpty() || terminatesEventPhase && getSegment().hasTerminatingGoals();
+        return !isProhibited() && !goals.isEmpty() || terminatesEventPhase && getSegment().hasTerminatingGoals();
     }
 
     /**

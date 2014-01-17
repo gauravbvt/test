@@ -183,3 +183,16 @@ h2.attachment-panel-add img.help-icon {
 #quick-help a.quick-help-back {
     padding: 15px 0 0;
 }
+
+div.lightbox {
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 30px;
+    padding: 10px;
+    border: 2px solid green;
+    background-color: white;
+    box-shadow: 4px 4px 5px #888888;
+    cursor: pointer;
+    z-index: 100001;
+}
+

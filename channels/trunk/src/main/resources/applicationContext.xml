@@ -173,6 +173,7 @@ CONFIGURATION NOTES:
     <bean id="imagingService" class="com.mindalliance.channels.engine.imaging.DefaultImagingService">
         <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
         <property name="imageDirectory" value="WEB-INF/images"/>
+        <property name="baseDirectory" value="images"/>
         <property name="iconPath" value="icons/"/>
     </bean>
 

@@ -12,12 +12,14 @@
                 <item>
                     <description>Channels is an online collaboration planning service.
 
+                        [[File:home_page.png|Channels home page]]
+
                         It enables
                         * analysts to develop best-practice templates for information sharing-enabled collaboration,
                         * planners to setup localized collaboration plans based on collaboration templates,
-                        * users to participate in collaboration plans and get collaboration checklists instructing
-                        their participation,
-                        * administrators to manage the Channels service.
+                        * users to participate in collaboration plans and get collaboration checklists instructing their participation,
+                        * administrators to manage the Channels service [[File:settings_templates.png|Channels settings page]].
+
                     </description>
                 </item>
                 <next section="plan-concepts" topic="collaboration-plan"/>

@@ -17,6 +17,7 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.guide.ChangeQualifier;
 import com.mindalliance.channels.guide.Guide;
 import com.mindalliance.channels.guide.GuideReader;
@@ -33,10 +34,10 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.guide.HelpScriptable;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
-import info.bliki.wiki.model.WikiModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,15 +45,15 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -76,6 +77,10 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     @SpringBean
     private GuideReader guideReader;
 
+    @SpringBean
+    private ImagingService imagingService;
+
+
     private Guide guide;
 
     private String guideName;
@@ -88,6 +93,10 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     private AjaxLink<String> backLink;
     private WebMarkupContainer content;
     private AjaxLink<String> glossaryLink;
+    private Map<TopicItem, String> topicItemsContents = new HashMap<TopicItem, String>(  );
+    private WebMarkupContainer lightBox;
+    private WebMarkupContainer docImage;
+    private Label docCaption;
 
     public HelpPanel( String id, String guideName, String defaultUserRoleId, Map<String, Object> context ) {
         super( id );
@@ -99,6 +108,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     }
 
     private void init() {
+        addLightbox( "images/delete.png", "" );
         addTitle();
         addGlossary();
         addBack();
@@ -108,12 +118,47 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         initContent();
     }
 
+    private void addLightbox( String imageSrc, String caption ) {
+        lightBox = new WebMarkupContainer( "lightbox" );
+        lightBox.setOutputMarkupId( true );
+        lightBox.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                makeVisible( lightBox, false );
+                target.add( lightBox );
+            }
+        } );
+        docImage = new WebMarkupContainer( "image" );
+        docImage.add( new AttributeModifier( "src", imageSrc ) );
+        docImage.setOutputMarkupId( true );
+        lightBox.add( docImage );
+        docCaption = new Label( "caption", caption);
+        docCaption.setOutputMarkupId( true );
+        lightBox.add( docCaption );
+        addTipTitle( lightBox, "Click to close" );
+        makeVisible( lightBox, false );
+        addOrReplace( lightBox );
+    }
+
     public String getUserRoleId() {
         return userRoleId;
     }
 
     private void initContent() {
         Topic topic = getTopic();
+        add( new HelpAjaxBehavior( topicItemsContents, topic.getTopicItems(), imagingService )  {
+            @Override
+            protected void respond( AjaxRequestTarget target ) {
+                IRequestParameters params = RequestCycle.get().getRequest().getRequestParameters();
+                String imageSrc = params.getParameterValue( HelpAjaxBehavior.IMAGE_PARAM ).toString();
+                String caption = params.getParameterValue( HelpAjaxBehavior.CAPTION_PARAM ).toString("");
+                if ( imageSrc != null ) {
+                    addLightbox( imageSrc, caption.replaceAll("_", " ") );
+                    makeVisible( lightBox, true );
+                    target.add( lightBox );
+                }
+            }
+        });
         addTopicName( topic );
         addTopicItems( topic );
         addDefinitions( getSection(), topic );
@@ -125,6 +170,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         AjaxLink<String> titleLink = new AjaxLink<String>( "title" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                makeVisible( lightBox, false );
                 Change change = new Change( Change.Type.Collapsed, Channels.GUIDE_ID );
                 update( target, change );
             }
@@ -399,39 +445,11 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     }
 
     private Label getDescriptionLabel( TopicItem topicItem ) {
-        Label label = new Label( "description", wikimediaToHtml( topicItem.getDescription() ) );
+        Label label = new Label( "description", topicItemsContents.get( topicItem ) );
         label.setEscapeModelStrings( false );
         return label;
     }
 
-    private String wikimediaToHtml( String string ) {
-        String content = trimAllLines( string );
-        WikiModel wikiModel = new WikiModel( "", "" );
-        String html = wikiModel.render( content );
-        html = html.replaceAll( "<a ", "<a target='_blank' " );
-        return html;
-    }
-
-    private String trimAllLines( String string ) {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader( new StringReader( string ) );
-        try {
-            String line;
-            while ( ( line = reader.readLine() ) != null ) {
-                sb.append( line.trim() );
-                sb.append( '\n' );
-            }
-        } catch ( IOException e ) {
-            // do nothing
-        } finally {
-            try {
-                reader.close();
-            } catch ( IOException e ) {
-                // do nothing
-            }
-        }
-        return sb.toString();
-    }
 
 
     private void addDocumentLink( Topic topic ) {
