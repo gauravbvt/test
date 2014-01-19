@@ -50,7 +50,6 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
      * Sizes of icons to generate.
      */
     private static final int[] ICON_HEIGHTS = {32, 56, 72, 84, 100, 116};
-    private static final int THUMBNAIL_HEIGHT = 50;
 
     /**
      * Attachment manager.
@@ -200,6 +199,22 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     @Override
     public File getIconDirectoryFile() throws IOException {
         return iconDirectory.getFile();
+    }
+
+    @Override
+    public int[] getImageSize( String imagePath, String imageName ) {
+        int[] size = new int[2];
+        try {
+            File imageFile = new File( getImageFilename( imagePath, imageName ) );
+            if ( imageFile.exists() ) {
+                BufferedImage image = ImageIO.read( imageFile );
+                size[0] = image.getWidth();
+                size[1] = image.getHeight();
+            }
+        } catch ( IOException e ) {
+            LOG.warn( "No such image " + imagePath + "/" + imageName);
+        }
+        return size;
     }
 
     @Override

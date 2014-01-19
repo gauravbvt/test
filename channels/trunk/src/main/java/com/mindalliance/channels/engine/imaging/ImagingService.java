@@ -19,6 +19,8 @@ import java.io.IOException;
  */
 public interface ImagingService {
 
+    public static final int THUMBNAIL_HEIGHT = 50;
+
     /**
      * Last file name part before extension denoting negation if present.
      */
@@ -30,6 +32,13 @@ public interface ImagingService {
 
     public static final String SEPARATOR = "---";
 
+    /**
+     * Get the size of an image given its path under "images/" and its name (with extension)
+     * @param imagePath a path
+     * @param imageName a file name
+     * @return an array [width,height]
+     */
+    int[] getImageSize( String imagePath, String imageName );
 
     /**
      * Find the size of an image given its url.
@@ -161,4 +170,4 @@ public interface ImagingService {
      */
     String getThumbnailPath( String imagePath, String imageName );
 
- }
+}

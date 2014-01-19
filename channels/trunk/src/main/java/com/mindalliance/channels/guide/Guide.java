@@ -8,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -119,5 +121,29 @@ public class Guide implements Serializable {
 
     public Object getContext() {
         return context;
+    }
+
+    public Topic findTopic( UserRole userRole, String sectionId, String topicId ) {
+        Section section = userRole.findSection( sectionId );
+        if ( section != null ) {
+            return section.findTopic( topicId );
+        } else {
+            return null;
+        }
+    }
+
+    public Map<String, TopicItem> getGlossary( UserRole userRole ) {
+        Map<String, TopicItem> glossary = new HashMap<String, TopicItem>();
+        Topic topic = findTopic( userRole, userRole.getGlossarySection(), userRole.getGlossaryTopic() );
+        if ( topic != null ) {
+            for ( TopicRef topicRef : topic.getDefinitions() ) {
+                Topic definitionTopic = findTopic( userRole, topicRef.getSectionId(), topicRef.getTopicId() );
+                if ( definitionTopic != null ) {
+                    if (! definitionTopic.getTopicItems().isEmpty() )
+                        glossary.put( definitionTopic.getName().toLowerCase(), definitionTopic.getTopicItems().get( 0 ) );
+                }
+            }
+        }
+        return glossary;
     }
 }

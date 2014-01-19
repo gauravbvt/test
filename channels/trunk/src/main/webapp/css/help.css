@@ -196,3 +196,8 @@ div.lightbox {
     z-index: 100001;
 }
 
+.definition {
+    font-weight: bold;
+    font-style: italic;
+}
+

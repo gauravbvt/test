@@ -22,7 +22,7 @@ public class UserRole implements Serializable {
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( Guide.class );
+    private static final Logger LOG = LoggerFactory.getLogger( UserRole.class );
 
 
     @XStreamAsAttribute

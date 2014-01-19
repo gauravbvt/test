@@ -40,6 +40,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -93,7 +94,6 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     private AjaxLink<String> backLink;
     private WebMarkupContainer content;
     private AjaxLink<String> glossaryLink;
-    private Map<TopicItem, String> topicItemsContents = new HashMap<TopicItem, String>(  );
     private WebMarkupContainer lightBox;
     private WebMarkupContainer docImage;
     private Label docCaption;
@@ -110,7 +110,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     private void init() {
         addLightbox( "images/delete.png", "" );
         addTitle();
-        addGlossary();
+        addGlossaryLink();
         addBack();
         content = new WebMarkupContainer( "content" );
         content.setOutputMarkupId( true );
@@ -146,24 +146,17 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
     private void initContent() {
         Topic topic = getTopic();
-        add( new HelpAjaxBehavior( topicItemsContents, topic.getTopicItems(), imagingService )  {
-            @Override
-            protected void respond( AjaxRequestTarget target ) {
-                IRequestParameters params = RequestCycle.get().getRequest().getRequestParameters();
-                String imageSrc = params.getParameterValue( HelpAjaxBehavior.IMAGE_PARAM ).toString();
-                String caption = params.getParameterValue( HelpAjaxBehavior.CAPTION_PARAM ).toString("");
-                if ( imageSrc != null ) {
-                    addLightbox( imageSrc, caption.replaceAll("_", " ") );
-                    makeVisible( lightBox, true );
-                    target.add( lightBox );
-                }
-            }
-        });
         addTopicName( topic );
         addTopicItems( topic );
         addDefinitions( getSection(), topic );
         addDoNext( getSection(), topic );
         addDocumentLink( topic );
+    }
+
+    @Override
+    protected void onRender() {
+        super.onRender();
+       // addTopicItems( getTopic() );
     }
 
     private void addTitle() {
@@ -179,7 +172,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         addOrReplace( titleLink );
     }
 
-    private void addGlossary() {
+    private void addGlossaryLink() {
         glossaryLink = new AjaxLink<String>( "glossary" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -193,6 +186,11 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         glossaryLink.setOutputMarkupId( true );
         makeVisible( glossaryLink, getUserRole().hasGlossary() );
         addOrReplace( glossaryLink );
+    }
+
+    private Map<String, TopicItem> getGlossary() {
+        UserRole userRole = getUserRole();
+        return guide.getGlossary( userRole );
     }
 
 
@@ -259,6 +257,35 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         topicItemListView.setOutputMarkupId( true );
         content.addOrReplace( topicItemListView );
     }
+
+    private Label getDescriptionLabel( TopicItem topicItem ) {
+        final StringBuilder htmlBuilder = new StringBuilder(  );
+        Label label = new Label( "description", "" ) {
+            @Override
+            protected void onRender() {
+                super.onRender();
+                getResponse().write( htmlBuilder.toString() );
+            }
+        };
+        label.setEscapeModelStrings( false );
+        label.setOutputMarkupId( true );
+        label.add( new HelpAjaxBehavior( htmlBuilder, topicItem, getGlossary(), imagingService )  {
+            @Override
+            protected void respond( AjaxRequestTarget target ) {
+                IRequestParameters params = RequestCycle.get().getRequest().getRequestParameters();
+                String imageSrc = params.getParameterValue( HelpAjaxBehavior.IMAGE_PARAM ).toString();
+                String caption = params.getParameterValue( HelpAjaxBehavior.CAPTION_PARAM ).toString("");
+                if ( imageSrc != null ) {
+                    addLightbox( imageSrc, caption.replaceAll("_", " ") );
+                    makeVisible( lightBox, true );
+                    target.add( lightBox );
+                }
+            }
+        });
+
+        return label;
+    }
+
 
     private void addDefinitions( final Section section, Topic topic ) {
         List<TopicRef> topicRefs = topic.getSortedDefinitions( getUserRole() );
@@ -444,12 +471,6 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         }
     }
 
-    private Label getDescriptionLabel( TopicItem topicItem ) {
-        Label label = new Label( "description", topicItemsContents.get( topicItem ) );
-        label.setEscapeModelStrings( false );
-        return label;
-    }
-
 
 
     private void addDocumentLink( Topic topic ) {
@@ -484,7 +505,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         this.userRoleId = userRoleId;
         this.sectionId = sectionId;
         this.topicId = topicId;
-        addGlossary();
+        addGlossaryLink();
         target.add( glossaryLink );
         initContent();
         target.add( content );
@@ -499,22 +520,26 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
     private Section getSection() {
         UserRole userRole = getUserRole();
-        return userRole != null
+        Section section =  userRole != null
                 ? userRole.findSection(
                 sectionId == null
                         ? userRole.getSections().get( 0 ).getId()
                         : sectionId )
                 : null;
+        sectionId = section == null ? null : section.getId();
+        return section;
     }
 
     private Topic getTopic() {
         Section section = getSection();
-        return section != null ?
+        Topic topic = section != null ?
                 section.findTopic(
                         topicId == null
                                 ? section.getTopics().get( 0 ).getId()
                                 : topicId )
                 : null;
+        topicId = topic == null ? null : topic.getId();
+        return topic;
     }
 
     // HelpScriptable - Script support
