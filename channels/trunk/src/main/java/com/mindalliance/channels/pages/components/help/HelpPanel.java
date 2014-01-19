@@ -151,12 +151,6 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         addDocumentLink( topic );
     }
 
-    @Override
-    protected void onRender() {
-        super.onRender();
-        // addTopicItems( getTopic() );
-    }
-
     private void addTitle() {
         AjaxLink<String> titleLink = new AjaxLink<String>( "title" ) {
             @Override
@@ -276,6 +270,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                 htmlBuilder,
                 guide,
                 getUserRole(),
+                topicId,
                 topicItem,
                 getGlossary(),
                 imagingService ) {

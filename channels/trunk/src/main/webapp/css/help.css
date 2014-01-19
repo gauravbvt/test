@@ -99,7 +99,7 @@ div.quick-help-content p {
     padding: 0 0 7px;
 }
 
-div.quick-help-content p a {
+/*div.quick-help-content p a {
     border-bottom: 1px dotted #1F7F5C;
     color: #1F7F5C;
     font-weight: normal;
@@ -109,6 +109,7 @@ div.quick-help-content p a:hover {
     border-bottom: 1px dotted #0b563b;
 	color: #0b563b;
 }
+*/
 
 div.quick-help-content ul {
 	margin: 0 0 0 20px;
@@ -196,8 +197,8 @@ div.lightbox {
     z-index: 100001;
 }
 
-.definition {
-    color: darkgray;
+.definition a {
+    color: #4F4F4F;
     cursor: pointer;
     font-weight: bold;
     font-style: italic;

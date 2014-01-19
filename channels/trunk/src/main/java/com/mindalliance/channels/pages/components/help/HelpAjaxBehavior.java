@@ -39,6 +39,7 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     private static final String GLOSSARY_TERM_PATTERN_FORMAT = "\\W({0}s?)\\W";
     private Guide guide;
     private UserRole userRole;
+    private String topicId;
     private TopicItem topicItem;
     private StringBuilder htmlBuilder;
     private Map<String, String[]> glossary;
@@ -47,11 +48,13 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     public HelpAjaxBehavior( StringBuilder htmlBuilder,
                              Guide guide,
                              UserRole userRole,
+                             String topicId,
                              TopicItem topicItem,
                              Map<String, String[]> glossary,
                              ImagingService imagingService ) {
         this.guide = guide;
         this.userRole = userRole;
+        this.topicId = topicId;
         this.topicItem = topicItem;
         this.htmlBuilder = htmlBuilder;
         this.glossary = glossary;
@@ -74,8 +77,10 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     private String processGlossary( String html ) {
         Set<String> terms = glossary.keySet();
         for ( String term : terms ) {
-            if ( term.matches( "[\\w\\s-]*" ) ) // make sure it is a valid glossary term
+            if ( term.matches( "[\\w\\s-]*" ) ) { // make sure it is a valid glossary term
+                if ( !glossary.get(term)[1].equals( topicId ) ) // don't link a glossary term in itw own definition
                 html = processGlossaryTerm( html, term );
+            }
         }
         return html;
     }
