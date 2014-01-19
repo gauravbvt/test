@@ -2,7 +2,10 @@ package com.mindalliance.channels.pages.components.help;
 
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.guide.Guide;
+import com.mindalliance.channels.guide.Topic;
 import com.mindalliance.channels.guide.TopicItem;
+import com.mindalliance.channels.guide.UserRole;
 import info.bliki.wiki.model.WikiModel;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -28,19 +31,27 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     public static final String IMAGE_PARAM = "image";
     public static final String CAPTION_PARAM = "caption";
     public static final String THUMBNAIL_CLASS = "thumbnail";
+    public static final String SECTION_PARAM = "section";
+    public static final String TOPIC_PARAM = "topic";
 
     // Group 1 = path to image file, 2 = image file name, 3= caption
     private static final Pattern IIMAGE_PATTERN = Pattern.compile( "<div\\s.*>\\n*\\s*<img src=\"images/([^\"]+/)(\\w+.\\w+)\".*alt=\"([^\"]*)\".*>\\n*\\s*</div>" );
     private static final String GLOSSARY_TERM_PATTERN_FORMAT = "\\W({0}s?)\\W";
+    private Guide guide;
+    private UserRole userRole;
     private TopicItem topicItem;
     private StringBuilder htmlBuilder;
-    private Map<String, TopicItem> glossary;
+    private Map<String, String[]> glossary;
     private ImagingService imagingService;
 
     public HelpAjaxBehavior( StringBuilder htmlBuilder,
+                             Guide guide,
+                             UserRole userRole,
                              TopicItem topicItem,
-                             Map<String, TopicItem> glossary,
+                             Map<String, String[]> glossary,
                              ImagingService imagingService ) {
+        this.guide = guide;
+        this.userRole = userRole;
         this.topicItem = topicItem;
         this.htmlBuilder = htmlBuilder;
         this.glossary = glossary;
@@ -81,13 +92,13 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
             if ( insideMarker( html, end ) ) {
                 sb.append( html.substring( cursor, end ) );
             } else {
-                String replacement = " <span class=\"definition\" title=\""
-                        + firstParagraphOf( glossary.get( term ).getDescription() )
-                        + "\">"
-                        + matcher.group( 1 )
-                        + "</span> ";
+                String[] glossaryEntry = glossary.get( term );
+                String glossarySectionId = glossaryEntry[0];
+                String glossaryTopicId = glossaryEntry[1];
+                Topic glossaryTopic = guide.findTopic( userRole, glossarySectionId, glossaryTopicId  );
+                String glossaryTopicLink = makeGlossaryTopicLink( glossarySectionId, glossaryTopic, matcher.group( 1 ) );
                 sb.append( html.substring( cursor, begin ) )
-                        .append( replacement );
+                        .append( glossaryTopicLink );
             }
             cursor = end;
         }
@@ -102,7 +113,24 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
                 && closeIndex < openIndex;
     }
 
-    private String firstParagraphOf( String string ) {
+    private String makeGlossaryTopicLink( String glossarySectionId, Topic glossaryTopic, String match ) {
+        StringBuilder sb = new StringBuilder(  );
+        TopicItem definitionItem = glossaryTopic.getTopicItems().get( 0 );
+        String itemSpan = " <span title=\""
+                + firstParagraphOf( definitionItem.getDescription() )
+                + "\">"
+                + match
+                + "</span> ";
+
+        sb.append( "<span class=\"definition\"> <a href=\"" )
+                .append( makeGlossaryCallback( glossarySectionId, glossaryTopic.getId() ) )
+                .append( "\">" )
+                .append( itemSpan )
+                .append( "</a></span>" );
+        return sb.toString();
+    }
+
+     private String firstParagraphOf( String string ) {
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader( new StringReader( string ) );
         int emptyLineCount = 0;
@@ -191,6 +219,22 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
         }
         return sb.toString();
     }
+
+    private String makeGlossaryCallback( String glossarySectionId, String glossaryTopicId ) {
+        StringBuilder scriptBuilder = new StringBuilder();
+        scriptBuilder.append( "wicketAjaxGet('" )
+                .append( getCallbackUrl() )
+                .append( "&" ).append( SECTION_PARAM ).append( "=" ).append(glossarySectionId ).append( "" )
+                .append( "&" ).append( TOPIC_PARAM ).append( "=" ).append( glossaryTopicId ).append( "" );
+        scriptBuilder.append( "'" );
+        String script = scriptBuilder.toString();
+        CharSequence callbackScript = generateCallbackScript( script );
+        StringBuilder callbackBuilder = new StringBuilder();
+        callbackBuilder.append( "javascript:" )
+                .append( callbackScript );
+        return callbackBuilder.toString().replaceAll( "&amp;", "&" );
+    }
+
 
     private String makeCallback( String imagePath, String imageName, String caption ) {
         StringBuilder scriptBuilder = new StringBuilder();

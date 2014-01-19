@@ -132,15 +132,22 @@ public class Guide implements Serializable {
         }
     }
 
-    public Map<String, TopicItem> getGlossary( UserRole userRole ) {
-        Map<String, TopicItem> glossary = new HashMap<String, TopicItem>();
+     public Map<String, String[]> getGlossary( UserRole userRole ) {
+        Map<String, String[]> glossary = new HashMap<String, String[]>();
         Topic topic = findTopic( userRole, userRole.getGlossarySection(), userRole.getGlossaryTopic() );
         if ( topic != null ) {
             for ( TopicRef topicRef : topic.getDefinitions() ) {
                 Topic definitionTopic = findTopic( userRole, topicRef.getSectionId(), topicRef.getTopicId() );
                 if ( definitionTopic != null ) {
-                    if (! definitionTopic.getTopicItems().isEmpty() )
-                        glossary.put( definitionTopic.getName().toLowerCase(), definitionTopic.getTopicItems().get( 0 ) );
+                    if (! definitionTopic.getTopicItems().isEmpty() ) {
+                        String[] glossaryEntry = new String[2];
+                        glossaryEntry[0] = topicRef.getSectionId();
+                        glossaryEntry[1] = topicRef.getTopicId();
+                        glossary.put( definitionTopic.getName().toLowerCase(), glossaryEntry );
+                    }
+                    else {
+                        LOG.warn( "Glossary topic without a definition item: " + topic.getId() );
+                    }
                 }
             }
         }

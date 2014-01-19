@@ -40,7 +40,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -54,7 +53,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -132,7 +130,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         docImage.add( new AttributeModifier( "src", imageSrc ) );
         docImage.setOutputMarkupId( true );
         lightBox.add( docImage );
-        docCaption = new Label( "caption", caption);
+        docCaption = new Label( "caption", caption );
         docCaption.setOutputMarkupId( true );
         lightBox.add( docCaption );
         addTipTitle( lightBox, "Click to close" );
@@ -148,7 +146,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         Topic topic = getTopic();
         addTopicName( topic );
         addTopicItems( topic );
-        addDefinitions( getSection(), topic );
+        addDefinitions( topic );
         addDoNext( getSection(), topic );
         addDocumentLink( topic );
     }
@@ -156,7 +154,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     @Override
     protected void onRender() {
         super.onRender();
-       // addTopicItems( getTopic() );
+        // addTopicItems( getTopic() );
     }
 
     private void addTitle() {
@@ -188,9 +186,14 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         addOrReplace( glossaryLink );
     }
 
-    private Map<String, TopicItem> getGlossary() {
+    private Map<String, String[]> getGlossary() {
         UserRole userRole = getUserRole();
         return guide.getGlossary( userRole );
+    }
+
+    private String getGlossarySectionId() {
+        UserRole userRole = getUserRole();
+        return userRole.getGlossarySection();
     }
 
 
@@ -258,8 +261,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         content.addOrReplace( topicItemListView );
     }
 
-    private Label getDescriptionLabel( TopicItem topicItem ) {
-        final StringBuilder htmlBuilder = new StringBuilder(  );
+    private Label getDescriptionLabel(  TopicItem topicItem ) {
+        final StringBuilder htmlBuilder = new StringBuilder();
         Label label = new Label( "description", "" ) {
             @Override
             protected void onRender() {
@@ -269,25 +272,37 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         };
         label.setEscapeModelStrings( false );
         label.setOutputMarkupId( true );
-        label.add( new HelpAjaxBehavior( htmlBuilder, topicItem, getGlossary(), imagingService )  {
+        label.add( new HelpAjaxBehavior(
+                htmlBuilder,
+                guide,
+                getUserRole(),
+                topicItem,
+                getGlossary(),
+                imagingService ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 IRequestParameters params = RequestCycle.get().getRequest().getRequestParameters();
-                String imageSrc = params.getParameterValue( HelpAjaxBehavior.IMAGE_PARAM ).toString();
-                String caption = params.getParameterValue( HelpAjaxBehavior.CAPTION_PARAM ).toString("");
-                if ( imageSrc != null ) {
-                    addLightbox( imageSrc, caption.replaceAll("_", " ") );
-                    makeVisible( lightBox, true );
-                    target.add( lightBox );
+                if ( params.getParameterNames().contains( IMAGE_PARAM ) ) {
+                    String imageSrc = params.getParameterValue( IMAGE_PARAM ).toString();
+                    String caption = params.getParameterValue( CAPTION_PARAM ).toString( "" );
+                    if ( imageSrc != null ) {
+                        addLightbox( imageSrc, caption.replaceAll( "_", " " ) );
+                        makeVisible( lightBox, true );
+                        target.add( lightBox );
+                    }
+                } else if ( params.getParameterNames().contains( SECTION_PARAM ) ) {
+                    String sectionId = params.getParameterValue( SECTION_PARAM ).toString( "" );
+                    String topicId = params.getParameterValue( TOPIC_PARAM ).toString( "" );
+                    openOn( sectionId, topicId, target );
                 }
             }
-        });
+        } );
 
         return label;
     }
 
 
-    private void addDefinitions( final Section section, Topic topic ) {
+    private void addDefinitions( Topic topic ) {
         List<TopicRef> topicRefs = topic.getSortedDefinitions( getUserRole() );
         WebMarkupContainer doDefinitionsContainer = new WebMarkupContainer( "definitionsContainer" );
         doDefinitionsContainer.setOutputMarkupId( true );
@@ -309,7 +324,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                 AjaxLink<String> defLink = new AjaxLink<String>( "definitionLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        openOn( defSection, defTopic, target );
+                        if ( defSection != null && defTopic != null )
+                            openOn( defSection.getId(), defTopic.getId(), target );
                     }
                 };
                 String labelString = defTopic == null ? "???" : defTopic.getName();
@@ -345,17 +361,9 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                 AjaxLink<String> nextLink = new AjaxLink<String>( "doNextLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        openOn( nextSection, nextTopic, target );
+                        openOn( nextSection.getId(), nextTopic.getId(), target );
                     }
                 };
-/*
-                String sectionPrefix = ( nextSection == null || nextSection.equals( getSection() )
-                        ? ""
-                        : "(" + nextSection.getName() + ") " );
-
-                String labelString = sectionPrefix
-                        + ( nextTopic == null ? "???" : nextTopic.getName() );
-*/
                 String labelString = nextTopic == null ? "???" : nextTopic.getName();
                 Label doNextLabel = new Label( "doNextText", labelString );
                 nextLink.add( doNextLabel );
@@ -378,11 +386,11 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         }
     }
 
-    private void openOn( Section section, Topic topic, AjaxRequestTarget target ) {
+    private void openOn( String sectionId, String topicId, AjaxRequestTarget target ) {
         rememberState();
         addBack();
         target.add( backLink );
-        selectTopicInSection( getUserRoleId(), section.getId(), topic.getId(), target );
+        selectTopicInSection( getUserRoleId(), sectionId, topicId, target );
     }
 
 
@@ -472,7 +480,6 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     }
 
 
-
     private void addDocumentLink( Topic topic ) {
         TopicDocument topicDocument = topic.getDocument();
         WebMarkupContainer docLink = new WebMarkupContainer( "documentLink" );
@@ -520,7 +527,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
     private Section getSection() {
         UserRole userRole = getUserRole();
-        Section section =  userRole != null
+        Section section = userRole != null
                 ? userRole.findSection(
                 sectionId == null
                         ? userRole.getSections().get( 0 ).getId()
