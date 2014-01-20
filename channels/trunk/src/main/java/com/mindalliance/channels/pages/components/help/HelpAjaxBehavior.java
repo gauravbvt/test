@@ -31,12 +31,13 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     public static final String IMAGE_PARAM = "image";
     public static final String CAPTION_PARAM = "caption";
     public static final String THUMBNAIL_CLASS = "thumbnail";
+    public static final String DEFINITION_CLASS = "definition";
     public static final String SECTION_PARAM = "section";
     public static final String TOPIC_PARAM = "topic";
 
     // Group 1 = path to image file, 2 = image file name, 3= caption
     private static final Pattern IIMAGE_PATTERN = Pattern.compile( "<div\\s.*>\\n*\\s*<img src=\"images/([^\"]+/)(\\w+.\\w+)\".*alt=\"([^\"]*)\".*>\\n*\\s*</div>" );
-    private static final String GLOSSARY_TERM_PATTERN_FORMAT = "\\W({0}s?)\\W";
+    private static final String GLOSSARY_TERM_PATTERN_FORMAT = "(\\W)({0})(\\W)";
     private Guide guide;
     private UserRole userRole;
     private String topicId;
@@ -71,15 +72,15 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
         String content = trimAllLines( string );
         WikiModel wikiModel = new WikiModel( "images/doc/${image}", "" );
         String html = wikiModel.render( content );
-        return processGlossary( processImages( html ) ); // todo - don't process a term in its own definition
+        return processGlossary( processImages( html ) );
     }
 
     private String processGlossary( String html ) {
         Set<String> terms = glossary.keySet();
         for ( String term : terms ) {
             if ( term.matches( "[\\w\\s-]*" ) ) { // make sure it is a valid glossary term
-                if ( !glossary.get(term)[1].equals( topicId ) ) // don't link a glossary term in itw own definition
-                html = processGlossaryTerm( html, term );
+                if ( !glossary.get( term )[1].equals( topicId ) ) // don't link a glossary term in itw own definition
+                    html = processGlossaryTerm( html, term );
             }
         }
         return html;
@@ -88,7 +89,7 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     private String processGlossaryTerm( String html, String term ) {
         StringBuilder sb = new StringBuilder();
         int cursor = 0;
-        String patternString = MessageFormat.format( GLOSSARY_TERM_PATTERN_FORMAT, term );
+        String patternString = MessageFormat.format( GLOSSARY_TERM_PATTERN_FORMAT, makeTermRegex( term ) );
         Pattern pattern = Pattern.compile( patternString, Pattern.CASE_INSENSITIVE );
         Matcher matcher = pattern.matcher( html );
         while ( matcher.find() ) {
@@ -100,14 +101,40 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
                 String[] glossaryEntry = glossary.get( term );
                 String glossarySectionId = glossaryEntry[0];
                 String glossaryTopicId = glossaryEntry[1];
-                Topic glossaryTopic = guide.findTopic( userRole, glossarySectionId, glossaryTopicId  );
-                String glossaryTopicLink = makeGlossaryTopicLink( glossarySectionId, glossaryTopic, matcher.group( 1 ) );
+                Topic glossaryTopic = guide.findTopic( userRole, glossarySectionId, glossaryTopicId );
+                String glossaryTopicLink = makeGlossaryTopicLink( glossarySectionId, glossaryTopic, matcher.group( 2 ) );
                 sb.append( html.substring( cursor, begin ) )
-                        .append( glossaryTopicLink );
+                        .append( matcher.group( 1 ) )
+                        .append( glossaryTopicLink )
+                        .append( matcher.group( 3 ) );
             }
             cursor = end;
         }
         sb.append( html.substring( cursor ) );
+        return sb.toString();
+    }
+
+    private String makeTermRegex( String term ) {
+        StringBuilder sb = new StringBuilder();
+        String[] words = term.split( " " );
+        for ( int i = 0; i < words.length; i++ ) {
+            String word = words[i];
+            if ( word.endsWith( "y" ) ) {
+          //      sb.append( "(" );
+                sb.append( word );
+                sb.append( "|" );
+                sb.append( word.substring( 0, word.length() - 1 ) ).append( "ies" );
+           //     sb.append( ")" );
+            } else if ( word.endsWith( "s" ) ) {
+                sb.append( word );
+            } else {
+                sb.append( word )
+                        .append( "s?" );
+            }
+            if ( i < words.length - 1 ) {
+                sb.append( " " );
+            }
+        }
         return sb.toString();
     }
 
@@ -119,15 +146,16 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
     }
 
     private String makeGlossaryTopicLink( String glossarySectionId, Topic glossaryTopic, String match ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         TopicItem definitionItem = glossaryTopic.getTopicItems().get( 0 );
-        String itemSpan = " <span title=\""
+        String itemSpan = "<span title=\""
                 + firstParagraphOf( definitionItem.getDescription() )
                 + "\">"
                 + match
-                + "</span> ";
+                + "</span>";
 
-        sb.append( "<span class=\"definition\"> <a href=\"" )
+        sb.append( "<span class=\"" ).append( DEFINITION_CLASS ).append( "\">" )
+                .append( "<a href=\"" )
                 .append( makeGlossaryCallback( glossarySectionId, glossaryTopic.getId() ) )
                 .append( "\">" )
                 .append( itemSpan )
@@ -135,7 +163,7 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
         return sb.toString();
     }
 
-     private String firstParagraphOf( String string ) {
+    private String firstParagraphOf( String string ) {
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader( new StringReader( string ) );
         int emptyLineCount = 0;
@@ -147,7 +175,7 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
                     emptyLineCount++;
                     sb.append( " " );
                 } else {
-                    sb.append( trimmed );
+                    sb.append( trimmed ).append( " " );
                 }
             }
         } catch ( IOException e ) {
@@ -229,7 +257,7 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
         StringBuilder scriptBuilder = new StringBuilder();
         scriptBuilder.append( "wicketAjaxGet('" )
                 .append( getCallbackUrl() )
-                .append( "&" ).append( SECTION_PARAM ).append( "=" ).append(glossarySectionId ).append( "" )
+                .append( "&" ).append( SECTION_PARAM ).append( "=" ).append( glossarySectionId ).append( "" )
                 .append( "&" ).append( TOPIC_PARAM ).append( "=" ).append( glossaryTopicId ).append( "" );
         scriptBuilder.append( "'" );
         String script = scriptBuilder.toString();

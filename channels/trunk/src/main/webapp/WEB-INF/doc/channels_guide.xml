@@ -1339,7 +1339,7 @@
                         * define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
                         * compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
                         * define for each segment the information sharing and tasks required to deal with these risks and opportunities
-                        * profile the "entities" (events, phases, organizations, roles etc.) referenced in the collaboration template
+                        * profile the entities (events, phases, organizations, roles etc.) referenced in the collaboration template
                         * report issues in addition to those automatically detected by Channels
                         * view analytics to better understand the consequences, strengths and weaknesses of the template
                     </description>
