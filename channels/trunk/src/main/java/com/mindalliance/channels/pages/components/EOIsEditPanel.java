@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.LinkClassifications;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.EOIsHolder;
@@ -33,6 +34,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +53,12 @@ import java.util.Set;
  * Time: 8:01 PM
  */
 public class EOIsEditPanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( EOIsEditPanel.class );
+
 
     /**
      * EOIs list container.
@@ -402,13 +411,17 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             List<ElementOfInformation> allEOIs = new ArrayList<ElementOfInformation>();
             allEOIs.addAll( getEOIHolder().getEffectiveEois() );
             allEOIs.addAll( newEOIs );
-            doCommand(
-                    UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                            "eois",
-                            allEOIs,
-                            UpdateObject.Action.Set )
-            );
-            populated = true;
+            try {
+                doCommand(
+                        UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                                "eois",
+                                allEOIs,
+                                UpdateObject.Action.Set )
+                );
+                populated = true;
+            } catch ( CommandException e ) {
+                LOG.warn( "Failed to autopopulate" );
+            }
         }
         return populated;
     }
@@ -446,7 +459,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return newEois;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromFunctionAcquired( Part part, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -475,7 +488,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromFunctionNeeded( Part part, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -744,10 +757,14 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
     }
 
     private void unlinkClassifications() {
-        doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                "classificationsLinked",
-                false,
-                UpdateObject.Action.Set ) );
+        try {
+            doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                    "classificationsLinked",
+                    false,
+                    UpdateObject.Action.Set ) );
+        } catch ( CommandException e ) {
+            LOG.warn( "Failed to unlink classifications" );
+        }
     }
 
     private Change linkClassifications() {
@@ -820,10 +837,14 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         public void setConfirmed( boolean val ) {
             assert !markedForCreation;
             if ( !val && isModifiable() ) {
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                        "localEois",
-                        eoi,
-                        UpdateObject.Action.Remove ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                            "localEois",
+                            eoi,
+                            UpdateObject.Action.Remove ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set confirmed" );
+                }
             }
         }
 
@@ -836,18 +857,26 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             if ( !content.isEmpty() ) {
                 if ( !markedForCreation && isModifiable() ) {
                     if ( !getEOIHolder().hasEffectiveEoiNamedExactly( content ) ) {
-                        doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                                "effectiveEois[" + index + "].content",
-                                content,
-                                UpdateObject.Action.Set ) );
+                        try {
+                            doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                                    "effectiveEois[" + index + "].content",
+                                    content,
+                                    UpdateObject.Action.Set ) );
+                        } catch ( CommandException e ) {
+                            LOG.warn( " Failed to set content" );
+                        }
                     }
                 } else {
                     if ( !getEOIHolder().getEffectiveEois().contains( eoi ) ) {
                         eoi.setContent( content );
-                        doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                                "localEois",
-                                eoi,
-                                UpdateObject.Action.AddUnique ) );
+                        try {
+                            doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                                    "localEois",
+                                    eoi,
+                                    UpdateObject.Action.AddUnique ) );
+                        } catch ( CommandException e ) {
+                            LOG.warn( "Failed to set content" );
+                        }
                     }
                 }
             }
@@ -859,10 +888,14 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
 
         public void setTimeSensitive( boolean val ) {
             if ( isModifiable() ) {
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                        "effectiveEois[" + index + "].timeSensitive",
-                        val,
-                        UpdateObject.Action.Set ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                            "effectiveEois[" + index + "].timeSensitive",
+                            val,
+                            UpdateObject.Action.Set ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set time sensitive" );
+                }
             }
         }
 
@@ -873,10 +906,14 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         public void setDescription( String val ) {
             if ( isModifiable() ) {
                 String value = val == null ? "" : val.trim();
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                        "effectiveEois[" + index + "].description",
-                        value,
-                        UpdateObject.Action.Set ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                            "effectiveEois[" + index + "].description",
+                            value,
+                            UpdateObject.Action.Set ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set description" );
+                }
             }
         }
 
@@ -887,10 +924,14 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         public void setSpecialHandling( String val ) {
             if ( isModifiable() ) {
                 String value = val == null ? "" : val.trim();
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                        "effectiveEois[" + index + "].specialHandling",
-                        value,
-                        UpdateObject.Action.Set ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                            "effectiveEois[" + index + "].specialHandling",
+                            value,
+                            UpdateObject.Action.Set ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set special handling" );
+                }
             }
         }
 

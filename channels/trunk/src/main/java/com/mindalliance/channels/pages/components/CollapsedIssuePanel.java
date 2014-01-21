@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -32,8 +33,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CollapsedIssuePanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( CollapsedIssuePanel.class );
+
 
     /**
      * Survey service.
@@ -197,22 +206,26 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Identifiable about = getIssue().getAbout();
         Command command;
         if ( about instanceof Waivable ) {
-            if ( about instanceof ModelObject ) { // the identifiable is persisted, store the waived detector name in it
-                command = UpdateObject.makeCommand(
-                        getUser().getUsername(),
-                        getIssue().getAbout(),
-                        "waivedIssueDetections",
-                        getIssue().getKind(),
-                        waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
-            } else { // the identifiable is not persistent so store the waiver in the plan community
-                command = UpdateObject.makeCommand(
-                        getUser().getUsername(),
-                        getPlanCommunity(),
-                        "issueDetectionWaivers",
-                        new IssueDetectionWaiver( about, getIssue().getKind() ),
-                        waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+            try {
+                if ( about instanceof ModelObject ) { // the identifiable is persisted, store the waived detector name in it
+                    command = UpdateObject.makeCommand(
+                            getUser().getUsername(),
+                            getIssue().getAbout(),
+                            "waivedIssueDetections",
+                            getIssue().getKind(),
+                            waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+                } else { // the identifiable is not persistent so store the waiver in the plan community
+                    command = UpdateObject.makeCommand(
+                            getUser().getUsername(),
+                            getPlanCommunity(),
+                            "issueDetectionWaivers",
+                            new IssueDetectionWaiver( about, getIssue().getKind() ),
+                            waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
+                }
+                doCommand( command );
+            } catch ( CommandException e ) {
+                LOG.warn( "Failed to set waived");
             }
-            doCommand( command );
         }
     }
 }

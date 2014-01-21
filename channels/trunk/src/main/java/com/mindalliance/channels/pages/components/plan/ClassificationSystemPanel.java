@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
@@ -24,6 +25,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,12 @@ import java.util.List;
  * Time: 10:36:45 AM
  */
 public class ClassificationSystemPanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ClassificationSystemPanel.class );
+
 
     private String newClassificationName;
     private Classification selectedClassification;
@@ -145,10 +154,14 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
         int index = getPlan().getClassifications().indexOf( classification );
         int level = getPlan().topLevelFor( classification.getSystem() );
         if ( index >= 0 ) {
-            doCommand( UpdateObject.makeCommand( getUser().getUsername(), getPlan(),
-                    "classifications[" + index + "].level",
-                    level - 1,
-                    UpdateObject.Action.Set ) );
+            try {
+                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getPlan(),
+                        "classifications[" + index + "].level",
+                        level - 1,
+                        UpdateObject.Action.Set ) );
+            } catch ( CommandException e ) {
+                LOG.warn( "Failed to move to top" );
+            }
         }
     }
 

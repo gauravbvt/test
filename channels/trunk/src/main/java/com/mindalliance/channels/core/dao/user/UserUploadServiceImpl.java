@@ -95,20 +95,26 @@ public class UserUploadServiceImpl implements UserUploadService {
         }
         try {
             BufferedImage image = ImageIO.read( upload.getInputStream() );
-            String fileName = user.getUsername() + "_" + Long.toString( System.currentTimeMillis() );
-            user.setPhoto( fileName );
-            File outputFile = new File( getUserPhotoUploadDirPath() + File.separator + fileName + ".png" );
-            ImageIO.write( image, "png", outputFile );
-            imagingService.squarifyAndIconize(
-                    outputFile.getAbsolutePath(),
-                    new File( getSquaredDirectory(), fileName + SQUARED + ".png" ),
-                    ICON );
-            LOG.info( "Uploaded file into ", outputFile );
-            return true;
+            if ( image != null ) {
+                String fileName = user.getUsername() + "_" + Long.toString( System.currentTimeMillis() );
+                user.setPhoto( fileName );
+                File outputFile = new File( getUserPhotoUploadDirPath() + File.separator + fileName + ".png" );
+                ImageIO.write( image, "png", outputFile );
+                imagingService.squarifyAndIconize(
+                        outputFile.getAbsolutePath(),
+                        new File( getSquaredDirectory(), fileName + SQUARED + ".png" ),
+                        ICON );
+                LOG.info( "Uploaded file into ", outputFile );
+                return true;
+            } else {
+                LOG.warn( "Invalid image file " + upload.getClientFileName() );
+                return false;
+            }
         } catch ( IOException e ) {
             LOG.warn( "Failed to upload user photo " + upload.getClientFileName(), e );
             return false;
         }
+
     }
 
     @Override
@@ -121,7 +127,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void cleanUpPhotos() {
         LOG.info( "Cleaning up uploaded photos" );
         int count = 0;

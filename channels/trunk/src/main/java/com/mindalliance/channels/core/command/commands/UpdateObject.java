@@ -15,13 +15,22 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
 
 /**
  * Abstract property update command.
  */
 public abstract class UpdateObject extends AbstractCommand {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractCommand.class );
+
 
     /**
      * Kinds of updates.
@@ -197,10 +206,18 @@ public abstract class UpdateObject extends AbstractCommand {
      * @return an UpdateObject command
      */
     public static UpdateObject makeCommand( String userName, Identifiable identifiable, String property, Object value,
-                                            Action action ) {
+                                            Action action ) throws CommandException {
+        try {
         return identifiable instanceof SegmentObject ?
                 new UpdateSegmentObject( userName, identifiable, property, value, action ) :
                 new UpdatePlanObject( userName, identifiable, property, value, action );
+        } catch ( Exception e ) {
+            LOG.error( "Failed to make command ", e );
+            throw new CommandException( "Failed to make update object command on "
+                    + identifiable
+                    + " with "
+                    + property );
+        }
     }
 
     @Override

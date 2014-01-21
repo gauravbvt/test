@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
@@ -25,6 +26,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -42,6 +45,12 @@ import java.util.List;
  * Time: 7:25:50 PM
  */
 public class ChannelListPanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ChannelListPanel.class );
+
 
     /**
      * List of wrapped channels.
@@ -254,18 +263,22 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             if ( action != UpdateObject.Action.AddUnique
                     || !channelable.getEffectiveChannels().contains( channel ) ) {
                 if ( channelable.isModelObject() ) {
-                    if ( channelable.isModifiableInProduction() ) {
-                        doUnsafeCommand(
-                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                        "modifiableChannels",
-                                        channel,
-                                        action ) );
-                    } else {
-                        doCommand( channelable,
-                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                        "modifiableChannels",
-                                        channel,
-                                        action ) );
+                    try {
+                        if ( channelable.isModifiableInProduction() ) {
+                            doUnsafeCommand(
+                                    UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                            "modifiableChannels",
+                                            channel,
+                                            action ) );
+                        } else {
+                            doCommand( channelable,
+                                    UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                            "modifiableChannels",
+                                            channel,
+                                            action ) );
+                        }
+                    } catch ( CommandException e ) {
+                        LOG.warn( "Failed to do action " + action, e );
                     }
                 } else {
                     if ( action == UpdateObject.Action.AddUnique )
@@ -311,11 +324,15 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     int index = channelable.getModifiableChannels().indexOf( channel );
                     if ( index >= 0 ) {
                         String oldFormatName = channel.getFormat() == null ? null : channel.getFormat().getName();
-                        doCommand( channelable,
-                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                        "modifiableChannels[" + index + "].format",
-                                        format,
-                                        UpdateObject.Action.Set ) );
+                        try {
+                            doCommand( channelable,
+                                    UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                            "modifiableChannels[" + index + "].format",
+                                            format,
+                                            UpdateObject.Action.Set ) );
+                        } catch ( CommandException e ) {
+                            LOG.warn( "Failed to set format" );
+                        }
                         if ( oldFormatName != null ) {
                             getCommander().cleanup( InfoFormat.class, oldFormatName );
                         }
@@ -335,11 +352,15 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 if ( channelable.isModelObject() ) {
                     int index = channelable.getModifiableChannels().indexOf( channel );
                     if ( index >= 0 )
-                        doCommand( channelable,
-                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                        "modifiableChannels[" + index + "].address",
-                                        address == null ? "" : address.trim(),
-                                        UpdateObject.Action.Set ) );
+                        try {
+                            doCommand( channelable,
+                                    UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                            "modifiableChannels[" + index + "].address",
+                                            address == null ? "" : address.trim(),
+                                            UpdateObject.Action.Set ) );
+                        } catch ( CommandException e ) {
+                            LOG.warn( "Failed to set address" );
+                        }
                 } else {
                     channelable.setAddress( channel, address );
                 }

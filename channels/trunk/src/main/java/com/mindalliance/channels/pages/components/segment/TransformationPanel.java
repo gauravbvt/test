@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.ElementOfInformation;
@@ -21,6 +22,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +38,12 @@ import java.util.List;
  * Time: 9:27:54 AM
  */
 public class TransformationPanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( TransformationPanel.class );
+
 
     private WebMarkupContainer subjectsContainer;
     private DropDownChoice<String> typeChoice;
@@ -197,12 +206,16 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
     public void setTypeLabel( String val ) {
         Transformation.Type type = Transformation.Type.valueOfLabel( val );
-        doCommand(
-                UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                        "eois[" + getEoiIndex() + "].transformation.type",
-                        type,
-                        UpdateObject.Action.Set )
-        );
+        try {
+            doCommand(
+                    UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                            "eois[" + getEoiIndex() + "].transformation.type",
+                            type,
+                            UpdateObject.Action.Set )
+            );
+        } catch ( CommandException e ) {
+            LOG.warn( "Failed to set type label" );
+        }
     }
 
     private Transformation getTransformation() {
@@ -243,12 +256,16 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
         public void removeSubject() {
             assert !isMarkedForCreation();
-            doCommand(
-                    UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                            "eois[" + getEoiIndex() + "].transformation.subjects",
-                            getSubject(),
-                            UpdateObject.Action.Remove )
-            );
+            try {
+                doCommand(
+                        UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                                "eois[" + getEoiIndex() + "].transformation.subjects",
+                                getSubject(),
+                                UpdateObject.Action.Remove )
+                );
+            } catch ( CommandException e ) {
+                LOG.warn( "Failed to remove subject" );
+            }
         }
 
         public Subject getSubject() {
@@ -260,12 +277,16 @@ public class TransformationPanel extends AbstractCommandablePanel {
         public void setSubject( Subject subject ) {
             assert isMarkedForCreation();
             if ( subject != null )
-                doCommand(
-                        UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                                "eois[" + getEoiIndex() + "].transformation.subjects",
-                                subject,
-                                UpdateObject.Action.AddUnique )
-                );
+                try {
+                    doCommand(
+                            UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
+                                    "eois[" + getEoiIndex() + "].transformation.subjects",
+                                    subject,
+                                    UpdateObject.Action.AddUnique )
+                    );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set subject" );
+                }
         }
 
         public String getSubjectLabel() {

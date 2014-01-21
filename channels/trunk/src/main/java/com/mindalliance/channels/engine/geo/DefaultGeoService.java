@@ -153,7 +153,7 @@ public class DefaultGeoService implements GeoService {
         }
 
         location.setCity( CITY_CODES.contains( toponym.getFeatureCode() ) ? toponym.getName()
-                                                                            : null );
+                : null );
         location.setCountryCode( toponym.getCountryCode() );
         try {
             location.setStateCode( toponym.getAdminCode1() );
@@ -166,7 +166,7 @@ public class DefaultGeoService implements GeoService {
         }
 
         location.setCityCode( CITY_CODES.contains( toponym.getFeatureCode() ) ? toponym.getFeatureCode()
-                                                                              : null );
+                : null );
         location.setLatitude( toponym.getLatitude() );
         location.setLongitude( toponym.getLongitude() );
         location.setGeonameId( toponym.getGeoNameId() );
@@ -185,15 +185,15 @@ public class DefaultGeoService implements GeoService {
 
         final List<String> geonameTokens = Arrays.asList( StringUtils.split( val, ",. :;-'\"" ) );
 
-        return CollectionUtils.exists( 
-            geoLocs,
-            new Predicate() {
-                @Override
-                public boolean evaluate( Object object ) {
-                    List<String> geoLocTokens = Arrays.asList( StringUtils.split( object.toString(), ",. :;-'\"" ) );
-                    return !CollectionUtils.intersection( geonameTokens, geoLocTokens ).isEmpty();
-                }
-            } );
+        return CollectionUtils.exists(
+                geoLocs,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        List<String> geoLocTokens = Arrays.asList( StringUtils.split( object.toString(), ",. :;-'\"" ) );
+                        return !CollectionUtils.intersection( geonameTokens, geoLocTokens ).isEmpty();
+                    }
+                } );
     }
 
     @Override
@@ -212,14 +212,14 @@ public class DefaultGeoService implements GeoService {
         if ( postalCode.isEmpty() || geoLocation == null )
             return false;
 
-        return CollectionUtils.exists( 
-            findNearbyPostalCodes( geoLocation ),
-            new Predicate() {
-                @Override
-                public boolean evaluate( Object object ) {
-                    return object.equals( postalCode );
-                }
-            } );
+        return CollectionUtils.exists(
+                findNearbyPostalCodes( geoLocation ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return object.equals( postalCode );
+                    }
+                } );
     }
 
     @Override
@@ -251,11 +251,11 @@ public class DefaultGeoService implements GeoService {
         }
     }
 
-    private String makeGoogleGeocodingURL( 
-        GeoLocation geoLocation,
-        String streetAddress,
-        String postalCode,
-        String outputFormat ) {
+    private String makeGoogleGeocodingURL(
+            GeoLocation geoLocation,
+            String streetAddress,
+            String postalCode,
+            String outputFormat ) {
         StringBuilder loc = new StringBuilder();
 
         if ( streetAddress != null ) {
@@ -310,28 +310,38 @@ public class DefaultGeoService implements GeoService {
             setPosition( place.getGeoLocation(), place.getStreetAddress(), place.getPostalCode() );
     }
 
-    private void setPosition( GeoLocation location, String streetAddress, String postalCode ) {
+    private boolean setPosition( GeoLocation location, String streetAddress, String postalCode ) {
+        int responseCode = 0;
         try {
             String coding = getGeoCoding( location, streetAddress, postalCode );
             String[] result = coding.split( "," );
-
-            if ( HttpServletResponse.SC_OK == Integer.valueOf( result[0] ) )
-                location.setPosition( 
-                    Double.valueOf( result[2] ),
-                    Double.valueOf( result[3] ),
-                    Integer.valueOf( result[1] ) );
+             responseCode = Integer.valueOf( result[0] );
+            if ( HttpServletResponse.SC_OK == responseCode ) {
+                location.setPosition(
+                        Double.valueOf( result[2] ),
+                        Double.valueOf( result[3] ),
+                        Integer.valueOf( result[1] ) );
+                return true;
+            }
 
         } catch ( IOException e ) {
-            throw new RuntimeException( e );
+            LOG.warn( "Failed to set position of geolocation "
+                    + location + " at "
+                    + streetAddress + ", "
+                    + postalCode
+                    + " [Response code = "
+                    + responseCode
+                    + "]");
         }
+        return false;
     }
 
     /**
      * Get CSV result from Google geocoder. Example: 200,6,42.730070,-73.690570
      *
-     * @param location the location
+     * @param location      the location
      * @param streetAddress a street address
-     * @param postalCode a postal code
+     * @param postalCode    a postal code
      * @return a string "http_code,precision,lat,long"
      * @throws IOException on errors
      */
@@ -355,13 +365,13 @@ public class DefaultGeoService implements GeoService {
 
     @Override
     public boolean isConfigured() {
-        return !( 
-            geonamesServer == null || geonamesUserName == null || geonamesToken == null || googleMapsAPIKey == null
-         );
+        return !(
+                geonamesServer == null || geonamesUserName == null || geonamesToken == null || googleMapsAPIKey == null
+        );
     }
 
     private String getLikelyGeoname( String name ) {
         return name != null && !name.trim().isEmpty() && isLikelyGeoname( name ) ? name
-                                                                                 : "";
+                : "";
     }
 }

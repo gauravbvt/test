@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -19,6 +20,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +36,12 @@ import java.util.List;
  * Time: 2:22:44 PM
  */
 public class ClassificationsPanel extends AbstractCommandablePanel {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ClassificationsPanel.class );
+
     /**
      * Classifiable model.
      */
@@ -263,10 +272,14 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             name = val;
             Classification classification = getClassification();
             if ( classification != null )
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getClassified(),
-                        getClassifiableProperty(),
-                        classification,
-                        UpdateObject.Action.AddUnique ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getClassified(),
+                            getClassifiableProperty(),
+                            classification,
+                            UpdateObject.Action.AddUnique ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to set name");
+                }
         }
 
         public void setSystem( String val ) {
@@ -285,10 +298,14 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             assert !markedForCreation;
             Classification oldClassification = getClassification();
             if ( oldClassification != null ) {
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getClassified(),
-                        getClassifiableProperty(),
-                        oldClassification,
-                        UpdateObject.Action.Remove ) );
+                try {
+                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getClassified(),
+                            getClassifiableProperty(),
+                            oldClassification,
+                            UpdateObject.Action.Remove ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to delete");
+                }
             }
         }
     }

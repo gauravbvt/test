@@ -98,7 +98,7 @@ public class LinkClassifications extends AbstractCommand {
     }
 
 
-    private MultiCommand makeSubCommands( EOIsHolder eoiHolder, boolean sameClassifications ) {
+    private MultiCommand makeSubCommands( EOIsHolder eoiHolder, boolean sameClassifications ) throws CommandException {
         MultiCommand subCommands = new MultiCommand( getUserName(), "link classifications - extra" );
         subCommands.setMemorable( false );
         subCommands.addCommand( UpdateObject.makeCommand( getUserName(),
