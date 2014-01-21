@@ -77,6 +77,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
 			
 		}
 		catch(UIAutomationException ue){
@@ -107,7 +108,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
 				
 			// Login page
 			stepNo++;
@@ -175,7 +176,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
 		    
 			// Sign out from home page
 		    stepNo++;
