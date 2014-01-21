@@ -11,7 +11,7 @@ import com.mindalliance.configuration.UIAutomationException;
 
 /**
  * HomePage.java class contains all the methods for components on Home Page.
- * Example "Click on Channels Setting"
+ * Example "Click on Channels Settings"
  * @author Afour
  *
  */

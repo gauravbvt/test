@@ -69,17 +69,42 @@ public class ChannelsAdmin {
 	}
 	
 	/**
+	 * Click the Add Plan button when same plan name is entered
+	 * @throws UIAutomationException 
+	 */
+	public String clickAddPlanButtonSamePlan() throws UIAutomationException
+	{
+		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+	
+		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(),"Invalid Template Notification");
+	}
+	/**
+	 * Click the Add Plan button after entering invalid plan name
+	 * @throws UIAutomationException 
+	 */
+	public String clickAddPlanButtonInvalidPlan() throws UIAutomationException
+	{
+		
+		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+		
+		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+	}
+	
+	/**
 	 * Click the Save Plan button
 	 * @throws UIAutomationException 
 	 */
-	public void clickSavePlanButton() throws UIAutomationException
+	public String clickSavePlanButton() throws UIAutomationException
 	{
 		
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		
-		UIActions.getText(fileName, "Settings Changed Notification", GlobalVariables.configuration.getAttrSearchList(),  "Settings Changed Notification");
+		return UIActions.getText(fileName, "Settings Changed Notification", GlobalVariables.configuration.getAttrSearchList(),  "Settings Changed Notification");
 	}
+	
 	
 	/**
 	 * Click the Save Plan button when Plan ids are the same
