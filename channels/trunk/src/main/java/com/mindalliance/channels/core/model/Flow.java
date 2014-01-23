@@ -114,6 +114,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private boolean published = false;
 
+    /**
+     * Whether the info product is time sensitive.
+     */
+    private boolean infoProductTimeSensitive = false;
+
     protected Flow() {
     }
 
@@ -255,6 +260,15 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public void setMaxDelay( String s ) {
         maxDelay = Delay.parse( s );
+    }
+
+    public boolean isInfoProductTimeSensitive() {
+        return infoProduct != null && infoProductTimeSensitive;
+    }
+
+    public void setInfoProductTimeSensitive( boolean infoProductTimeSensitive ) {
+        if ( infoProduct != null )
+            this.infoProductTimeSensitive = infoProductTimeSensitive;
     }
 
     public List<ElementOfInformation> getEois() {
@@ -1476,12 +1490,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public boolean isTimeSensitive() {
-        return getEffectiveEois().isEmpty()
+        return isInfoProductTimeSensitive()
+                || getEffectiveEois().isEmpty()
                 || CollectionUtils.exists( getEffectiveEois(), PredicateUtils.invokerPredicate( "isTimeSensitive" ) );
     }
 
     public boolean isTimeSensitive( final String eoiContent ) {
-        return CollectionUtils.exists(
+        return isInfoProductTimeSensitive() &&  infoProductHasEoiNamed( eoiContent )
+        || CollectionUtils.exists(
                 getEffectiveEois(),
                 new Predicate() {
                     @Override
@@ -1491,6 +1507,39 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     }
                 }
         );
+    }
+
+    @Override
+    public void setTimeSensitive( final String eoiContent, boolean value ) {
+        if ( infoProductHasEoiNamed( eoiContent ) ) {
+            setInfoProductTimeSensitive( value );
+        } else {
+            ElementOfInformation eoi = (ElementOfInformation) CollectionUtils.find(
+                    getLocalEois(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return Matcher.same(((ElementOfInformation)object).getContent(), eoiContent);
+                        }
+                    }
+            );
+            if ( eoi != null ) {
+                eoi.setTimeSensitive( value );
+            }
+        }
+    }
+
+
+    private boolean infoProductHasEoiNamed( final String eoiContent ) {
+        return infoProduct != null &&
+                CollectionUtils.exists(
+                        infoProduct.getEffectiveEois(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoiContent );
+                            }
+                        });
     }
 
     public List<TransmissionMedium> transmissionMedia() {
@@ -1597,6 +1646,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "referencesEventPhase", isReferencesEventPhase() );
         state.put( "canBypassIntermediate", isCanBypassIntermediate() );
         state.put( "receiptConfirmationRequested", isReceiptConfirmationRequested() );
+        state.put( "infoProductTimeSensitive", isInfoProductTimeSensitive() );
         return state;
     }
 
@@ -1639,6 +1689,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setCanBypassIntermediate( (Boolean) state.get( "canBypassIntermediate" ) );
         if ( state.containsKey( "receiptConfirmationRequested" ) )
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
+        if ( state.containsKey( "infoProductTimeSensitive" ) )
+            setInfoProductTimeSensitive( (Boolean) state.get( "infoProductTimeSensitive" ) );
     }
 
     public void setProductInfoFromName( AbstractModelObjectDao dao ) {

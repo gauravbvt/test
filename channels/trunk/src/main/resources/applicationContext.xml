@@ -359,6 +359,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ActorHasSupervisorOutsideOwnOrganization"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EntityNotInvolvedAgainstExpectation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UnresolvedProblemFeedback"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowInformationShouldBeInfoProduct"/>
             </list>
         </property>
     </bean>

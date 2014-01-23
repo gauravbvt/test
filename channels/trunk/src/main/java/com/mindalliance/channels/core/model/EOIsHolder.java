@@ -21,6 +21,8 @@ public interface EOIsHolder extends Identifiable {
     boolean isSpecialHandlingChangeable();
     boolean isDescriptionChangeable();
     boolean isTimeSensitive();
+    boolean isTimeSensitive( String eoiContent );
+    void setTimeSensitive( String eoiContent, boolean val );
     boolean canSetTimeSensitivity();
     String getEOIHolderLabel();
     boolean canSetElements();

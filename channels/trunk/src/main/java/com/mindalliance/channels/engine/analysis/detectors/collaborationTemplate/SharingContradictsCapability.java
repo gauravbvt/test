@@ -58,7 +58,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                                 "The sharing flow contradicts an explicit capability as follows: " + mismatchesToString(
                                         mismatches ) );
                         issue.setRemediation( "Modify the definition " + "of the contradicted capability"
-                                              + "\nor modify the definition of this sharing flow." );
+                                + "\nor modify the definition of this sharing flow." );
                         issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
                         issues.add( issue );
                     }
@@ -81,9 +81,9 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                 if ( Matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
                     matched = true;
                     if ( Classification.hasHigherClassification( offeredEoi.getClassifications(),
-                                                                 sharedEoi.getClassifications(), plan )
-                         || Classification.hasHigherClassification( sharedEoi.getClassifications(),
-                                                                    offeredEoi.getClassifications(), plan ) ) {
+                            sharedEoi.getClassifications(), plan )
+                            || Classification.hasHigherClassification( sharedEoi.getClassifications(),
+                            offeredEoi.getClassifications(), plan ) ) {
                         mismatches.add( '\"' + sharedEoi.getContent() + "\" has different secrecy classifications." );
                     }
                 }
@@ -104,15 +104,18 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
 
     private static void findChannelsMismatch( Flow sharing, Flow capability, List<String> mismatches,
                                               final Place locale ) {
-        for ( final Channel sharingChannel : sharing.getEffectiveChannels() ) {
-            boolean matched = CollectionUtils.exists( capability.getEffectiveChannels(), new Predicate() {
-                @Override
-                public boolean evaluate( Object object ) {
-                    return sharingChannel.getMedium().narrowsOrEquals( ( (Channel) object ).getMedium(), locale );
-                }
-            } );
-            if ( !matched )
-                mismatches.add( "Sharing over unexpected channel \"" + sharingChannel + "\"." );
+        List<Channel> capabilityChannels = capability.getEffectiveChannels();
+        if ( !capabilityChannels.isEmpty() ) { // capability specifies channels, else any channel is fine
+            for ( final Channel sharingChannel : sharing.getEffectiveChannels() ) {
+                boolean matched = CollectionUtils.exists( capabilityChannels, new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return sharingChannel.getMedium().narrowsOrEquals( ( (Channel) object ).getMedium(), locale );
+                    }
+                } );
+                if ( !matched )
+                    mismatches.add( "Sharing over unexpected channel \"" + sharingChannel + "\"." );
+            }
         }
     }
 

@@ -56,7 +56,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                             issue.setDescription( "\""
                                     + actor.getName()
                                     + "\" can not fulfill all commitments as required"
-                                    + " because of problems such as: "
+                                    + " because of these problems: "
                                     + ChannelsUtils.listToString( new ArrayList<String>( allProblems ), ", and " ) );
                             issue.setRemediation( "Make sure that all commitments of "
                                     + "\""

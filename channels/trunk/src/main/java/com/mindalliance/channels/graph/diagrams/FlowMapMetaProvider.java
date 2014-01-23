@@ -130,7 +130,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     if ( flow.isProhibited() )
                         flowName += " -PROHIBITED-";
                     if ( !flow.getRestrictions().isEmpty() )
-                        flowName += " (if " + flow.getRestrictionString( true ) + ")";
+                        flowName += " (if " + flow.getRestrictionString( !flow.isNeed() ) + ")";
                     String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                     return sanitize( label );
                 }
@@ -150,7 +150,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 flowName += " -PROHIBITED-";
             if ( !flow.getRestrictions().isEmpty() ) {
                 if ( highlighted )
-                    flowName += " (if " + flow.getRestrictionString( true ) + ")";
+                    flowName += " (if " + flow.getRestrictionString( !flow.isNeed() ) + ")";
                 else
                     flowName += "*";
             }
@@ -381,7 +381,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 }
                 String labelTooltip;
                 if ( !edge.getRestrictions().isEmpty() ) {
-                    labelTooltip = "Only if " + edge.getRestrictionString( true );
+                    labelTooltip = "Only if " + edge.getRestrictionString( !edge.isNeed() );
                 } else {
                     labelTooltip = sanitize( edge.getName() );
                 }
@@ -401,7 +401,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                         edgeTooltip += " - if task fails";
                     }
                     if ( edge.isRestricted() ) {
-                        edgeTooltip += " - only if " + edge.getRestrictionString( true );
+                        edgeTooltip += " - only if " + edge.getRestrictionString( !edge.isNeed() );
                     }
                     if ( edge.isReceiptConfirmationRequested() ) {
                         edgeTooltip += " - request receipt confirmation ";

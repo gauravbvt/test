@@ -2,9 +2,13 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.LinkClassifications;
+import com.mindalliance.channels.core.command.commands.ToggleTimeSensitivity;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
@@ -13,6 +17,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.pages.Channels;
@@ -230,7 +235,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         );
         confirmedCheckBox.setEnabled( wrapper.isModifiable() );
         if ( !wrapper.isModifiable() ) {
-            addTipTitle( confirmedCheckBox, "Standard element of information" );
+            addTipTitle( confirmedCheckBox, "From information product" );
         }
         item.addOrReplace( confirmedCheckBox );
     }
@@ -268,6 +273,8 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         );
         timeSensitiveCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
+                addEOIs();
+                target.add( eoisContainer );
                 update( target, new Change( Change.Type.Updated, getEOIHolder(), "eois" ) );
             }
         } );
@@ -390,6 +397,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         traceContainer.add( traceLink );
     }
 
+
     private List<EOIWrapper> getWrappers() {
         List<EOIWrapper> wrappers = new ArrayList<EOIWrapper>();
         List<ElementOfInformation> eois = getEOIHolder().getEffectiveEois();
@@ -459,7 +467,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return newEois;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromFunctionAcquired( Part part, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -488,7 +496,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromFunctionNeeded( Part part, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -517,7 +525,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromCapability( List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -564,7 +572,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return capability;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromNeed( List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -613,7 +621,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return need;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromOtherReceives( Part target, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -643,7 +651,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedFromOtherSends( Part source, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -673,7 +681,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean addGuessedSentFromReceives( Part source, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -883,19 +891,15 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
 
         public boolean isTimeSensitive() {
-            return eoi.isTimeSensitive();
+            return getEOIHolder().isTimeSensitive( eoi.getContent() );
         }
 
-        public void setTimeSensitive( boolean val ) {
-            if ( isModifiable() ) {
-                try {
-                    doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
-                            "effectiveEois[" + index + "].timeSensitive",
-                            val,
-                            UpdateObject.Action.Set ) );
-                } catch ( CommandException e ) {
-                    LOG.warn( "Failed to set time sensitive" );
-                }
+        public void setTimeSensitive( final boolean val ) {
+            if ( isTimeSensitive() != val ) {
+                doCommand( new ToggleTimeSensitivity(
+                        getUser().getUsername(),
+                        getEOIHolder(),
+                        eoi.getContent() ) );
             }
         }
 

@@ -506,7 +506,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public List<String> getEoiSummaries() {
         List<String> eoiStrings = new ArrayList<String>();
         for ( ElementOfInformation eoi : getFlow().getEffectiveEois() ) {
-            eoiStrings.add( eoi.getLabel() + ( eoi.isTimeSensitive() ? "*" : "" ) );
+            eoiStrings.add( eoi.getLabel() + ( getFlow().isTimeSensitive( eoi.getContent() ) ? "*" : "" ) );
         }
         if ( eoiStrings.isEmpty() ) {
             eoiStrings.add( "(none)" );

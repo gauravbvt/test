@@ -179,6 +179,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addEntityCell( item, "supervisor" );
                 addBooleanCell( item, "linked", "linked" );
                 addShowFlowsCell( item );
+                addAddItCell( item );
                 item.add( new AttributeModifier(
                         "class",
                         new Model<String>( cssClasses( item, count ) ) ) );
@@ -291,7 +292,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         );
         transferFromChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addJobTransferPanel( );
+                addJobTransferPanel();
                 target.add( jobTransferPanel );
             }
         } );
@@ -319,7 +320,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         this.copying = copying;
     }
 
-    private void addJobTransferPanel(  ) {
+    private void addJobTransferPanel() {
         if ( getTransferFrom() == null ) {
             jobTransferPanel = new Label( "jobTransfers", "" );
         } else {
@@ -408,14 +409,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 "confirmed",
                 new PropertyModel<Boolean>( jobWrapper, "confirmed" ) );
         confirmedCheckBox.setOutputMarkupId( true );
-        makeVisible( confirmedCheckBox, jobWrapper.canBeConfirmed() );
+        makeVisible( confirmedCheckBox, !jobWrapper.isMarkedForCreation() && jobWrapper.canBeConfirmed() );
         item.addOrReplace( confirmedCheckBox );
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
                     addJobPlaybook( null );
-                    target.add( flowsDiv );
                 }
+                target.add( flowsDiv );
                 jobsDiv.addOrReplace( makeJobsTable() );
                 target.add( jobsDiv );
                 update( target, new Change(
@@ -426,6 +427,32 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             }
         } );
         confirmedCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+    }
+
+    private void addAddItCell( ListItem<JobWrapper> item ) {
+        final JobWrapper jobWrapper = item.getModel().getObject();
+        WebMarkupContainer addItContainer = new WebMarkupContainer( "addItContainer" );
+        addItContainer.setOutputMarkupId( true );
+        AjaxLink<String> addItLink = new AjaxLink<String>( "addIt" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                jobWrapper.setConfirmed( true );
+                if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
+                    addJobPlaybook( null );
+                }
+                target.add( flowsDiv );
+                jobsDiv.addOrReplace( makeJobsTable() );
+                target.add( jobsDiv );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        getOrganization(),
+                        "jobs"
+                ) );
+            }
+        };
+        addItContainer.add( addItLink );
+        makeVisible( addItContainer, jobWrapper.isMarkedForCreation() && jobWrapper.canBeConfirmed() );
+        item.addOrReplace( addItContainer );
     }
 
     private void addBooleanCell( ListItem<JobWrapper> item, String id, String property ) {
@@ -474,7 +501,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         };
         titleField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addConfirmedCell( item );
+                if ( jobWrapper.isMarkedForCreation() ) {
+                    addAddItCell( item );
+                } else {
+                    addConfirmedCell( item );
+                }
                 target.add( item );
                 if ( !jobWrapper.isMarkedForCreation() && jobWrapper.isConfirmed() ) {
                     update( target, new Change(
@@ -723,9 +754,9 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setActorName( String name ) {
             String oldName = getActorName();
-            if ( name != null && !isSame( name, oldName ) ) {
+            if ( name == null || !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setActor( getQueryService().safeFindOrCreate( Actor.class, name ) );
+                    job.setActor( name == null ? null : getQueryService().safeFindOrCreate( Actor.class, name ) );
                 }
                 getCommander().cleanup( Actor.class, oldName );
             }
@@ -738,9 +769,9 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setRoleName( String name ) {
             String oldName = getRoleName();
-            if ( name != null && !isSame( name, oldName ) ) {
+            if ( name == null || !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setRole( getQueryService().safeFindOrCreateType( Role.class, name ) );
+                    job.setRole( name == null ? null : getQueryService().safeFindOrCreateType( Role.class, name ) );
                 }
                 getCommander().cleanup( Role.class, oldName );
             }
@@ -752,7 +783,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setJurisdictionName( String name ) {
             String oldName = getJurisdictionName();
-            if ( !isSame( name, oldName ) ) {
+            if ( name == null || !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     if ( name != null )
                         job.setJurisdiction( getQueryService().safeFindOrCreate( Place.class, name ) );
@@ -769,7 +800,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         public void setSupervisorName( String name ) {
             String oldName = getSupervisorName();
-            if ( !isSame( name, oldName ) ) {
+            if ( name == null || !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     if ( name != null )
                         job.setSupervisor( getQueryService().safeFindOrCreate( Actor.class, name ) );
@@ -933,7 +964,11 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             };
             entityField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                 protected void onUpdate( AjaxRequestTarget target ) {
-                    addConfirmedCell( item );
+                    if ( jobWrapper.isMarkedForCreation() ) {
+                        addAddItCell( item );
+                    } else {
+                        addConfirmedCell( item );
+                    }
                     target.add( item );
                     if ( !jobWrapper.isMarkedForCreation() ) {
                         update( target, new Change(

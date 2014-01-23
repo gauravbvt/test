@@ -151,7 +151,18 @@ public class InfoProduct extends ModelEntity implements EOIsHolder {
         this.classificationsLinked = classificationsLinked;
     }
 
-// EOIHolder
+    // EOIHolder
+
+    @Override
+    public boolean isTimeSensitive( String eoiContent ) {
+        return false;
+    }
+
+    @Override
+    public void setTimeSensitive( String eoiContent, boolean val ) {
+        // Do nothing
+    }
+
 
 
     @Override

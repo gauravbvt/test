@@ -155,6 +155,11 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.setValue( Boolean.toString( flow.isPublished() ) );
             writer.endNode();
         }
+        // Info product is time sensitive
+        writer.startNode( "infoProductTimeSensitive" );
+        writer.setValue( Boolean.toString( flow.isInfoProductTimeSensitive() ) );
+        writer.endNode();
+
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -323,6 +328,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 }
             } else if ( nodeName.equals( "published" ) ) {
                 flow.setPublished( Boolean.valueOf( reader.getValue() ) );
+            } else if ( nodeName.equals( "infoProductTimeSensitive" ) ) {
+                flow.setInfoProductTimeSensitive( Boolean.valueOf( reader.getValue() ) );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

@@ -95,7 +95,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
 
     @Override
     protected String getKindLabel() {
-        return "Checklist does not reference some conditions or outcomes of the task";
+        return "Checklist never references one known condition or outcome of the task";
     }
 
     @Override

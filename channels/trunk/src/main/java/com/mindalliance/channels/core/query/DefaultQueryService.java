@@ -2179,13 +2179,13 @@ public abstract class DefaultQueryService implements QueryService {
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            final Restriction inverseNeedRestriction = ( (Restriction) object ).inverse();
+                            final Restriction needRestriction = ( (Restriction) object );
                             return !CollectionUtils.exists(
                                     capabilityRestrictions,
                                     new Predicate() {
                                         @Override
                                         public boolean evaluate( Object object ) {
-                                            return Restriction.implies( ( (Restriction) object ), inverseNeedRestriction );
+                                            return Restriction.implies( ( (Restriction) object ), needRestriction );
                                         }
                                     }
                             );

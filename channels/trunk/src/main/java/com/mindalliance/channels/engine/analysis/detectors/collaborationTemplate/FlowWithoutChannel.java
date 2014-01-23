@@ -34,7 +34,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
 
         Flow flow = (Flow) modelObject;
-        if ( !flow.isToSelf() ) {
+        if ( flow.isSharing() && !flow.isToSelf() ) {
             // There is no channel in a flow that requires one
             List<Channel> flowChannels = flow.getEffectiveChannels();
             if ( flowChannels.isEmpty() )

@@ -73,7 +73,7 @@ public class InfoNeed implements Serializable {
 
     public boolean narrowsOrEquals( InfoNeed other ) {
         return information.narrowsOrEquals( other.getInformation() )
-                && sourceSpec.narrowsOrEquals( other.getSourceSpec(), Place.UNKNOWN )
+                && ( other.getSourceSpec().isAnyone() || sourceSpec.narrowsOrEquals( other.getSourceSpec(), Place.UNKNOWN ) )
                 && maxDelay.compareTo( other.getMaxDelay() ) <= 0;
     }
 
