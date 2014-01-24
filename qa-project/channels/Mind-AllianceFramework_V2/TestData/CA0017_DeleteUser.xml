@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<elements>
+<user>User 1</user>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<addEmailOfUser>admin@gmail.com</addEmailOfUser>
+</elements>

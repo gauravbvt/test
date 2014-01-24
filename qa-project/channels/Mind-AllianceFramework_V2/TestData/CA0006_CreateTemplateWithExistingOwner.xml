@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<elements>
+<automationTestPlan>Automation Test Plan 1</automationTestPlan>
+<automationTestPlan1>Automation Test Plan 2</automationTestPlan1>
+<authorAutomationTestPlan>Afour technologies</authorAutomationTestPlan>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<planName>New Demo Plan v.1 (dev)</planName>
+</elements>
