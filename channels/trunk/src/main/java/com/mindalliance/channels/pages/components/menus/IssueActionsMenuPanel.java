@@ -44,7 +44,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
 
     @Override
     public String getUserRoleId() {
-        return "planner";
+        return "developer";
     }
 
     @Override

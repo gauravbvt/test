@@ -298,7 +298,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
 
     private void addDefinitions( Topic topic ) {
-        List<TopicRef> topicRefs = topic.getSortedDefinitions( getUserRole() );
+        List<TopicRef> topicRefs = topic.getSortedDefinitions( guide, getUserRole() );
         WebMarkupContainer doDefinitionsContainer = new WebMarkupContainer( "definitionsContainer" );
         doDefinitionsContainer.setOutputMarkupId( true );
         doDefinitionsContainer.setVisible( !topicRefs.isEmpty() );
@@ -311,7 +311,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                 TopicRef topicRef = item.getModelObject();
                 UserRole userRole = getUserRole();
                 final Section defSection = userRole != null
-                        ? userRole.findSection( topicRef.getSectionId() )
+                        ? guide.findSection( userRole, topicRef.getSectionId() )
                         : null;
                 final Topic defTopic = defSection == null
                         ? null
@@ -348,7 +348,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                 TopicRef topicRef = item.getModelObject();
                 UserRole userRole = getUserRole();
                 final Section nextSection = userRole != null
-                        ? userRole.findSection( topicRef.getSectionId() )
+                        ? guide.findSection( userRole, topicRef.getSectionId() )
                         : null;
                 final Topic nextTopic = nextSection == null
                         ? null
@@ -371,10 +371,10 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
     private void rememberState() {
         UserRole userRole = getUserRole();
-        Section currentSection = userRole.findSection( sectionId );
+        Section currentSection = guide.findSection( userRole, sectionId );
         Topic currentTopic = null;
         if ( currentSection != null )
-            currentTopic = currentSection.findTopic( topicId );
+            currentTopic = guide.findTopic( userRole, sectionId, topicId );
         if ( currentSection != null && currentTopic != null ) {
             sectionStack.push( currentSection );
             topicStack.push( currentTopic );
@@ -523,7 +523,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     private Section getSection() {
         UserRole userRole = getUserRole();
         Section section = userRole != null
-                ? userRole.findSection(
+                ? guide.findSection( userRole,
                 sectionId == null
                         ? userRole.getSections().get( 0 ).getId()
                         : sectionId )

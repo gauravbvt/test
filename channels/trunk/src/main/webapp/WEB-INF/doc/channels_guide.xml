@@ -12,19 +12,14 @@
                 <item>
                     <description>Channels is an online collaboration planning service.
 
-                        [[File:home_page.png|Channels home page]]
-
-                        It enables [[File:warning.png|Warning]]
-                        * analysts to develop best-practice templates for information sharing-enabled collaboration,
-                        * planners to setup localized collaboration plans based on collaboration templates,
-                        * users to participate in collaboration plans and get collaboration checklists instructing their participation,
-                        * administrators to manage the Channels service [[File:settings_templates.png|Channels settings page]].
+                        It enables...
+                        * Analysts to develop best-practice templates for information-intensive collaboration,
+                        * Planners to setup and manage localized collaboration plans based on collaboration templates,
+                        * Users to participate in collaboration plans and get collaboration checklists instructing their participation,
+                        * Administrators to configure and manage the Channels service.
 
                     </description>
                 </item>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-template"/>
-                <next section="plan-concepts" topic="plan-checklist"/>
                 <next section="plan-concepts" topic="collaboration-vs-process"/>
             </topic>
         </section>
@@ -123,6 +118,7 @@
                 <item>
                     <description>A glossary of collaboration planning terms</description>
                 </item>
+                <definition section="plan-concepts" topic="collaboration-planning"/>
                 <definition section="plan-concepts" topic="collaboration-plan"/>
                 <definition section="plan-concepts" topic="plan-template"/>
                 <definition section="plan-concepts" topic="plan-organization"/>
@@ -139,16 +135,49 @@
         </section>
         <section id="plan-concepts">
             <name>Concepts</name>
+            <topic id="collaboration-planning">
+                <name>Collaboration planning</name>
+                <item>
+                    <description>Collaboration Planning is the process by which organizations decide and agree on how they will cordinate and share information
+                        in anticipated scenarios so that they can manage risks and capture opportunities.
+
+                        Collaboration planning captures and disseminates as collaboration plans...
+
+                        * the commitments of responsible individuals
+                        * in anticipated planning scenarios
+                        * to communicate and share information
+                        * so that co-dependent organizations
+                        * can successfully coordinate and inform
+                        * tasks that achieve mission-critical goals
+                        * in compliance with applicable policies.
+
+                        The mission of collaboration planning is to help even strangers become successful collaborators at the very onset of crises
+                        or the dawn of opportunities.
+
+                        The collaboration planning process is iterative. [[File:collaboration_planning_process.png|The collaboration planning process]]
+
+                        It consists of...
+
+                        * Scoping future collaborations
+                        * Building a collaboration template
+                        * Creating and localizing a collaboration plan
+                        * Managing participation in the collaboration plan
+                        * Accessing collaboration checklists
+
+                    </description>
+                </item>
+            </topic>
             <topic id="collaboration-plan">
                 <name>Collaboration plan</name>
                 <item>
-                    <description>A collaboration plan captures and disseminates how individuals in positions of responsibility within organizations
+                    <description>A collaboration plan defines how identified individuals in positions of responsibility within organizations
                         are expected to act and communicate in anticipated planning scenarios.
 
-                        The purpose of collaboration plans is to help even strangers become successful collaborators at the very onset of crises
-                        or the dawn of opportunities.
+                        [[File:collaboration_plan_illustration.png|Collaboration plan]]
 
-                        A collaboration plan is based on a production version of a collaboration template. The template defines
+                        A collaboration plan is based on a production version of a collaboration template. [[File:collaboration_plan_based_on_template.png|Collaboration plans are based on collaboration templates]]
+
+                        The template defines...
 
                         * the planning scenarios,
                         * the collaborators and their organizations,
@@ -187,37 +216,43 @@
 
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-template"/>
-                <next section="plan-concepts" topic="plan-placeholder"/>
-                <next section="plan-concepts" topic="plan-organization"/>
-                <next section="plan-concepts" topic="plan-position"/>
-                <next section="plan-concepts" topic="plan-planner"/>
-                <next section="plan-concepts" topic="plan-participant"/>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="collaboration-vs-process"/>
             </topic>
             <topic id="plan-template">
                 <name>Collaboration template</name>
                 <item>
-                    <description>A collaboration template defines a best-practice collaboration between and within organizations in terms of
+                    <description>A collaboration template captures how organizations would collaborate in anticipated scenarios.
+                        It expresses collaboration rules and practices in terms of roles and it uses placeholders to
+                        represent what might change during a collaboration or according to its context.
+
+                        [[File:collaboration_template_illustration.png|A collaboration template captures generally applicable collaboration rules and practices]]
+
+                        A collaboration template is defined in terms of...
 
                         * tasks required to achieve objectives in identified planning scenarios,
                         * the communications that coordinate and inform these tasks,
                         * how to assign tasks to individuals assigned on the basis of their positions in organizations
                         * checklists detailing how to execute each task and how to coordinate and inform their execution via communication and information sharing
 
-                    A template identifies the organizations it involves either as ''known organizations'' - real-life organizations - or as ''placeholder'' - organizations which real identities are to be given in the collaboration plans that adopt the template.
+                        A template identifies the organizations it involves either as ''known organizations'' - real-life
+                        organizations - or as ''placeholder'' - organizations which real identities are to be given in
+                        the collaboration plans that adopt the template.
 
-                        A template also identifies the positions (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on a template by being assigned to one or more positions defined in the template.
+                        A template also identifies the positions (aka organizational roles) that make up the collaborating
+                        organizations. Users participate in the collaboration plans based on a template by being assigned to one or more positions defined in the template.
 
-                        A collaboration template has versions. The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
+                        A collaboration template has versions. [[File:collaboration_template_versions.png|Collaboration template versions]] The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
                     </description>
                 </item>
             </topic>
             <topic id="plan-organization">
-                <name>Plan organization</name>
+                <name>Organization</name>
                 <item>
-                    <description>A collaboration plan involves organizations and individuals holding positions in them (organizational roles).
+                    <description>An organization is a group of individuals in positions of responsibility forming an administrative unit
+                        that has a name and a mission.
+
+                        An organization can be a corporation, a government agency, a department, a project team, a platoon etc.
+
+                        An organization can contain sub-organizations.
 
                         The organizations known to a plan consist of:
 
@@ -230,15 +265,27 @@
                 </item>
             </topic>
             <topic id="plan-placeholder">
-                <name>Organization placeholder</name>
+                <name>Placeholder</name>
                 <item>
-                    <description>The collaboration template upon which a collaboration plan is based identifies all the
+                    <description>A placeholder is an organization, place or individual whose final identity is not known
+                        to a collaboration template but is known to collaboration plans based on it.
+
+                        A placeholder for an individual is called a position in a collaboration plan.
+
+                        A location placeholder that sets the overall locale for a collaboration plan must be instantiated
+                        with an actual location for the plan to be opened for participation.
+
+                        Most often, the term placeholder is used as a shorthand for organization placeholder.
+
+                        The collaboration template upon which a collaboration plan is based identifies all the
                         organizations that are involved in the collaboration it defines. Because each collaboration plan
                         may involve its own, local organizations, template developers will often keep the identity of
                         organizations ''to be determined'' by making them ''placeholder'' organizations.
 
                         A placeholder organization from a collaboration template, for example "The Municipal Police Department",
                         can be associated to one or more organizations known to a collaboration plan, for example, "Gotham Police Department".
+
+                        [[File:organizations_participate_as_placeholders.png|Organizations participate in a plan as placeholders defined in a template]]
 
                         A collaboration template may identify one of the positions in organizations it defines as
                         a ''custodian'' for a placeholder organization. If so, any user participating in a plan in this
@@ -253,11 +300,17 @@
             <topic id="plan-position">
                 <name>Position</name>
                 <item>
-                    <description>A position in an organization can be filled one individual and, sometimes, by or more functionally indistinguishable
+                    <description>A position is a role assigned and title given to an individual by an organization.
+
+                        A position in an organization can be filled by one individual and, sometimes, by or more functionally indistinguishable
                         individuals.
 
-                        A position in an organization usually translates to a job title (e.g. Senior VP Sales) and one
-                        or more roles and responsibilities (a.k.a. jobs) on the basis of which task checklists are assigned.
+                        [[File:participation_in_position.png|A user can participate in a plan by filling a position]]
+
+                        A position in an organization usually translates to task assignments and communication commitments
+                        documented as checklists.
+
+                        [[File:assignments_commitments_from_participation.png|Assignments and commitments from participation in a position]]
 
                         It is possible that by holding a (primary) position in an organization, a user will automatically
                         be assigned to ''linked'' positions in other organizations.
@@ -266,6 +319,8 @@
                         according to a template, be automatically assigned to a position of "Member" of the county's
                         "Emergency Operations Center" (linked position). Thus a Chief of Police would have not only the jobs of a chief of police
                         but also all the jobs of a member of the county's emergency operations center.
+
+                        [[File:linked_position.png|Linked position]]
 
                         Users participate in a collaboration plan by being assigned to one or more positions.
 
@@ -282,7 +337,7 @@
                 </item>
             </topic>
             <topic id="plan-participant">
-                <name>Plan participant</name>
+                <name>Participant</name>
                 <item>
                     <description>A plan participant is any user who has accepted to join a collaboration plan, with the
                         intent of being assigned one or more positions in participating organizations</description>
@@ -301,18 +356,19 @@
             <topic id="plan-custodian">
                 <name>Placeholder custodian</name>
                 <item>
-                    <description>If a user is the custodian of a placeholder organization in a collaboration plan, he or
-                        she is authorized to manage the association of any number of known organizations to that placeholder.
+                    <description>A placeholder custodian is a user who, by virtue of his/her participation, is authorized
+                        to manage the association of any number of known organizations to that placeholder.
 
-                    A user is the custodian of a placeholder organization if he or she is a planner or is assigned to
-                    a position that is identified as the custodian by the developers of the template where the placeholder organization is defined.
+                        A user is the custodian of a placeholder organization if he or she is a planner or is assigned to
+                        a position that is identified as the custodian by the developers of the collaboration template
+                        where the placeholder organization is defined.
                     </description>
                 </item>
             </topic>
             <topic id="plan-participation">
-                <name>Plan participation</name>
+                <name>Participation</name>
                 <item>
-                    <description>Organizations and users participate in a collaboration plan.
+                    <description>The participation in a collaboration plan is the sum of all organizations and users involved in it.
 
                         A known organization defined in the collaboration template upon which the collaboration plan is
                         based automatically participates (as itself) in the plan.
@@ -321,12 +377,16 @@
                         defined by the template on which the plan is based. Participation by an organization registered
                         in a plan happens when the organization is associated with a placeholder in the template.
 
+                        [[File:organizations_participate_as_placeholders.png|Organizations can participate as placeholders defined in a template]]
+
                         When a registered organization is associated with a placeholder organization in the template,
                         the registered organization gets a ''copy'' of all the positions in the placeholder organization.
 
                         For example, when "Gotham Police Department" in the plan is associated with "Municipal Police department"
                         in the template, the position of "Chief at Gotham Police Department" is created as a copy of the
                         template-defined position of "Chief of Municipal Police Department".
+
+                        [[File:positions_copied_from_placeholders.png|Organizations get positions from placeholders they fill]]
 
                         Users participate in a plan by assigning themselves or by being assigned to one or more positions
                         in participating organizations.
@@ -341,22 +401,30 @@
             <topic id="plan-checklist">
                 <name>Collaboration checklist</name>
                 <item>
-                    <description>Each task in a collaboration has an associated checklist that details how to execute the task.
-                        The checklist is defined in the collaboration template of the plan based on the nature of the task,
-                        its context and impacts and the communications in and out of the task.
+                    <description>A checklist is a set of instructions to a user assigned to a task. The checklist indicates
+                        when to execute the task and how to execute it, how to get needed information and
+                        communicate information acquire while or from doing the task, what the relevant policies are and
+                        what impacts a failing the task would have on the collaboration.
+
+                        Each task in the collaboration template a collaboration plan is based on has an associated checklist,
+                        minus contact information, that details how to execute the task.
 
                         When a user receives checklists from being assigned to positions assigned to tasks, the checklists
                         are personalized with contact names and information of other users who participate in positions the user collaborates with.
 
-                    A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
+                        [[File:checklists_in_templates_and_plans.png|Checklists defined in templates are personalized in plans]]
 
-                        The triggers can be
+                        A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
+
+                        The triggers can be...
 
                         * nothing (if the task is ongoing),
                         * information self-acquired (observation of an event, for example),
                         * information to be researched to carry out another task also assigned to the user,
                         * information sent by another user (a notification)
                         * or information requested by another user (a query).
+
+                        [[File:checklist_example.png|Sample checklist]]
 
                         The steps of a checklist can be communications (queries, notifications) or actions (other than communications) taken in executing the task.
 
@@ -367,7 +435,7 @@
                 </item>
             </topic>
             <topic id="plan-planning-scenario">
-                <name>Planning scenario</name>
+                <name>Scenario</name>
                 <item>
                     <description>A planning scenario describes anticipated circumstances that would introduce risks an opportunities to organizations who must then collaborate to mitigate those risks and/or seize those opportunities.
 
@@ -378,18 +446,20 @@
                 </item>
             </topic>
             <topic id="plan-requirement">
-                <name>Collaboration requirement</name>
+                <name>Requirement</name>
                 <item>
                     <description>A collaboration requirement specifies expected communication between two organizations in a plan.
 
-                        The requirement specifies in more or less generic terms:
+                        The requirement specifies in more or less generic terms...
+
                         * the ''source'' and ''sink'' organizations,
                         * the information to be communicated
                         * the planning scenario in which this communication is to happen
                         * the number of positions in each organization sending and receiving the information
                         * the number of alternate source-positions for each sink-positions
 
-                        A collaboration requirement may or may not apply to a pair of organizations in the plan. If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
+                        A collaboration requirement may or may not apply to a pair of organizations in the plan.
+                        If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
                     </description>
                 </item>
             </topic>
@@ -667,7 +737,7 @@
             </topic>
         </section>
     </role>
-    <role id="planner" glossarySection="concepts" glossaryTopic="glossary">
+    <role id="developer" isa="participant" glossarySection="concepts" glossaryTopic="glossary">
         <name>For developers of collaboration templates</name>
         <section id="about-template-developer">
             <name>About Channels</name>
@@ -749,7 +819,7 @@
                         * WordNet [http://wordnet.princeton.edu/]
                         * XStream [http://xstream.codehaus.org/]
 
-                        Our thanks and admiration to all who contributed to these libraires.
+                        Our thanks and admiration to all who contributed to these libraries.
                     </description>
                 </item>
             </topic>
@@ -3156,8 +3226,28 @@ Note that all profile attributes are optional.]]>
             </topic>
         </section>
     </role>
-    <role id="admin">
+    <role id="admin" isa="developer" glossarySection="admin-concepts" glossaryTopic="admin-glossary">
         <name>For Channels administrators</name>
+        <section id="admin-concepts">
+            <name>Channels administration</name>
+            <topic id="admin-glossary">
+                <name>Administration glossary</name>
+                <item>
+                    <description>
+                        A glossary of Channels administration terms.
+                    </description>
+                </item>
+                <definition section="admin-concepts" topic="server"/>
+            </topic>
+            <topic id="server">
+                <name>The Channels server</name>
+                <item>
+                    <description>
+                        Channels is a collaboration planning Web application server usually installed in a cloud infrastructure.
+                    </description>
+                </item>
+            </topic>
+        </section>
         <section id="settings-page">
             <name>Channels settings page</name>
             <topic id="about-settings-page">

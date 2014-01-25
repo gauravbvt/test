@@ -74,17 +74,18 @@ public class Topic implements Serializable {
         this.definitions = definitions;
     }
 
-    public List<TopicRef> getSortedDefinitions( final UserRole userRole ) {
+    public List<TopicRef> getSortedDefinitions( final Guide guide, final UserRole userRole ) {
         if ( sortedDefinitions == null ) {
             sortedDefinitions = new ArrayList<TopicRef>();
-            sortedDefinitions.addAll( getDefinitions() );
+            List<TopicRef> definitions = guide.getAllDefinitions( userRole, this );
+            sortedDefinitions.addAll( definitions );
             Collections.sort(
                     sortedDefinitions,
                     new Comparator<TopicRef>() {
                         @Override
                         public int compare( TopicRef tr1, TopicRef tr2 ) {
-                            Topic t1 = userRole.deref( tr1 );
-                            Topic t2 = userRole.deref( tr2 );
+                            Topic t1 = userRole.deref( guide, tr1 );
+                            Topic t2 = userRole.deref( guide, tr2 );
                             return ( t1 != null && t2 != null )
                                     ? t1.getName().compareTo( t2.getName() )
                                     : 0;

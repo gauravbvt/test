@@ -388,7 +388,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getDefaultUserRoleId() {
-        return "planner";
+        return "developer";
     }
 
     @Override

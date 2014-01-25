@@ -10212,6 +10212,23 @@
                     <entry><para>Yes</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Information in flow has the same name as an information product</para></entry>
+
+                    <entry><para>Low</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the information the name of the information product</para>
+                        </listitem>
+                        <listitem>
+                            <para>or change the name of the information.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>

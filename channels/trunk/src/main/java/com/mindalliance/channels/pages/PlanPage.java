@@ -556,7 +556,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private String getDefaultUserRoleId() {
-        return "planner";
+        return "developer";
     }
 
     private Map<String, Object> getHelpContext() {

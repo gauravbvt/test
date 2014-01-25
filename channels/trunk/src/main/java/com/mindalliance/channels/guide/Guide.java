@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class Guide implements Serializable {
 
     @XStreamImplicit(itemFieldName = "role")
     private List<UserRole> userRoles;
+
     private Object context = this;
 
     public Guide() {
@@ -63,6 +65,15 @@ public class Guide implements Serializable {
     }
 
     public UserRole findUserRole( final String userRoleId ) {
+        UserRole userRole = findUserRoleNoDefault( userRoleId );
+        if ( userRole == null ) {
+            LOG.warn( "User role " + userRoleId + " not found in guide " + getName() );
+            userRole = getUserRoles().get( 0 );
+        }
+        return userRole;
+    }
+
+    public UserRole findUserRoleNoDefault( final String userRoleId ) {
         UserRole userRole = null;
         if ( userRoleId != null ) {
             userRole = (UserRole) CollectionUtils.find( userRoles,
@@ -73,47 +84,8 @@ public class Guide implements Serializable {
                         }
                     } );
         }
-        if ( userRole == null ) {
-            LOG.warn( "User role " + userRoleId + " not found in guide " + getName() );
-            userRole = getUserRoles().get( 0 );
-        }
         return userRole;
     }
-
-/*
-    public Section derefSection( final String groupId ) {
-        return (Section) CollectionUtils.find(
-                sections,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Section) object ).getId().equals( groupId );
-                    }
-                } );
-    }
-
-    public int findSectionIndex( Section nextGroup ) {
-        return getSections().indexOf( nextGroup );
-    }
-
-    public Section findSection( final String sectionId ) {
-        Section section = null;
-        if ( sectionId != null ) {
-            section = (Section) CollectionUtils.find( sections,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (Section) object ).getId().equals( sectionId );
-                        }
-                    } );
-        }
-        if ( section == null ) {
-            LOG.warn( "Section " + sectionId + " not found in guide " + getName() );
-            section = getSections().get( 0 );
-        }
-        return section;
-    }
-*/
 
     public void setContext( Map<String, Object> map ) {
         this.context = new LazyDynaMap( map );
@@ -123,8 +95,12 @@ public class Guide implements Serializable {
         return context;
     }
 
+    public Section findSection( UserRole userRole, String sectionId ) {
+        return userRole.findSection( this, sectionId );
+    }
+
     public Topic findTopic( UserRole userRole, String sectionId, String topicId ) {
-        Section section = userRole.findSection( sectionId );
+        Section section = userRole.findSection( this, sectionId );
         if ( section != null ) {
             return section.findTopic( topicId );
         } else {
@@ -134,9 +110,7 @@ public class Guide implements Serializable {
 
      public Map<String, String[]> getGlossary( UserRole userRole ) {
         Map<String, String[]> glossary = new HashMap<String, String[]>();
-        Topic topic = findTopic( userRole, userRole.getGlossarySection(), userRole.getGlossaryTopic() );
-        if ( topic != null ) {
-            for ( TopicRef topicRef : topic.getDefinitions() ) {
+            for ( TopicRef topicRef : findAllGlossaryDefinitions( userRole ) ) {
                 Topic definitionTopic = findTopic( userRole, topicRef.getSectionId(), topicRef.getTopicId() );
                 if ( definitionTopic != null ) {
                     if (! definitionTopic.getTopicItems().isEmpty() ) {
@@ -146,11 +120,36 @@ public class Guide implements Serializable {
                         glossary.put( definitionTopic.getName().toLowerCase(), glossaryEntry );
                     }
                     else {
-                        LOG.warn( "Glossary topic without a definition item: " + topic.getId() );
+                        LOG.warn( "Glossary topic without a definition item: " + definitionTopic.getId() );
                     }
                 }
-            }
-        }
+         }
         return glossary;
+    }
+
+    public List<TopicRef> findAllGlossaryDefinitions( UserRole userRole ) {
+       List<TopicRef> allDefinitions = new ArrayList<TopicRef>(  );
+        Topic topic = getGlossaryTopic( userRole );
+        if ( topic != null ) {
+            allDefinitions.addAll( topic.getDefinitions() );
+        }
+        // Inherit glossary entries from isa user role
+        if ( userRole.getIsa() != null ) {
+            UserRole isaRole = findUserRoleNoDefault( userRole.getIsa() );
+            allDefinitions.addAll( findAllGlossaryDefinitions( isaRole ) );
+        }
+        return allDefinitions;
+    }
+
+    public Topic getGlossaryTopic( UserRole userRole ) {
+        return findTopic( userRole, userRole.getGlossarySection(), userRole.getGlossaryTopic() );
+    }
+
+    public List<TopicRef> getAllDefinitions( UserRole userRole, Topic topic ) {
+        if ( getGlossaryTopic( userRole ).getId().equals( topic.getId() ) ) {
+            return findAllGlossaryDefinitions( userRole );
+        } else {
+            return topic.getDefinitions();
+        }
     }
 }

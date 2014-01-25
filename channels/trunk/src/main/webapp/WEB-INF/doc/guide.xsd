@@ -18,6 +18,7 @@
                 <xs:element ref="section" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="isa" type="xs:IDREF"/>
             <xs:attribute name="glossarySection" use="optional"/>
             <xs:attribute name="glossaryTopic" use="optional"/>
         </xs:complexType>

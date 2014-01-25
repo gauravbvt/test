@@ -28,6 +28,8 @@ public class UserRole implements Serializable {
     @XStreamAsAttribute
     private String id;
     @XStreamAsAttribute
+    private String isa;
+    @XStreamAsAttribute
     private String glossarySection;
     @XStreamAsAttribute
     private String glossaryTopic;
@@ -47,6 +49,14 @@ public class UserRole implements Serializable {
 
     public void setId( String id ) {
         this.id = id;
+    }
+
+    public String getIsa() {
+        return isa;
+    }
+
+    public void setIsa( String isa ) {
+        this.isa = isa;
     }
 
     public String getGlossarySection() {
@@ -81,11 +91,7 @@ public class UserRole implements Serializable {
         this.sections = sections;
     }
 
-    public int findSectionIndex( Section nextGroup ) {
-        return getSections().indexOf( nextGroup );
-    }
-
-    public Section findSection( final String sectionId ) {
+    public Section findSection( Guide guide, final String sectionId ) {
         Section section = null;
         if ( sectionId != null ) {
             section = (Section) CollectionUtils.find( sections,
@@ -95,6 +101,13 @@ public class UserRole implements Serializable {
                             return ( (Section) object ).getId().equals( sectionId );
                         }
                     } );
+        }
+        if ( section == null && isa != null ) {
+            // Look is isa user role if not found in this user role
+            UserRole isaRole = guide.findUserRole( isa );
+            if ( isaRole != null ) {
+                section = isaRole.findSection( guide, sectionId );
+            }
         }
         if ( section == null ) {
             LOG.warn( "Section " + sectionId + " not found for user role " + getName() );
@@ -107,8 +120,8 @@ public class UserRole implements Serializable {
         return "User role " + getId();
     }
 
-    public Topic deref( TopicRef topicRef ) {
-        Section section = findSection( topicRef.getSectionId() );
+    public Topic deref( Guide guide, TopicRef topicRef ) {
+        Section section = findSection( guide, topicRef.getSectionId() );
         return section != null
                 ? section.findTopic( topicRef.getTopicId() )
                 : null;

@@ -76,7 +76,7 @@ public class IssuesPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getDefaultUserRoleId() {
-        return "planner";
+        return "participant";
     }
 
     private void addTitle() {
