@@ -138,7 +138,7 @@
             <topic id="collaboration-planning">
                 <name>Collaboration planning</name>
                 <item>
-                    <description>Collaboration Planning is the process by which organizations decide and agree on how they will cordinate and share information
+                    <description>Collaboration Planning is the process by which organizations decide and agree on how they will coordinate and share information
                         in anticipated scenarios so that they can manage risks and capture opportunities.
 
                         Collaboration planning captures and disseminates as collaboration plans...
@@ -829,10 +829,9 @@
             <topic id="glossary">
                 <name>Glossary</name>
                 <item>
-                    <description>A glossary of collaboration planning terms</description>
+                    <description>A glossary of collaboration planning terms for template developers</description>
                 </item>
-                <definition section="concepts" topic="plan"/>
-                <definition section="concepts" topic="plan-element"/>
+                <definition section="concepts" topic="template-element"/>
                 <definition section="concepts" topic="event"/>
                 <definition section="concepts" topic="phase"/>
                 <definition section="concepts" topic="scenario"/>
@@ -849,7 +848,6 @@
                 <definition section="concepts" topic="attachment"/>
                 <definition section="concepts" topic="info-product"/>
                 <definition section="concepts" topic="info-format"/>
-                <definition section="concepts" topic="organization"/>
                 <definition section="concepts" topic="role"/>
                 <definition section="concepts" topic="agent"/>
                 <definition section="concepts" topic="place"/>
@@ -862,41 +860,19 @@
                 <definition section="concepts" topic="usefulness"/>
                 <definition section="concepts" topic="survey"/>
                 <definition section="concepts" topic="tag"/>
-                <definition section="concepts" topic="checklist"/>
+                <definition section="concepts" topic="checklist-step"/>
                 <definition section="concepts" topic="function"/>
             </topic>
-            <topic id="plan">
-                <name>Collaboration template</name>
-                <item>
-                    <description>A collaboration template is defined by
-                        * the planning scenarios that will cause organizations to collaborate and share information
-                        * the organizations and agents (stand-ins for people or systems) employed by them that involved in the collaborations
-                        * assignable tasks, connected by information flows, that achieve organizational goals in planning scenarios
 
-                        Applying a scope to a collaboration template produces visualizations, analytics, diagnostics,
-                        reports and, crucially, collaboration checklists.
-
-                        A collaboration template has one editable development version, zero or one production version
-                        (read-only) and any number of retired versions (also read-only).
-
-                        The development version is released by an administrator. Upon releasing a new version of the
-                        template, a copy of the development version becomes the new production version and the prior
-                        production version is retired. Finally, the development version number is incrementd by one.
-                    </description>
-                </item>
-            </topic>
-            <topic id="plan-element">
+            <topic id="template-element">
                 <name>Template element</name>
                 <item>
-                    <description>Anything that contributes to the definition of a collaboration template, be it a
-                        segment, a task, a flow, an entity, information etc. is considered a template element.
+                    <description>A template element is anything with a name that contributes to the definition of a collaboration template.
+
+                        A template element can be a segment, a task, a flow, a role, information etc. Template elements
+                        are themselves defined in terms of other template elements.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="segment"/>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="information"/>
             </topic>
             <topic id="event">
                 <name>Event</name>
@@ -908,11 +884,9 @@
                         creating opportunities for another.
 
                         From the point of view of the template, an event is considered an ''incident'' if its occurrence
-                        is not planned (an 'outside' event).
+                        is not planned (it is an 'outside' event).
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="checklist-trigger"/>
             </topic>
             <topic id="phase">
                 <name>Phase</name>
@@ -921,25 +895,29 @@
                         phase is either the time before, during or after events.
 
                         A collaboration template can address what happens before, during or after of events, or a
-                        combination thereof.
+                        combination thereof. Each segment in a collaboration template focuses on one planning scenario
+                        which is defined in terms of one phase of one event.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
             </topic>
             <topic id="scenario">
                 <name>Planning scenario</name>
                 <item>
                     <description>The term ''planning scenario'' is used in collaboration planning to mean a phase of an
                         event being planned for, possibly occurring in the context of other past or current events.
+
+                        A planning scenario is associated with risks and opportunities (gains to be achieved) for organizations.
                     </description>
                 </item>
             </topic>
             <topic id="goal">
                 <name>Goal</name>
                 <item>
-                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the
-                        organizations to be involved in the template. A goal is either a risk to be mitigated or an
-                        opportunity to be seized due to the onset or conclusion of an event.
+                    <description>Goals are either risks to be mitigated or gains to be achieved by organizations.
+
+                        In Channels, a goal is understood as a ''mission-level'' goal of one or more of the
+                        organizations represented in a collaboration template. A goal, either a risk to be mitigated or an
+                        opportunity to be seized, is the consequence of the onset or conclusion of an event.
 
                         Goals are achieved by successfully carrying out tasks, or they are automatically achieved when
                         an event terminates.
@@ -953,7 +931,7 @@
                 <name>Segment</name>
                 <item>
                     <description>Collaboration templates are composed of one or more or more segments. Each segment
-                        addresses a list of organizational goals in one planning scenario.
+                        addresses a list of organizational goals to be achieved in one planning scenario.
 
                         No two segments should address identical goals in identical planning scenarios.
 
@@ -965,8 +943,8 @@
             <topic id="information">
                 <name>Information</name>
                 <item>
-                    <description>Information is shared by collaborating agents (people or systems) via communication
-                        channels.
+                    <description>Information is what is communicated by an agent (person or system) via a transmission
+                        medium.
 
                         Information is named and can be described by a list of its essential elements.
 
@@ -977,34 +955,49 @@
                         a secrecy classification.
                     </description>
                 </item>
-                <next section="concepts" topic="info-product"/>
                 <next section="profiling" topic="profiling-info-product"/>
             </topic>
             <topic id="task">
                 <name>Task</name>
                 <item>
-                    <description>A task is an action or decision taken, individually or as a team, by assigned agents
-                        (people or systems) in order to achieve goals and/or acquire information to share.
+                    <description>A task is an action or decision taken, individually or as a team, by agents
+                        (people or systems) assigned to it.
+
+                        A task's outcomes can be:
+                        * an event triggered or terminated,
+                        * goals achieved
+                        * information acquired that can then be shared
+
+                        A task specifies what agents known to the collaboration templates will be assigned to it and,
+                        whether they will be executing the task individually or as a team.
+
+                        A task can also specify where the task is to be executed and how the location will become known to the agents
+                        assigned to the task.
+
+                        Each task is accompanied by a checklist that details how to execute the task.
                     </description>
                 </item>
+                <next section="info-sharing" topic="add-task"/>
+                <next section="info-sharing" topic="define-task"/>
             </topic>
             <topic id="need">
                 <name>Information need</name>
                 <item>
-                    <description>Specification of information needed to execute a task, plus requirements on its manner
-                        of delivery.
+                    <description>An information need specifies information that is needed to execute a task, possibly with delivery requirements.
 
-                        Delivery requirements include
+                        Delivery requirements can also be specified in terms of:
                         * timeliness
                         * transmission media
                         * information format
                     </description>
                 </item>
+                <next section="info-sharing" topic="add-need"/>
+                <next section="info-sharing" topic="define-flow"/>
             </topic>
             <topic id="capability">
                 <name>Information capability</name>
                 <item>
-                    <description>Specification of information acquired by or for the execution of a task that could be
+                    <description>An information capability specifies information that would be acquired by or for the execution of a task and that that could be
                         shared with "quality of service" commitments.
 
                         Quality of service commitments include
@@ -1013,36 +1006,79 @@
                         * information format
                     </description>
                 </item>
+                <next section="info-sharing" topic="add-capability"/>
+                <next section="info-sharing" topic="define-flow"/>
             </topic>
             <topic id="flow">
-                <name>Information sharing flow (or, simply, flow)</name>
+                <name>Flow</name>
                 <item>
-                    <description>How agents who carry out a task that ''produces'' information would commit to share
+                    <description>An information flow specifies how agents who carry out a task that ''produces'' information would commit to communicate
                         that information with agents carrying out a task that ''consumes'' it.
+
+                        An information flow is defined in terms of:
+                        * The information being communicated
+                        * The source task where the information was acquired
+                        * The target task where the information is consumed
+                        * The impact (triggering, terminating, informing) of communicating the information on either source and target tasks
+                        * The transmission media over which the information would be communicated
+                        * The maximum acceptable delay between acquiring the information and communicating it
+                        * Instructions, such as whether to also share the planning scenario in context
                     </description>
                 </item>
+                <next section="info-sharing" topic="define-flow"/>
             </topic>
             <topic id="assignment">
                 <name>Task assignment</name>
                 <item>
-                    <description>The list of agents assigned to a task because their profiles match the definition of
-                        the task.
+                    <description>A task's assignments is the list of agents known to the collaboration template that match
+                        the assignment profile of the task.
+
+                        The assignment profile specifies agents by naming (or not):
+                        * The actual agent
+                        * A type of agent
+                        * A role in which the agents are employed
+                        * The place or type of place matching the jurisdiction of the employed agents
+                        * An actual or type of organization employing the agents
+
+                        [[File:task_assignments_computing.png|How agents are assigned to a task]]
+
+                        Leaving an attribute of an assignment profile empty indicates that any value is acceptable. For example,
+                        leaving the jurisdiction unspecified means that assignment is not restricted by jurisdiction.
+
+                        More often than not, a task's assignment profile will not name a specific agent but will only name a role
+                        and a type of organization.
                     </description>
                 </item>
+                <next section="info-sharing" topic="define-task"/>
+                <next section="improving" topic="tune-task-flow-definition"/>
             </topic>
             <topic id="commitment">
                 <name>Communication commitment</name>
                 <item>
-                    <description>The commitment by one agent to communicate based on information acquired doing a task with another
-                        agent who needs information to initiate, terminate or successfully execute some other task.
+                    <description>A communication commitment is the promise by one agent to communicate information acquired
+                        to do or while doing a task with another agent who needs this information to initiate,
+                        terminate or successfully execute some other task.
+
+                        The communication commitments are derived from flows connecting tasks.
+                        There is a communication commitment from each agent assigned to the source task to each agent
+                        assigned to the target task such that the pair of agents respects the restrictions, if any, set on the flow
+                        (in same organization, in different locations etc.)
+
+                        [[File:commitments_computing.png|How communication commitments are derived from an information flow]]
+                        [[File: commitments.png|Viewing commitments from a flow]]
+
                     </description>
                 </item>
+                <next section="info-sharing" topic="define-flow"/>
+                <next section="improving" topic="tune-task-flow-definition"/>
             </topic>
             <topic id="issue">
                 <name>Issue</name>
                 <item>
-                    <description>A problem with the template that is either detected automatically by Channels or, upon
-                        review, by template developers. An issue is either one of
+                    <description>An issue problem with the collaboration template that is either detected automatically by Channels or, upon
+                        review, by template developers.
+
+                        An issue is either one of
                         * validity (something is inherently wrong in the template)
                         * completeness (something is obviously missing from the template)
                         * robustness (something is making a plan based on the template likely to fail)
@@ -1052,8 +1088,11 @@
             <topic id="attachment">
                 <name>Attachment</name>
                 <item>
-                    <description>You can attach uploaded or linked resources to a collaboration template or plan as
-                        a whole, or to any element of a collaboration template.
+                    <description>An attachment is an uploaded or linked document, image etc. that describes a template element.
+
+                        You can attach uploaded or linked resources to a collaboration template or collaboration plan as
+                        a whole, or to any element of a collaboration template or plan.
+
                         Attachments can be documents, graphics, videos etc. They can be named and categorized, typically
                         as reference, picture or policy.
                     </description>
@@ -1065,6 +1104,8 @@
                     <description>An information product is an entity representing a standard bundle of elements of
                         information.
 
+                        Information products are typically used to specify types of reports that are to be shared.
+
                         An information product be defined as an extension of another information product to which it
                         adds elements of information.
 
@@ -1072,61 +1113,68 @@
                         products.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
+                <next section="profiling" topic="profiling-info-product"/>
             </topic>
             <topic id="info-format">
                 <name>Information format</name>
                 <item>
                     <description>An information format is an entity representing a standard format in which information
                         is to be communicated.
+
+                        PDF, XML, WORD etc. are examples of information formats.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
-            </topic>
-            <topic id="organization">
-                <name>Organization</name>
-                <item>
-                    <description>An organization is an entity representing an administrative unit (a corporation, an
-                        agency, a department, a project team etc.) with a name, a mission, (and possibly a parent
-                        organization) and that employs agents in roles of responsibility.
-                    </description>
-                </item>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="role"/>
-                <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="profiling-info-format"/>
             </topic>
             <topic id="role">
                 <name>Role</name>
                 <item>
-                    <description>A role is an entity representing a standard set of responsibilities that one or more
-                        organizations can assign to some of its members. A role, such as Manager, is different from a
-                        job title, such as Senior VP Sales.
+                    <description>A role is an entity representing a standard set of responsibilities that various
+                        organizations can assign to its members.
+
+                        A role, such as Manager, is different from a job title, such as Senior VP Sales. Unlike job titles,
+                        roles are not meant to be included in checklists or anything else shown to participants in collaboration
+                        plans based on the collaboration template.
+
+                        Roles are always entity types and they can form taxonomies whereby a role has a narrower meaning than another.
+                        For example, a manager would be categorized as an employee, meaning that all managers are employees
+                        but not all employees are managers. Manager being narrower than employee, we say that manager ''inherits'' from employee.
+
+                        Roles are used by template developers to define the jobs of agents in organizations and to specify
+                        task assignment profiles that will match agents based on their direct or inherited roles.
+
+                        Based on the example above, a task assigned to all employees would also implicitly be assigned
+                        to all managers since a manager is also an employee. Clearly, great care must be taken in defining
+                        the taxonomy of roles in a collaboration template.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
+                <next section="profiling" topic="profiling-role"/>
             </topic>
             <topic id="agent">
                 <name>Agent</name>
                 <item>
-                    <description>An agent is an entity representing a person or system, or a completely interchangeable
-                        group of persons or systems.
+                    <description>An agent is an entity representing one or more interchangeable persons or systems.
+
+                        An agent is a placeholder for participants in collaboration plans based on the collaboration template.
 
                         An agent can be employed by one or more organizations in titled positions, each specified by a
                         role.
 
                         Agent ''types'' are not to be confused with ''roles''. Agent types are used to categorize agents
-                        independently of their roles. Examples of agent types are "adult", "trained in CPR", "licensed
-                        diver" etc.
+                        independently of their roles. Agent types are typically used to represent qualifications.
+                        Examples of agent types are "adult", "trained in CPR", "licensed diver" etc.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
+                <next section="profiling" topic="profiling-agent"/>
             </topic>
             <topic id="place">
                 <name>Place</name>
                 <item>
-                    <description>A place is an entity used to delimit jurisdictions of agents employed by organizations,
-                        to locate where tasks are to be executed, where events are of significance, and where a template
-                        is meant to apply.
+                    <description>A place is an entity used to represent an area in space, usually an administrative are.
+
+                        A place is used to delimit jurisdictions of agents employed by organizations,
+                        to locate where tasks are to be executed, where events are of significance, and where a collaboration template
+                        is meant to apply (its locale, which is to be identified by each collaboration plan based on the template).
 
                         A place can represent either an actual place ("Grand Central Station") or a type (category) of places
                         ("Rail Station").
@@ -1145,7 +1193,7 @@
                         event and as the location of the task.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
+                <next section="profiling" topic="profiling-place"/>
             </topic>
             <topic id="medium">
                 <name>Transmission medium</name>
@@ -1153,13 +1201,13 @@
                     <description>A transmission medium is an entity representing the means, technological or not, by
                         which agents communicate.
 
-                        A transmission medium can be meant for broadcasting (to all), multicasting (to many) or
-                        narrowcasting (to one).
+                        A transmission medium can be meant for broadcasting (to all), multicasting (to many but not all) or
+                        narrowcasting (to one per communication).
 
                         A transmission medium is always a type (a category).
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
+                <next section="profiling" topic="profiling-medium"/>
             </topic>
             <topic id="classification">
                 <name>Secrecy classification</name>
@@ -1172,12 +1220,9 @@
                         * the security level of transmission media
                     </description>
                 </item>
-                <next section="concepts" topic="agent"/>
-                <next section="concepts" topic="information"/>
-                <next section="concepts" topic="medium"/>
             </topic>
             <topic id="overriding">
-                <name>Overriding tasks</name>
+                <name>Overriding task</name>
                 <item>
                     <description>A task with the same name as another task overrides it if it assigns a subset of the
                         agents the other task assigns.
@@ -1185,32 +1230,35 @@
                         An agent is assigned to the overriding task (the more exclusive one), not the overridden task.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
             </topic>
             <topic id="checklist-trigger">
                 <name>Checklist trigger</name>
                 <item>
-                    <description>A collaboration checklist is a task assigned to an agent, with attendant activity and
-                        information sharing steps detailing its execution.
+                    <description>A checklist trigger is the condition that (could) initiate the execution of the task
+                        detailed by the collaboration checklist.
 
-                        Checklists are triggered by
-                        * observation of events,
-                        * notifications (from others or from self),
-                        * by requests for information (from others or from self),
-                        * or by nothing (ongoing tasks)
+                        The triggers of a collaboration checklist are the triggers of the task as derived from its definition.
+
+                        A task and thus its collaboration checklist can be triggered by assigned agents...
+                        * becoming aware of an event (without being told),
+                        * receiving notifications (being told without asking),
+                        * receiving requests for information (being told after asking),
+                        * doing and receiving nothing (if the task is always ongoing)
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="checklist"/>
-                <next section="concepts" topic="assignment"/>
-                <next section="concepts" topic="commitment"/>
+                <next section="info-sharing" topic="define-task"/>
+
             </topic>
             <topic id="entity">
                 <name>Entity</name>
                 <item>
-                    <description>An entity is a grab bag term for "timeless things and concepts". Entities include
+                    <description>An entity is a grab bag term for plan elements that are "timeless things or concepts"
+                        (as opposed to tasks and communicated information)
+
+                        Entities include
                         * agents
                         * events
+                        * functions
                         * information formats
                         * information products
                         * organizations
@@ -1234,21 +1282,13 @@
                         always types in Channels.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
-                <next section="concepts" topic="agent"/>
-                <next section="concepts" topic="event"/>
-                <next section="concepts" topic="info-product"/>
-                <next section="concepts" topic="info-format"/>
-                <next section="concepts" topic="organization"/>
-                <next section="concepts" topic="phase"/>
-                <next section="concepts" topic="place"/>
-                <next section="concepts" topic="role"/>
-                <next section="concepts" topic="medium"/>
             </topic>
             <topic id="impact">
-                <name>Impact of sharing</name>
+                <name>Impact of communicating</name>
                 <item>
-                    <description>Sharing information can impact the execution of tasks in different ways. It can
+                    <description>Communicating information can impact the status of tasks in different ways.
+
+                        It can
                         * trigger the task
                         * terminate the task
                         * be critical (crucial) to the task's success
@@ -1258,9 +1298,10 @@
                         task's success are considered.
                     </description>
                 </item>
+                <next section="info-sharing" topic="define-flow"/>
             </topic>
             <topic id="usefulness">
-                <name>Useful tasks</name>
+                <name>Useful task</name>
                 <item>
                     <description>A task is considered useful if it directly achieves a goal or if its failure would
                         prevent another task from achieving a goal.
@@ -1269,17 +1310,17 @@
                         considered an issue by Channels.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="goal"/>
+                <next section="info-sharing" topic="define-task"/>
             </topic>
             <topic id="survey">
                 <name>Survey</name>
                 <item>
-                    <description>Template developers can define surveys for various kinds of template elements (surveys about
-                        tasks, about events, about the collaboration template as a whole etc.).
+                    <description>A survey is a questionnaire about a template element or the template as a whole sent to one or more participants.
 
-                        A survey is a questionnaire composed of required and optional questions. Questions can have
-                        single or multiple answers and they may allow free commentary.
+                        Questions be optional and can have single or multiple answers. They can also allow free commentary.
+
+                        Template developers can define surveys for various kinds of template elements (surveys about
+                        tasks, about events, about the collaboration template as a whole etc.).
 
                         A survey is applied to one or more template elements of the appropriate kind (a task survey can
                         be applied to many tasks) and is then sent to one or more users with an optional deadline.
@@ -1289,7 +1330,8 @@
                         registered as Channels users.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
+                <next section="learning" topic="compose-questionnaire"/>
+                <next section="learning" topic="launch-survey"/>
             </topic>
             <topic id="tag">
                 <name>Tag</name>
@@ -1308,10 +1350,9 @@
                         One use of tags is to specify information in collaboration requirements.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
             </topic>
-            <topic id="checklist">
-                <name>Checklist</name>
+            <topic id="checklist-step">
+                <name>Checklist step</name>
                 <item>
                     <description>A collaboration checklist lists the steps required to successfully execute a task.
 
@@ -1323,6 +1364,8 @@
                         * sending confirmation of information received,
                         * a self-assigned research sub-task
                         * a self-assigned follow up sub-task
+
+                        [[File:checklist_step_editing.png|Editing a checklist step]
 
                         A step may be required or optional. A step may have identify the completion of other steps as
                         pre-requisites.
@@ -1358,21 +1401,15 @@
                         Functions are "entities" and so they can be categorized by other functions. Functions are always
                         entity "types"; there is no such thing as an "actual" function.
 
+                        [[File:function_and_tasks_illustration.png|Tasks can implement functions]]
+
                         A task may or may not declare that it implements a function. If it does, it is expected to
                         conform to the specifications of the function. Issues are raised if the task does not fully do
                         so.
                     </description>
-                    <script>
-                        <action>Open a function profile</action>
-                        <change>
-                            <subjectPath>guide.anyFunction</subjectPath>
-                            <type>Expanded</type>
-                            <property>details</property>
-                        </change>
-                    </script>
                 </item>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="task"/>
+                <next section="profiling" topic="profiling-function"/>
+
             </topic>
         </section>
         <section id="plans-page">
@@ -1664,7 +1701,6 @@
                         You can click on the name of the template element that was changed to quickly navigate to it.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
             </topic>
         </section>
         <section id="issues-page">
@@ -1680,7 +1716,6 @@
                         Individual issues are revealed by clicking on the text of an issue kind.
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
             </topic>
         </section>
         <section id="scoping">
@@ -1721,8 +1756,6 @@
                         element. When they are, they are automatically added to the scope of the template.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
-                <next section="concepts" topic="event"/>
                 <next section="scoping" topic="phases"/>
                 <next section="scoping" topic="involvements"/>
                 <next section="profiling" topic="profiling-event"/>
@@ -1741,7 +1774,6 @@ The list is part of the template's ''details''.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="phase"/>
                 <next section="scoping" topic="add-define-segment"/>
                 <next section="scoping" topic="involvements"/>
                 <next section="scoping" topic="involvements"/>
@@ -1777,7 +1809,6 @@ The list is part of the template's ''details''.]]></description>
                         You can drill down on the cross-segment flows and on the causation links.
                     </description>
                 </item>
-                <next section="concepts" topic="segment"/>
             </topic>
             <topic id="add-define-segment">
                 <name>Add and define a segment</name>
@@ -1793,7 +1824,6 @@ The list is part of the template's ''details''.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="segment"/>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
@@ -1809,7 +1839,6 @@ The list is part of the template's ''details''.]]></description>
                         * add a new issue
                     </description>
                 </item>
-                <next section="concepts" topic="segment"/>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
             </topic>
@@ -1823,8 +1852,6 @@ The list is part of the template's ''details''.]]></description>
                         * specify a context in terms of other events occurring or having occurred
                     </description>
                 </item>
-                <next section="concepts" topic="segment"/>
-                <next section="concepts" topic="scenario"/>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-goals"/>
             </topic>
@@ -1846,8 +1873,6 @@ Naming the goal is optional.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="goal"/>
-                <next section="concepts" topic="segment"/>
             </topic>
             <topic id="all-goals">
                 <name>All goals</name>
@@ -1856,10 +1881,6 @@ Naming the goal is optional.]]></description>
                         sorted, filtered and paged.
                     </description>
                 </item>
-                <next section="concepts" topic="goal"/>
-                <next section="concepts" topic="segment"/>
-                <next section="concepts" topic="phase"/>
-                <next section="concepts" topic="event"/>
             </topic>
             <topic id="classifications">
                 <name>Define secrecy classifications</name>
@@ -1909,9 +1930,6 @@ Naming the goal is optional.]]></description>
                         opened for editing by clicking on them in the flow map.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="information"/>
             </topic>
             <topic id="add-task">
                 <name>Add a task</name>
@@ -1921,7 +1939,6 @@ Naming the goal is optional.]]></description>
                         The newly created task is intially empty and presented as ''someone doing something''.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
                 <next section="info-sharing" topic="define-task"/>
             </topic>
             <topic id="define-task">
@@ -1944,8 +1961,6 @@ Naming the goal is optional.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="function"/>
                 <next section="info-sharing" topic="add-need"/>
                 <next section="info-sharing" topic="add-capability"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
@@ -1962,7 +1977,6 @@ Naming the goal is optional.]]></description>
                         * or improve its execution
                     </description>
                 </item>
-                <next section="concepts" topic="need"/>
                 <next section="info-sharing" topic="add-capability"/>
                 <next section="info-sharing" topic="define-flow"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
@@ -1970,12 +1984,11 @@ Naming the goal is optional.]]></description>
             <topic id="add-capability">
                 <name>Add info capability to task</name>
                 <item>
-                    <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the
+                    <description>Add an ''information capability'' to a task by clicking on the ''ADD'' button in the
                         Sends panel. An info capability specifies info agents assigned to a task expect to acquire and
                         be able to share with others.
                     </description>
                 </item>
-                <next section="concepts" topic="capability"/>
                 <next section="info-sharing" topic="add-need"/>
                 <next section="info-sharing" topic="define-flow"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
@@ -2002,7 +2015,6 @@ Naming the goal is optional.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="flow"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
                 <next section="profiling" topic="profiling-medium"/>
                 <next section="profiling" topic="profiling-info-product"/>
@@ -2023,7 +2035,6 @@ Naming the goal is optional.]]></description>
                         * if defining an info need, whether its delivery is subject to timeliness constraints
                     </description>
                 </item>
-                <next section="concepts" topic="information"/>
             </topic>
             <topic id="connect-with-flow">
                 <name>Connect tasks with info sharing</name>
@@ -2047,8 +2058,6 @@ Naming the goal is optional.]]></description>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="task"/>
                 <next section="info-sharing" topic="add-task"/>
             </topic>
             <topic id="task-overrides">
@@ -2056,8 +2065,6 @@ Naming the goal is optional.]]></description>
                 <item>
                     <description>The list of tasks that either override this task or are overridden by it.</description>
                 </item>
-                <next section="concepts" topic="overriding"/>
-                <next section="concepts" topic="task"/>
             </topic>
             <topic id="edit-checklist">
                 <name>Editing a checklist</name>
@@ -2097,7 +2104,6 @@ Naming the goal is optional.]]></description>
                         icon next to the name of the task.
                     </description>
                 </item>
-                <next section="concepts" topic="checklist"/>
                 <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="all-checklists"/>
             </topic>
@@ -2164,7 +2170,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="event"/>
                 <next section="profiling" topic="profiling-phase"/>
                 <next section="profiling" topic="profiling-place"/>
                 <next section="scoping" topic="eventsAndPhases"/>
@@ -2209,7 +2214,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="phase"/>
                 <next section="profiling" topic="profiling-phase"/>
                 <next section="scoping" topic="eventsAndPhases"/>
             </topic>
@@ -2233,7 +2237,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="organization"/>
                 <next section="profiling" topic="organization-participation"/>
                 <next section="profiling" topic="profiling-agent"/>
             </topic>
@@ -2260,9 +2263,7 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="organization"/>
-                <next section="concepts" topic="agent"/>
-                <next section="profiling" topic="organization"/>
+                <next section="profiling" topic="profiling-organization"/>
                 <next section="profiling" topic="profiling-agent"/>
                 <next section="profiling" topic="agent-participation"/>
             </topic>
@@ -2283,7 +2284,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="organization"/>
                 <next section="profiling" topic="profiling-organization"/>
             </topic>
             <topic id="profiling-role">
@@ -2315,7 +2315,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="role"/>
             </topic>
             <topic id="profiling-agent">
                 <name>Profile an agent</name>
@@ -2361,7 +2360,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="agent"/>
                 <next section="profiling" topic="agent-participation"/>
                 <next section="profiling" topic="profiling-organization"/>
             </topic>
@@ -2394,7 +2392,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="agent"/>
                 <next section="profiling" topic="agent"/>
                 <next section="profiling" topic="profiling-organization"/>
                 <next section="profiling" topic="organization-participation"/>
@@ -2415,7 +2412,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="agent"/>
                 <next section="profiling" topic="agent"/>
                 <next section="profiling" topic="profiling-agent"/>
                 <next section="profiling" topic="profiling-organization"/>
@@ -2456,7 +2452,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="place"/>
             </topic>
             <topic id="profiling-medium">
                 <name>Profile a transmission medium</name>
@@ -2491,7 +2486,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="medium"/>
             </topic>
             <topic id="profiling-info-product">
                 <name>Profile an information product</name>
@@ -2523,7 +2517,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="info-product"/>
             </topic>
             <topic id="profiling-info-format">
                 <name>Profile an information format</name>
@@ -2554,7 +2547,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="info-format"/>
             </topic>
             <topic id="profiling-function">
                 <name>Profiling a function</name>
@@ -2579,6 +2571,14 @@ Note that all profile attributes are optional.]]>
                         When a function is categorized by other functions, it adds to the goals, information needs and
                         capabilitites that the categorizing functions define.
                     </description>
+                    <script>
+                        <action>Open a function profile</action>
+                        <change>
+                            <subjectPath>guide.anyFunction</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
                 </item>
                 <item>
                     <description>Functions can be found by name in the template's index.</description>
@@ -2591,7 +2591,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="function"/>
 
             </topic>
         </section>
@@ -2610,8 +2609,6 @@ Note that all profile attributes are optional.]]>
                         summarizes.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="commitment"/>
             </topic>
             <topic id="segment-organizations">
                 <name>Organizations in a segment</name>
@@ -2620,8 +2617,6 @@ Note that all profile attributes are optional.]]>
                         organizations are linked by communication commitments.
                     </description>
                 </item>
-                <next section="concepts" topic="segment"/>
-                <next section="concepts" topic="organization"/>
             </topic>
             <topic id="entity-analytics">
                 <name>Entity analytics</name>
@@ -2630,7 +2625,6 @@ Note that all profile attributes are optional.]]>
                         then drill down.
                     </description>
                 </item>
-                <next section="concepts" topic="entity"/>
             </topic>
             <topic id="entity-issues">
                 <name>Entity issues</name>
@@ -2645,9 +2639,6 @@ Note that all profile attributes are optional.]]>
                         icon.
                     </description>
                 </item>
-                <next section="concepts" topic="plan-element"/>
-                <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="issue"/>
             </topic>
             <topic id="dissemination">
                 <name>Info dissemination</name>
@@ -2657,9 +2648,6 @@ Note that all profile attributes are optional.]]>
                         end up.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="information"/>
             </topic>
             <topic id="failure-impact">
                 <name>Failure impact</name>
@@ -2670,10 +2658,6 @@ Note that all profile attributes are optional.]]>
                         Only useful tasks and critical flows are considered when doing failure impact analysis.
                     </description>
                 </item>
-                <next section="concepts" topic="task"/>
-                <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="impact"/>
-                <next section="concepts" topic="usefulness"/>
             </topic>
         </section>
         <section id="improving">
@@ -2698,8 +2682,6 @@ Note that all profile attributes are optional.]]>
                         survey'' button.
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
-                <next section="concepts" topic="plan-element"/>
             </topic>
             <topic id="plan-versions">
                 <name>Template versions</name>
@@ -2711,7 +2693,6 @@ Note that all profile attributes are optional.]]>
                         administrator can actually put the current development version into production.
                     </description>
                 </item>
-                <next section="concepts" topic="plan"/>
             </topic>
             <topic id="plan-evaluation">
                 <name>Template evaluation</name>
@@ -2724,7 +2705,6 @@ Note that all profile attributes are optional.]]>
                         * and how many different kinds of issues were found
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
                 <next section="improving" topic="all-issues"/>
             </topic>
             <topic id="all-issues">
@@ -2734,7 +2714,6 @@ Note that all profile attributes are optional.]]>
                         them, search on their names and drill down on them.
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
                 <next section="improving" topic="resolving-issues"/>
             </topic>
             <topic id="resolving-issues">
@@ -2769,7 +2748,6 @@ Note that all profile attributes are optional.]]>
                         a survey (with questionnaire) can be created about resolving the issue.
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
                 <next section="learning" topic="launch-remediation-survey"/>
             </topic>
             <topic id="moving-tasks">
@@ -2786,7 +2764,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="task"/>
                 <next section="scoping" topic="add-define-segment"/>
             </topic>
             <topic id="tune-task-flow-definition">
@@ -2829,8 +2806,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="assignment"/>
-                <next section="concepts" topic="commitment"/>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="verify-taxonomy">
@@ -2861,7 +2836,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="entity"/>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="verify-checklists">
@@ -2887,7 +2861,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="checklist"/>
                 <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="tune-task-flow-definition"/>
                 <next section="improving" topic="verify-taxonomy"/>
@@ -2904,7 +2877,6 @@ Note that all profile attributes are optional.]]>
                         Clicking on the name of a tasks or a segment, takes you to it.
                     </description>
                 </item>
-                <next section="concepts" topic="checklist"/>
                 <next section="info-sharing" topic="edit-checklist"/>
             </topic>
         </section>
@@ -2937,8 +2909,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="plan-element"/>
-                <next section="concepts" topic="survey"/>
                 <next section="learning" topic="launch-survey"/>
             </topic>
             <topic id="launch-survey">
@@ -2975,8 +2945,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="plan-element"/>
-                <next section="concepts" topic="survey"/>
                 <next section="learning" topic="add-survey-participants"/>
                 <next section="learning" topic="compose-questionnaire"/>
             </topic>
@@ -3005,7 +2973,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="survey"/>
                 <next section="learning" topic="add-survey-participants"/>
                 <next section="learning" topic="compose-questionnaire"/>
             </topic>
@@ -3038,7 +3005,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="survey"/>
                 <next section="learning" topic="survey-results"/>
             </topic>
             <topic id="survey-results">
@@ -3061,7 +3027,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="survey"/>
                 <next section="learning" topic="add-survey-participants"/>
             </topic>
             <topic id="feedback">
@@ -3102,7 +3067,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="plan"/>
                 <next section="searching" topic="references"/>
             </topic>
             <topic id="whos-who">
@@ -3122,7 +3086,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="agent"/>
             </topic>
             <topic id="documents">
                 <name>Search for attachments</name>
@@ -3141,7 +3104,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="attachment"/>
             </topic>
             <topic id="tags">
                 <name>Search by tags</name>
@@ -3160,7 +3122,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="tag"/>
             </topic>
             <topic id="taxonomies">
                 <name>Looking up a taxonomy</name>
@@ -3182,7 +3143,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="entity"/>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="references">
@@ -3206,7 +3166,6 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="plan-element"/>
             </topic>
         </section>
         <section id="user-issues">
@@ -3222,7 +3181,6 @@ Note that all profile attributes are optional.]]>
                         * giving options for its remediation (start each option on a new line)
                     </description>
                 </item>
-                <next section="concepts" topic="issue"/>
             </topic>
         </section>
     </role>

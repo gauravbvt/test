@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.help;
 
+import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.guide.Guide;
@@ -119,12 +120,15 @@ public abstract class HelpAjaxBehavior extends AbstractDefaultAjaxBehavior {
         String[] words = term.split( " " );
         for ( int i = 0; i < words.length; i++ ) {
             String word = words[i];
-            if ( word.endsWith( "y" ) ) {
-          //      sb.append( "(" );
+            if ( com.mindalliance.channels.core.Matcher.same( "medium", word ) ) {
+                sb.append( word );
+                sb.append( "|media" );
+            } else if ( word.endsWith( "y" ) ) {
+                //      sb.append( "(" );
                 sb.append( word );
                 sb.append( "|" );
                 sb.append( word.substring( 0, word.length() - 1 ) ).append( "ies" );
-           //     sb.append( ")" );
+                //     sb.append( ")" );
             } else if ( word.endsWith( "s" ) ) {
                 sb.append( word );
             } else {
