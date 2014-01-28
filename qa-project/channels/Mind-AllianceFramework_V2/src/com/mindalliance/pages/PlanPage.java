@@ -445,6 +445,117 @@ public class PlanPage {
 	}
 	
 	/**
+	 * 'verifyShowPopupMenuIsPresent' method verifies that Show popup menu is present on the Plan Page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyShowPopupMenuIsPresent(String show) throws UIAutomationException{
+
+		// Assertion: Verify 'show' is present
+		elementController.requireElementSmart(fileName,"Show",GlobalVariables.configuration.getAttrSearchList(), "Show");
+		String popUpName=UIActions.getText(fileName,"Show",GlobalVariables.configuration.getAttrSearchList(), "Show");
+		if(!show.equals(popUpName)){
+		throw new UIAutomationException( "'"+show +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyShowPopupMenuIsPresentInTaskPanel' method verifies that Show popup menu is present in Task Panel
+	 * @throws UIAutomationException 
+	 */
+	public void verifyShowPopupMenuIsPresentInTaskPanel(String show) throws UIAutomationException{
+		
+		// Assertion: Verify 'show' is present
+		elementController.requireElementSmart(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		String popUpName=UIActions.getText(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		if(!show.equals(popUpName)){
+		throw new UIAutomationException( "'"+show +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyShowPopupMenuIsPresentInReceivesPanel' method verifies that Show popup menu is present in Receives Panel
+	 * @throws UIAutomationException 
+	 */
+	public void verifyShowPopupMenuIsPresentInReceivesPanel(String show) throws UIAutomationException{
+		// Assertion: Verify 'show' is present
+		elementController.requireElementSmart(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		String popUpName=UIActions.getText(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		if(!show.equals(popUpName)){
+		throw new UIAutomationException( "'"+show +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyShowPopupMenuIsPresentInSendsPanel' method verifies that Show popup menu is present in Sends Panel
+	 * @throws UIAutomationException 
+	 */
+	public void verifyShowPopupMenuIsPresentInSendsPanel(String show) throws UIAutomationException{
+		// Assertion: Verify 'show' is present
+		elementController.requireElementSmart(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		String popUpName=UIActions.getText(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		if(!show.equals(popUpName)){
+		throw new UIAutomationException( "'"+show +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyActionsPopupMenuIsPresent' method verifies that Actions popup menu is present on the Plan Editor Page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresent(String actions) throws UIAutomationException{
+		
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions",GlobalVariables.configuration.getAttrSearchList(), "Actions");
+		String popUpName=UIActions.getText(fileName,"Actions",GlobalVariables.configuration.getAttrSearchList(), "Actions");
+		if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyActionsPopupMenuIsPresentInSendsPanel' method verifies that Actions popup menu is present in Sends panel on the Plan Editor Page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInSendsPanel(String actions) throws UIAutomationException{
+		
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Actions In Sends Panel");
+		String popUpName=UIActions.getText(fileName,"Actions In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Actions In Sends Panel");
+		if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyActionsPopupMenuIsPresentInReceivesPanel' method verifies that Actions popup menu is present in Receives panel on the Plan Editor Page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInReceivesPanel(String actions) throws UIAutomationException{
+	
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Actions In Receives Panel");
+		String popUpName=UIActions.getText(fileName,"Actions In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Actions In Receives Panel");
+		if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}
+	}
+	
+
+	/**
+	 * 'verifyActionsPopupMenuIsPresentInAboutTemplate' method verifies that Actions popup menu is present in About Template
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInAboutTemplate(String actions) throws UIAutomationException{
+	
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In About Template",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Template");
+		String popUpName=UIActions.getText(fileName,"Actions In About Template",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Template");
+		if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}
+	}
+	
+	/**
 	 * 'clickPopupMenu' method click on Pop up menu and Submenu under that Popup menu
 	 * @param popUpName Show / Actions / Searching / Scoping / Improving / Participation
 	 * @throws UIAutomationException 
@@ -1975,6 +2086,7 @@ public class PlanPage {
 		Select secondRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(secondRatedDropDownList);
 		UIActions.selectByTextAndClick("High");
+		UIActions.enterKey(Keys.ENTER);
 		
 	}
 	/**
@@ -2956,7 +3068,7 @@ public class PlanPage {
 			}
 		}
 		else {
-			// Assertion: Verify by clicking on 'Show Simple Form' link chabges to 'Show Advanced form'
+			// Assertion: Verify by clicking on 'Show Simple Form' link changes to 'Show Advanced form'
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Sends Panel");
 			UIActions.click(fileName,"Show Advanced Simple Form In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Sends Panel");
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Sends Panel");
@@ -3078,6 +3190,69 @@ public class PlanPage {
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
 	}
+	
+	/**
+	 * Clicks on Messages Tab in Collaboration Panel
+	 * @throws UIAutomationException
+	 */
+	public void clickMessagesTabInCollaborationPanel() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
+		UIActions.click(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
+		elementController.requireElementSmart(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
+		String tabTextInPage=UIActions.getText(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab in Collaboration Panel" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+	}
+	
+	/**
+	 * Select from to  dropdownlist in Collaboration panel
+	 * @param contact
+	 * @throws UIAutomationException
+	 */
+	public void clickToDropDownInCollaborationPanel(String to) throws UIAutomationException{
+        
+		elementController.requireElementSmart(fileName,"To Drop Down In Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"To Drop Down In Messages Tab in Collaboration Panel");
+		UIActions.click(fileName,"To Drop Down In Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"To Drop Down In Messages Tab in Collaboration Panel");
+		
+		Select toDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(toDropDownList);
+		UIActions.selectByTextAndClick(to);
+		
+
+	}
+	
+	/**
+	 * Click Send button in Collaboration Panel
+	 * @param contact
+	 * @throws UIAutomationException
+	 */
+	public String clickSendButtonInCollaborationPanel() throws UIAutomationException{
+        
+		elementController.requireElementSmart(fileName,"Send Button In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Send Button In Collaboration Panel");
+		UIActions.click(fileName,"Send Button In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Send Button In Collaboration Panel");
+		
+		return UIActions.getText(fileName,"Message Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Sent Notification");
+	
+	}
+	
+	
+	/**
+	 * Enter message in Message text area in Collaboration Panel
+	 * @param message
+	 * @throws UIAutomationException
+	 */
+	public void enterMessage(String message) throws UIAutomationException{
+		UIActions.scrollDown();
+		elementController.requireElementSmart(fileName,"Message Text Area In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Message Text Area In Collaboration Panel");
+		UIActions.click(fileName,"Message Text Area In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Message Text Area In Collaboration Panel");
+		
+		UIActions.clearTextBox(fileName,"Message Text Area In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Message Text Area In Collaboration Panel");
+		UIActions.enterValueInTextBox(message,fileName,"Message Text Area In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Message Text Area In Collaboration Panel");
+		
+	}
+	
 	/**
 	 * Check if 'Receives' panel is present
 	 * @throws UIAutomationException

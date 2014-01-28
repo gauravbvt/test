@@ -142,6 +142,7 @@ public class HomePage {
 	
 	
 	
+	
 	/**
 	 * 'selectPlanFromDropDown' method clicks on Plan drop down
 	 * @throws UIAutomationException 

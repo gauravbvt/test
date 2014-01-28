@@ -125,7 +125,18 @@ public class DomainPlanPage {
 	
        	UIActions.getText(fileName, "IssueSummaryReportPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
 	}
+	
+	/**
+	 * Click on Template link on Issue Summary Report Page
+	 * @throws UIAutomationException
+	 */
+	public String clickTemplateLinkOnIssueSummaryReportPage() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Template Link On Issue Summary Report Page",GlobalVariables.configuration.getAttrSearchList(), "Template Link On Issue Summary Report Page");
+		UIActions.click(fileName,"Template Link On Issue Summary Report Page",GlobalVariables.configuration.getAttrSearchList(), "Template Link On Issue Summary Report Page");
 
+       	return UIActions.getText(fileName, "CollaborationTemplatePageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Page Title");
+	}
+	
 	/**
 	 * Click on Surveys link
 	 * @throws UIAutomationException

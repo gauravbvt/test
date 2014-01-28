@@ -79,11 +79,11 @@ public class HeaderController {
 	 * 'clickSendButton' method clicks on 'Send Feedback' button
 	 * @throws UIAutomationException 
 	 */
-	public void clickSendButton() throws UIAutomationException{
+	public String clickSendButton() throws UIAutomationException{
 	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
 	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
 	   
-		UIActions.getText(fileName, "Send Feedback Notification", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Notification");
+		return UIActions.getText(fileName, "Send Feedback Notification", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Notification");
 		
 		
 	
