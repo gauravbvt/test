@@ -34,7 +34,7 @@ import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
 /**
  * Test Case ID: CPA0002_HideCollaborationPanel
- * Summary: Send Feedback from Collaboration Templates Page
+ * Summary:Hide Collaboration Panel
  * @author Administrator
  *
  */
@@ -93,7 +93,7 @@ public class CPA0002_HideCollaborationPanel extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method is used to hide the Collaboration Panel
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

@@ -34,7 +34,7 @@ import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
 /**
  * Test Case ID: CPA0010_ClickActivitiesTab
- * Summary: Send Feedback from Collaboration Templates Page
+ * Summary: Click Activities tab in Collaboration Panel
  * @author Administrator
  *
  */
@@ -91,7 +91,7 @@ public class CPA0010_ClickActivitiesTab extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verify that Activities tab is shown in Collaboration Panel
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 
