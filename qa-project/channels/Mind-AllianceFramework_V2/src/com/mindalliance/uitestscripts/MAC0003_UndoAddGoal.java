@@ -82,6 +82,7 @@ public class MAC0003_UndoAddGoal extends TestCase {
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Initialized");
+	
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
