@@ -43,13 +43,18 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getDefaultUserRoleId() {
+        return getPlanCommunity().isDomainCommunity() ? "developer" : "participant";
+    }
+
+    @Override
     protected String getHelpSectionId() {
-        return "issues-page";
+        return getPlanCommunity().isDomainCommunity() ? "template-issues-page" : "plan-issues-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return "about-issues-page";
+        return getPlanCommunity().isDomainCommunity() ?  "about-template-issues-page" : "about-plan-issues-page";
     }
 
     protected void addContent() {
@@ -72,11 +77,6 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     @Override
     protected String getFeedbackType() {
         return Feedback.ISSUES;
-    }
-
-    @Override
-    protected String getDefaultUserRoleId() {
-        return "participant";
     }
 
     private void addTitle() {

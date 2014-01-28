@@ -12,7 +12,10 @@
                 <item>
                     <description>Channels is an online collaboration planning service.
 
+                        [[File:home_page.png|Channels home page]]
+
                         It enables...
+
                         * Analysts to develop best-practice templates for information-intensive collaboration,
                         * Planners to setup and manage localized collaboration plans based on collaboration templates,
                         * Users to participate in collaboration plans and get collaboration checklists instructing their participation,
@@ -33,7 +36,9 @@
                         * edit the email address Channels will use to communicate with you
                         * upload a photo of yourself
 
-                        Make sure you press the Apply button for the changes to take effect.
+                        [[File:home_page.png|User identity]]
+
+                        Make sure you press the Apply button for the changes to take effect. Otherwise they will be discarded.
                     </description>
                 </item>
             </topic>
@@ -42,6 +47,8 @@
                 <item>
                     <description>This allows you to provide the different ways by which your collaborators and
                         supervisors can contact you.
+
+                        [[File:home_page.png|User identity]]
 
                         You can select means of communication (email, cell, pager, etc.) and, for each one, give your
                         contact info (an email address, a phone number etc.).
@@ -67,6 +74,8 @@
                     <description>Click on the bar to expand the attachment controls. Use the controls to upload a file
                         or enter a URL and then attach it to the current context.
 
+                        [[File:attaching_documents.png|Attaching documents]]
+
                         Assign a type to the attachment, the default being "Reference", to indicate your intent. Attachments of type "Picture" will typically be used as an icon.
                     </description>
                 </item>
@@ -80,11 +89,12 @@
                     <description>As a participant or potential participant in a collaboration plan, you may be asked by collaboration template developers
                         to answer surveys in order to help improve a collaboration template.
 
-                        You can
+                        [[File:surveys_page.png|Surveys page]]
+
+                        You can...
 
                         * see the surveys you need to complete
-                        ** and optionally complete them, decline them or forward
-                        them,
+                        ** and optionally complete them [[File:surveys_filling.png|Filling out a survey]], decline them or forward them,
                         * see those you completed
                         ** and revise you answers if you so wish,
                         * and see those you declined
@@ -98,12 +108,13 @@
             <topic id="about-feedback-page">
                 <name>My feedback</name>
                 <item>
-                    <description>You can
+                    <description>You can...
 
-                        * browse and filter the list of all feedback messages you sent to the developers of the
-                        collaboration template your collaboration plan has adopted,
+                        * browse and filter the list of all feedback messages you sent to the developers of the collaboration template your collaboration plan has adopted,
                         * expand the conversation with developers initiated by your feedback,
                         * and add a comment to the conversation.
+
+                        [[File:feedback_page.png|Managing your feedback]]
 
                         You can mark feedback as "resolved", once you consider that your feedback has achieved your intended
                         objective.
@@ -131,6 +142,7 @@
                 <definition section="plan-concepts" topic="plan-checklist"/>
                 <definition section="plan-concepts" topic="plan-planning-scenario"/>
                 <definition section="plan-concepts" topic="plan-requirement"/>
+                <definition section="plan-concepts" topic="chain-of-command"/>
             </topic>
         </section>
         <section id="plan-concepts">
@@ -185,13 +197,13 @@
                         * the communications that coordinate and inform the tasks,
                         * and the checklists detailing when and how to execute the tasks and communicate.
 
-                        The collaboration template is defined using "placeholders" for
+                        The collaboration template is defined using "placeholders" for...
 
                         * organizations (organization placeholders),
                         * people and systems (agents)
                         * and places (location placeholders).
 
-                        A collaboration plan adopting a template identifies
+                        A collaboration plan adopting a template identifies...
 
                         * the locations of location placeholders,
                         * the organizations participating as organization placeholders,
@@ -254,7 +266,7 @@
 
                         An organization can contain sub-organizations.
 
-                        The organizations known to a plan consist of:
+                        The organizations known to a plan consist of...
 
                         * All the known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration template adopted by the plan
                         * All (known) organizations registered in the plan only
@@ -463,46 +475,61 @@
                     </description>
                 </item>
             </topic>
+            <topic id="chain-of-command">
+                <name>Chain of command</name>
+                <item>
+                    <description>The chains of command of a user is the sum of all direct and indirect supervisor-supervised
+                        relationships involving that user from participation in a collaboration plan.</description>
+                </item>
+            </topic>
             <topic id="collaboration-vs-process">
                 <name>Collaborations vs. business processes</name>
                 <item>
                     <description>
                         Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
-                        can be captured as business processes, most collaborations can not. Furthermore, while business processes have
-                        "owners", no one can be said to own a collaboration.
+                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration plans.
+                        Furthermore, while business processes have "owners", no one by definition can be said to "own" a collaboration.
 
                         A ''business process'' is a close orchestration of people and systems within an (extended) organization,
-                        all working harmoniously according to a known and repeatable script in order to accomplish a common goal.
+                        all working harmoniously according to a known and repeatable script in order to accomplish an organizational goal.
 
                         A ''collaboration'', as understood in Channels, is the coordination of interdependent work done
-                        by multiple individuals, from one or more organizations, each trying to achieve their own, possibly conflicting,
+                        by multiple individuals, from one or more organizations, where organizations are trying to achieve their own, possibly conflicting,
                         goals.
 
                         The goals of organizations, namely risk mitigation and opportunity captures, are
                         instantiated by events to be caused, prevented, responded to, recovered from etc.
                         These events, it is assumed, affect, in some ways or other, all the participants in the collaboration,
-                        driving them to collaborate and share information.
+                        driving them to collaborate and communicate.
 
                         Collaboration planning focuses on information as the source of task inter-dependencies.
                         Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
-                        or inform them so they can succeed.
+                        or inform them so they can succeed (information sharing).
 
-                        Unlike business processes, a collaboration plan does not necessarily script the tasks; it only attempts to resolve their
-                        information and coordination inter-dependencies via information flows.
-                        The collaboration plan assumes that tasks and communications can fail,
-                        which is why Channels encourages information flow redundancies in collaboration plans.
+                        Unlike business processes, a collaboration plan does '''not''' script the tasks; it only attempts to resolve their
+                        information and coordination inter-dependencies via information flows and to make explicit the
+                        expected task assignments and communication commitments that are required to successfully collaborate.
+
+                        Whereas a business process will explicitly script (program) tasks and communications, a collaboration plan
+                        only ''implies'' the many possible sequences of tasks and communications that can resolve inter-dependencies
+                        between organizations that are trying to achieve their missions in anticipated scenarios. This makes
+                        a collaboration plan much less brittle than a business process when reality confounds expectations.
+
+                        Another important way in which collaboration planning differs from business process modeling is that collaboration planning assumes
+                        that tasks and communications can and sometimes will fail.
+                        This is why Channels encourages the design of redundant information flows in collaboration plans.
 
                         Most endeavors involving multiple organizations (each bringing its own agenda) can '''not''' be represented
                         realistically or usefully as business processes. However, most and possibly all multi-organization
-                        endeavors can be represented, analyzed and improved upon as collaborations.
+                        endeavors can be represented, analyzed and improved upon as collaboration plans.
 
                         It is easy to understand the allure of seeing the work of organizations primarily as business processes.
-                        If only we always knew exactly how to work together and always did it predictably and in complete harmony!
+                        If only we always knew exactly how to work together and if only we always did it predictably, infallibly and in complete harmony!
                         However, the reality is that only a small percentage of all the work we do with others can be
                         represented as business processes.
 
-                        So, this is why most of the efficiencies to be gained from planning how we work together will
-                        come from improving the flow of information in collaborations, not in business processes.
+                        This is why most of the efficiencies to be gained from planning how we work together will
+                        come from designing and improving collaboration plans, not business processes.
                     </description>
                 </item>
             </topic>
@@ -513,16 +540,18 @@
                 <name>All Collaboration Plans page</name>
                 <item>
                     <description>The ''All Collaboration Plans'' page list all the collaboration plans visible to you,
-                        namely, all plans you can participate in and all those, whether or not they are open for participation,
-                        for which you are a planner.
+                        namely, all plans you can participate in and all those for which you are a planner,
+                        whether or not they are open for participation yet.
 
-                        You can:
+                        You can...
+
                         * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is to be based, and then pressing the "Start it" button - you will be the founding planner for this plan,
                         * access a collaboration plan visible to you (select the Go button next to its name in the list of plans).
+
+                        [[File:collaboration_plans_page.png|Collaboration plans page]]
                     </description>
                 </item>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-template"/>
+                <next section="collaboration-plan-page" topic="about-collaboration-plan-page"/>
             </topic>
         </section>
         <section id="collaboration-plan-page">
@@ -530,41 +559,61 @@
             <topic id="about-collaboration-plan-page">
                 <name>Collaboration plan page</name>
                 <item>
-                    <description>As a user you can see and all collaboration plans in which you are a planner or that have been opened for
-                        participation by their planners.
+                    <description>The collaboration plan page is the home page of a collaboration plan.
 
                         As a user, you can decide to participate in positions (roughly, organizational roles) that are open to participation by all.
+                        [[File:plan_user_managing_participation.png|User-managed participation]]
 
                         If you created the collaboration plan, you are the initial collaboration planner for this plan.
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
+                        [[File:plan_planner_authorizing.png|Authorizing planners]]
 
-                        As a planner, you can name the plan, localize it, update it to a new version of the collaboration template, and set collaboration requirements for it.
-                        A plan is localized by resolving placeholder places from the template to known locations. At a minimum, the placeholder locale of the adopted template, if identified, needs
-                        to be resolved. Until it is, a plan can not be opened for participation.
+                        A newly created collaboration plan is initially closed for participation. As a planner, you
+                        decide when to open it (or later close it) for participation. The collaboration plan can not be opened
+                        for participation [[File:plan_opening_participation.png|Opening a plan for participation]]
+                        until the template's locale has been given an actual location, if it is a placeholder.
 
-                        As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or a developer of the collaboration template upon which the plan is based, you can access it.
+                        As a planner, you can name the plan, describe it and localize it [[File:plan_setting_up.png|Setting up a collaboration plan]].
+                        You can also update it to a new version of the collaboration template if one is detected by Channels.
+
+                        As a planner you can set collaboration requirements for the collaboration plan. [[File:plan_requirements_page.png|Plan requirements page]]
+                        An issue is raised by Channels for each requirement that is not met.
+
+                        A plan is localized by resolving placeholder places from the template to known locations.
+                        At a minimum, the placeholder locale of the adopted template [[File:template_locale.png|Collaboration template locale]], if identified, needs
+                        to be resolved. Until it is, a planner can not open the plan for participation.
+
+                        As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or
+                        a developer of the collaboration template upon which the plan is based, you can access it.
 
                         As a planner, you can register organizations for potential participation into the plan (or in
-                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate). You can also
-                        assign users to positions known to the plan.
+                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate). [[File:plan_registering_orgs.png|Registering organizations in a plan]]
+                        You can then assign known organizations (registered and from the template) to organization placeholders defined in the template. [[File:plan_participation_organizations.png|Managing organization participation in a plan]]
 
-                        As a planner, you can define requirements on the collaboration and visualize the extent they are fulfilled given the current participation.
+                        You can also assign any and all users to positions that need to be filled. [[File:plan_participation_users.png|User filling into positions a plan]]
+
+                        As a planner, you can define requirements on the collaboration and visualize the extent
+                        to which they are fulfilled given the current participation. [[File:plan_requirements_page.png|Plan requirements]]
 
                         As a planner, you can view all issues detected in and reported about the collaboration plan.
+                        You can waive issues that are "waivable". [[File:plan_issues_managing.png|Managing a plan's issues]]
+                        You can also see all issues, with metrics, in the plan issues report [[File:plan_issues_report.png||Plan issues report]]
 
                         If, as a participant, you are assigned to a position where you supervise other positions, you can assign
                         users to these positions, subject to some constraints, and subject to they accepting the
-                        assignment. You are also responsible for confirming these assignments in order to activate them.
+                        assignment. You are also responsible for confirming these assignments in order to activate them. [[File:plan_participation_confirmation.png|Confirming supervised participation]]
 
-                        As a participant, you can access your collaboration checklists, the surveys you take part in,
-                        and the replies to feedback you have provided.
+                        As a participant, you can access your collaboration checklists [[File:plan_checklists_accessing.png|Accessing the plan's checklists]],
+                        the surveys you take part in [[File:surveys_page|The surveys page]],
+                        and the replies to feedback you have provided [[File:feedback_page|The feedback page]].
                     </description>
                 </item>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-template"/>
-                <next section="plan-concepts" topic="plan-checklist"/>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="plan-planner"/>
+                <next section="what-i-do" topic="participating-in-plan"/>
+                <next section="participation-page" topic="about-participation-page"/>
+                <next section="all-checklists-page" topic="about-all-protocols-page"/>
+                <next section="checklists-page" topic="about-checklists-page"/>
+                <next section="requirements-page" topic="about-requirements-page"/>
+                <next section="plan-issues-page" topic="about-plan-issues-page"/>
             </topic>
         </section>
         <section id="what-i-do">
@@ -581,10 +630,8 @@
                     Once you participate in a plan, you can withdraw from participation, but only if you are not a planner
                     and if you have not accepted any position. </description>
                 </item>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-participant"/>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="plan-position"/>
+                <next section="what-i-do" topic="my-participation"/>
+                <next section="what-i-do" topic="my-to-be-confirmed"/>
             </topic>
             <topic id="my-privileges">
                 <name>My user privileges</name>
@@ -599,16 +646,15 @@
                 <name>I participate as...</name>
                 <item>
                     <description>You can accept to participate in positions that are open to all users or in positions that have
-                        been assigned to you by authorized users (planners or your supervisors).
+                        been assigned to you by authorized users (planners or your supervisors). [[File:plan_user_managing_participation.png|User-managed participation]]
 
-                        By check a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
+                        By checking a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
                         this position. By un-checking an already checked box, you unilaterally resign the assignment.
 
-                        By pressing the "command chains" icons next to the help icon, you can see your command chains
-                        defined by your participation and that of other users in the plan.
+                        By pressing the "command chains" icons next to the help icon, you can see your chains of command
+                        defined by your participation and that of other users in the plan. [[File:plan_chains_of_command.png|Chains of command in a plan]]
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
             <topic id="adding-participation">
                 <name>I also participate in...</name>
@@ -616,18 +662,21 @@
                     <description>Based on your user privileges or current participation, other assignments in the
                         collaboration plan's organization may be available to you.
 
+                        [[File:plan_user_managing_participation.png|User-managed participation]]
+
                         First select an organization where a desired position would be listed and then select the position.
 
                         Your selection may be subject to confirmation by users participating in positions where they supervise
                         the position in which you selected to participate.
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
             <topic id="my-to-be-confirmed">
                 <name>I await confirmation to be...</name>
                 <item>
                     <description>This is a list of positions your participation as await confirmation by your supervisors.
+
+                        [[File:plan_user_managing_participation.png|User-managed participation]]
 
                         You can withdraw your participation request by un-checking the box next to the position.
                     </description>
@@ -643,6 +692,8 @@
                     <description>As a collaboration planner, the ''Collaboration Requirements'' page enables you to define
                         information sharing requirements between organizations participating in the plan.
 
+                        [[File:plan_requirements_page.png|Plan requirements page]]
+
                         You can then examine to what extent each requirement can be satisfied by the applicable pairs of
                         organizations (information source-sink pairs), should they follow the adopted collaboration template.
 
@@ -652,9 +703,125 @@
                         requirements.
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-requirement"/>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-participation"/>
+            </topic>
+            <topic id="defining-requirement">
+                <name>Defining requirements</name>
+                <item>
+                    <description>
+                        Defining a collaboration requirement means specifying how organizations in a collaboration plan are expected to communicate.
+
+                        What the requirements want to enforce is '''not''' that participants will follow the directives
+                        in their assigned collaboration checklists as defined in the collaboration template the collaboration plan is based on;
+                        it is assumed (rightly or wrongly) that they will.
+
+                        What requirements want to enforce is that, given ''current participation'' in the plan, and given
+                        the checklists they currently have, certain organizations commit to communicate certain information
+                        with certain others and that there will be sufficient redundancy in sources and targets.
+
+                        A given requirement might apply to every possible pairing of known organizations in a collaboration plan or
+                        only to some pairs of organizations. A pair of organizations to which a requirement applies consists
+                        of a "source" organization (the one who commits to communicate some information) and of a
+                        "receiver" organization (the other organization, who would be receiving the information as per the commitment).
+
+                        To be precise, a requirement defines a subset of all the communication commitments that currently exist between users participating in a plan and asserts
+                        that there will be, in that subset, enough sources, enough receivers and enough sources for each receiver.
+
+                        One can think of the set of all communication commitments as the sum of all communication steps in all the checklists for all participants in a plan.
+
+                        A requirement specifies (or not) ...
+
+                        * the information to be communicated
+                        * the positions in organizations who would commit to communicating it and their numbers (the sources)
+                        * the positions in organizations who would benefit from these commitments and their numbers (the receivers)
+                        * the expected number of sources per receiver (redundancy of source for each distinct receiver)
+
+                        Documents can be attached to a requirement and planners can report issues
+                        [[File:plan_requirement_issues.png| Plan requirement issues]] about the definition of a requirement.
+
+                        If information to be communicated is not specified then any information will satisfy the requirement.
+                        If the sources are not specified then any user in any position in any organization can be a source satisfying the requirements.
+                        The same logic applies to receivers.
+
+                        Information in required communication commitments can be specified by giving none, any, or all of...
+
+                        * its name
+                        * tags applied to information flows in the collaboration template from which the communication commitments are derived (any information from a flow tagged by all the given tags will match)
+                        * element names (any information with all the named elements will match)
+
+                        [[File:plan_requirement_info.png|Plan requirement - Specifying information]]
+
+                        If the information is not specified, then all communication commitments would match the information requirement.
+
+                        The identities of sources are specified by naming none, any, or all of...
+
+                        * the agent (hiring position of users) acting as the source
+                        * the organization the agent works for
+                        * the placeholder organization the above organization participates as
+
+                        [[File:plan_requirement_source.png|Plan requirement - Specifying source]]
+
+                        The commitments can be further specified in terms of how the sources would acquire the information to be communicated.
+                        This is done by naming none, any or all of...
+
+                        * the source task of the flow from which the commitment is derived
+                        * tags applied on matching source tasks of flows from which commitments are derived
+                        * the planning scenario in which the tasks are to be executed
+
+                        If the sources are not specified, then all communication commitments would match the source requirement.
+
+                        The requirement on sources also include the minimum, preferred minimum and an optional maximum number of different sources in all commitments
+                        that match the requirement.
+
+                        The receivers are specified similarly as to their identity. Similarly to sources,
+                        the commitments can be further specified in terms of how the receivers would make use of the information to be communicated.
+                        This is done by naming none, any or all of...
+
+                        * the target task of the flow from which the commitment is derived
+                        * tags applied to matching target tasks  of flows from which commitments are derived
+                        * the planning scenario in which the tasks are to be executed
+
+                        If the receivers are not specified then all communication commitments would match the receiver requirement.
+
+                        The requirement on receivers also include the minimum, preferred minimum and an optional maximum number of receivers in
+                        all commitments that match the requirement.
+
+                        The required redundancy of distinct sources per receiver is defined in terms of a minimum, preferred,
+                        and an optional maximum number.
+
+                        [[File:plan_requirement_sources_per_receiver.png|Plan requirement - Sources per receiver]]
+
+                    </description>
+                </item>
+            </topic>
+            <topic id="analyzing-requirements">
+                <name>Analyzing requirements</name>
+                <item>
+                    <description>
+                        Requirement analysis [[File:plan_requirement_analysis.png|Plan requirement analysis]]
+                        measures how well the requirements are satisfied by participation in the plan.
+
+                        Analysis consists in doing the following for each requirement ...
+
+                        * Identifying all pairs of organizations (sources and receivers) to which the requirement applies
+                        * For each pair, gather all communication commitments between each pair of organizations that match the requirement
+                        * Count the number of commitments between individuals who are members of these organizations and count how many distinct individuals act as sources and receivers.
+                        * Check if there are enough distinct sources and receivers, and if there are enough sources per receiver.
+                        * Rate how the pair of organizations fulfill the requirement in terms of the counts being above the absolute minimum, below the maximum (if set) or right on target with the preferred minimum.
+
+                        The rating for a pair of organizations is:
+
+                        * '''Impossible''' if the template can not produce commitments that match the requirement
+                        * '''Negative''' if the minimum number of sources or receivers is not met or the maximum is exceeded (it set)
+                        * '''Weak''' if the absolute minimum and maximum numbers of sources and receivers is verified but not the preferred minimum
+                        * '''Strong''' if the absolute minimum and maximum numbers of sources and receivers is verified as well as the preferred minimum
+
+                        A diagram shows organizations linked by one or more requirements that apply to them. It also shows whether those requirements are satisfied.
+
+                       The requirements between each pair are listed below the diagram together the satisfaction ratings. It is possible to view all the
+                        communication commitments between a pair of organizations that go toward satisfying a given requirement.
+
+                    </description>
+                </item>
             </topic>
         </section>
         <section id="participation-page">
@@ -662,7 +829,8 @@
             <topic id="about-participation-page">
                 <name>Plan Participation page</name>
                 <item>
-                    <description>The ''Plan Participation'' page enables you to:
+                    <description>The ''Plan Participation'' page [[File:plan_participation_page.png|Plan participation page]] enables you to...
+
                         * browse a registry of all organizations participating or eligible to participate in the plan,
                         * register, as authorized, organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
                         * assign, as authorized, users to template-defined positions in organizations,
@@ -671,9 +839,6 @@
                         * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="collaboration-plan"/>
-                <next section="plan-concepts" topic="plan-template"/>
             </topic>
         </section>
         <section id="all-checklists-page">
@@ -681,7 +846,8 @@
             <topic id="about-all-protocols-page">
                 <name>All Checklists page</name>
                 <item>
-                    <description>The ''All Checklists'' page let's you access all your collaboration checklists and those of all participants you are allowed to see.
+                    <description>The ''All Checklists'' page [[File:plan_checklists_accessing.png|All checklists page]] let's you access
+                        all your collaboration checklists and those of all participants you are allowed to see.
 
                         If you are a planner, you can see the personalized checklists of all users and the generic checklists for all positions.
 
@@ -694,23 +860,22 @@
                         Note that for a user who participates in only one position, this page is skipped and the user will be taken directly to the Participant Checklist page.
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="collaboration-plan"/>
                 <next section="checklists-page" topic="about-checklists-page"/>
             </topic>
         </section>
         <section id="checklists-page">
-            <name>Participation Checklists page</name>
+            <name>Participant's Checklists page</name>
             <topic id="about-checklists-page">
-                <name>Participation Checklists page</name>
+                <name>Participant's Checklists page</name>
                 <item>
-                    <description>The ''Participation Checklists'' page displays the combined collaboration checklists:
+                    <description>The ''Participant's Checklists'' page [[File:participant_checklists_page.png|Participant's checklists page]]
+                        displays the combined collaboration checklists...
 
                         * given to a user for participation in a position (personalized checklists)
                         * given to a user for all the positions the user participated in (personalized checklists)
                         * for a position based solely on the assigned tasks and required communications (generic checklists - no contact information)
 
-                        A checklist describes
+                        A checklist describes...
 
                         * a task
                         * what events or communications trigger it (if any)
@@ -720,10 +885,17 @@
                         ** self-assigned "research" sub-tasks
                         ** self-assigned "follow up" tasks
 
-                        A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist
-                        and gives access to the chains of command of each contact.
 
-                        Users can provide feedback (question, suggestion or problem) about
+                        The prescribed process for executing the steps can be viewed as a diagram. [[File:checklist_process_diagram.png|Checklist process diagram]]
+
+                        Each checklist step can be expanded to see details about its execution, including contacts if it is a communication step.
+                        [[File:checklist_step_expanded.png|Expanded checklist step]]
+                        Each contact is linked to a user profile and contact information in the contacts directory.
+
+                        A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist
+                        and gives access to the chains of command of each contact. [[File:checklist_contacts_directory.png|Checklists contact directory]]
+
+                        Users can provide feedback (question, suggestion or problem) about...
 
                         * the entire page
                         * individual checklists
@@ -732,10 +904,26 @@
 
                     </description>
                 </item>
-                <next section="plan-concepts" topic="plan-participation"/>
-                <next section="plan-concepts" topic="collaboration-plan"/>
             </topic>
         </section>
+        <section id="plan-issues-page">
+            <name>Issues page</name>
+            <topic id="about-plan-issues-page">
+                <name>Issues report</name>
+                <item>
+                    <description>The issues report provides metrics on all the issues found in a collaboration
+                        plan.
+
+                        [[File:plan_issues_report.png|Plan issues report]]
+
+                        The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
+
+                        Individual issues are revealed by clicking on the text of an issue kind. [[File:plan_issues_report_expanded.png|Expanded issues]]
+                    </description>
+                </item>
+            </topic>
+        </section>
+
     </role>
     <role id="developer" isa="participant" glossarySection="concepts" glossaryTopic="glossary">
         <name>For developers of collaboration templates</name>
@@ -789,8 +977,8 @@
                         * Jean-François Cloutier
                         * Denis Ranger
                         * Romit Chatterjee
-                        * Priyanka Gurav (AFourTech)
-                        * Mahesh Kulkarni (AFourTech)
+                        * Priyanka Gurav (QA - AFourTech)
+                        * Mahesh Kulkarni (QA - AFourTech)
                     </description>
                 </item>
             </topic>
@@ -963,7 +1151,8 @@
                     <description>A task is an action or decision taken, individually or as a team, by agents
                         (people or systems) assigned to it.
 
-                        A task's outcomes can be:
+                        A task's outcomes can be...
+
                         * an event triggered or terminated,
                         * goals achieved
                         * information acquired that can then be shared
@@ -1000,7 +1189,8 @@
                     <description>An information capability specifies information that would be acquired by or for the execution of a task and that that could be
                         shared with "quality of service" commitments.
 
-                        Quality of service commitments include
+                        Quality of service commitments include...
+
                         * timeliness
                         * transmission media
                         * information format
@@ -1015,7 +1205,8 @@
                     <description>An information flow specifies how agents who carry out a task that ''produces'' information would commit to communicate
                         that information with agents carrying out a task that ''consumes'' it.
 
-                        An information flow is defined in terms of:
+                        An information flow is defined in terms of...
+
                         * The information being communicated
                         * The source task where the information was acquired
                         * The target task where the information is consumed
@@ -1033,7 +1224,8 @@
                     <description>A task's assignments is the list of agents known to the collaboration template that match
                         the assignment profile of the task.
 
-                        The assignment profile specifies agents by naming (or not):
+                        The assignment profile specifies agents by naming (or not)...
+
                         * The actual agent
                         * A type of agent
                         * A role in which the agents are employed
@@ -1183,7 +1375,8 @@
                         (The Flooded City). The identity of a placeholder place (or placeholder location) is to be
                         resolved by each plan adopting the template.
 
-                        The use of placeholder places is required when
+                        The use of placeholder places is required when...
+
                         * stating the scope of an event
                         * stating the default locale of the template as a whole
 
@@ -1214,7 +1407,8 @@
                 <item>
                     <description>A classification system names secrecy classification levels.
 
-                        Secrecy classifications are used to specify
+                        Secrecy classifications are used to specify...
+
                         * the clearances of agents
                         * the secrecy of elements of information
                         * the security level of transmission media
@@ -1240,6 +1434,7 @@
                         The triggers of a collaboration checklist are the triggers of the task as derived from its definition.
 
                         A task and thus its collaboration checklist can be triggered by assigned agents...
+
                         * becoming aware of an event (without being told),
                         * receiving notifications (being told without asking),
                         * receiving requests for information (being told after asking),
@@ -1255,7 +1450,8 @@
                     <description>An entity is a grab bag term for plan elements that are "timeless things or concepts"
                         (as opposed to tasks and communicated information)
 
-                        Entities include
+                        Entities are...
+
                         * agents
                         * events
                         * functions
@@ -1288,7 +1484,8 @@
                 <item>
                     <description>Communicating information can impact the status of tasks in different ways.
 
-                        It can
+                        It can...
+
                         * trigger the task
                         * terminate the task
                         * be critical (crucial) to the task's success
@@ -1356,7 +1553,7 @@
                 <item>
                     <description>A collaboration checklist lists the steps required to successfully execute a task.
 
-                        A step can be either
+                        A step can be either...
 
                         * some stated activity (other than communicating)
                         * an information request to make,
@@ -1433,15 +1630,15 @@
                     </description>
                 </item>
                 <next section="about-template-developer" topic="template-developer"/>
-                <next section="plan-editor" topic="about-plan-editor"/>
+                <next section="template-editor" topic="about-template-editor"/>
             </topic>
         </section>
-        <section id="plan-editor">
+        <section id="template-editor">
             <name>Collaboration template editor page</name>
-            <topic id="about-plan-editor">
+            <topic id="about-template-editor">
                 <name>Collaboration template editor</name>
                 <item>
-                    <description>As a template developer, you use the template editor to
+                    <description>As a template developer, you use the template editor to...
 
                         * define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
                         * compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
@@ -1459,7 +1656,8 @@
             <topic id="show-plan">
                 <name>Template editor show menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Presence/Hide Presence - Hide or show the developers presence, activities and messages panel
                         * About Template - Open the template details panel
                         * About Template Segment - Open the segment details panel
@@ -1469,7 +1667,8 @@
             <topic id="actions-plan">
                 <name>Template editor actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Send message - Send a message about this template as a whole
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1497,7 +1696,8 @@
             <topic id="scoping-menu">
                 <name>Scoping menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * All Events and Phases - Open the panel with the editable list of all events event phases in the scope of this template
                         * All Goals - Open the panel showing all goals defined in this template
                         * All involvements - Open the panel used to name the organizations (real or placeholders), the places (actual), information products, formats, roles and transmission media that are expected to be involved in tasks or communication commitments in this template
@@ -1508,7 +1708,8 @@
             <topic id="improving-menu">
                 <name>Improving menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * All Checklists - open the panel where all checklists in the template can be browsed
                         * Task Mover - Open the panel used to easily move tasks from the current segment to another (only visible to developers)
                         * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and commit to share information - as reflected in their checklists
@@ -1521,7 +1722,8 @@
             <topic id="learning-menu">
                 <name>Learning menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * All feedback - Open a panel where all feedback sent about this template is listed and can be responded to
                         * All surveys - Open a panel from where surveys can be defined, launched and managed
                     </description>
@@ -1530,7 +1732,8 @@
             <topic id="actions-segment">
                 <name>Segment actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Send message - Send a message about this template segment
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1543,7 +1746,8 @@
             <topic id="show-task">
                 <name>Task show menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Details/Hide details - Show or hide the task definition form
                         * Assignments - Show the list of agents in scope that are assignable to the task given its definition
                         * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
@@ -1562,7 +1766,8 @@
             <topic id="actions-task">
                 <name>Task actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Send message - Send a message about this task
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1582,13 +1787,14 @@
             <topic id="show-flow">
                 <name>Need/Capability/Flow show menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Details / Hide details - Open or close the definition form
                         * Info product - Open the profile panel for the referenced info product (hidden if N/A)
                         * Elements - Open the elements of information edit panel (hidden if definition form is closed)
                         * Commitments - Open a panel with all computed info communication commitments (hidden if N/A)
                         * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A)
-                        * Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
+                        * Dissemination - Open a panel showing how elements of information in this flow disseminate to tasks (hidden if N/A)
                         * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
                         * Send message - Send a message about this info need/capability/flow
                     </description>
@@ -1597,7 +1803,8 @@
             <topic id="actions-flow">
                 <name>Need/capability/flow actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Copy need/capability/flow - Take a copy
@@ -1613,7 +1820,8 @@
             <topic id="issue-menu">
                 <name>Issue menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Show/Hide details - Show or hide the details of this issue reported by a template developer
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1625,7 +1833,8 @@
             <topic id="actions-plan-details">
                 <name>Template details actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Send message - Send a message about this template as a whole
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1637,7 +1846,8 @@
             <topic id="actions-entity">
                 <name>Entity actions menu</name>
                 <item>
-                    <description>The options are
+                    <description>The options are...
+
                         * Send message - Send a message about this entity
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
@@ -1703,13 +1913,13 @@
                 </item>
             </topic>
         </section>
-        <section id="issues-page">
+        <section id="template-issues-page">
             <name>Issues page</name>
-            <topic id="about-issues-page">
+            <topic id="about-template-issues-page">
                 <name>Issues report</name>
                 <item>
                     <description>The issues report provides metrics on all the issues found in a collaboration
-                        template or plan.
+                        template.
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
@@ -1831,7 +2041,8 @@ The list is part of the template's ''details''.]]></description>
             <topic id="segment-details">
                 <name>Segment details</name>
                 <item>
-                    <description>You can:
+                    <description>You can...
+
                         * name or rename the segment
                         * give it a description
                         * give it tags
@@ -1845,7 +2056,8 @@ The list is part of the template's ''details''.]]></description>
             <topic id="segment-scenario">
                 <name>Define a segment's planning scenario</name>
                 <item>
-                    <description>You can:
+                    <description>You can...
+
                         * identify the phase of the event
                         * identify the event
                         * rate the event severity that qualifies an event for this planning scenario
@@ -1907,7 +2119,8 @@ Naming the goal is optional.]]></description>
                     <description>Information flow maps depict how information is consumed and produced by tasks and to
                         what effects.
 
-                        Represented in a flow map are
+                        Represented in a flow map are...
+
                         * Events which initiations or terminations trigger tasks
                         * Event initiated or terminated by tasks
                         * Goals (risks or opportunities) achieved by tasks
@@ -1915,7 +2128,8 @@ Naming the goal is optional.]]></description>
                         * The information needs and capabilities of tasks
                         * Information sharing flows connecting tasks
 
-                        Using view controls in the left-hand side, you can
+                        Using view controls in the left-hand side, you can...
+
                         * hide or show info needs and capabilities,
                         * hide or show goals,
                         * hide tasks without assignments and flows without commitments
@@ -1944,7 +2158,8 @@ Naming the goal is optional.]]></description>
             <topic id="define-task">
                 <name>Define a task</name>
                 <item>
-                    <description>Define a task by
+                    <description>Define a task by...
+
                         * naming it
                         * identifying the function it implements
                         * identifying where it is to be executed
@@ -1970,7 +2185,8 @@ Naming the goal is optional.]]></description>
                 <item>
                     <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the
                         Receives panel. An info need specifies information that agents assigned to the task need to
-                        receive to
+                        receive to...
+
                         * trigger the task
                         * enable it to succeed (critical)
                         * terminate the task (useful)
@@ -1996,7 +2212,8 @@ Naming the goal is optional.]]></description>
             <topic id="define-flow">
                 <name>Define a send or receive</name>
                 <item>
-                    <description>Specify an information need, capability or sharing by
+                    <description>Specify an information need, capability or sharing by...
+
                         * naming the information
                         * requiring the information to be compliant with a named information product
                         * listing its elements
@@ -2026,7 +2243,8 @@ Naming the goal is optional.]]></description>
                     <description>You can list the essential elements of information of an information need, capability
                         or flow, and set their properties.
 
-                        The properties of an element of information are
+                        The properties of an element of information are...
+
                         * its name
                         * the question it answers
                         * its security classification
@@ -2076,7 +2294,8 @@ Naming the goal is optional.]]></description>
                         These communication steps can not be removed from the checklist. Action steps, representing
                         simple activities requiring no communication or new information, can be added and removed.
 
-                        A step can be given:
+                        A step can be given...
+
                         * Prerequisite steps - steps the step must come "after"
                         * Conditions that must be present for the step to be taken ("if")
                         * Conditions that must be absent for the step to be taken ("unless")
@@ -2085,14 +2304,16 @@ Naming the goal is optional.]]></description>
                         Action steps (not communication steps) can be marked as "required", else they are optional.
                         Communication and sub-task steps are marked as required if they are notifications or follow-ups.
 
-                        Conditions applicable on steps are either:
+                        Conditions applicable on steps are either...
+
                         * Goals achieved by the task
                         * Events triggered or terminated by the task
                         * Information needs of the task
                         * The task having failed (a non-optional condition for "on-failure notification steps)
                         * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
-                        Outcomes of a steps can be:
+                        Outcomes of a steps can be...
+
                         * Goals, if any, achieved by the task
                         * Events, if any, caused or terminated by the task
                         * Sharing capabilities acquired for or from successfully executing the task
@@ -2369,12 +2590,14 @@ Note that all profile attributes are optional.]]>
                     <description>Users in a collaboration plan participate as (actual) agents that are defined in the
                         collaboration template the plan has adopted.
 
-                        Depending on the participation constrains set for the agent,
+                        Depending on the participation constrains set for the agent...
+
                         * any number of users can participate as the agent
                         * or exactly one user can participate
                         * or at most a specified number of users can participate
 
-                        Furthermore, who can participate as the agent can be set to
+                        Furthermore, who can participate as the agent can be set to...
+
                         * any user whatsoever (open participation)
                         * or users confirmed in their participation by other users participating as the agent's supervisors
                         * or users already participating as agents employed by one of the agent's organizations
@@ -2553,7 +2776,8 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>Define a function that tasks can implement.
 
-                        A function can be:
+                        A function can be...
+
                         * named
                         * described
                         * categorized by other (more generic) functions
@@ -2698,7 +2922,8 @@ Note that all profile attributes are optional.]]>
                 <name>Template evaluation</name>
                 <item>
                     <description>The template evaluation gives an accounting of the issues found in this template. The
-                        metrics are expressed in terms of
+                        metrics are expressed in terms of...
+
                         * the three main types of issues (robustness, completeness, validity)
                         * their severity
                         * whether they were waived or not
@@ -2776,7 +3001,8 @@ Note that all profile attributes are optional.]]>
                         only the right agents that are assigned to the tasks on each side of a flow become parties to
                         communication commitments.
 
-                        Which agents are assigned to a task is determined by
+                        Which agents are assigned to a task is determined by...
+
                         * how a task specifies the agents assignable to it
                         * what agents are in the template's environments and how they are profiled
                         * how the agents are employed (role, jurisdiction, organization)
@@ -2927,7 +3153,8 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <item>
-                    <description>Once a survey is launched, it can be managed by
+                    <description>Once a survey is launched, it can be managed by...
+
                         * inviting users to participate
                         * looking at the answers from survey participants
                         * deactivating or reactivating the survey
@@ -2985,7 +3212,8 @@ Note that all profile attributes are optional.]]>
                         After the deadline has passed, the survey is considered late. Late participants can be
                         ''nagged'' (nags are sent by email).
 
-                        A participant can
+                        A participant can...
+
                         *accept the invitation by answering questions,
                         *decline the invitation
                         *forward the survey to others (if it was marked as forwardable).
@@ -3173,7 +3401,8 @@ Note that all profile attributes are optional.]]>
             <topic id="adding-issue">
                 <name>Reporting an issue</name>
                 <item>
-                    <description>You can report an issue about the current context by pressing the New button, and then
+                    <description>You can report an issue about the current context by pressing the New button, and then...
+
                         * providing a brief description of the issue
                         * giving the type of issue (validity, completeness or robustness)
                         * optionally tagging the issue
@@ -3213,7 +3442,7 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>As an administrator, you manage templates and users for a Channels server.
 
-                        Template management consists of:
+                        Template management consists of...
 
                         * Creating a new template with a unique resource identifier (URI)
                         * Deleting a template - permitted only if not yet adopted by a collaboration plan
@@ -3221,7 +3450,7 @@ Note that all profile attributes are optional.]]>
                         * Naming the owner of the template
                         * Changing the default email addresses at which user or developer feedback is sent
 
-                        User management consists of:
+                        User management consists of...
 
                         * Adding a new user with a unique username - be aware that users can not be deleted, only disabled
                         * Giving a user a full name, email address and password - the user can later modify all of these

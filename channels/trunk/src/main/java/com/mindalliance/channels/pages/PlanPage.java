@@ -520,7 +520,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                helpPanel.selectTopicInSection( "plan-editor", "about-plan-editor", target );
+                helpPanel.selectTopicInSection( "template-editor", "about-template-editor", target );
                 toggleQuickHelp( target );
             }
         };
