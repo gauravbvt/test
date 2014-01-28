@@ -239,6 +239,12 @@
 		<Name>Capability copied</Name>
 	</Element>
 	<Element>
+		<GivenName>Message Sent Notification</GivenName>
+		<Name>Message Sent</Name>
+	</Element>
+	
+	
+	<Element>
 		<GivenName>Strench Up Forms</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div/span[6]/img</Xpath>
 		<Name></Name>
@@ -565,6 +571,46 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>show all activites</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Messages Tab in Collaboration Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/span/div/div/div/ul/li[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Activities</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>To Drop Down In Messages Tab in Collaboration Panel</GivenName>
+		<Xpath>//select[contains(@name,'segment:social:tabs:panel:newMessage:recipient')]</Xpath>
+		<Name>segment:social:tabs:panel:newMessage:recipient</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Send Button In Collaboration Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div[4]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Message Text Area In Collaboration Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div[4]/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -1203,7 +1249,7 @@
 		<GivenName>Actions</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/a/span</Xpath>
 		<Name></Name>
-		<Id>id6c</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Actions</LinkText>
 		<ClassName>menubar</ClassName>
@@ -1216,6 +1262,16 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Actions</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In About Template</GivenName>
+		<Xpath>/html/body/form/div[4]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	

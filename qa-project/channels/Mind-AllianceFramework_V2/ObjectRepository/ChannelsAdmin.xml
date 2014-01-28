@@ -26,6 +26,11 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Invalid Template Notification</GivenName>
+ 		<Title>Invalid template identifier - New collaboration template not added.</Title>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Plan Name</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/input</Xpath>
  		<Name></Name>
