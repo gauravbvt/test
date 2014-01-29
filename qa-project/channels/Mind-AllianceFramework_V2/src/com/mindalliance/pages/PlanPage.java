@@ -556,6 +556,34 @@ public class PlanPage {
 	}
 	
 	/**
+	 * 'verifyActionsPopupMenuIsPresentInAboutTemplateSegment' method verifies that Actions popup menu is present in About Template Segment window
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInAboutTemplateSegment(String actions) throws UIAutomationException{
+	
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In About Template Segment",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Template Segment");
+		String popUpName=UIActions.getText(fileName,"Actions In About Template Segment",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Template Segment");
+		if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyActionsPopupMenuIsPresentInAboutFunction' method verifies that Actions popup menu is present in About Function window
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInAboutFunction(String actions) throws UIAutomationException{
+	
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In About Function",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Function");
+		String popUpName=UIActions.getText(fileName,"Actions In About Function",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Function");
+	/*	if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}*/
+	}
+	
+	/**
 	 * 'clickPopupMenu' method click on Pop up menu and Submenu under that Popup menu
 	 * @param popUpName Show / Actions / Searching / Scoping / Improving / Participation
 	 * @throws UIAutomationException 
@@ -1500,7 +1528,7 @@ public class PlanPage {
 	}
 	/**
 	 * Organization name in task panel
-	 * @param roleName
+	 * @param orgName
 	 * @throws UIAutomationException
 	 */
 	public void enterOrganizationInTask(String orgName) throws UIAutomationException{
@@ -1509,6 +1537,32 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(orgName,fileName,"Organization In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Organization In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
+	
+	/**
+	 * Function name in task panel
+	 * @param funcName
+	 * @throws UIAutomationException
+	 */
+	public void enterFunctionInTask(String funcName) throws UIAutomationException{
+		
+		elementController.requireElementSmart(fileName,"Function In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function In Task Panel");
+		UIActions.click(fileName,"Function In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function In Task Panel");
+		UIActions.clearTextBox(fileName,"Function In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function In Task Panel");
+		UIActions.enterValueInTextBox(funcName,fileName,"Function In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function In Task Panel");
+		UIActions.enterKey(Keys.TAB);
+	}
+	
+	/**
+	 * Function name in task panel
+	 * @param function
+	 * @throws UIAutomationException
+	 */
+	public void clickFunctionLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Function Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function Link In Task Panel");
+		UIActions.click(fileName,"Function Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function Link In Task Panel");
+		
+	}
+	
 	/**
 	 * Verify Task name is present in Task mover window
 	 * @param taskName
