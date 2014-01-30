@@ -2540,7 +2540,7 @@ input[disabled] {
     margin: 0;
     position: absolute;
     top: 2px;
-    left: 3.8em;
+    left: 5em;
 }
 
 .flow-overrides {

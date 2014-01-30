@@ -54,6 +54,7 @@
                         produce collaboration checklists.
                     </description>
                 </item>
+                <next section="about-channels" topic="template-building-strategies"/>
             </topic>
             <topic id="development-team">
                 <name>Development team</name>
@@ -145,6 +146,101 @@
                         come from designing and improving collaboration plans, not from business processes.
                     </description>
                 </item>
+            </topic>
+            <topic id="template-building-strategies">
+                <name>Template building strategies</name>
+                <item>
+                    <description>
+                        Template developers can use various strategies when building a collaboration template.
+
+                        They can use...
+
+                        * a goal-driven strategy
+                        * an effects-driven strategy
+                        * an issues-driven strategy
+                        * an opportunistic mix of all three
+
+                    </description>
+                </item>
+                <item>
+                    <description>
+                        A '''goal-driven strategy''' focuses on achieving organizational goals in each scenario.
+
+                        [[File:template_strategies_goal_driven.png|The goal-driven strategy]]
+
+                        When applying this strategy, template developers...
+
+                        * select an organizational goal in a segment
+                        * add tasks to the segment that directly achieve the goal
+                        * add tasks that produce information needed by other tasks in the segment
+                        * and connect them with enabling flows
+
+                        They repeat any or all of the above in all segments until...
+
+                        * all relevant goals for all organizations in scope are listed
+                        * all goals are achieved
+                        * and all information needs are met
+
+                        This strategy has pros and cons.
+
+                        Pros: All tasks contribute directly or indirectly to achieving goals.
+                        Cons: Event-triggered tasks might be ignored.
+                    </description>
+                </item>
+                <item>
+                    <description>
+                        An '''effects-driven strategy''' focuses on the consequences of events and on the impacts of communicating.
+
+                        [[File:template_strategies_effects_driven.png|The effects-driven strategy]]
+
+                        When applying this strategy, template developers...
+
+                        * select a segment covering a planning scenario
+                        * and in that segment, they define tasks that are
+                        ** directly triggered (no communications required) by the start of the segment's scenario
+                        ** or are ongoing.
+
+                        For each task, developers...
+
+                        * indicate if it can cause an event or terminate the segment
+                        * connect it to tasks it triggers or terminates via notifications or requests.
+
+                        Developers repeat the above until nothing is caused, triggered or terminated.
+
+                        This strategy has pros and cons.
+
+                        Pros: Cause and effect relationships are more reliably captured.
+                        Cons: Some tasks might not contribute to achieving goals.
+
+                    </description>
+                </item>
+                <item>
+                    <description>
+                        An ''issues-drive''' focuses on strategy focuses on eliminating or waiving outstanding issues until none are outstanding.
+
+                        [[File:template_strategies_issues_driven.png|The issues-driven strategy]]
+
+                        When applying this strategy, template developers...
+
+                        * select an issue, prioritizing...
+                        ** validity issues
+                        ** then completeness issues
+                        ** and finally robustness issues
+                        * waive an issue, if it is a “false positive” and it can be waived
+                        * or resolve the issue
+                        ** possibly by applying one of the proposed fixes
+                        ** and after surveying stakeholders as necessary
+
+                        Developers repeat the above until no issues, detected by Channels or reported by developers, are left outstanding.
+
+                        This strategy has pros and cons.
+
+                        Pros: Channels will find issues that people would easily miss.
+                        Cons: An issue-free collaboration template is not necessarily the right one.
+
+                    </description>
+                </item>
+
             </topic>
 
         </section>
@@ -1455,6 +1551,10 @@
                         * The transmission media over which the information would be communicated
                         * The maximum acceptable delay between acquiring the information and communicating it
                         * Instructions, such as whether to also share the planning scenario in context
+
+                        An information flow can connect tasks that are from different segments.
+
+                        [[File:flows_across_segments.png|Flows can cross segment boundaries]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="define-flow"/>
@@ -1656,14 +1756,25 @@
                 </item>
             </topic>
             <topic id="overriding">
-                <name>Overriding task</name>
+                <name>Overriding</name>
                 <item>
                     <description>A task with the same name as another task overrides it if it assigns a subset of the
                         agents the other task assigns.
 
+                        [[File:template_task_overriding.png|How a task overrides another]]
+
                         An agent is assigned to the overriding task (the more exclusive one), not the overridden task.
+
+                        An information flow with the same name as another flow overrides it if its source task and target task
+                        both override the source and target tasks of the other flows.
+
+                        [[File:template_flow_overriding.png|Flow overriding]]
+
+                        Agents with commitments from a flow can not have commitments from an another flow
+                        that's overridden by the first flow.
                     </description>
                 </item>
+                <next section="info-sharing" topic="task-overrides"/>
             </topic>
             <topic id="checklist-trigger">
                 <name>Checklist trigger</name>
@@ -1802,7 +1913,7 @@
                         * a self-assigned research sub-task
                         * a self-assigned follow up sub-task
 
-                        [[File:checklist_step_editing.png|Editing a checklist step]
+                        [[File:template_checklist_editor_steps.png|Steps in a checklist]]
 
                         A step may be required or optional. A step may have identify the completion of other steps as
                         pre-requisites.
@@ -1811,21 +1922,28 @@
                         having been achieved, an information need having been satisfied, the task having failed) be
                         present or absent.
 
-                        Channels will raise an issue whenever a condition or outcome from the definition of a task is
-                        not referenced by at least one step, for example, when a goal achieved by the task is not
-                        associated with a step in its checklist.
-
                         The communication steps of a checklist are implied by the flows in and out of a task, to and
                         from other agents(requested info to be received and notifications to be sent).
 
+                        [[File:template_checklist_communication_steps.png|Communication steps from flows]]
+
+                        If a flow triggers the task the checklist is for and if the flow is marked as requesting confirmation
+                        of receipt, then a confirm receipt communication step is automatically added to the checklist.
+
                         The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to
                         self and followup sub-tasks are triggering notifications to self.
+
+                        [[File:template_checklist_subtask_steps.png|Subtask steps from flows]]
 
                         The conditions on executing steps can be the goals achieved and events triggered by the task, or
                         other stated conditions.
 
                         The outcomes of a task (events caused or terminated, goals achieved, sharing capabilities
                         acquired) can be associated with the execution of individual steps.
+
+                        Channels will raise an issue whenever a condition or outcome from the definition of a task is
+                        not referenced by at least one step, for example, when a goal achieved by the task is not
+                        associated with a step in its checklist.
                     </description>
                 </item>
             </topic>
@@ -1872,6 +1990,7 @@
                     </description>
                 </item>
                 <next section="template-editor" topic="about-template-editor"/>
+                <next section="about-channels" topic="template-building-strategies"/>
             </topic>
         </section>
         <section id="template-editor">
@@ -1902,6 +2021,7 @@
                         [[File:template_editor_panes.png|The template editor's panes and content]]
                     </description>
                 </item>
+                <next section="about-channels" topic="template-building-strategies"/>
             </topic>
         </section>
         <section id="menus">
@@ -2495,6 +2615,9 @@
                         the task's definition form. You can toggle between a simple form (only basic fields are shown)
                         and advanced form (all fields are shown).
 
+                        Tags set on a task can be used, among other things, to categorize the assignments that are derived from it. These tags
+                        can be used in defining collaboration requirements in a collaboration plan.
+
                     </description>
                     <script>
                         <action>Open the task form</action>
@@ -2511,7 +2634,7 @@
             <topic id="add-need">
                 <name>Add info need to task</name>
                 <item>
-                    <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the
+                    <description>Add an information need to a task by clicking on the ''ADD'' button in the
                         Receives panel. An info need specifies information that agents assigned to the task need to
                         receive to...
 
@@ -2519,6 +2642,11 @@
                         * enable it to succeed (critical)
                         * terminate the task (useful)
                         * or improve its execution
+
+                        [[File:template_flow_add.png|Adding a send or a receive]]
+
+                        An information flow connecting one task to another can be built by first creating an information need and
+                        then identifying a source task.
                     </description>
                 </item>
                 <next section="info-sharing" topic="add-capability"/>
@@ -2530,7 +2658,14 @@
                 <item>
                     <description>Add an ''information capability'' to a task by clicking on the ''ADD'' button in the
                         Sends panel. An info capability specifies info agents assigned to a task expect to acquire and
-                        be able to share with others.
+                        be able to share with others, and how and how quickly.
+
+                        [[File:template_flow_add.png|Adding a send or a receive]]
+
+                        A flow connecting one task to another can be built by first creating an information capability and
+                        then identifying a target task.
+
+                        [[File:template_capability_to_flow.png|From capability to flow]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="add-need"/>
@@ -2540,17 +2675,36 @@
             <topic id="define-flow">
                 <name>Define a send or receive</name>
                 <item>
-                    <description>Specify an information need, capability or sharing by...
+                    <description>Specify an information need, capability or flow by...
 
-                        * naming the information
-                        * requiring the information to be compliant with a named information product
-                        * listing its elements
-                        * indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
-                        * whether the need, capability or sharing is private or can be made known to parties other than those who need, can share, share or receive the information.
-                        * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets
-                        * the communication channels to use, each including transmission medium and, optionally, a required format
-                        * timeliness constraints
-                        * and more
+                        * what is to be communicated [[File:template_flow_about.png|What is to be communicated]]
+                        * requiring the information to be compliant with a named information product [[File:template_flow_info_product.png|Standardizing the information as an info product]]
+                        * listing the elements of information [[File:template_flow_eois|Defining the elements of information]]
+                        * indicating the intent and whether it is ''pushed'' (a notification) or ''pulled' (a requested answer) [[File:template_flow_mode_intent.png|The mode and intent of a communication]]
+                        * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets [[File:template_flow_restrictions.png|Restrictions on a flow]]
+                        * the communication channels to use, each including transmission medium and, optionally, a required format [[File:template_flow_channels.png|Communication channels]]
+                        * timeliness constraints [[File:template_flow_timing.png|Communication timeliness]]
+                        * if a flow to a ''middleman'', whether it can be bypassed [[File:template_flow_bypassing_intermediate.png|Permission to disintermediate]]
+                        * and documenting it [[File:template_flow_documentation.png|Documenting a send or receive]]
+
+                        A flow is defined by first adding an information need and then identifying a source task, or by
+                        first adding an information capability and then identifying a target task.
+
+                        [[File:template_flow_source_target.png|Identifying a source or target task]]
+
+                        What is to be communicated in a send or receive is a combination of...
+
+                        * the information that justifies the communication
+                        * if allowed, the context in which the communication is made, namely, the current planning scenario
+
+                        Tags set on a flow can be used, among other things, to categorize the commitments that are derived from it. These tags
+                        can be used in defining collaboration requirements in a collaboration plan.
+
+                        An information need or capability can be marked as ''private'', in which case it is not to be communicated
+                        to participants in a collaboration plan. This will come into play when Channels supports the execution
+                        of plans.
+
+                        [[File:template_flow_private_need_capability.png|Privacy of info needs and capabilities]]
                     </description>
                     <script>
                         <action>Open the send/receive form</action>
@@ -2560,7 +2714,10 @@
                         </change>
                     </script>
                 </item>
+                <next section="info-sharing" topic="add-need"/>
+                <next section="info-sharing" topic="add-capability"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
+                <next section="info-sharing" topic="eois"/>
                 <next section="profiling" topic="profiling-medium"/>
                 <next section="profiling" topic="profiling-info-product"/>
                 <next section="profiling" topic="profiling-info-format"/>
@@ -2579,8 +2736,16 @@
                         * its handling instructions
                         * if produced, how it transforms , if at all, received elements
                         * if defining an info need, whether its delivery is subject to timeliness constraints
+
+                        [[File:template_flow_eois.png|Defining the elements of information]]
+
+                        If the information to be sent or received is standardized as an information product, then the send/receive
+                        inherits the information product's elements of information. Other elements of information can be added
+                        that are specific to the send/receive but this is discouraged.
                     </description>
                 </item>
+                <next section="info-sharing" topic="define-flow"/>
+                <next section="profiling" topic="profiling-info-product"/>
             </topic>
             <topic id="connect-with-flow">
                 <name>Connect tasks with info sharing</name>
@@ -2589,11 +2754,20 @@
                         that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info
                         need of another.
 
+                        [[File:template_flow_source_target.png|Identifying a source or target task]]
+
                         A sharing flow is created by connecting an info need or a capability to a task. The flow appears
                         in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
 
-                        Tasks in different segments can only be connected via their respective, defined info need and
-                        info capability.
+                        Tasks in different segments can only be connected via their respective, defined information need and
+                        information capability. You might want to thin of information needs and capabilities as defining
+                        the "flow connecting interface" of segments.
+
+                        [[File:flows_across_segments.png|Connecting tasks with flows across segments]]
+
+                        Channels can be asked to automatically create flows by connecting all tasks with matching
+                        information capabilities and needs, within and across segments. This is done by using the
+                        menu item ''Satisfy all needs'' in a task's actions menu.
                     </description>
                     <script>
                         <action>Open the send/receive form</action>
@@ -2605,11 +2779,34 @@
                     </script>
                 </item>
                 <next section="info-sharing" topic="add-task"/>
+                <next section="info-sharing" topic="add-need"/>
+                <next section="info-sharing" topic="add-capability"/>
+                <next section="info-sharing" topic="define-flow"/>
             </topic>
             <topic id="task-overrides">
                 <name>Task overrides</name>
                 <item>
-                    <description>The list of tasks that either override this task or are overridden by it.</description>
+                    <description>You can see the list of all tasks that either override this task or are overridden by it.
+
+                        [[File:template_task_overrides.png|List of overridden tasks]]
+
+                        A task is said to override another if the task names are the same (case is unimportant) and if the
+                        agent assignment profile of the first task narrows the assignment profile of the other task.
+
+                        [[File:template_task_overriding.png|How a task overrides another]]
+
+                        In other words, any agent assigned to the overriding task would also be assigned to the overridden
+                        task but not vice-versa. For example, a task "Detect threats" assigned to all Managers overrides
+                        a task "Detect threats" assigned to all Employees because a Manager is an Employee but an Employee
+                        is not necessarily a Manager.
+
+                        If an agent is assigned to a task that overrides another task, it is '''not''' assigned to the
+                        overridden task. in the above example, an agent who is a Manager would be assigned to only one task,
+                        the one profiled for Managers, not the task profiled for Employees, even though the agent matches it
+                        too.
+
+
+                    </description>
                 </item>
             </topic>
             <topic id="edit-checklist">
@@ -2618,6 +2815,8 @@
                     <description>A checklist comes pre-populated with steps representing the requested information to be
                         received, the notifications to be sent, the research and follow-up sub-tasks that are defined
                         for the task as flows.
+
+                        [[File:template_checklist_editor.png|Checklist editor]]
 
                         These communication steps can not be removed from the checklist. Action steps, representing
                         simple activities requiring no communication or new information, can be added and removed.
@@ -2646,11 +2845,17 @@
                         * Events, if any, caused or terminated by the task
                         * Sharing capabilities acquired for or from successfully executing the task
 
+                        [[File:template_checklist_step_editor.png|Editing a step in a checklist]]
+
                         A checklist must be confirmed to be deployed to participants as such. Any change to the implied
                         communication steps or to the action steps requires a re-confirmation.
 
                         A process flow describing the execution of the checklist is accessed by clicking on the flow
-                        icon next to the name of the task.
+                        icon next to the name of the task. The process flow shows all steps, their pre-conditions and outcomes
+                        as icons set between a start and stop icons. The process diagram shows when steps can be executed in no
+                        particular order or in a sequence.
+
+                        [[File:template_checklist_editor_step_flow.png|Checklist editor open on a step and showing process flow]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="checklist-flow"/>
@@ -2660,6 +2865,8 @@
                 <name>Checklist flow diagram</name>
                 <item>
                     <description>The checklist flow diagram depicts how the steps in the checklist are to be executed.
+
+                        [[File:template_checklist_process_diagram.png|Checklist process diagram]]
 
                         The green dot represents start of execution and the red dot its end. Execution is from left to
                         right.
@@ -2677,17 +2884,18 @@
             </topic>
         </section>
         <section id="profiling">
-            <name>Defining the template's scope</name>
+            <name>Defining domain entities</name>
             <topic id="profiling-event">
                 <name>Profile an event</name>
                 <item>
-                    <description><![CDATA[Define an event (always a type, never an actual event) by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it with event types
-* locating where it would happen
-* stating whether the event can terminate on its own
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define an event (always a type, never an actual event) by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it with event types
+                        * locating where it would happen
+                        * stating whether the event can terminate on its own
+
+                        Note that all profile attributes are optional
                     </description>
                     <script>
                         <action>Open an event profile</action>
@@ -2726,11 +2934,13 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-phase">
                 <name>Profile a event phase</name>
                 <item>
-                    <description><![CDATA[Define a phase (always a type) by
-* renaming it &ndash; it was created when first named &ndash; 
-* specifying if it is a pre-, co- or post-event phase
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define a phase (always a type) by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it with phase types (categorization has no useful purpose for phases)
+                        * indicating whether it is a pre-, co- or post-event phase
+
+                        Note that all profile attributes are optional.
                     </description>
                     <script>
                         <action>Open a phase profile</action>
@@ -2769,13 +2979,23 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-organization">
                 <name>Profile an organization</name>
                 <item>
-                    <description><![CDATA[Define an actual or type of organization by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it with organization types
-* If an actual organization, by
-** naming the parent organization
-** listing the agents it employs, with titles and roles, and optionally jurisdictions and supervisors
-Note that all profile attributes are optional.]]>
+                    <description>Define an actual or type of organization by
+
+                        * renaming it - it was created when first named-
+                        * categorizing it with organization types
+                        * stating its mission
+                        * identifying the actual parent organization
+                        * If an actual organization, by
+                        ** giving the organization location (a place)
+                        ** giving contact information for the organization as a whole
+
+                        Note that all profile attributes are optional.
+
+                        An actual organization employs agents in roles with jurisdiction that must be identified
+                        if they are to be assigned to tasks.
+
+                        An actual organization can be declared a placeholder, meaning its identity (or identities)
+                        will be decided in each collaboration plan that adopts the template whete the organziation is defined.
                     </description>
                     <script>
                         <action>Open an organization profile</action>
@@ -2786,8 +3006,20 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
+                <next section="profiling" topic="organization-jobs"/>
                 <next section="profiling" topic="organization-participation"/>
                 <next section="profiling" topic="profiling-agent"/>
+            </topic>
+            <topic id="organization-jobs">
+                <name>Positions in an organization</name>
+                <item>
+                    <description>An actual organization employs agents in roles with jurisdiction. Each position has a title
+                        that will be used in collaboration plans to describe the positions in which individuals can participate.
+
+                        Even though an organization might employ individuals in a great number of positions,
+                        only the positions that will be involved in the collaboration should be listed
+                    </description>
+                </item>
             </topic>
             <topic id="organization-participation">
                 <name>Specify organization participation</name>
@@ -2838,11 +3070,12 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-role">
                 <name>Profile a role</name>
                 <item>
-                    <description><![CDATA[Define a role (always a type) by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define a role (always a type) by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it
+
+                        Note that all profile attributes are optional
                     </description>
                     <script>
                         <action>Open a role profile</action>
@@ -2868,15 +3101,17 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-agent">
                 <name>Profile an agent</name>
                 <item>
-                    <description><![CDATA[Define an actual or type of agent by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it with agent types
-* If an actual agent, by
-** declaring it a person or system
-** setting clearances, languages, availability
-** setting constraints on users participating as this agent
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define an actual or type of agent by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it with agent types
+                        * If an actual agent, by
+                        ** declaring it a person or system
+                        ** setting clearances, languages, availability
+                        ** setting constraints on users participating as this agent
+                        ** identifying the transmission media this agent should be reachable with
+
+                        Note that all profile attributes are optional.
                     </description>
                     <script>
                         <action>Open an agent profile</action>
@@ -2970,18 +3205,19 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-place">
                 <name>Profile a place</name>
                 <item>
-                    <description><![CDATA[Define an actual or type of place by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it with place types (such as 'city', 'building' etc.)
-* if an actual place, by
-** naming what place it is within
-** giving a street address and postal code
-** identifying its geographical area
-* if a type of place, by
-** setting the place (type or actual) it must be in
-** the place it must contain
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define an actual or type of place by...
+
+                        * renaming it- it was created when first named -
+                        * categorizing it with place types (such as 'city', 'building' etc.)
+                        * if an actual place, by
+                        ** naming what place it is within
+                        ** giving a street address and postal code
+                        ** identifying its geographical area
+                        * if a type of place, by
+                        ** setting the place (type or actual) it must be in
+                        ** the place it must contain
+
+                        Note that all profile attributes are optional.
                     </description>
                     <script>
                         <action>Open a place profile</action>
@@ -3007,15 +3243,19 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-medium">
                 <name>Profile a transmission medium</name>
                 <item>
-                    <description><![CDATA[Define a transmission medium (always a type) by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it
-* stating whether it is unicast, multicast or broadcast
-* naming the other media this one can delegate to
-* naming its level of security
-* giving the pattern the media's ''addresses'' must conform to
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define a transmission medium (always a type) by
+
+                        * renaming it - it was created when first named -
+                        * categorizing it
+                        * stating whether it is
+                        ** unicast - one individual contacted per transmission -
+                        ** multicast - multiple known individuals contacted per transmission -
+                        ** or broadcast - unknown multitude contacted per transmission -
+                        * naming the other media this one can delegate to
+                        * naming its level of security - in terms of secrecy classification levels
+                        * giving the pattern the media's ''addresses'' must conform to
+
+                        Note that all profile attributes are optional.
                     </description>
                     <script>
                         <action>Open a transmission medium profile</action>
@@ -3041,12 +3281,13 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-info-product">
                 <name>Profile an information product</name>
                 <item>
-                    <description><![CDATA[Define an information product (always a type) by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it
-* defining the elements of information flows standardized to this information product require
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define an information product (always a type) by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it - it will inherit the elements of information of the info products that categorize it
+                        * defining the elements of information flows standardized to this information product require
+
+                        Note that all profile attributes are optional.
                     </description>
                     <script>
                         <action>Open an information product profile</action>
@@ -3072,11 +3313,12 @@ Note that all profile attributes are optional.]]>
             <topic id="profiling-info-format">
                 <name>Profile an information format</name>
                 <item>
-                    <description><![CDATA[Define an information format (always a type) that can qualify communication channels by
-* renaming it &ndash; it was created when first named &ndash; 
-* categorizing it
-* and more
-Note that all profile attributes are optional.]]>
+                    <description>Define an information format (always a type) by...
+
+                        * renaming it - it was created when first named -
+                        * categorizing it
+
+                        Note that all profile attributes are optional
                     </description>
                     <script>
                         <action>Open an information format profile</action>
@@ -3121,7 +3363,7 @@ Note that all profile attributes are optional.]]>
                         an information product, and define function-specific elements of information.
 
                         When a function is categorized by other functions, it adds to the goals, information needs and
-                        capabilitites that the categorizing functions define.
+                        information capabilities that the categorizing functions define.
                     </description>
                     <script>
                         <action>Open a function profile</action>
@@ -3151,13 +3393,18 @@ Note that all profile attributes are optional.]]>
             <topic id="entity-network">
                 <name>Communication commitment networks</name>
                 <item>
-                    <description>A collaboration template determines how agents must commit to share information with
-                        one another.
+                    <description>A collaboration template determines how actual agents must commit to communicate with
+                        one another. The network can show the agents themselves or it can aggregate  the
+                        commitment relationships by...
 
-                        Commitment networks depict these communication commitment relationships between agents either
-                        directly or aggregated by role or organization.
+                        * agent types
+                        * roles
+                        * actual organizations
+                        * types of organizations
 
-                        You can drill down on each commitment relationship to see the communicationg commitments it
+                        [[File:template_analysis_network.png|Communication commitments between agents aggregated by types of organization]]
+
+                        You can drill down on each commitment relationship to see the communication commitments it
                         summarizes.
                     </description>
                 </item>
@@ -3175,6 +3422,8 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>You can see the different ways in which this entity is involved in the template, and
                         then drill down.
+
+                        [[File:template_analysis_entities.png|Miscellaneous domain entity analytics]]
                     </description>
                 </item>
             </topic>
@@ -3195,9 +3444,13 @@ Note that all profile attributes are optional.]]>
             <topic id="dissemination">
                 <name>Info dissemination</name>
                 <item>
-                    <description>You can visualize where, according to template, individual elements of informations
-                        comsumed by a task would come from, and where elements of information produced by a task would
+                    <description>You can visualize where, according to template, individual elements of information
+                        consumed by a task would come from, and where elements of information produced by a task would
                         end up.
+
+                        Timeliness of delivery is examined whenever task in the dissemination have information needs that set timeliness constraints.
+
+                        [[File:template_analysis_dissemination_targets.png|Dissemination of element of information from selected task]] [[File:template_analysis_dissemination_sources.png|Dissemination of element of information to selected task]]
                     </description>
                 </item>
             </topic>
@@ -3205,7 +3458,9 @@ Note that all profile attributes are optional.]]>
                 <name>Failure impact</name>
                 <item>
                     <description>You can visualize how the failure of a task or of a flow can cause the cascading
-                        failures of useful tasks, thus jeopardizing the achiement of organizational goals.
+                        failures of useful tasks, thus jeopardizing the achievement of organizational goals.
+
+                        [[File:template_analysis_failure_impacts.png|Task failure analysis]]
 
                         Only useful tasks and critical flows are considered when doing failure impact analysis.
                     </description>
@@ -3220,20 +3475,32 @@ Note that all profile attributes are optional.]]>
                     <description>Channels automatically detected issues about this template element. You or other
                         developers may also have reported issues about it.
 
-                        All issues about the template element are listed. The developer-reported issues can be opened up
+                        [[File:template_analysis_issue_detected.png|Issue detected]]
+
+                        Issues are reported in a number of places...
+
+                        * With the template element they are about [[File:template_analysis_issues_in_context.png|Issues in context]]
+                        * With all other issues in a table for browsing [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
+                        * In an issues report with metrics [[File:template_analysis_issues_report.png|Template issues report]] [[File:template_analysis_issues_report_expanded.png|Template issues report, expanded]]
+
+                        Some issues detected by Channels can be waived (marked as false positives).
+
+                        The developer-reported issues can be opened up
                         to edit their names, description, severity and remediation options. When editing remediation
                         options, start each one on a new line.
 
-                        Some issues detected by Channels can be waived (marked as false positives).
+                        [[File:template_analysis_issue_user_reporting.png|A developer can report an issue]]
 
                         You can report a new issue by pressing the New button and then editing the issue. When
                         describing remediation options, start each one on a new line.
 
-                        You can automatically create a survey about remediating an issue by pressing on the ''Create
+                        You can automatically create a survey about fixing an issue by pressing on the ''Create
                         survey'' button. If a survey was already created, you can view it by pressing the the ''View
                         survey'' button.
                     </description>
                 </item>
+                <next section="learning" topic="launch-remediation-survey"/>
+                <next section="about-channels" topic="template-building-strategies"/>
             </topic>
             <topic id="plan-versions">
                 <name>Template versions</name>
@@ -3243,6 +3510,7 @@ Note that all profile attributes are optional.]]>
                         You can vote to move the current development version of this in production if you believe it is
                         ready. You can see the votes of other template developers and send them messages. Note that only an
                         administrator can actually put the current development version into production.
+
                     </description>
                 </item>
             </topic>
@@ -3259,12 +3527,15 @@ Note that all profile attributes are optional.]]>
                     </description>
                 </item>
                 <next section="improving" topic="all-issues"/>
+                <next section="about-channels" topic="template-building-strategies"/>
             </topic>
             <topic id="all-issues">
                 <name>All issues</name>
                 <item>
                     <description>All issues found in the template are listed in a paged table. You can sort them, filter
                         them, search on their names and drill down on them.
+
+                        [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
                     </description>
                 </item>
                 <next section="improving" topic="resolving-issues"/>
@@ -3275,6 +3546,8 @@ Note that all profile attributes are optional.]]>
                     <description>An obvious way of improving a collaboration template is to resolve issues detected by
                         Channels and by planners. The 'All issues" table aggregates all individual issues found in a
                         template.
+
+                        [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
                     </description>
                     <script>
                         <action>Open the All Issues table</action>
@@ -3308,6 +3581,8 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To
                         shrink a bloated segment, a new segment is usually created and tasks are moved to it.
+
+                        [[File:template_improving_task_mover.png|Task mover]]
                     </description>
                     <script>
                         <action>Transfer tasks</action>
@@ -3335,6 +3610,8 @@ Note that all profile attributes are optional.]]>
                         * what agents are in the template's environments and how they are profiled
                         * how the agents are employed (role, jurisdiction, organization)
                         * how the taxonomies of role, agent, organization etc. are defined
+
+                        [[File:template_improving_task_assignments.png|Verifying a task's assignments]]
                     </description>
                     <script>
                         <action>See a task's assignments</action>
@@ -3346,10 +3623,13 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <item>
-                    <description>Exactly what communication commitments are generated for a flow depends on
+                    <description>Exactly what communication commitments are generated for a flow depends on...
+
                         * what agents are assigned to the producing task and consuming task connected by the flow
                         * what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
                         * whether an overriding flow prohibits a pairing of agents
+
+                        [[File:template_improving_commitments.png|Verifying a flow's communication commitments]]
                     </description>
                     <script>
                         <action>See communication commitments derived from a flow</action>
@@ -3368,6 +3648,8 @@ Note that all profile attributes are optional.]]>
                     <description>Entities (i.e. roles, agents, organizations, places, events etc.) can be categorized.
                         Agents are categorized by agent types, organization by organization types, events by other
                         events (events are always types) etc.
+
+                        [[File:template_improving_taxonomies.png|Validating domain entity taxonomies]]
 
                         How entities are categorized largely determine the meaning of the tasks, flows, employments etc.
                         that are defined in terms of these entities.
@@ -3399,8 +3681,10 @@ Note that all profile attributes are optional.]]>
                         large number of communication commitments. The ''checklists map'' makes it easy to see if the sharing
                         commitments generated from the template are the intended ones.
 
+                        [[File:template_improving_checklists_map.png|Using the checklists map]]
+
                         The map is focused on one agent or one organization (as an aggregate of agents). It shows the
-                        commitments that involved that egent or organizations.
+                        commitments that involved that agent or organizations.
 
                         The other parties to the commitments can be aggregated by role, organization type or not at all.
 
@@ -3442,6 +3726,8 @@ Note that all profile attributes are optional.]]>
                     <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about
                         elements of the template or the template as a whole.
 
+                        [[File:template_learning_questionnaire.png|Composing a survey questionnaire]]
+
                         You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions
                         can be marked as required or optional.
 
@@ -3469,7 +3755,14 @@ Note that all profile attributes are optional.]]>
                 <name>Launch a survey</name>
                 <item>
                     <description>A survey is launched on the template or on a template element by applying a
-                        questionnaire to it.
+                        questionnaire to it, usually from within its definition.
+
+                        [[File:template_learning_survey_launching.png|Launching a survey on template element]]
+
+                        A survey about fixing an issue can be launched from where the issue is reported. The questionnaire
+                        is automatically built to offer a choice of remediation options.
+
+                        [[File:template_learning_survey_launching_issue.png|Launching an issue remediation survey]]
                     </description>
                     <script>
                         <action>View launched and launch-able surveys on a task</action>
@@ -3483,10 +3776,12 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>Once a survey is launched, it can be managed by...
 
-                        * inviting users to participate
-                        * looking at the answers from survey participants
+                        * inviting users to participate [[File:template_learning_survey_participation.png|Managing participation in a survey]]
+                        * looking at a preview of the survey [[File:template_learning_survey_preview.png|Previewing a survey]]
+                        * looking at the current answers from survey participants [[File:template_learning_survey_results.png|Looking up the answers to a survey]]
                         * deactivating or reactivating the survey
-                        * editing the survey's questionnaire
+                        * modifying the survey questionnaire - even after participants have started answering the survey
+
                     </description>
                     <script>
                         <action>See all launched surveys</action>
@@ -3500,14 +3795,17 @@ Note that all profile attributes are optional.]]>
                         </change>
                     </script>
                 </item>
-                <next section="learning" topic="add-survey-participants"/>
                 <next section="learning" topic="compose-questionnaire"/>
+                <next section="learning" topic="add-survey-participants"/>
+                <next section="learning" topic="launch-remediation-survey"/>
             </topic>
             <topic id="launch-remediation-survey">
                 <name>Launch an issue remediation survey</name>
                 <item>
                     <description>Surveys can be launched on an issue that was detected. The questionnaire is
                         automatically generated based on the remediation options.
+
+                        [[File:template_learning_survey_launching_issue.png|Launching an issue remediation survey]]
 
                         The questionnaire can be modified and extended while the survey is ongoing.
 
@@ -3535,7 +3833,9 @@ Note that all profile attributes are optional.]]>
                 <name>Invite participation to a survey</name>
                 <item>
                     <description>Once a survey is launched, users can be invited to participate in it. Users can be
-                        given a deadline to answer all of the survey's required questions.
+                        given a deadline to answer all of the required questions in a survey.
+
+                        [[File:template_learning_survey_participation.png|Managing participation in a survey]]
 
                         After the deadline has passed, the survey is considered late. Late participants can be
                         ''nagged'' (nags are sent by email).
@@ -3570,6 +3870,8 @@ Note that all profile attributes are optional.]]>
                         available to all template developers.
 
                         Results can be viewed by opening the survey and selecting the Results tabs.
+
+                        [[File:template_learning_survey_results.png|Looking up the answers to a survey]]
                     </description>
                     <script>
                         <action>See all launched surveys</action>
@@ -3591,8 +3893,10 @@ Note that all profile attributes are optional.]]>
                     <description>Users can ask questions, report problems and make suggestions via a feedback widget
                         that appears in their home page, their checklists etc.
 
-                        You can see this feedback and reply to it. The user can then reply back etc. or mark the
-                        question, problem or suggestion as resolved.
+                        You can see all feedback provided about the collaboration template and reply to any of it.
+                        The user can then reply back etc. or mark the question, problem or suggestion as resolved.
+
+                        [[File:template_learning_feedback_managing.png|Managing feedback about the template]]
                     </description>
                     <script>
                         <action>Open feedback manager</action>
@@ -3736,6 +4040,9 @@ Note that all profile attributes are optional.]]>
                         * optionally tagging the issue
                         * rating the severity of the issue
                         * giving options for its remediation (start each option on a new line)
+
+                        [[File:template_analysis_issue_user_reporting.png|User-reported issues]]
+
                     </description>
                 </item>
             </topic>
