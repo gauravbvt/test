@@ -33,6 +33,7 @@ public class RequirementsManagerPanel extends AbstractUpdatablePanel implements 
      */
     private Set<Identifiable> lockedIdentifiables = new HashSet<Identifiable>();
 
+    private boolean tabHelpRequested;
 
     public RequirementsManagerPanel( String id, Set<Long> expansions ) {
         super( id, null, expansions );
@@ -47,12 +48,40 @@ public class RequirementsManagerPanel extends AbstractUpdatablePanel implements 
         tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
             @Override
             protected void onAjaxUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.NeedsRefresh ) );
+                tabHelpRequested = true;
+                Change change = Change.helpTopic( getUserRoleId(), getTabSectionId(), getTabTopicId() );
+                update( target, change );
             }
         };
         tabbedPanel.setOutputMarkupId( true );
         addOrReplace( tabbedPanel );
     }
+
+    @Override
+    public String getUserRoleId() {
+        return "participant";
+    }
+
+    public String getTabSectionId() {
+        return "requirements-page";
+    }
+
+    public String getTabTopicId() {
+        if ( !tabHelpRequested ) {
+            return "about-requirements-page";
+        } else {
+            int tab = tabbedPanel.getSelectedTab();
+            switch ( tab ) {
+                case 0:
+                    return "defining-requirement";
+                case 1:
+                    return "analyzing-requirements";
+                default:
+                    return null;
+            }
+        }
+    }
+
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();

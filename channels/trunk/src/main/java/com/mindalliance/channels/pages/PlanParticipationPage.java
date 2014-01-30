@@ -35,7 +35,7 @@ public class PlanParticipationPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getHelpTopicId() {
-        return "about-participation-page";
+        return participationManagerPanel.getTabTopicId();
     }
 
     @Override

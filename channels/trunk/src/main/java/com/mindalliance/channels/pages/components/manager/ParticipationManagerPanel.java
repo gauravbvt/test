@@ -7,6 +7,7 @@ import com.mindalliance.channels.db.services.communities.UserParticipationServic
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -41,6 +42,8 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     private AjaxTabbedPanel<ITab> tabbedPanel;
 
+    private boolean tabHelpRequested;
+
     public ParticipationManagerPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
         init();
@@ -54,11 +57,49 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
         tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
             @Override
             protected void onAjaxUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.NeedsRefresh ) );
+                tabHelpRequested = true;
+                Change change = Change.helpTopic( getUserRoleId(), getTabSectionId(), getTabTopicId() );
+                update( target, change );
+                // update( target, new Change( Change.Type.NeedsRefresh ) );
             }
         };
         tabbedPanel.setOutputMarkupId( true );
         addOrReplace( tabbedPanel );
+    }
+
+    @Override
+    public String getUserRoleId() {
+        return "participant";
+    }
+
+    public String getTabSectionId() {
+        return "participation-page";
+    }
+
+    public String getTabTopicId() {
+        if ( !tabHelpRequested ) {
+            return "about-participation-page";
+        } else {
+            int tab = tabbedPanel.getSelectedTab();
+            switch ( tab ) {
+                case 0:
+                    return "registering-organizations";
+                case 1:
+                    return "managing-organization-participation";
+                case 2:
+                    return "managing-user-participation";
+                case 3:
+                    return "confirming-participation";
+                case 4:
+                    return "viewing-user-participation";
+                case 5:
+                    return "authorizing-planners";
+                case 6:
+                    return "participation-issues";
+                default:
+                    return null;
+            }
+        }
     }
 
     private List<ITab> getTabs() {
@@ -83,7 +124,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new ParticipationConfirmationsPanel( id, getModel() );
             }
         } );
-         tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
             @Override
             public Panel getPanel( String id ) {
                 return new UsersParticipationPanel( id );
@@ -111,7 +152,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     public String getIssuesTitle() {
         int issuesCount = getCommunityService().getDoctor().findAllIssues( getCommunityService() ).size();
-        return "Issues (" + issuesCount +")";
+        return "Issues (" + issuesCount + ")";
     }
 
 

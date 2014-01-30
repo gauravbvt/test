@@ -351,9 +351,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         if ( change.isNone() ) {
         } else if ( change.isCommunicated() ) {
             // do something?
-        } else if ( change.isCollapsed() || change.isRemoved() )
+        } else if ( change.isCollapsed() || change.isRemoved() ) {
             collapse( change );
-        else if ( change.isExpanded() || change.isAdded() ) {
+        } else if ( change.isExpanded() || change.isAdded() ) {
             expand( change );
         }
     }
@@ -369,6 +369,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             notifier.create( target,
                     "Notification",
                     message );
+        } else if ( change.isHelpTopic() ) {
+            helpPanel.selectTopicInSection( change.getUserRoleId(), change.getSectionId(), change.getTopicId(), target );
         } else if ( change.isCommunicated() ) {
             newMessage( target, change );
             updateContent( target );

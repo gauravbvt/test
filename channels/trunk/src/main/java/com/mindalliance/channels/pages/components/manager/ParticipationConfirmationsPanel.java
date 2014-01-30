@@ -48,6 +48,17 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
         addParticipationToConfirm();
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "confirming-participation";
+    }
+
+
     private void addParticipationToConfirm() {
         WebMarkupContainer confirmationsContainer = new WebMarkupContainer( "supervisorParticipationConfirmations" );
         confirmationsContainer.setOutputMarkupId( true );

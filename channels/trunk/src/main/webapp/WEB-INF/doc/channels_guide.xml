@@ -16,16 +16,139 @@
 
                         It enables...
 
-                        * Analysts to develop best-practice templates for information-intensive collaboration,
-                        * Planners to setup and manage localized collaboration plans based on collaboration templates,
-                        * Users to participate in collaboration plans and get collaboration checklists instructing their participation,
-                        * Administrators to configure and manage the Channels service.
+                        * '''Developers''' to build reusable best-practice templates for information-intensive collaboration,
+                        * '''Planners''' to setup and manage localized collaboration plans based on collaboration templates,
+                        * '''Participants''' to take part in collaboration plans and get collaboration checklists instructing their participation,
+                        * '''Administrators''' to configure and manage the Channels service.
 
                     </description>
                 </item>
-                <next section="plan-concepts" topic="collaboration-vs-process"/>
+                <next section="about-channels" topic="collaboration-vs-process"/>
+                <next section="about-channels" topic="template-development"/>
+                <next section="about-channels" topic="development-team"/>
+                <next section="about-channels" topic="attributions"/>
             </topic>
+            <topic id="template-development">
+                <name>Collaboration template development</name>
+                <item>
+                    <description>As a template developer, you use Channels to design and build collaboration templates
+                        that become the basis collaboration plans in which organizations and individuals participate
+                        to get checklists that implement robust collaborations.
+
+                        A collaboration templates forms the basis of collaboration plans where the identities of ''placeholder'
+                        organizations are given and where users are assigned to the positions defined in the templates in terms of
+                        jobs given to agents in organizations.
+
+                        A collaboration template specifies how various kinds of organizations ought to communicate and share
+                        information to collaboratively prevent, respond to, or recover from a number of anticipated
+                        events that test their missions.
+
+                        Channels continuously examines collaboration templates for gaps and brittleness, and suggests
+                        options for remediation.
+
+                        Channels produces visualizations, analytics and reports that help planners and stakeholders
+                        understand and improve complex collaboration templates.
+
+                        Channels is a ''planning'' tool. It does not manage the ''actual'' sharing of information. It is
+                        used to capture and improve the collaboration ''practices'' of organizations and to adaptively
+                        produce collaboration checklists.
+                    </description>
+                </item>
+            </topic>
+            <topic id="development-team">
+                <name>Development team</name>
+                <item>
+                    <description>
+                        * Jean-François Cloutier
+                        * Denis Ranger
+                        * Romit Chatterjee
+                        * Priyanka Gurav (QA - AFourTech)
+                        * Mahesh Kulkarni (QA - AFourTech)
+                    </description>
+                </item>
+            </topic>
+            <topic id="attributions">
+                <name>Attributions</name>
+                <item>
+                    <description>Channels is built using these open source code libraries:
+
+                        * AOPAlliance [http://aopalliance.sourceforge.net/]
+                        * Apache Commons [http://commons.apache.org/]
+                        * Apache Lucene [http://lucene.apache.org/core/]
+                        * Apache Velocity [http://velocity.apache.org/]
+                        * Apache Wicket [http://wicket.apache.org/]
+                        * AspectJ [http://www.eclipse.org/aspectj/]
+                        * Bliki wiki [http://code.google.com/p/gwtwiki/]
+                        * EhCache [http://ehcache.org/]
+                        * Enunciate [http://enunciate.codehaus.org/]
+                        * Geonames [http://www.geonames.org/]
+                        * GraphViz [http://www.graphviz.org/]
+                        * MongoDB [http://www.mongodb.org/]
+                        * Jamon [http://jamonapi.sourceforge.net/]
+                        * JWNL [http://sourceforge.net/projects/jwordnet/]
+                        * SLF4J [http://www.slf4j.org/]
+                        * JQWicket [http://code.google.com/p/jqwicket/]
+                        * Spring Framework [http://www.springsource.org/spring-framework/]
+                        * WordNet [http://wordnet.princeton.edu/]
+                        * XStream [http://xstream.codehaus.org/]
+
+                        Our thanks and admiration to all who contributed to these libraries.
+                    </description>
+                </item>
+            </topic>
+            <topic id="collaboration-vs-process">
+                <name>Collaborations vs. business processes</name>
+                <item>
+                    <description>
+                        Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
+                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration plans.
+                        Furthermore, while business processes have "owners", no one by definition can be said to "own" a collaboration.
+
+                        A ''business process'' is a close orchestration of people and systems within one (extended) organization,
+                        all working harmoniously according to a known and repeatable script in order to accomplish organizational goals.
+
+                        A ''collaboration'', as understood in Channels, is the coordination via communications of interdependent work done
+                        by multiple individuals, from one or more organizations, where organizations are trying to achieve their own, possibly conflicting,
+                        goals.
+
+                        The goals of organizations, namely risk mitigation and opportunity captures, are
+                        instantiated by events to be caused, prevented, responded to, recovered from etc. collaboratively.
+                        These events, it is assumed, affect, in some ways or other, the participants in the collaboration,
+                        driving them to collaborate and communicate.
+
+                        Collaboration planning focuses on information as the source of task inter-dependencies.
+                        Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
+                        or inform them so they can succeed (information sharing).
+
+                        Unlike business processes, a collaboration plan does '''not''' tightly script the tasks; it only attempts to resolve their
+                        information and coordination inter-dependencies via information flows and to make explicit the
+                        expected task assignments and communication commitments that are required to successfully collaborate.
+
+                        Whereas a business process will explicitly and formally script (program) tasks and communications, a collaboration plan
+                        only ''implies'' the many possible sequences of tasks and communications that can resolve inter-dependencies
+                        between organizations that are trying to achieve their missions in anticipated scenarios. This makes
+                        a collaboration plan much less brittle than a business process when reality confounds expectations, as it often does.
+
+                        Another important way in which collaboration planning differs from business process modeling is that collaboration planning assumes
+                        that tasks and communications can and sometimes will fail.
+                        This is why Channels encourages the design of redundant information flows in collaboration plans.
+
+                        Most endeavors involving multiple organizations (each bringing its own agenda) can '''not''' be represented
+                        realistically or usefully as business processes. However, most and possibly all multi-organization
+                        endeavors can be represented as collaboration plans to be analyzed and improved upon.
+
+                        It is easy to understand the allure of casting the work of organizations as crisp business processes.
+                        If only we always knew exactly how to work together and if only we always did it predictably, infallibly and in complete harmony!
+                        However, the reality is that only a small percentage of all the work we do with others fits the business process mold.
+
+                        This is why most of the efficiencies to be gained from planning how we work together will
+                        come from designing and improving collaboration plans, not from business processes.
+                    </description>
+                </item>
+            </topic>
+
         </section>
+
         <section id="about-me">
             <name>User interface</name>
             <topic id="my-identity">
@@ -482,57 +605,6 @@
                         relationships involving that user from participation in a collaboration plan.</description>
                 </item>
             </topic>
-            <topic id="collaboration-vs-process">
-                <name>Collaborations vs. business processes</name>
-                <item>
-                    <description>
-                        Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
-                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration plans.
-                        Furthermore, while business processes have "owners", no one by definition can be said to "own" a collaboration.
-
-                        A ''business process'' is a close orchestration of people and systems within an (extended) organization,
-                        all working harmoniously according to a known and repeatable script in order to accomplish an organizational goal.
-
-                        A ''collaboration'', as understood in Channels, is the coordination of interdependent work done
-                        by multiple individuals, from one or more organizations, where organizations are trying to achieve their own, possibly conflicting,
-                        goals.
-
-                        The goals of organizations, namely risk mitigation and opportunity captures, are
-                        instantiated by events to be caused, prevented, responded to, recovered from etc.
-                        These events, it is assumed, affect, in some ways or other, all the participants in the collaboration,
-                        driving them to collaborate and communicate.
-
-                        Collaboration planning focuses on information as the source of task inter-dependencies.
-                        Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
-                        or inform them so they can succeed (information sharing).
-
-                        Unlike business processes, a collaboration plan does '''not''' script the tasks; it only attempts to resolve their
-                        information and coordination inter-dependencies via information flows and to make explicit the
-                        expected task assignments and communication commitments that are required to successfully collaborate.
-
-                        Whereas a business process will explicitly script (program) tasks and communications, a collaboration plan
-                        only ''implies'' the many possible sequences of tasks and communications that can resolve inter-dependencies
-                        between organizations that are trying to achieve their missions in anticipated scenarios. This makes
-                        a collaboration plan much less brittle than a business process when reality confounds expectations.
-
-                        Another important way in which collaboration planning differs from business process modeling is that collaboration planning assumes
-                        that tasks and communications can and sometimes will fail.
-                        This is why Channels encourages the design of redundant information flows in collaboration plans.
-
-                        Most endeavors involving multiple organizations (each bringing its own agenda) can '''not''' be represented
-                        realistically or usefully as business processes. However, most and possibly all multi-organization
-                        endeavors can be represented, analyzed and improved upon as collaboration plans.
-
-                        It is easy to understand the allure of seeing the work of organizations primarily as business processes.
-                        If only we always knew exactly how to work together and if only we always did it predictably, infallibly and in complete harmony!
-                        However, the reality is that only a small percentage of all the work we do with others can be
-                        represented as business processes.
-
-                        This is why most of the efficiencies to be gained from planning how we work together will
-                        come from designing and improving collaboration plans, not business processes.
-                    </description>
-                </item>
-            </topic>
         </section>
         <section id="collaboration-plans-page">
             <name>All Collaboration Plans page</name>
@@ -562,10 +634,12 @@
                     <description>The collaboration plan page is the home page of a collaboration plan.
 
                         As a user, you can decide to participate in positions (roughly, organizational roles) that are open to participation by all.
+
                         [[File:plan_user_managing_participation.png|User-managed participation]]
 
                         If you created the collaboration plan, you are the initial collaboration planner for this plan.
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
+
                         [[File:plan_planner_authorizing.png|Authorizing planners]]
 
                         A newly created collaboration plan is initially closed for participation. As a planner, you
@@ -573,46 +647,82 @@
                         for participation [[File:plan_opening_participation.png|Opening a plan for participation]]
                         until the template's locale has been given an actual location, if it is a placeholder.
 
-                        As a planner, you can name the plan, describe it and localize it [[File:plan_setting_up.png|Setting up a collaboration plan]].
+                        As a planner, you can name the plan, describe it and localize it.
                         You can also update it to a new version of the collaboration template if one is detected by Channels.
 
-                        As a planner you can set collaboration requirements for the collaboration plan. [[File:plan_requirements_page.png|Plan requirements page]]
+                        [[File:plan_setting_up.png|Setting up a collaboration plan]]
+
+                        As a planner you can set collaboration requirements for the collaboration plan.
                         An issue is raised by Channels for each requirement that is not met.
 
+                        [[File:plan_requirements_page.png|Plan requirements page]]
+
                         A plan is localized by resolving placeholder places from the template to known locations.
-                        At a minimum, the placeholder locale of the adopted template [[File:template_locale.png|Collaboration template locale]], if identified, needs
+                        At a minimum, the placeholder locale of the adopted template, if identified, needs
                         to be resolved. Until it is, a planner can not open the plan for participation.
+
+                        [[File:template_locale.png|Collaboration template locale]]
 
                         As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or
                         a developer of the collaboration template upon which the plan is based, you can access it.
 
                         As a planner, you can register organizations for potential participation into the plan (or in
-                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate). [[File:plan_registering_orgs.png|Registering organizations in a plan]]
-                        You can then assign known organizations (registered and from the template) to organization placeholders defined in the template. [[File:plan_participation_organizations.png|Managing organization participation in a plan]]
+                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate).
 
-                        You can also assign any and all users to positions that need to be filled. [[File:plan_participation_users.png|User filling into positions a plan]]
+                        [[File:plan_registering_orgs.png|Registering organizations in a plan]]
+
+                        You can then assign known organizations (registered and from the template) to organization placeholders defined in the template.
+
+                        [[File:plan_participation_organizations.png|Managing organization participation in a plan]]
+
+                        You can also assign any and all users to positions that need to be filled.
+
+                        [[File:plan_participation_users.png|User filling into positions a plan]]
 
                         As a planner, you can define requirements on the collaboration and visualize the extent
-                        to which they are fulfilled given the current participation. [[File:plan_requirements_page.png|Plan requirements]]
+                        to which they are fulfilled given the current participation.
+
+                        [[File:plan_requirements_page.png|Plan requirements]]
 
                         As a planner, you can view all issues detected in and reported about the collaboration plan.
-                        You can waive issues that are "waivable". [[File:plan_issues_managing.png|Managing a plan's issues]]
-                        You can also see all issues, with metrics, in the plan issues report [[File:plan_issues_report.png||Plan issues report]]
+                        You can waive issues that are "waivable".
+
+                        [[File:plan_issues_managing.png|Managing a plan's issues]]
+
+                        You can also see all issues, with metrics, in the plan issues report
+
+                        [[File:plan_issues_report.png||Plan issues report]]
 
                         If, as a participant, you are assigned to a position where you supervise other positions, you can assign
                         users to these positions, subject to some constraints, and subject to they accepting the
-                        assignment. You are also responsible for confirming these assignments in order to activate them. [[File:plan_participation_confirmation.png|Confirming supervised participation]]
+                        assignment. You are also responsible for confirming these assignments in order to activate them.
 
-                        As a participant, you can access your collaboration checklists [[File:plan_checklists_accessing.png|Accessing the plan's checklists]],
-                        the surveys you take part in [[File:surveys_page|The surveys page]],
-                        and the replies to feedback you have provided [[File:feedback_page|The feedback page]].
+                        [[File:plan_participation_confirmation.png|Confirming supervised participation]]
+
+                        As a participant, you can access your collaboration checklists.
+
+                        [[File:plan_checklists_accessing.png|Accessing the plan's checklists]]
+
+                        You can also access the surveys you take part in.
+
+                        [[File:surveys_page|The surveys page]]
+
+                        And you can access the replies to feedback you have provided.
+
+                        [[File:feedback_page|The feedback page]].
                     </description>
                 </item>
                 <next section="what-i-do" topic="participating-in-plan"/>
-                <next section="participation-page" topic="about-participation-page"/>
-                <next section="all-checklists-page" topic="about-all-protocols-page"/>
-                <next section="checklists-page" topic="about-checklists-page"/>
+                <next section="what-i-do" topic="my-privileges"/>
+                <next section="what-i-do" topic="my-participation"/>
+                <next section="what-i-do" topic="adding-participation"/>
+                <next section="what-i-do" topic="my-to-be-confirmed"/>
                 <next section="requirements-page" topic="about-requirements-page"/>
+                <next section="requirements-page" topic="defining-requirement"/>
+                <next section="requirements-page" topic="analyzing-requirements"/>
+                <next section="participation-page" topic="about-participation-page"/>
+                <next section="all-checklists-page" topic="about-all-checklists-page"/>
+                <next section="checklists-page" topic="about-checklists-page"/>
                 <next section="plan-issues-page" topic="about-plan-issues-page"/>
             </topic>
         </section>
@@ -630,8 +740,12 @@
                     Once you participate in a plan, you can withdraw from participation, but only if you are not a planner
                     and if you have not accepted any position. </description>
                 </item>
+                <next section="what-i-do" topic="my-privileges"/>
                 <next section="what-i-do" topic="my-participation"/>
+                <next section="what-i-do" topic="adding-participation"/>
                 <next section="what-i-do" topic="my-to-be-confirmed"/>
+                <next section="participation-page" topic="about-participation-page"/>
+
             </topic>
             <topic id="my-privileges">
                 <name>My user privileges</name>
@@ -646,13 +760,17 @@
                 <name>I participate as...</name>
                 <item>
                     <description>You can accept to participate in positions that are open to all users or in positions that have
-                        been assigned to you by authorized users (planners or your supervisors). [[File:plan_user_managing_participation.png|User-managed participation]]
+                        been assigned to you by authorized users (planners or your supervisors).
+
+                        [[File:plan_user_managing_participation.png|User-managed participation]]
 
                         By checking a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
                         this position. By un-checking an already checked box, you unilaterally resign the assignment.
 
                         By pressing the "command chains" icons next to the help icon, you can see your chains of command
-                        defined by your participation and that of other users in the plan. [[File:plan_chains_of_command.png|Chains of command in a plan]]
+                        defined by your participation and that of other users in the plan.
+
+                        [[File:plan_chains_of_command.png|Chains of command in a plan]]
                     </description>
                 </item>
             </topic>
@@ -703,6 +821,8 @@
                         requirements.
                     </description>
                 </item>
+                <next section="requirements-page" topic="defining-requirement"/>
+                <next section="requirements-page" topic="analyzing-requirements"/>
             </topic>
             <topic id="defining-requirement">
                 <name>Defining requirements</name>
@@ -736,7 +856,9 @@
                         * the expected number of sources per receiver (redundancy of source for each distinct receiver)
 
                         Documents can be attached to a requirement and planners can report issues
-                        [[File:plan_requirement_issues.png| Plan requirement issues]] about the definition of a requirement.
+                        about the definition of a requirement.
+
+                        [[File:plan_requirement_issues.png| Plan requirement issues]]
 
                         If information to be communicated is not specified then any information will satisfy the requirement.
                         If the sources are not specified then any user in any position in any organization can be a source satisfying the requirements.
@@ -792,13 +914,15 @@
 
                     </description>
                 </item>
+                <next section="requirements-page" topic="about-requirements-page"/>
             </topic>
             <topic id="analyzing-requirements">
                 <name>Analyzing requirements</name>
                 <item>
                     <description>
-                        Requirement analysis [[File:plan_requirement_analysis.png|Plan requirement analysis]]
-                        measures how well the requirements are satisfied by participation in the plan.
+                        Requirement analysis measures how well the requirements are satisfied by participation in the plan.
+
+                        [[File:plan_requirement_analysis.png|Plan requirement analysis]]
 
                         Analysis consists in doing the following for each requirement ...
 
@@ -822,6 +946,7 @@
 
                     </description>
                 </item>
+                <next section="requirements-page" topic="about-requirements-page"/>
             </topic>
         </section>
         <section id="participation-page">
@@ -829,25 +954,216 @@
             <topic id="about-participation-page">
                 <name>Plan Participation page</name>
                 <item>
-                    <description>The ''Plan Participation'' page [[File:plan_participation_page.png|Plan participation page]] enables you to...
+                    <description>The ''Plan Participation'' page enables you to...
 
                         * browse a registry of all organizations participating or eligible to participate in the plan,
                         * register, as authorized, organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
                         * assign, as authorized, users to template-defined positions in organizations,
                         * confirm the participation of users in positions you supervise,
-                        * review, you are planner, the participation issues detected by Channels,
+                        * review, as planner, the participation issues detected by Channels,
                         * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
+
+                        [[File:plan_participation_page.png|Plan participation page]]
                     </description>
                 </item>
+                <next section="participation-page" topic="registering-organizations"/>
+                <next section="participation-page" topic="managing-organization-participation"/>
+                <next section="participation-page" topic="managing-user-participation"/>
+                <next section="participation-page" topic="confirming-participation"/>
+                <next section="participation-page" topic="viewing-user-participation"/>
+                <next section="participation-page" topic="authorizing-planners"/>
+                <next section="participation-page" topic="participation-issues"/>
             </topic>
+           <topic id="registering-organizations">
+               <name>Registering organizations</name>
+               <item>
+                   <description>
+                       You can browse all organizations known to the collaboration plan
+                       (only organizations known to the collaboration plan can participate in it.)
+
+                       All non-placeholder organizations from the collaboration template the plan is based on are always
+                       known to the plan (and to all plans based on the template).
+
+                       To enable other organizations to participate in a plan, planners must first register them locally
+                       into the plan (or globally into all plans) and then, optionally, profile them. Only planners
+                       can register new organizations and change the profiles of registered organizations.
+
+                       [[File:plan_registering_orgs.png|Organizations registered and known to the plan]]
+
+                       An organization is registered into a plan by giving its name and by indicating whether it is to be
+                       known to the plan alone or to all plans hosted
+                       on the Channels server. The scope of registration of an organization can be modified later as long
+                       as it does not conflict with its participation (a global registration for an organization can not
+                       be reversed to a local registration if the organization already participates in many plans).
+
+                       After the organization is registered, planners are expected to profile it.
+
+                       A registered organization is profiled by...
+
+                       * Changing its name
+                       * Providing a brief description (optional)
+                       * Giving its street address (optional)
+                       * Stating its mission (optional)
+                       * Identifying its parent organization (optional)
+                       * Providing contact information for the organization as a whole
+
+                       [[File:plan_organization_profile.png|Editing the profile of an organization registered in the plan]]
+
+                       The profile of a known organization defined in the collaboration template can not be modified by planners.
+                   </description>
+               </item>
+               <next section="participation-page" topic="about-participation-page"/>
+           </topic>
+            <topic id="managing-organization-participation">
+                <name>Managing organization participation</name>
+                <item>
+                    <description>
+                        For members of an organization to participate in a collaboration and get their checklists, their
+                        organization must first participate in the plan.
+
+                        A non-placeholder organization from the collaboration template the plan is based on already
+                        participate "as themselves" in the plan. Organization placeholders defined in the template
+                        however await authorized participants in the plan to identify which organizations known to the
+                        plan participate as these placeholders.
+
+                        [[File:plan_participation_organizations.png|Managing organization participation]]
+
+                        A participant is authorized to associate a known organization to a placeholder organization if
+                        that user is a planner or participates in a position that makes him/her a custodian of that
+                        placeholder organization according to the template. The template can set a limit on the number of
+                        organizations that can participate as a placeholder.
+
+                        Once an organization is associated with a placeholder, that organization inherits copies of all
+                        the hiring and linked positions of the placeholder. If an organization participates as many
+                        placeholders, it inherits positions from all of them.
+
+                        [[File:positions_copied_from_placeholders.png|Organizations inherit positions from placeholders]]
+
+                        Users who expressed intent to participate in
+                        the collaboration plan can now be made given these hiring positions, subject to various constraints.
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+            <topic id="managing-user-participation">
+                <name>Managing user participation</name>
+                <item>
+                    <description>
+                        Users can volunteer to participate in hiring positions of participating organizations or be asked
+                        to do so by authorized users.
+
+                        Depending on how a hiring position in an organization has been defined by the developers of the
+                        collaboration template, a user can volunteer his/her participation in that position or he/she must be
+                        assigned to the position by supervisors or by planners. A supervisor for a hiring position (if
+                        the position has one) is any user who is participating in a position that supervises the hiring position.
+
+                        [[File:plan_participation_users.png|Managing user participation]]
+
+                        A position might accept only one user or some number of users participating in it. This is set
+                        by template developers in the template and can not be altered in a plan by planners.
+
+                        A user can participate in any number of positions. A user must accept a participation for it to be
+                        effective. If the position participated in is supervised, all supervisors must also confirm the participation.
+
+                        When a user participates in a hiring position (accepted and confirmed if need be), the user automatically
+                        participates in all positions linked to the hiring positions. The linking of positions is set by
+                        developers in the collaboration template of the plan and can not be changed by planners.
+
+                        [[File:linked_position.png|Linked positions]]
+
+                        Participation in a position can be terminated...
+
+                        * by the participating user un-accepting the position (the participation request remains and can be re-accepted)
+                        * by a supervisor un-confirming the participation (confirmation becomes pending again)
+                        * by a supervisor or planner deleting the participation (the participation request is removed)
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+            <topic id="confirming-participation">
+                <name>Confirming user participation</name>
+                <item>
+                    <description>
+                        When a position is defined as supervised (in the collaboration template the plan is based on),
+                        participation by a user in that position only becomes effective when all users participating as
+                        the supervisors of that position (immediately above in the chain of command) have confirmed
+                        the participation.
+
+                        As a participant, you are presented with all user participation that you either need to confirm or that
+                        you have already confirmed. You then confirm participation or un-confirm participation you have confirmed.
+
+                        [[File:plan_participation_confirmation.png|Confirming supervised participation]]
+
+                        If there are no confirmations past or requested, the pane is empty.
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+            <topic id="viewing-user-participation">
+                <name>Viewing all positions with and without users</name>
+                <item>
+                    <description>
+                        You can browse, filter and search all participation by users in hiring positions of participating organizations.
+                        You can also see all hiring positions that are empty and need to be filled by users.
+
+                        [[File:plan_participation_users_viewing.png|Participation by users and unfilled positions]]
+
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+            <topic id="authorizing-planners">
+                <name>Authorizing planners</name>
+                <item>
+                    <description>
+                        As planner in a collaboration plan, you can authorize any other user to also become a planner.
+
+                        You can resign as planner if you are not the last one. You can not "resign" someone else unless
+                        you are a Channels administrator.
+
+                        [[File:plan_planner_authorizing.png|Authorizing users as planners]]
+
+                        Note that when a user creates a new collaboration plan (any user can do this), that user becomes the first
+                        and founding planner.
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+            <topic id="participation-issues">
+                <name>Collaboration plan issues</name>
+                <item>
+                    <description>
+                        Collaboration plan issues are detected automatically by Channels and refreshed every time a change is
+                        made to the collaboration plan.
+
+                        Issues can have to do with...
+
+                        * Missing or improper participation
+                        * Incorrect organization profiles
+                        * Plan requirements not being satisfied
+                        * Problem with the definition of a plan requirement (entered by planners)
+                        * The current collaboration template being obsolete (a new production version is available)
+                        * Missing user contact information
+                        * Unresolved problem communicated via user feedback
+
+                        Planners can waive an issue if it can be waived ("waivability" depends on the kind of issue).
+
+                        [[File:plan_issues_managing.png|Plan issues]]
+                    </description>
+                </item>
+                <next section="participation-page" topic="about-participation-page"/>
+            </topic>
+
         </section>
         <section id="all-checklists-page">
             <name>All Checklists page</name>
-            <topic id="about-all-protocols-page">
+            <topic id="about-all-checklists-page">
                 <name>All Checklists page</name>
                 <item>
-                    <description>The ''All Checklists'' page [[File:plan_checklists_accessing.png|All checklists page]] let's you access
+                    <description>The ''All Checklists'' page let's you access
                         all your collaboration checklists and those of all participants you are allowed to see.
+
+                        [[File:plan_checklists_accessing.png|All checklists page]]
 
                         If you are a planner, you can see the personalized checklists of all users and the generic checklists for all positions.
 
@@ -868,12 +1184,13 @@
             <topic id="about-checklists-page">
                 <name>Participant's Checklists page</name>
                 <item>
-                    <description>The ''Participant's Checklists'' page [[File:participant_checklists_page.png|Participant's checklists page]]
-                        displays the combined collaboration checklists...
+                    <description>The ''Participant's Checklists'' page displays the combined collaboration checklists...
 
                         * given to a user for participation in a position (personalized checklists)
                         * given to a user for all the positions the user participated in (personalized checklists)
                         * for a position based solely on the assigned tasks and required communications (generic checklists - no contact information)
+
+                        [[File:participant_checklists_page.png|Participant's checklists page]]
 
                         A checklist describes...
 
@@ -886,14 +1203,20 @@
                         ** self-assigned "follow up" tasks
 
 
-                        The prescribed process for executing the steps can be viewed as a diagram. [[File:checklist_process_diagram.png|Checklist process diagram]]
+                        The prescribed process for executing the steps can be viewed as a diagram.
+
+                        [[File:checklist_process_diagram.png|Checklist process diagram]]
 
                         Each checklist step can be expanded to see details about its execution, including contacts if it is a communication step.
+
                         [[File:checklist_step_expanded.png|Expanded checklist step]]
+
                         Each contact is linked to a user profile and contact information in the contacts directory.
 
                         A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist
-                        and gives access to the chains of command of each contact. [[File:checklist_contacts_directory.png|Checklists contact directory]]
+                        and gives access to the chains of command of each contact.
+
+                        [[File:checklist_contacts_directory.png|Checklists contact directory]]
 
                         Users can provide feedback (question, suggestion or problem) about...
 
@@ -911,14 +1234,15 @@
             <topic id="about-plan-issues-page">
                 <name>Issues report</name>
                 <item>
-                    <description>The issues report provides metrics on all the issues found in a collaboration
-                        plan.
+                    <description>The issues report provides metrics on all the issues found in a collaboration plan.
 
                         [[File:plan_issues_report.png|Plan issues report]]
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
-                        Individual issues are revealed by clicking on the text of an issue kind. [[File:plan_issues_report_expanded.png|Expanded issues]]
+                        Individual issues are revealed by clicking on the text of an issue kind.
+
+                        [[File:plan_issues_report_expanded.png|Expanded issues]]
                     </description>
                 </item>
             </topic>
@@ -927,92 +1251,7 @@
     </role>
     <role id="developer" isa="participant" glossarySection="concepts" glossaryTopic="glossary">
         <name>For developers of collaboration templates</name>
-        <section id="about-template-developer">
-            <name>About Channels</name>
-            <topic id="template-developer">
-                <name>Building collaboration templates</name>
-                <item>
-                    <description>As a template developer, you use Channels to design and build collaboration templates
-                        from which robust checklists are generated that implement robust collaborations.
-
-                        A collaboration templates forms the basis of collaboration plans where the identities of ''placeholder'
-                        organizations are given and where users are assigned to the positions defined in the templates in terms of
-                        jobs given to agents in organizations.
-
-                        A collaboration template specifies how various kinds of organizations ought to communicate and share
-                        information to collaboratively prevent, respond to, or recover from a number of anticipated
-                        events that test their missions.
-
-                        Channels continuously examines collaboration templates for gaps and brittleness, and suggests
-                        options for remediation.
-
-                        Channels produces visualizations, analytics and reports that help planners and stakeholders
-                        understand and improve complex collaboration templates.
-
-                        Channels is a ''planning'' tool. It does not manage the ''actual'' sharing of information. It is
-                        used to capture and improve the collaboration ''practices'' of organizations and to adaptively
-                        produce collaboration checklists.
-                    </description>
-                </item>
-                <next section="info-sharing" topic="flow-map"/>
-                <next section="about-template-developer" topic="protocols"/>
-                <next section="about-template-developer" topic="development-team"/>
-                <next section="about-template-developer" topic="attributions"/>
-            </topic>
-            <topic id="protocols">
-                <name>Generating collaboration checklists</name>
-                <item>
-                    <description>Channels computes personalized collaboration checklists from a collaboration template
-                        and provides them to the plan participants on demand.
-
-                        As a user's participation in a plan changes, even as events unfold, Channels automatically
-                        adapts and updates the user's checklists.
-                    </description>
-                </item>
-            </topic>
-            <topic id="development-team">
-                <name>Development team</name>
-                <item>
-                    <description>
-                        * Jean-François Cloutier
-                        * Denis Ranger
-                        * Romit Chatterjee
-                        * Priyanka Gurav (QA - AFourTech)
-                        * Mahesh Kulkarni (QA - AFourTech)
-                    </description>
-                </item>
-            </topic>
-            <topic id="attributions">
-                <name>Attributions</name>
-                <item>
-                    <description>Channels is built using these open source code libraries:
-
-                        * AOPAlliance [http://aopalliance.sourceforge.net/]
-                        * Apache Commons [http://commons.apache.org/]
-                        * Apache Lucene [http://lucene.apache.org/core/]
-                        * Apache Velocity [http://velocity.apache.org/]
-                        * Apache Wicket [http://wicket.apache.org/]
-                        * AspectJ [http://www.eclipse.org/aspectj/]
-                        * Bliki wiki [http://code.google.com/p/gwtwiki/]
-                        * EhCache [http://ehcache.org/]
-                        * Enunciate [http://enunciate.codehaus.org/]
-                        * Geonames [http://www.geonames.org/]
-                        * GraphViz [http://www.graphviz.org/]
-                        * MongoDB [http://www.mongodb.org/]
-                        * Jamon [http://jamonapi.sourceforge.net/]
-                        * JWNL [http://sourceforge.net/projects/jwordnet/]
-                        * SLF4J [http://www.slf4j.org/]
-                        * JQWicket [http://code.google.com/p/jqwicket/]
-                        * Spring Framework [http://www.springsource.org/spring-framework/]
-                        * WordNet [http://wordnet.princeton.edu/]
-                        * XStream [http://xstream.codehaus.org/]
-
-                        Our thanks and admiration to all who contributed to these libraries.
-                    </description>
-                </item>
-            </topic>
-        </section>
-        <section id="concepts">
+         <section id="concepts">
             <name>Key concepts</name>
             <topic id="glossary">
                 <name>Glossary</name>
@@ -1081,6 +1320,8 @@
                 <item>
                     <description>A phase is an entity representing a time period relative to the occurrence of events. A
                         phase is either the time before, during or after events.
+
+                        [[File:phase_illustration.png|An event phase is time relative to the occurrence of events]]
 
                         A collaboration template can address what happens before, during or after of events, or a
                         combination thereof. Each segment in a collaboration template focuses on one planning scenario
@@ -1256,8 +1497,7 @@
                         assigned to the target task such that the pair of agents respects the restrictions, if any, set on the flow
                         (in same organization, in different locations etc.)
 
-                        [[File:commitments_computing.png|How communication commitments are derived from an information flow]]
-                        [[File: commitments.png|Viewing commitments from a flow]]
+                        [[File:commitments_computing.png|How communication commitments are derived from an information flow]] [[File: commitments.png|Viewing commitments from a flow]]
 
                     </description>
                 </item>
@@ -1612,10 +1852,12 @@
         <section id="plans-page">
             <name>Collaboration template page</name>
             <topic id="about-plans-page">
-                <name>Collaboration template</name>
+                <name>Collaboration template page</name>
                 <item>
                     <description>As a template developer, you can access collaboration template editor and a summary report
                         on all issues found in the template.
+
+                        [[File:template_page.png|A collaboration template home page]]
 
                         As a developer or authorized user you can access the planning surveys you participate in and the
                         feedback you provided.
@@ -1629,7 +1871,6 @@
                         plan-adopted collaboration template are accessible.
                     </description>
                 </item>
-                <next section="about-template-developer" topic="template-developer"/>
                 <next section="template-editor" topic="about-template-editor"/>
             </topic>
         </section>
@@ -1646,9 +1887,21 @@
                         * profile the entities (events, phases, organizations, roles etc.) referenced in the collaboration template
                         * report issues in addition to those automatically detected by Channels
                         * view analytics to better understand the consequences, strengths and weaknesses of the template
+
+                        [[File:template_editor_page.png|The collaboration template editor]]
+
+                        The collaboration template editor is composed of the panes...
+
+                        * Presence/activity/messages pane
+                        * Flow map pane
+                        * Task definition pane
+                        * "Received" pane
+                        * "Sent" pane
+                        * Flow map issues pane (hidden unless revealed)
+
+                        [[File:template_editor_panes.png|The template editor's panes and content]]
                     </description>
                 </item>
-                <next section="about-template-developer" topic="template-developer"/>
             </topic>
         </section>
         <section id="menus">
@@ -1897,6 +2150,8 @@
                     <description>This shows the list of all template developers currently working on this collaboration
                         template.
 
+                        [[File:template_presence.png|Developers currently working on the template]]
+
                         You can also see the list of all authorized developers for this template, whether they are online
                         or not.
                     </description>
@@ -1907,6 +2162,8 @@
                 <item>
                     <description>This gives you the list of the most recent changes made to the template by yourself and
                         other developers. You can hide your own activities.
+
+                        [[File:template_activities.png|Records of the latest changes made to the template]]
 
                         You can click on the name of the template element that was changed to quickly navigate to it.
                     </description>
@@ -1920,6 +2177,8 @@
                 <item>
                     <description>The issues report provides metrics on all the issues found in a collaboration
                         template.
+
+                        [[File:template_issues_report.png|Template issues report]]
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
@@ -1938,6 +2197,8 @@
                         an event and by the event itself. For examples, planning scenarios could be responding during an
                         earthquake (the event), or recovering after an earthquake.
 
+                        [[File:template_scoping_events_phases.png|Naming all events and event phases in scope]]
+
                         The list of all events and phases within the scope of a template thus determines what planning
                         scenarios are within the scope of the collaboration template.
 
@@ -1952,6 +2213,10 @@
 
                         The ''Phases'' tab gives access to the list of all event phases in scope. A new phase can be
                         added by naming it. A phase not yet referenced anywhere else in the template can be deleted.
+
+                        Note that Channels will expect to see at least one segment for each combination of phase and event in scope.
+
+                        [[File:phases_times_events.png|Planning scenario scope = all combinations of phases and events]]
                     </description>
                     <script>
                         <action>Open all events and phases</action>
@@ -1961,20 +2226,19 @@
                         </change>
                     </script>
                 </item>
-                <item>
-                    <description>Note that events can also be named anywhere they are used to define another template
-                        element. When they are, they are automatically added to the scope of the template.
-                    </description>
-                </item>
                 <next section="scoping" topic="phases"/>
+                <next section="scoping" topic="events"/>
                 <next section="scoping" topic="involvements"/>
                 <next section="profiling" topic="profiling-event"/>
             </topic>
             <topic id="phases">
-                <name>Name all phases</name>
+                <name>Naming all phases</name>
                 <item>
-                    <description><![CDATA[Name the '''phases''' within the scope of the collaboration template. Channels will now expect to see at least one segment for each combination of phase and event in scope.
-The list is part of the template's ''details''.]]></description>
+                    <description>Name the phases that are within the scope of the collaboration template.
+
+                        [[File:template_scoping_phases.png|Naming the event phases in scope]]
+
+                    </description>
                     <script>
                         <action>Edit list of phases in scope</action>
                         <change>
@@ -1984,10 +2248,27 @@ The list is part of the template's ''details''.]]></description>
                         </change>
                     </script>
                 </item>
+                <next section="scoping" topic="events"/>
                 <next section="scoping" topic="add-define-segment"/>
                 <next section="scoping" topic="involvements"/>
                 <next section="scoping" topic="involvements"/>
                 <next section="profiling" topic="profiling-phase"/>
+            </topic>
+            <topic id="events">
+                <name>Naming all events</name>
+                <item>
+                    <description>Name the events that are within the scope of the collaboration template.
+                        Channels will now expect to see at least one segment for each combination of phase and event in scope.
+
+                        [[File:template_scoping_events.png|Naming the events in scope]]
+
+                        Note that events can also be named anywhere they are used to define another template
+                        element. When they are, they are automatically added to the scope of the template.
+                    </description>
+                </item>
+                <next section="scoping" topic="phases"/>
+                <next section="scoping" topic="events"/>
+                <next section="profiling" topic="profiling-event"/>
             </topic>
             <topic id="involvements">
                 <name>All involvements</name>
@@ -1995,7 +2276,10 @@ The list is part of the template's ''details''.]]></description>
                     <description>
                         Name all the (actual) organizations, places, agents, transmission media, information products and formats that are
                         within the scope of this template and indicate which ones are expected to be involved in tasks (via assignments)
-                        or in flows (via communication commitments), and thus be referenced in checklists.</description>
+                        or in flows (via communication commitments), and thus be referenced in checklists.
+
+                    [[File:template_involvements.png|Stating expectations of involvement in the template]]
+                    </description>
                     <script>
                         <action>Edit the list of involved entities</action>
                         <change>
@@ -2012,6 +2296,8 @@ The list is part of the template's ''details''.]]></description>
                     <description>All segments in the template are grouped either by event or by phase. They are
                         connected by cross-segment flows and by causation links.
 
+                        [[File:template_all_segments.png|All segments in a template, grouped and connected]]
+
                         A cross-segment flow is a flow from a task in one segment to a task in another. A causation link
                         is an event caused or terminated by a task in one segment that sets the conditions for another
                         segment.
@@ -2021,10 +2307,15 @@ The list is part of the template's ''details''.]]></description>
                 </item>
             </topic>
             <topic id="add-define-segment">
-                <name>Add and define a segment</name>
+                <name>Adding a segment</name>
                 <item>
                     <description>
-                        <![CDATA[From the top action menu, add new segment, then name it and identify the ''planning scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
+                        From the top action menu, add new segment, then name it and identify the planning scenario
+                        it addresses.
+
+                        [[File:template_segment_adding_removing.png|Adding and removing segments]]
+
+                    </description>
                     <script>
                         <action>Define a segment</action>
                         <change>
@@ -2048,6 +2339,8 @@ The list is part of the template's ''details''.]]></description>
                         * give it tags
                         * attach documents to it
                         * add a new issue
+
+                        [[File:template_segment_details.png|Defining a segment's basic attributes]]
                     </description>
                 </item>
                 <next section="scoping" topic="segment-scenario"/>
@@ -2062,6 +2355,8 @@ The list is part of the template's ''details''.]]></description>
                         * identify the event
                         * rate the event severity that qualifies an event for this planning scenario
                         * specify a context in terms of other events occurring or having occurred
+
+                        [[File:template_segment_scenario.png|Defining a segment's scenario]]
                     </description>
                 </item>
                 <next section="scoping" topic="segment-details"/>
@@ -2070,12 +2365,19 @@ The list is part of the template's ''details''.]]></description>
             <topic id="segment-goals">
                 <name>Define a segment's goals</name>
                 <item>
-                    <description><![CDATA[Define a small number of goals the segment is meant to address. For each goal
-* set the type of goal,
-* the organization, type or actual, whose goal it is,
-* the severity/importance of the risk to be mitigated or gain to be achieved.
+                    <description>Define a small number of goals the segment is meant to address.
 
-Naming the goal is optional.]]></description>
+                        For each goal...
+                        * set the type of goal,
+                        * the organization, type or actual, whose goal it is,
+                        * the severity/importance of the risk to be mitigated or gain to be achieved.
+
+                        [[File:template_segment_goals.png|Adding goals to a segment]]
+
+                        Naming and further describing the goal is optional.
+
+                        [[File:template_segment_goals_details.png|Adding to the definition of a goal]]
+                    </description>
                     <script>
                         <action>Set segment goals</action>
                         <change>
@@ -2085,22 +2387,27 @@ Naming the goal is optional.]]></description>
                         </change>
                     </script>
                 </item>
+                <next section="scoping" topic="all-goals"/>
             </topic>
             <topic id="all-goals">
                 <name>All goals</name>
                 <item>
                     <description>All goals defined in all segments of the template are presented in a table that can be
                         sorted, filtered and paged.
+
+                        [[File:scoping_all_goals.png|Viewing all goals in a template]]
                     </description>
                 </item>
             </topic>
             <topic id="classifications">
                 <name>Define secrecy classifications</name>
                 <item>
-                    <description><![CDATA[Define a secrecy classification system to be used in setting
-* an agent's clearances,
-* the security of a transmission medium,
-* the classification level of shared elements of information.]]></description>
+                    <description>You define a secrecy classification system by first giving it a unique name and then adding and ordering
+                        uniquely named classification levels.
+
+                        [[File:template_classification_systems.png|Defining a classification system]]
+
+                    </description>
                     <script>
                         <action>Define classifications</action>
                         <change>
@@ -2112,7 +2419,7 @@ Naming the goal is optional.]]></description>
             </topic>
         </section>
         <section id="info-sharing">
-            <name>Specifying info sharing</name>
+            <name>Specifying collaborations</name>
             <topic id="flow-map">
                 <name>Information flow maps</name>
                 <item>
@@ -2128,6 +2435,8 @@ Naming the goal is optional.]]></description>
                         * The information needs and capabilities of tasks
                         * Information sharing flows connecting tasks
 
+                        [[File:template_flow_map_legend.png|Flow map legend]]
+
                         Using view controls in the left-hand side, you can...
 
                         * hide or show info needs and capabilities,
@@ -2140,6 +2449,8 @@ Naming the goal is optional.]]></description>
                         * replace the task and flow forms by a table showing issues related to the selected flow or task
                         * show a legend about the flow map
 
+                        [[File:template_flow_map_view_controls.png|Flow map viewing controls]]
+
                         A task is brought into focus for editing by clicking on it in the flow map. Flows can also be
                         opened for editing by clicking on them in the flow map.
                     </description>
@@ -2150,7 +2461,15 @@ Naming the goal is optional.]]></description>
                 <item>
                     <description>Add new task to a segment by clicking ''ADD'' in the Task panel or by selecting ''add
                         new task'' from the top Actions menu.
-                        The newly created task is intially empty and presented as ''someone doing something''.
+
+                        [[File:template_task_adding.png|Adding a task to a segment]]
+
+                        The newly created task is initially empty and presented as ''someone doing something''.
+
+                        Any task in a segment can be removed, unless it is the last one, whether or not it is connected by flows
+                        to other tasks.
+
+                        [[File:template_task_removing.png|Removing a task]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="define-task"/>
@@ -2160,13 +2479,22 @@ Naming the goal is optional.]]></description>
                 <item>
                     <description>Define a task by...
 
-                        * naming it
-                        * identifying the function it implements
-                        * identifying where it is to be executed
-                        * profiling who is to be assigned to it
-                        * what goals it directly achieves
-                        * and more
+                        [[File:template_task_definition_form.png|Accessing a task definition form]]
+
+                        * naming it [[File:template_task_definition_about.png|What the task is about]]
+                        * identifying the function it implements [[File:template_task_definition_function.png|The function the task implements]]
+                        * identifying where it is to be executed [[File:template_task_definition_location.png|Where the task is to be executed]]
+                        * profiling which agents will be assigned to it [[File:template_task_definition_assigned.png|The task's assignment profile]]
+                        * stating timing attributes [[File:template_task_definition_timing.png|The task's time-related attributes]]
+                        * what effects it is meant to have [[File:template_task_definition_effects.png|The intended effects of the task]]
+                        * and instructions and documentation for those assigned to the task [[File:template_task_definition_documentation.png|Documenting the task]]
+
                         Note that as little and as much as wanted can be put into a task's definition.
+
+                        To access a task's form, select the task in the flow map and then click on its summary to reveal
+                        the task's definition form. You can toggle between a simple form (only basic fields are shown)
+                        and advanced form (all fields are shown).
+
                     </description>
                     <script>
                         <action>Open the task form</action>

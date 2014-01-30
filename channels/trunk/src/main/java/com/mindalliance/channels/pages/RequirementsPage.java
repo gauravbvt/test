@@ -33,7 +33,7 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getHelpTopicId() {
-        return "about-requirements-page";
+        return requirementsManagerPanel.getTabTopicId();
     }
 
     @Override

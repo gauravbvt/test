@@ -50,6 +50,17 @@ public class CollaborationPlanIssuesPanel extends AbstractIssueTablePanel {
         super.init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "participation-issues";
+    }
+
+
     protected void addFilters() {
         addIncludeWaived();
         addOfSeverity();

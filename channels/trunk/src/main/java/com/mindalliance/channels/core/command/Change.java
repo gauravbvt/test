@@ -22,6 +22,10 @@ import java.util.Map;
  */
 public class Change implements Serializable {
 
+    private static final String USER_ROLE_ID = "userRoleId";
+    private static final String SECTION_ID = "sectionId";
+    private static final String TOPIC_ID = "topicId";
+
     /**
      * A kind of change.
      */
@@ -113,7 +117,11 @@ public class Change implements Serializable {
         /**
          * Open the guide on a section and topic.
          */
-        Guide;
+        Guide,
+        /**
+         * Changes the in-context help topic.
+         */
+        HelpTopic;
 
     }
 
@@ -230,6 +238,27 @@ public class Change implements Serializable {
         change.addQualifier( "topicId", topicId );
         return change;
     }
+
+    public static Change helpTopic( String userRoleId, String sectionId, String topicId ) {
+        Change change = new Change( Type.HelpTopic );
+        change.addQualifier( "userRoleId", userRoleId );
+        change.addQualifier( "sectionId", sectionId );
+        change.addQualifier( "topicId", topicId );
+        return change;
+    }
+
+    public String getUserRoleId() {
+        return (String)getQualifier( USER_ROLE_ID );
+    }
+
+    public String getSectionId() {
+        return (String)getQualifier( SECTION_ID );
+    }
+
+    public String getTopicId() {
+        return (String)getQualifier( TOPIC_ID );
+    }
+
 
     public boolean isByIdOnly() {
         return id != null && identifiableRef == null;
@@ -500,10 +529,18 @@ public class Change implements Serializable {
 
     /**
      * Whether type is guide.
-     * @return
+     * @return a boolean
      */
     public boolean isGuide() {
         return type == Type.Guide;
+    }
+
+    /**
+     * Whether the type is help topic.
+     * @return a boolean
+     */
+    public boolean isHelpTopic() {
+        return type == Type.HelpTopic;
     }
 
     /**

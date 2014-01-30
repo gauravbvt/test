@@ -85,6 +85,17 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         addAgencyProfile( null );
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "managing-organization-participation";
+    }
+
+
     private void addPlaceHolders() {
         placeholderListContainer = new WebMarkupContainer( "placeholderListContainer" );
         placeholderListContainer.setOutputMarkupId( true );

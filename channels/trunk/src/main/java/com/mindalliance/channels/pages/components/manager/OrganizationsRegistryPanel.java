@@ -22,6 +22,7 @@ import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -109,6 +110,16 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         addOrganizationParticipationTable();
         addRegistering();
         addAgencyProfile();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "registering-organizations";
     }
 
     public Agency getProfiledAgency() {

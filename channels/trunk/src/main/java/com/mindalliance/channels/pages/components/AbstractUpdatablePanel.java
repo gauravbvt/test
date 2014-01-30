@@ -791,4 +791,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         textComponent.add( new AttributeModifier( "placeholder", ChannelsUtils.sanitizeAttribute( hint ) ) );
     }
 
+    public String getSectionId() {
+        return null;
+    }
+
+    public String getTopicId() {
+        return null;
+    }
+
 }

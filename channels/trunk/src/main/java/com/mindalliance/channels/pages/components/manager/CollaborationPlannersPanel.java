@@ -60,6 +60,17 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
         addPlannerAuthorization();
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "authorizing-planner";
+    }
+
+
     private void addCollaborationPlannersTable() {
         collaborationPlannersTable = new CollaborationPlannersTable(
                 "plannersTable",
@@ -103,6 +114,7 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
                 target.add( authorizeButton );
             }
         } );
+        addInputHint( authorizedUserField, "User name or email" );
         authorizationContainer.addOrReplace( authorizedUserField );
     }
 

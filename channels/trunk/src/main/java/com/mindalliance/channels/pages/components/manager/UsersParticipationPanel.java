@@ -85,6 +85,17 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         addUsersParticipationTable();
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "viewing-user-participation";
+    }
+
+
     private void addUsersDropDown() {
         DropDownChoice<String> usersRelationshipChoice = new DropDownChoice<String>(
                 "users",

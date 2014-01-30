@@ -86,6 +86,17 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         addCancelAndSubmitButtons();
     }
 
+    @Override
+    public String getSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "managing-user-participation";
+    }
+
+
     private void addParticipation() {
         addAgencies();
         addAgents();
