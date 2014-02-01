@@ -416,6 +416,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
+                props += isTopBottom() ? "" : " leftRight";
                 maximized = !maximized;
                 addFlowMapViewingControls();
                 target.add( getControlsContainer() );
@@ -746,6 +747,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             setShowingConnectors( property.contains( "showConnectors" ) );
             setHidingNoop( property.contains( "hideNoop" ) );
             setSimplified( property.contains( "simplify" ) );
+            setTopBottom( !property.contains( "leftRight" ) );
         }
         addFlowDiagram();
         setPartOrFlowUpdated( false );

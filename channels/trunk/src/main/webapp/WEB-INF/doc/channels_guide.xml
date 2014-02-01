@@ -2566,6 +2566,7 @@
                         * shrink it to fit in the display space,
                         * squeeze the flow map to make more space for the task and flow forms,
                         * simplify it by reducing the amount of information displayed,
+                        * change the orientation of the diagram (top-down vs sideways)
                         * replace the task and flow forms by a table showing issues related to the selected flow or task
                         * show a legend about the flow map
 

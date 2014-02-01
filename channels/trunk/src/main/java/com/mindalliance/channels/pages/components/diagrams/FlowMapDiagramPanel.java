@@ -219,6 +219,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
+                props += isTopBottom() ? "" : " leftRight";
                 change.setProperty( props );
                 change.setScript( js );
                 this.update( target, change );
@@ -252,12 +253,17 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             props += isShowingConnectors() ? " showConnectors" : "";
             props += isHidingNoop() ? " hideNoop" : "";
             props += isSimplified() ? " simplify" : "";
+            props += isTopBottom() ? "" : " leftRight";
             change.setProperty( props );
             change.setScript( js );
             update( target, change );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selected flow not found at id " + id );
         }
+    }
+
+    private boolean isTopBottom() {
+        return getOrientation().equals( "TB" );
     }
 
     private Segment getSegment() {

@@ -55,4 +55,12 @@ public class Settings implements Serializable {
     public boolean isUsingMap() {
         return usingMap;
     }
+
+    public void setOrientationLeftRight() {
+        orientation = "LR";
+    }
+
+    public void setOrientationTopBottom() {
+        orientation = "TB";
+    }
 }

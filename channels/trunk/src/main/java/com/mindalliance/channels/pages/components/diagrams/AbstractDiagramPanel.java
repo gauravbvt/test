@@ -99,6 +99,15 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return settings.getOrientation();
     }
 
+    public void setOrientationLeftRight() {
+        settings.setOrientationLeftRight();
+    }
+
+    public void setOrientationTopBottom() {
+        settings.setOrientationTopBottom();
+    }
+
+
     /**
      * Initialize.
      */

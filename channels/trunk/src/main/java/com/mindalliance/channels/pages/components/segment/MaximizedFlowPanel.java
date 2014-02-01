@@ -28,12 +28,14 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
             boolean showingConnectors,
             boolean hidingNoop,
             boolean simplified,
+            boolean topBottom,
             Set<Long> expansions ) {
         super( id, segmentModel, partModel, expansions );
         setShowingGoals( showingGoals );
         setShowingConnectors( showingConnectors );
         setHidingNoop( hidingNoop );
         setSimplified( simplified );
+        setTopBottom( topBottom );
         init();
     }
 
@@ -63,6 +65,7 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
                 props += isShowingConnectors() ? " showConnectors" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
+                props += isTopBottom() ? "" : " leftRight";
                 update( target, new Change(
                         Change.Type.Minimized,
                         getSegment(),

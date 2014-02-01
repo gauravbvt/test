@@ -52,6 +52,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     private boolean showingConnectors = false;
 
     /**
+     * Whether the orientation is top-bottom
+     */
+    private boolean topBottom = true; // default orientation is top-to-bottom
+
+    /**
      * Whether to simplify the flow map.
      */
     private boolean simplified = false;
@@ -128,6 +133,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         this.simplified = simplified;
     }
 
+    public boolean isTopBottom() {
+        return topBottom;
+    }
+
+    public void setTopBottom( boolean topBottom ) {
+        this.topBottom = topBottom;
+    }
+
     public void setFlow( Flow flow ) {
         this.flow = flow;
     }
@@ -147,7 +160,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
     protected void addFlowDiagram() {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
-        Settings settings = new Settings( getFlowMapDomId(), null, dim, true, true );
+        Settings settings = new Settings( getFlowMapDomId(), getOrientation() , dim, true, true );
 
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel( "flow-map",
@@ -161,6 +174,10 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         flowMapDiagramPanel.setFlow( findExpandedFlow() );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
+    }
+
+    private String getOrientation() {
+        return topBottom ? "TB" : "LR";
     }
 
     private Flow findExpandedFlow() {
@@ -182,6 +199,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         addShowGoalsControl();
         addShowConnectorsControl();
         addHideConceptualControl();
+        addOrientationControl();
         addShowLegendControl();
     }
 
@@ -252,6 +270,35 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                         : "Show info needs and capabilities" ) );
         showConnectors.add( icon );
     }
+
+    private void addOrientationControl() {
+        WebMarkupContainer orientationControl = new WebMarkupContainer( "orientation" );
+        orientationControl.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                topBottom = !topBottom;
+                addFlowDiagram();
+                target.add( flowMapDiagramPanel );
+                addFlowMapViewingControls();
+                target.add( controlsContainer );
+            }
+        } );
+        controlsContainer.add( orientationControl );
+        // icon
+        WebMarkupContainer icon = new WebMarkupContainer( "orientation_icon" );
+        icon.add( new AttributeModifier(
+                "src",
+                new Model<String>( topBottom
+                        ? "images/left_right.png"
+                        : "images/top_bottom.png" ) ) );
+        addTipTitle(
+                icon,
+                new Model<String>( topBottom
+                        ? "Display left to right"
+                        : "Display top to bottom" ) );
+        orientationControl.add( icon );
+    }
+
 
     private void addShowGoalsControl() {
         WebMarkupContainer showGoals = new WebMarkupContainer( "showGoals" );
