@@ -1400,7 +1400,7 @@
             <topic id="event">
                 <name>Event</name>
                 <item>
-                    <description>An event is an entity representing a transient change in the world that introduces
+                    <description>An event is a domain entity representing a transient change in the world that introduces
                         risks and/or opportunities for organizations.
 
                         Risks and events should not be confused. An event can introduce risks to one organization while
@@ -1414,7 +1414,7 @@
             <topic id="phase">
                 <name>Phase</name>
                 <item>
-                    <description>A phase is an entity representing a time period relative to the occurrence of events. A
+                    <description>A phase is a domain entity representing a time period relative to the occurrence of events. A
                         phase is either the time before, during or after events.
 
                         [[File:phase_illustration.png|An event phase is time relative to the occurrence of events]]
@@ -1633,7 +1633,7 @@
             <topic id="info-product">
                 <name>Information product</name>
                 <item>
-                    <description>An information product is an entity representing a standard bundle of elements of
+                    <description>An information product is a domain entity representing a standard bundle of elements of
                         information.
 
                         Information products are typically used to specify types of reports that are to be shared.
@@ -1650,7 +1650,7 @@
             <topic id="info-format">
                 <name>Information format</name>
                 <item>
-                    <description>An information format is an entity representing a standard format in which information
+                    <description>An information format is a domain entity representing a standard format in which information
                         is to be communicated.
 
                         PDF, XML, WORD etc. are examples of information formats.
@@ -1661,7 +1661,7 @@
             <topic id="role">
                 <name>Role</name>
                 <item>
-                    <description>A role is an entity representing a standard set of responsibilities that various
+                    <description>A role is a domain entity representing a standard set of responsibilities that various
                         organizations can assign to its members.
 
                         A role, such as Manager, is different from a job title, such as Senior VP Sales. Unlike job titles,
@@ -1685,7 +1685,7 @@
             <topic id="agent">
                 <name>Agent</name>
                 <item>
-                    <description>An agent is an entity representing one or more interchangeable persons or systems.
+                    <description>An agent is a domain entity representing one or more interchangeable persons or systems.
 
                         An agent is a placeholder for participants in collaboration plans based on the collaboration template.
 
@@ -1702,7 +1702,7 @@
             <topic id="place">
                 <name>Place</name>
                 <item>
-                    <description>A place is an entity used to represent an area in space, usually an administrative are.
+                    <description>A place is a domain entity used to represent an area in space, usually an administrative are.
 
                         A place is used to delimit jurisdictions of agents employed by organizations,
                         to locate where tasks are to be executed, where events are of significance, and where a collaboration template
@@ -1731,7 +1731,7 @@
             <topic id="medium">
                 <name>Transmission medium</name>
                 <item>
-                    <description>A transmission medium is an entity representing the means, technological or not, by
+                    <description>A transmission medium is a domain entity representing the means, technological or not, by
                         which agents communicate.
 
                         A transmission medium can be meant for broadcasting (to all), multicasting (to many but not all) or
@@ -1798,10 +1798,10 @@
             <topic id="entity">
                 <name>Entity</name>
                 <item>
-                    <description>An entity is a grab bag term for plan elements that are "timeless things or concepts"
+                    <description>A domain entity, or entity for short, is a grab bag term for plan elements that are "timeless things or concepts"
                         (as opposed to tasks and communicated information)
 
-                        Entities are...
+                        Domain entities are...
 
                         * agents
                         * events
@@ -1817,7 +1817,7 @@
                         Channels distinguishes between "actual" entities and "types" (or categories) of entities. For
                         example, IBM is an organization whereas "Corporation" is a type of organization.
 
-                        Entities are automatically created when they are first named in the definition of some template
+                        Domain entities are automatically created when they are first named in the definition of some template
                         element. No two entities of the same kind can have the same name in a template.
 
                         Entities can be categorized by entity types of the same kind (IBM - an actual organization - is
@@ -2221,11 +2221,11 @@
                 <item>
                     <description>The options are...
 
-                        * Send message - Send a message about this entity
+                        * Send message - Send a message about this domain entity
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
-                        * Paste attachment - Add the copied attachment, if any, to this entity
-                        * New issue - Report a new issue about this entity
+                        * Paste attachment - Add the copied attachment, if any, to this domain entity
+                        * New issue - Report a new issue about this domain entity
                     </description>
                 </item>
             </topic>
@@ -3421,7 +3421,7 @@
             <topic id="entity-analytics">
                 <name>Entity analytics</name>
                 <item>
-                    <description>You can see the different ways in which this entity is involved in the template, and
+                    <description>You can see the different ways in which this domain entity is involved in the template, and
                         then drill down.
 
                         [[File:template_analysis_entities.png|Miscellaneous domain entity analytics]]
@@ -3431,7 +3431,7 @@
             <topic id="entity-issues">
                 <name>Entity issues</name>
                 <item>
-                    <description>Issues may have been detected or reported about this entity's profile. You can include
+                    <description>Issues may have been detected or reported about this domain entity's profile. You can include
                         issues about other template elements that relate to the entity. You can also filter out issues
                         that have been waived by template developers (the default).
 
