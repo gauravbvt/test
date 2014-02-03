@@ -584,6 +584,21 @@ public class PlanPage {
 	}
 	
 	/**
+	 * 'verifyActionsPopupMenuIsPresentInAboutLocation
+	 * ' method verifies that Actions popup menu is present in About Location window
+	 * @throws UIAutomationException 
+	 */
+	public void verifyActionsPopupMenuIsPresentInAboutLocation(String actions) throws UIAutomationException{
+	
+		// Assertion: Verify 'actions' is present
+		elementController.requireElementSmart(fileName,"Actions In About Location",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Location");
+		String popUpName=UIActions.getText(fileName,"Actions In About Location",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Location");
+	/*	if(!actions.equals(popUpName)){
+		throw new UIAutomationException( "'"+actions +"' not found");
+		}*/
+	}
+	
+	/**
 	 * 'clickPopupMenu' method click on Pop up menu and Submenu under that Popup menu
 	 * @param popUpName Show / Actions / Searching / Scoping / Improving / Participation
 	 * @throws UIAutomationException 
@@ -1504,6 +1519,18 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(locationName,fileName,"Location In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
+	
+	/**
+	 * Location link in task panel
+	 * @param function
+	 * @throws UIAutomationException
+	 */
+	public void clickLocationLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Location Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location Link In Task Panel");
+		UIActions.click(fileName,"Location Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location Link In Task Panel");
+		
+	}
+	
 	/**
 	 * Enters Agent name in task panel
 	 * @param agentName
@@ -1551,9 +1578,8 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(funcName,fileName,"Function In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Function In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
-	
 	/**
-	 * Function name in task panel
+	 * Function link in task panel
 	 * @param function
 	 * @throws UIAutomationException
 	 */

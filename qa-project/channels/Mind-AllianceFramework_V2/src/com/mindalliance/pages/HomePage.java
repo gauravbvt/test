@@ -217,7 +217,10 @@ public class HomePage {
 	public void clickApplyButtonInAboutMe() throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 		UIActions.click(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
-		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e ){}
 		/*elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
 		String tabTextInPage=UIActions.getText(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Applied Notification" , "Name");
