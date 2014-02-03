@@ -675,6 +675,17 @@
 	</Element>
 	
 	<Element>
+		<GivenName>This organization is a placeholder</GivenName>
+		<Xpath>//div[contains(@class,'aspect')]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
 		<GivenName>Structure Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[3]/a/span</Xpath>
 		<Name></Name>
@@ -892,7 +903,7 @@
 	</Element>
 	<Element>
 		<GivenName>Location In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[4]/td/span/span/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[5]/td/span/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -926,6 +937,35 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	<Element>
+		<GivenName>Function In Task Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[4]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Function Link In Task Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[4]/th/label/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Location Link In Task Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[5]/th/label/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Task Mover Table</GivenName>
 		<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table</Xpath>
@@ -1266,8 +1306,38 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Actions In About Location</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Actions</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Actions In About Template</GivenName>
 		<Xpath>/html/body/form/div[4]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In About Template Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In About Function</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

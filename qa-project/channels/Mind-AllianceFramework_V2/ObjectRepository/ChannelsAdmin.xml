@@ -32,9 +32,9 @@
  	
  	<Element>
  		<GivenName>Plan Name</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/input</Xpath>
+ 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri')]</Xpath>
  		<Name></Name>
- 		<Id></Id>
+ 		<Id>id46</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
@@ -53,9 +53,9 @@
  	
  	<Element>
  		<GivenName>Owner Name</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[5]/td[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:planProperties:planOwner')]</Xpath>
  		<Name></Name>
- 		<Id></Id>
+ 		<Id>id12b</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
@@ -71,7 +71,7 @@
     	<ClassName></ClassName>
  	</Element>
  	
- 	//Add user
+ 	<!--Add User -->
  	<Element>
  		<GivenName>Submit</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/a</Xpath>
@@ -94,38 +94,29 @@
  	
  		<Element>
 		<GivenName>Email</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[2]/td[2]/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:email')]</Xpath>
+		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:email</Name>
+		<Id>id97</Id>
 	</Element>
 	
 		<Element>
 		<GivenName>Password</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[3]/td[2]/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:password')]</Xpath>
+		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:password</Name>
+		<Id>id98</Id>
 	</Element>
 	
 	<Element>
 		<GivenName>IsAdministrator</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[4]/td[2]/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin')]</Xpath>
+		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin</Name>
+		<Id>id99</Id>
 	</Element>
 	
 	<Element>
 		<GivenName>IsDisabled</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[5]/td[2]/select</Xpath>
-		<Name></Name>
+		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled')]</Xpath>
+		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
