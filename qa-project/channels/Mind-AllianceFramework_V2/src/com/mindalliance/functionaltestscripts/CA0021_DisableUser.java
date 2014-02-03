@@ -131,7 +131,6 @@ public class CA0021_DisableUser extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels Admin Page");
-			
 	
  			//Click Users tab
  			stepNo++;

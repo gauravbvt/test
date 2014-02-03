@@ -233,7 +233,6 @@ public class CA0007_CreateTemplateWithSpecialCharacters extends TestCase {
 	              
 	        Element oXmlEleCA0007_CreateTemplateWithSpecialCharacters = (Element) eleCA0007_CreateTemplateWithSpecialCharacters;
 	       	
-	        
 	        this.testData.put("AutomationTestPlan",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("automationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());

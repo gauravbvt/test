@@ -160,7 +160,6 @@ public class CA0016_CreateUser extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Add User Details");
-			
 
 			//Sign Out from 'Admin' page
 			stepNo++;
@@ -172,7 +171,6 @@ public class CA0016_CreateUser extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
 			
-
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

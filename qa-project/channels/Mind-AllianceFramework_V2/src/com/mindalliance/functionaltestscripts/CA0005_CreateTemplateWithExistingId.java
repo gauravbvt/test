@@ -93,7 +93,7 @@ public class CA0005_CreateTemplateWithExistingId extends TestCase {
 	}
 	
 	/**
-	 * This method will add plan to the Channels and verify if the plan is added
+	 * This method will add same existing plan to the Channels and verify if the plan is not added
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

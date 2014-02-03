@@ -93,7 +93,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 	}
 	
 	/**
-	 * This method will add plan to the Channels and verify if the plan is added
+	 * This method will add plan with existing plan owner name to the Channels and verify if the plan is added
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -185,14 +185,14 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add button");
 						
-			// Enter Same Owner name
+			// Enter Same(Existing) Owner name
 			stepNo++;
 			description="Enter Same Owner name";
 			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Owner name");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter existing Owner name");
 						
 			//Click Save button to Save plan
 			stepNo++;
