@@ -133,9 +133,9 @@ public class CA0016_CreateUser extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels Admin Page");
 			
-	
  			//Click Users tab
  			stepNo++;
+ 			description="Click Users Tab";
  			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
  			channelsAdmin.clickUsersTab();
  		    // Write log
