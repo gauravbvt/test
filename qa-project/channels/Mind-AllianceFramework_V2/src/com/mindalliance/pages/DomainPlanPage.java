@@ -80,6 +80,7 @@ public class DomainPlanPage {
 	
 	/**
 	 * Enters contact details in the Contact text field
+	 * @param contactInfo
 	 * @throws UIAutomationException
 	 */
 	public void enterContactInfo(String contactInfo) throws UIAutomationException{
@@ -109,8 +110,6 @@ public class DomainPlanPage {
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
 		UIActions.getText(fileName, "CollaborationPlanEditorPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan Editor Page Title");
 	}
-
-	
 	/**
 	 * Click on Template Issues link
 	 * @throws UIAutomationException
@@ -125,7 +124,6 @@ public class DomainPlanPage {
 	
        	UIActions.getText(fileName, "IssueSummaryReportPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
 	}
-	
 	/**
 	 * Click on Template link on Issue Summary Report Page
 	 * @throws UIAutomationException

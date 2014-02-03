@@ -220,7 +220,7 @@ public class HomePage {
 		try{
 			Thread.sleep(1000);
 		}
-		catch(Exception e ){}
+		catch(Exception e){}
 		/*elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
 		String tabTextInPage=UIActions.getText(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Applied Notification" , "Name");
@@ -231,10 +231,11 @@ public class HomePage {
 		
 	/**
 	 * Enters password in Current Password text field in the My Password tab
+	 * @param currentPassword
 	 * @throws UIAutomationException
 	 */
 	public void enterPasswordInCurrentPassword(String currentPassword) throws UIAutomationException{
-	
+		
 		elementController.requireElementSmart(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
 		UIActions.click(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
 		UIActions.clearTextBox(fileName,"Current Password Text Field",GlobalVariables.configuration.getAttrSearchList(), "Current Password");
@@ -245,6 +246,7 @@ public class HomePage {
 	
 	/**
 	 * Enters password in New Password text field in the My Password tab
+	 * @param newPassword
 	 * @throws UIAutomationException
 	 */
 	public void enterPasswordInNewPassword(String newPassword) throws UIAutomationException{
@@ -259,6 +261,7 @@ public class HomePage {
 	
 	/**
 	 * Enters password in New Password text field in the My Password tab
+	 * @param confirmPassword
 	 * @throws UIAutomationException
 	 */
 	public void enterPasswordInConfirmPassword(String confirmPassword) throws UIAutomationException{
@@ -337,6 +340,7 @@ public class HomePage {
 	}
 	/**
 	 * Clicks on 'Send' button in Messages tab
+	 * @param message
 	 * @throws UIAutomationException
 	 */
 	public String clickSendButtonInMessagesTab(String message) throws UIAutomationException{	
@@ -361,13 +365,12 @@ public class HomePage {
 	public void clickResetButtonInMessagesTab() throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Reset Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Reset Button In Messages Tab");
 		UIActions.click(fileName,"Reset Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Reset Button In Messages Tab");
-		
-	
 		}
 	
 	
 	/**
 	 * 'selectFromToDropDown' method clicks on To drop down
+	 * @param to
 	 * @throws UIAutomationException 
 	 */
 	public void selectFromToDropDown(String To) throws UIAutomationException{

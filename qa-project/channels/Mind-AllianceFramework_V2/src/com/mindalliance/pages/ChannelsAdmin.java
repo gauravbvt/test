@@ -30,17 +30,14 @@ public class ChannelsAdmin {
 	
 	/**
 	 * Enters plan name in 'Plan name' text box.
+	 * @param planName
 	 * @throws UIAutomationException 
 	 */
-	
 	public void enterPlanName(String planName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
 		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-	
-		
-		
+		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");	
 	}
 	
 	/**
@@ -55,7 +52,6 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 		UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 	}
-	
 	
 	/**
 	 * Click the Add Plan button
@@ -76,8 +72,12 @@ public class ChannelsAdmin {
 	{
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-	
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(),"Invalid Template Notification");
+	
 	}
 	/**
 	 * Click the Add Plan button after entering invalid plan name
@@ -88,7 +88,10 @@ public class ChannelsAdmin {
 		
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 	}
 	
@@ -98,7 +101,6 @@ public class ChannelsAdmin {
 	 */
 	public String clickSavePlanButton() throws UIAutomationException
 	{
-		
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		
@@ -125,8 +127,6 @@ public class ChannelsAdmin {
 		return UIActions.getText(fileName, "Same Plan Notification",GlobalVariables.configuration.getAttrSearchList() , "Same Plan Notification");
 	 
 	}
-	
-	
 	
 	/**
 	 * Click the Productize Plan button
@@ -155,6 +155,7 @@ public class ChannelsAdmin {
 	}
 	/**
 	 * Selects the plan from the drop down
+	 * @param planName
 	 * @throws UIAutomationException
 	 */
 	public void selectPlan(String planName) throws UIAutomationException{
@@ -168,6 +169,7 @@ public class ChannelsAdmin {
 
 	/**
 	 * Delete the plan
+	 * @param planName
 	 * @throws UIAutomationException
 	 */
 	public void deletePlan(String planName) throws UIAutomationException{
@@ -188,13 +190,13 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
 		UIActions.click(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
 		
-		// Assertion: Verify if the Default Event is clicked
-		//elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
-		//String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		 //Assertion: Verify if the Users tab is clicked
+		elementController.requireElementSmart(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
+		String usersTab=UIActions.getText(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
 		
-		//if(!networkTab.contains(networkTab)){
-		//	throw new UIAutomationException("Users Tab not selected");
-		//}	
+		if(!usersTab.contains(usersTab)){
+			throw new UIAutomationException("Users Tab not selected");
+		}	
 	}
 		
 	/**
@@ -220,10 +222,8 @@ public class ChannelsAdmin {
 		return UserAlreadyExists;
 	}
 	
-	
 	/**
-	 * Add user to plan
-	 * @param userName
+	 * Verify Same User notification
 	 * @throws UIAutomationException
 	 */
 	public void verifySameUserNotification() throws UIAutomationException{
@@ -235,7 +235,7 @@ public class ChannelsAdmin {
 	}
 	 
 	/**
-	 * Add user to plan/template
+	 * Select an option from drop down
 	 * @param userRole
 	 * @throws UIAutomationException
 	 */
@@ -253,12 +253,12 @@ public class ChannelsAdmin {
 	
 	}
 	
-	
-	
-	
 	/**
-	 * Add user to plan
-	 * @param userName
+	 * Add user details to plan
+	 * @param email
+	 * @param password
+	 * @param IsAdministrator
+	 * @param IsDisabled
 	 * @throws UIAutomationException
 	 */
 	public String addUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
@@ -275,20 +275,19 @@ public class ChannelsAdmin {
 		UIActions.enterKey(Keys.TAB);
 		
 		elementController.requireElementSmart(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
-		UIActions.click(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
+		UIActions.click(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator Option");
 		Select adminDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(adminDropDownList);
 		UIActions.selectByTextAndClick(IsAdministrator);
 		
 		elementController.requireElementSmart(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
-		UIActions.click(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		UIActions.click(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled Option");
 		Select disabledDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(disabledDropDownList);
 		UIActions.selectByTextAndClick(IsDisabled);
 			
 		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
-		
 		
 		// Verify that the new user is added
 		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
@@ -297,8 +296,11 @@ public class ChannelsAdmin {
 	}
 	
 	/**
-	 * Add user to plan
-	 * @param userName
+	 * Add invalid user details to plan
+	 * @param email
+	 * @param password
+	 * @param IsAdministrator
+	 * @param IsDisabled
 	 * @throws UIAutomationException
 	 */
 	public String addInvalidUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
@@ -337,7 +339,6 @@ public class ChannelsAdmin {
 		
 		//Settings not changed notification after entering invalid details
 	}
-	
 	
 	/**
 	 * Delete user from plan
@@ -378,11 +379,8 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 	}
 	
-	
-	
-	
 	/**
-	 * Gets username from list of usernname
+	 * Gets username from list of username
 	 * @param userName
 	 * @throws UIAutomationException
 	 */

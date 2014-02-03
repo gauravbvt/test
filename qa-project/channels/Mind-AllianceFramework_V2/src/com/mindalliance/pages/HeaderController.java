@@ -46,6 +46,7 @@ public class HeaderController {
 	
 	/**
 	 * 'enterFeedback' method enters feedback in the Feedback textarea
+	 * @param feedback
 	 * @throws UIAutomationException 
 	 */
 	
@@ -109,12 +110,10 @@ public class HeaderController {
 	public void clickSendFeedbackAsQuestion() throws UIAutomationException{
 		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
 	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
-	
 		
 	    elementController.requireElementSmart(fileName, "Send Feedback As Question", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Question");
 	    UIActions.click(fileName, "Send Feedback As Question", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Question");
 
-	
 	}
 	
 	/**
@@ -125,7 +124,6 @@ public class HeaderController {
 		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
 	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
 	
-		
 	    elementController.requireElementSmart(fileName, "Send Feedback As Problem", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Problem");
 	    UIActions.click(fileName, "Send Feedback As Problem", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Problem");
 	
@@ -139,12 +137,10 @@ public class HeaderController {
 		elementController.requireElementSmart(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
 	    UIActions.click(fileName, "Send Feedback DropDown", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback DropDown");
 	
-		
 	    elementController.requireElementSmart(fileName, "Send Feedback As Suggestion", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Suggestion");
 	    UIActions.click(fileName, "Send Feedback As Suggestion", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback As Suggestion");
 		
 	}
-	
 	
 	/**
 	 * Check Urgent checkbox
@@ -270,7 +266,8 @@ public class HeaderController {
 	
 	/**
 	 * 'clickHomeTab' method clicks on 'Home drop down selector'
-	 * 
+	 * @param title
+	 * @throws UIAutomationException 
 	 */
 	
 	public void clickHomeTab(String title) throws UIAutomationException{
