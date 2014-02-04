@@ -322,22 +322,16 @@
  	
  	<Element>
  		<GivenName>Email Text Field In About Me</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td[2]/input</Xpath>
- 		<Name></Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
-    	<ClassName></ClassName>
+ 		<Xpath>//input[contains(@name,'contentsContainer:social:tabs:panel:userInfo:fullName')]</Xpath>
+ 		<Name>contentsContainer:social:tabs:panel:userInfo:fullName</Name>
+ 		<Id>id21</Id>
  	</Element>
  	
  	<Element>
  		<GivenName>Name Text Field In About Me</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td[2]/input</Xpath>
- 		<Name></Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
-    	<ClassName></ClassName>
+ 		<Xpath>//input[contains(@name,'contentsContainer:social:tabs:panel:userInfo:fullName')]</Xpath>
+ 		<Name>contentsContainer:social:tabs:panel:userInfo:email</Name>
+ 		<Id>id22</Id>
  	</Element>
  	
  	<Element>
@@ -425,7 +419,7 @@
  	<Element>
  		<GivenName>Current Password Text Field</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/input</Xpath>
- 		<Name></Name>
+ 		<Name>contentsContainer:social:tabs:panel:newPasswordContainer:userPassword:password</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>

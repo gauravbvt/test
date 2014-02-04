@@ -118,6 +118,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Taxonomies Window Title</GivenName>
+		<Title>TAXONOMIES</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>All Attachments Window Title</GivenName>
+		<Title>ALL ATTACHMENTS</Title>
+	</Element>
+	
+	<Element>
 		<GivenName>Who's Who Window Title</GivenName>
 		<Title>WHO'S WHO</Title>
 	</Element>
@@ -165,6 +175,18 @@
 		<GivenName>Task Mover Window Title</GivenName>
 		<Title>Task Mover</Title>
 	</Element>
+	
+	<Element>
+		<GivenName>All Events And Phases Window Title</GivenName>
+		<Title>Events</Title>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>All Involvements Window Title</GivenName>
+		<Title>All Involvements</Title>
+	</Element>
+	
 	
 	<Element>
 		<GivenName>Actions In About Plan Segment</GivenName>
@@ -546,7 +568,7 @@
 	
 	<Element>
 		<GivenName>Activities</GivenName>
-		<Xpath>/html/body/form/span[2]/span/div/div/div/ul/li[2]/a/span</Xpath>
+		<Xpath>//li[contains(@class,'tab1')]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -606,12 +628,9 @@
 	
 	<Element>
 		<GivenName>Message Text Area In Collaboration Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div[4]/textarea</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//textarea[contains(@name,'segment:social:tabs:panel:newMessage:text')]</Xpath>
+		<Name>segment:social:tabs:panel:newMessage:text</Name>
+		<Id>id180</Id>
 	</Element>
 	
 	<Element>
@@ -3337,6 +3356,16 @@
 	</Element>
 
 	<Element>
+		<GivenName>All Involvements</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+
+	<Element>
 		<GivenName>Event Phases Tab</GivenName>
 		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
 		<Name></Name>
@@ -3502,6 +3531,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Taxonomies</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
+	</Element>
+	
+	<Element>
+		<GivenName>All Attachments</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[5]/span/a/span</Xpath>
+	</Element>
+	
+	<Element>
 		<GivenName>Tags Title</GivenName>
 		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
@@ -3512,6 +3551,33 @@
 	</Element>
 	
 	<Element>
+		<GivenName>All Involvements Title</GivenName>
+		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Taxonomies Title</GivenName>
+		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[3]/a/span</Xpath>
+	</Element>
+	
+	<Element>
+		<GivenName>All Attachments Title</GivenName>
+		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[5]/a/span</Xpath>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>All Events And Phases Title</GivenName>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li/a/span</Xpath>
+	</Element>
+	
+	
+	 <Element>
 		<GivenName>All Issues</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>

@@ -43,12 +43,9 @@
  	
  	<Element>
  		<GivenName>Send Feedback Text Field</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div/textarea</Xpath>
- 		<Name></Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
-    	<ClassName></ClassName>
+ 		<Xpath>//textarea[contains(@name,'feedback:aware:feedback:content')]</Xpath>
+ 		<Name>feedback:aware:feedback:content</Name>
+ 		<Id>id3f</Id>
  	</Element>
  	
  	<Element>
