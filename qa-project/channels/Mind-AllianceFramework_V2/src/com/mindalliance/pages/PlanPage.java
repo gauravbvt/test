@@ -17,8 +17,6 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.UIActions;
 import com.mindalliance.configuration.UIAutomationException;
 
-
-
 /**
  * PlanPage.java class contains all the methods for components on Information Sharing Page.
  * Example "About plan window", "Collaboration panel"
@@ -496,7 +494,8 @@ public class PlanPage {
 		if(!show.equals(popUpName)){
 		throw new UIAutomationException( "'"+show +"' not found");
 		}
-	}	
+	}
+	
 	/**
 	 * 'verifyActionsPopupMenuIsPresent' method verifies that Actions popup menu is present on the Plan Editor Page
 	 * @param actions
@@ -599,6 +598,36 @@ public class PlanPage {
 		throw new UIAutomationException( "'"+actions +"' not found");
 		}*/
 	}
+	/**
+	 * 'verifySearchingPopupMenuIsPresent' method verifies that Searching popup menu is present on the Plan Editor Page
+	 * @param actions
+	 * @throws UIAutomationException 
+	 */
+	public void verifySearchingPopupMenuIsPresent(String searching) throws UIAutomationException{
+		
+		// Assertion: Verify 'searching' is present
+		elementController.requireElementSmart(fileName,"Searching",GlobalVariables.configuration.getAttrSearchList(), "Searching");
+		String popUpName=UIActions.getText(fileName,"Searching",GlobalVariables.configuration.getAttrSearchList(), "Searching");
+		if(!searching.equals(popUpName)){
+		throw new UIAutomationException( "'"+searching +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyScopingPopupMenuIsPresent' method verifies that Scoping popup menu is present on the Plan Editor Page
+	 * @param scoping
+	 * @throws UIAutomationException 
+	 */
+	public void verifyScopingPopupMenuIsPresent(String scoping) throws UIAutomationException{
+		
+		// Assertion: Verify 'searching' is present
+		elementController.requireElementSmart(fileName,"Scoping",GlobalVariables.configuration.getAttrSearchList(), "Scoping");
+		String popUpName=UIActions.getText(fileName,"Scoping",GlobalVariables.configuration.getAttrSearchList(), "Scoping");
+		if(!scoping.equals(popUpName)){
+		throw new UIAutomationException( "'"+scoping +"' not found");
+		}
+	}
+	
 	
 	/**
 	 * 'clickPopupMenu' method click on Pop up menu and Submenu under that Popup menu
@@ -748,7 +777,6 @@ public class PlanPage {
 	}
 	
 	/**
-	 * 'clickSubmenu' method click on Sub Menu under Popup menu
 	 * @param popUpName Add New Segment / About Plan / About Plan Segment / Remove This segment / Cut Task / Paste Task
 	 * @throws UIAutomationException
 	*/
@@ -942,7 +970,10 @@ public class PlanPage {
 	case "Tags":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-				
+		try{
+			Thread.sleep(2000);
+			}
+			catch(Exception e){}		
 		// Assertion : Verify 'Tags' window is present 
 		elementController.requireElementSmart(fileName, "Tags Title", GlobalVariables.configuration.getAttrSearchList(),"Tags Title");
 		headingOfWindowInPage=UIActions.getText(fileName, "Tags Title", GlobalVariables.configuration.getAttrSearchList(),"Tags Title");
@@ -952,6 +983,70 @@ public class PlanPage {
 		}
 		break;
 		
+	case "Taxonomies":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(2000);
+			}
+			catch(Exception e){}		
+		// Assertion : Verify 'Taxonomies' window is present 
+		elementController.requireElementSmart(fileName, "Taxonomies Title", GlobalVariables.configuration.getAttrSearchList(),"Taxonomies Title");
+		headingOfWindowInPage=UIActions.getText(fileName, "Taxonomies Title", GlobalVariables.configuration.getAttrSearchList(),"Taxonomies Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Taxonomies Window Title", "Title");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+		break;
+		
+	case "All Attachments":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(2000);
+			}
+			catch(Exception e){}		
+		// Assertion : Verify 'All Attachments' window is present 
+		elementController.requireElementSmart(fileName, "All Attachments Title", GlobalVariables.configuration.getAttrSearchList(),"All Attachments Title");
+		headingOfWindowInPage=UIActions.getText(fileName, "All Attachments Title", GlobalVariables.configuration.getAttrSearchList(),"All Attachments Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Attachments Window Title", "Title");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+		break;
+		
+		case "All Events And Phases":
+			elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			try{
+				Thread.sleep(2000);
+				}
+				catch(Exception e){}		
+			// Assertion : Verify 'All Attachments' window is present 
+			elementController.requireElementSmart(fileName, "All Events And Phases Title", GlobalVariables.configuration.getAttrSearchList(),"All Events And Phases Title");
+			headingOfWindowInPage=UIActions.getText(fileName, "All Events And Phases Title", GlobalVariables.configuration.getAttrSearchList(),"All Events And Phases Title");
+			headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Events And Phases Window Title", "Title");
+			if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+				throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+			}
+			break;
+
+		case "All Involvements":
+			elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			try{
+				Thread.sleep(2000);
+				}
+				catch(Exception e){}		
+			// Assertion : Verify 'All Attachments' window is present 
+			elementController.requireElementSmart(fileName, "All Involvements Title", GlobalVariables.configuration.getAttrSearchList(),"All Involvements Title");
+			headingOfWindowInPage=UIActions.getText(fileName, "All Involvements Title", GlobalVariables.configuration.getAttrSearchList(),"All Involvements Title");
+			headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Involvements Window Title", "Title");
+			if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+				throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+			}
+			break;
+			
 	case "Template Evaluation":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);

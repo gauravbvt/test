@@ -218,7 +218,7 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 		UIActions.click(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 		try{
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		}
 		catch(Exception e){}
 		/*elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
