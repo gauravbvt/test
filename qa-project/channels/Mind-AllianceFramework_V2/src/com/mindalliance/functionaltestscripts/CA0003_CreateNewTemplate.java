@@ -149,7 +149,6 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan button");
 					
-			
 			//Click Save button
 			stepNo++;
 			description="Click Save button";
