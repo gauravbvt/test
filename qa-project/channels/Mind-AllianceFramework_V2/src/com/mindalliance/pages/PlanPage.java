@@ -3411,7 +3411,10 @@ public class PlanPage {
         
 		elementController.requireElementSmart(fileName,"Send Button In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Send Button In Collaboration Panel");
 		UIActions.click(fileName,"Send Button In Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(),"Send Button In Collaboration Panel");
-		
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		return UIActions.getText(fileName,"Message Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Sent Notification");
 	
 	}
@@ -4245,8 +4248,11 @@ public class PlanPage {
 	public void clickHideCollaborationPanelButton() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Hide Collaboration Panel Button",GlobalVariables.configuration.getAttrSearchList(),"Hide Collaboration Panel Button");
 		UIActions.click(fileName,"Hide Collaboration Panel Button",GlobalVariables.configuration.getAttrSearchList(),"Hide Collaboration Panel Button");
-		
-		UIActions.getText(fileName, "HideCollaborationPanelNotification", GlobalVariables.configuration.getAttrSearchList(), "Hide Collaboration Panel Notification");
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
+		//UIActions.getText(fileName, "HideCollaborationPanelNotification", GlobalVariables.configuration.getAttrSearchList(), "Hide Collaboration Panel Notification");
 	}
 	
 	/**
