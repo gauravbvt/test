@@ -294,7 +294,6 @@ public class Home {
 		suite.addTestSuite(CT0007_ClickSurveysLink.class);
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
    
-		//Collaboration Panel
 		
 		//About Me Home Page
 		suite.addTestSuite(AMHP0009_InvalidEmail.class);
@@ -321,6 +320,25 @@ public class Home {
         suite.addTestSuite(CA0025_CreateUserWithSameName.class);
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
+        
+        //Actions Popup Menu
+        suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
+        suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
+        suite.addTestSuite(TEMPACT0063_VerifyActionsMenuPresentInAboutTemplateSegmentWindow.class);
+        
+        //Searching Popup Menu
+        suite.addTestSuite(SRCH0001_VerifySearchingPopupPresent.class);
+        suite.addTestSuite(SRCH0003_ClickIndexOptionFromSearchingPopupMenu.class);
+        suite.addTestSuite(SRCH0056_ClickTaxonomiesOptionFromSearchingPopupMenu.class);
+        suite.addTestSuite(SRCH0059_ClickWhosWhoOptionFromSearchingPopupMenu.class);
+        suite.addTestSuite(SRCH0070_ShowAllAttachments.class);
+        suite.addTestSuite(SRCH0077_ShowTags.class);
+        
+        //Collaboration Panel
+        suite.addTestSuite(CPA0002_HideCollaborationPanel.class);
+        suite.addTestSuite(CPA0010_ClickActivitiesTab.class);
+        suite.addTestSuite(CPA0020_SendMessageToAllDevelopers.class);
+        suite.addTestSuite(CPA0022_SendMessageToEveryone.class);
 		return suite;
 	}
 }
