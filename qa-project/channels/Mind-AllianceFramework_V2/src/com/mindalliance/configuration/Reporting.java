@@ -612,8 +612,8 @@ public class Reporting extends TakeScreenshot {
 			xml.writeAttribute("bgColor", "#DDDDDD");
 			xml.writeStartElement("td");
 			xml.writeStartElement("center");
-			xml.writeCharacters("Start Datetime: "+ GlobalVariables.configuration.getStartTime().toString());
-			xml.writeEmptyElement("br");
+//			xml.writeCharacters("Start Datetime: "+GlobalVariables.configuration.getStartTime().toString());
+//			xml.writeEmptyElement("br");
 		//	xml.writeCharacters("End Datetime: "
 			//		+ GlobalVariables.configuration.endtime.toString());
 			xml.writeEmptyElement("br");
