@@ -225,7 +225,10 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 			
 		// Assertion: Verify that "User 1" is added
-		
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		if(userName.equals(userName))
 		{
 			UserAlreadyExists= UIActions.getText(fileName, "Alert Window Title Of Same Plan", GlobalVariables.configuration.getAttrSearchList(), "Alert Window Title Of Same Plan");
