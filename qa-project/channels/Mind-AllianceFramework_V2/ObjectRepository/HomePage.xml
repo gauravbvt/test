@@ -85,7 +85,7 @@
 	
 	<Element>
 			<GivenName>	Show All Messages Name</GivenName>
-			<Title>Show all messages</Title>
+			<Title>show all messages</Title>
 	</Element>
 	
  	<Element>
@@ -390,6 +390,16 @@
  		<GivenName>Hide Broadcasts In Social Panel</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
  		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Hide Broadcasts Name</GivenName>
+ 		<Xpath></Xpath>
+ 		<Name>hide broadcasts</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
