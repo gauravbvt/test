@@ -75,7 +75,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
-			Log4J.getlogger(this.getClass()).info(testCaseId +" test case execution started");
+			Log4J.getlogger(this.getClass()).info(testCaseId +" Test case execution started");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
