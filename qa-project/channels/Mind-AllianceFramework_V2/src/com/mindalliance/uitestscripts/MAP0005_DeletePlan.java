@@ -137,6 +137,7 @@ public class MAP0005_DeletePlan extends TestCase {
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
