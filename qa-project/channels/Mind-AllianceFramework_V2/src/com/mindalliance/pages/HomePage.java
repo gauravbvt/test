@@ -140,9 +140,6 @@ public class HomePage {
 //       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
-	
-	
-	
 	/**
 	 * 'selectPlanFromDropDown' method clicks on Plan drop down
 	 * @throws UIAutomationException 
@@ -178,9 +175,6 @@ public class HomePage {
     		throw new UIAutomationException("Issues Summary Report page not found.");
     	}
 	}	
-	
-	
-
 	
 	/**
 	 * Enters Email address in About Me tab
@@ -260,7 +254,7 @@ public class HomePage {
 	}
 	
 	/**
-	 * Enters password in New Password text field in the My Password tab
+	 * Enters password in Confirm Password text field in the My Password tab
 	 * @param confirmPassword
 	 * @throws UIAutomationException
 	 */
@@ -303,7 +297,7 @@ public class HomePage {
 	}
 	
 	/**
-	 * Clicks on 'Message' tab
+	 * Clicks on 'Messages' tab
 	 * @throws UIAutomationException
 	 */
 	public void clickMessagesTabInSocialPanel() throws UIAutomationException{
@@ -322,6 +316,7 @@ public class HomePage {
 	
 	/**
 	 * Enters message in text area in the Messages tab 
+	 * @param message
 	 * @throws UIAutomationException
 	 */
 	public void enterMessageInMessagesTextArea(String message) throws UIAutomationException{
@@ -370,7 +365,7 @@ public class HomePage {
 	
 	/**
 	 * 'selectFromToDropDown' method clicks on To drop down
-	 * @param to
+	 * @param To
 	 * @throws UIAutomationException 
 	 */
 	public void selectFromToDropDown(String To) throws UIAutomationException{
@@ -444,7 +439,7 @@ public class HomePage {
 		// Check by clicking on 'hide broadcasts' it changes to 'show all messages'
 		elementController.requireElementSmart(fileName,"Show All Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show All Messages In Social Panel");
 		String linkTextInPage=UIActions.getText(fileName,"Show All Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show All Messages In Social Panel");
-		String linkTextInXML=dataController.getPageDataElements(fileName,"Show All Messages Name" , "Name");
+		String linkTextInXML=dataController.getPageDataElements(fileName,"Show All Messages Name" , "Title");
 		if(!linkTextInPage.contains(linkTextInXML)){
 			throw new UIAutomationException( "'"+linkTextInXML +"' not found");
 		}
@@ -453,14 +448,14 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Show All Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show All Messages In Social Panel");
 		UIActions.click(fileName,"Show All Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Show All Messages In Social Panel");
 		try{
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		}
 		catch(Exception e ){}
 		
 		// Check by clicking on 'show all messages' it changes to 'hide broadcasts'
 		elementController.requireElementSmart(fileName,"Hide Broadcasts In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Hide Broadcasts In Social Panel");
 		String showLinkTextInPage=UIActions.getText(fileName,"Hide Broadcasts In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Hide Broadcasts In Social Panel");
-		String showLinkTextInXML=dataController.getPageDataElements(fileName,"Hide Broadcasts Name" , "Name");
+		String showLinkTextInXML=dataController.getPageDataElements(fileName,"Hide Broadcasts Name" , "Title");
 		if(!showLinkTextInPage.contains(showLinkTextInXML)){
 			throw new UIAutomationException( "'"+showLinkTextInXML +"' not found");
 		}

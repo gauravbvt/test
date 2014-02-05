@@ -3400,7 +3400,6 @@ public class PlanPage {
 		Configuration.getConfigurationObject().setSelect(toDropDownList);
 		UIActions.selectByTextAndClick(to);
 		
-
 	}
 	
 	/**
@@ -3474,7 +3473,6 @@ public class PlanPage {
 			if(!linkTextInPage.contains(linkTextInXML)){
 				throw new UIAutomationException( "'"+linkTextInXML +"' not found");
 			}
-			
 			
 			// Click on 'show All Activites'
 			elementController.requireElementSmart(fileName,"Show All Activities",GlobalVariables.configuration.getAttrSearchList(), "Show All Activities");
@@ -3774,7 +3772,10 @@ public class PlanPage {
 		Select goalsDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(goalsDropDownList);
 		UIActions.selectByText(selectGoal);
-				
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}		
 		// Assertion: Verify Goal is selected 
 		elementController.requireElementSmart(fileName,"Verify Goal Added In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Verify Goal Added In Task Panel");
 		String goalNameInPage=UIActions.getText(fileName,"Verify Goal Added In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Verify Goal Added In Task Panel");
@@ -3789,6 +3790,10 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void uncheckGoalInTask(String selectGoal,String chooseOne) throws UIAutomationException{
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		elementController.requireElementSmart(fileName,"Uncheck Checkbox Of Goal In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Uncheck Checkbox Of Goal In Task Panel");
 		UIActions.click(fileName,"Uncheck Checkbox Of Goal In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Uncheck Checkbox Of Goal In Task Panel");
 							

@@ -62,6 +62,10 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 	}
 	
 	/**
@@ -73,7 +77,7 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		try{
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		}
 		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(),"Invalid Template Notification");
@@ -89,7 +93,7 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		try{
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		}
 		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
@@ -103,7 +107,10 @@ public class ChannelsAdmin {
 	{
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
-		
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		return UIActions.getText(fileName, "Settings Changed Notification", GlobalVariables.configuration.getAttrSearchList(),  "Settings Changed Notification");
 	}
 	
@@ -124,6 +131,10 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		
 		elementController.requireElementSmart(fileName,"Notification for same plan",GlobalVariables.configuration.getAttrSearchList(), "Notification for same plan");
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		return UIActions.getText(fileName, "Same Plan Notification",GlobalVariables.configuration.getAttrSearchList() , "Same Plan Notification");
 	 
 	}
@@ -288,7 +299,10 @@ public class ChannelsAdmin {
 			
 		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
-		
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		// Verify that the new user is added
 		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
 		String notification=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
