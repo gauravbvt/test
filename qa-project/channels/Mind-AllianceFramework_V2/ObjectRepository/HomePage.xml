@@ -88,6 +88,12 @@
 			<Title>show all messages</Title>
 	</Element>
 	
+	
+	<Element>
+			<GivenName>Hide Broadcasts Name</GivenName>
+			<Title>hide broadcasts</Title>
+	</Element>
+	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
  		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
@@ -135,9 +141,9 @@
 	
  	<Element>
  		<GivenName>Send Feedback Text Field</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div/textarea</Xpath>
- 		<Name></Name>
- 		<Id></Id>
+ 		<Xpath>//input[contains(@name,'feedback:aware:feedback:content')]</Xpath>
+ 		<Name>feedback:aware:feedback:content</Name>
+ 		<Id>id71</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
@@ -227,8 +233,6 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
- 	
- 	
  	 	
  	<Element>
  		<GivenName>Help</GivenName>
@@ -335,22 +339,12 @@
  	</Element>
  	
  	<Element>
- 		<GivenName>Name Text Field In About Me</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td[2]/input</Xpath>
- 		<Name></Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
-    	<ClassName></ClassName>
- 	</Element>
- 	
- 	<Element>
  		<GivenName>Apply Button In About Me</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div[2]/div/div/input</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText>Apply</LinkText>
+    	<LinkText>id28</LinkText>
     	<ClassName></ClassName>
  	</Element>
  	
