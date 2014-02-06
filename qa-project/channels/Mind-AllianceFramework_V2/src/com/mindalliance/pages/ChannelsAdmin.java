@@ -66,23 +66,31 @@ public class ChannelsAdmin {
 			Thread.sleep(5000);
 		}
 		catch(Exception e){}
+		
 	}
 	
 	/**
 	 * Click the Add Plan button when same plan name is entered
 	 * @throws UIAutomationException 
 	 */
-	public String clickAddPlanButtonSamePlan() throws UIAutomationException
+	public void clickAddPlanButtonSamePlan() throws UIAutomationException
 	{
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(3500);
 		}
 		catch(Exception e){}
-		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(),"Invalid Template Notification");
-	
-	}
+		
+		//Check whether the "Settings Changed" notification appears
+		elementController.requireElementSmart(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+		String tabTextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+					
+		}
 	/**
 	 * Click the Add Plan button after entering invalid plan name
 	 * @throws UIAutomationException 
@@ -103,15 +111,23 @@ public class ChannelsAdmin {
 	 * Click the Save Plan button
 	 * @throws UIAutomationException 
 	 */
-	public String clickSavePlanButton() throws UIAutomationException
+	public void clickSavePlanButton() throws UIAutomationException
 	{
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(3500);
 		}
 		catch(Exception e){}
-		return UIActions.getText(fileName, "Settings Changed Notification", GlobalVariables.configuration.getAttrSearchList(),  "Settings Changed Notification");
+		
+		//Check whether the "Settings Changed" notification appears
+		elementController.requireElementSmart(fileName,"Settings Changed Notification",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed Notification");
+		String tabTextInPage=UIActions.getText(fileName,"Settings Changed Notification",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed Notification");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Settings Changed Notification Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+	
 	}
 	
 	
@@ -189,6 +205,7 @@ public class ChannelsAdmin {
 		
 		elementController.requireElementSmart(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
+		
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 	}
@@ -215,8 +232,8 @@ public class ChannelsAdmin {
 	 * @param userName
 	 * @throws UIAutomationException
 	 */
-	public String addUser(String userName) throws UIAutomationException{
-		String UserAlreadyExists=null;
+	public void addUser(String userName) throws UIAutomationException{
+		
 		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.enterValueInTextBox(userName,fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
@@ -226,14 +243,19 @@ public class ChannelsAdmin {
 			
 		// Assertion: Verify that "User 1" is added
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(4000);
 		}
 		catch(Exception e){}
-		if(userName.equals(userName))
+		/*if(userName.equals(userName))
 		{
-			UserAlreadyExists= UIActions.getText(fileName, "Alert Window Title Of Same Plan", GlobalVariables.configuration.getAttrSearchList(), "Alert Window Title Of Same Plan");
-		}
-		return UserAlreadyExists;
+			elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+			String tabTextInPage=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+			String tabTextInXML=dataController.getPageDataElements(fileName,"Settings changed notification for users Name" , "Name");
+			if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+			}
+		}*/
+		
 	}
 	
 	/**
@@ -275,7 +297,7 @@ public class ChannelsAdmin {
 	 * @param IsDisabled
 	 * @throws UIAutomationException
 	 */
-	public String addUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
+	public void addUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
 		UIActions.click(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
 		UIActions.clearTextBox(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
@@ -303,13 +325,18 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(3500);
 		}
 		catch(Exception e){}
-		// Verify that the new user is added
-		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
-		String notification=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
-		return notification;		
+		
+		// Verify that the new user details are added
+		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+		String tabTextInPage=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Settings changed notification for users Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+						
 	}
 	
 	/**
@@ -320,7 +347,7 @@ public class ChannelsAdmin {
 	 * @param IsDisabled
 	 * @throws UIAutomationException
 	 */
-	public String addInvalidUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
+	public void addInvalidUserDetails(String email,String password,String IsAdministrator,String IsDisabled) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
 		UIActions.click(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
 		UIActions.clearTextBox(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
@@ -347,14 +374,14 @@ public class ChannelsAdmin {
 			
 		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
-		
-		
-		// Verify that the new user is added
-		elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
-		String notification=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed");
-		return notification;	
-		
+	
 		//Settings not changed notification after entering invalid details
+		/*elementController.requireElementSmart(fileName,"Settings not changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings not changed notification for users");
+		String tabTextInPage=UIActions.getText(fileName,"Settings not changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings not changed notification for users");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Settings not changed notification for users Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}*/
 	}
 	
 	/**

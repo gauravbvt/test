@@ -3380,7 +3380,7 @@ public class PlanPage {
 		UIActions.click(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
 		elementController.requireElementSmart(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
 		String tabTextInPage=UIActions.getText(fileName,"Messages Tab in Collaboration Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages Tab in Collaboration Panel");
-		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab in Collaboration Panel" , "Name");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab in Collaboration Panel Name" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}

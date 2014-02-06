@@ -56,13 +56,13 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		UIActions.click(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		
-		/*elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
+		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		String tabTextInPage=UIActions.getText(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"About Me Tab Text" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
-			throw new UIAutomationException( "'"+tabTextInXML +"' not found");*/
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
-	
+	}
 	/**
 	 * Clicks on 'Contact info' drop down
 	 * @throws UIAutomationException
@@ -105,9 +105,9 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
 		UIActions.click(fileName,"Collaboration Template Editor Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Template Editor Link");
 
-		/*// Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Collaboration Plan Editor Page Title", "Title1");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Collaboration Plan Editor Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 		UIActions.getText(fileName, "CollaborationPlanEditorPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan Editor Page Title");
 	}
 	/**

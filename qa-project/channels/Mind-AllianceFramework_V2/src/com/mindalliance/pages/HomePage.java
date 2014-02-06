@@ -28,8 +28,8 @@ public class HomePage {
 	 */
 	
 	public void verifyHomePage() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels");
-		String headingInPage=UIActions.getText(fileName,"Welcome To Channels",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels");
+		elementController.requireElementSmart(fileName,"Welcome To Channels Title",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels Title");
+		String headingInPage=UIActions.getText(fileName,"Welcome To Channels Title",GlobalVariables.configuration.getAttrSearchList(), "Welcome To Channels Title");
     	
 		if(!headingInPage.contains("Welcome To Channels")){
     		throw new UIAutomationException("Welcome To Channels page not found.");
@@ -57,9 +57,9 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
 		UIActions.click(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
 				
-		/*// Assertion : Check Title of Page
+		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Domain Plan Editor Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));*/
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
@@ -211,13 +211,19 @@ public class HomePage {
 	public void clickApplyButtonInAboutMe() throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 		UIActions.click(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
-		
-	/*	elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
+		try
+		{
+			Thread.sleep(3500);
+		}
+		catch(Exception e){}
+		elementController.requireElementSmart(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
 		String tabTextInPage=UIActions.getText(fileName,"No Changes Applied Notification",GlobalVariables.configuration.getAttrSearchList(), "No Changes Applied Notification");
-		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Notification" , "Title");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Notification Name" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}*/
+		}
+
+		
 		}
 		
 	/**
@@ -301,12 +307,12 @@ public class HomePage {
 	
 		elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
 		UIActions.click(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
-		/*elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
+		elementController.requireElementSmart(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
 		String tabTextInPage=UIActions.getText(fileName,"Messages In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "Messages In Social Panel");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"Messages Tab Text" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}*/
+		}
 		UIActions.getText(fileName, "Messages Tab Text", GlobalVariables.configuration.getAttrSearchList(), "Messages Tab Text");
 	
 	}
@@ -335,17 +341,36 @@ public class HomePage {
 	 * @param message
 	 * @throws UIAutomationException
 	 */
-	public String clickSendButtonInMessagesTab(String message) throws UIAutomationException{	
+	public void clickSendButtonInMessagesTab(String message) throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
 		UIActions.click(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
-		
-		if(message.equals(""))
+		try
 		{
-		return	UIActions.getText(message, "Blank Message Notification", GlobalVariables.configuration.getAttrSearchList(),"Blank Message Notification");
+			Thread.sleep(3500);
+		}
+		catch(Exception e){}
+		
+		//If the message is blank , check whether "Message not sent" notification appears
+		if(message.equals(" "))
+		{
+		// Check by clicking on 'Send' notification appears
+		elementController.requireElementSmart(fileName,"Message Not Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Not Sent Notification");
+		String linkTextInPage=UIActions.getText(fileName,"Message Not Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Not Sent Notification");
+		String linkTextInXML=dataController.getPageDataElements(fileName,"Message Not Sent Notification Name" , "Name");
+		if(!linkTextInPage.contains(linkTextInXML)){
+		throw new UIAutomationException( "'"+linkTextInXML +"' not found");
+		}			
+			
 		}
 		else
 		{
-		return	UIActions.getText(message, "Message Sent Notification",GlobalVariables.configuration.getAttrSearchList() , "Message Sent Notification");
+		// Check by clicking on 'Send' notification appears
+		elementController.requireElementSmart(fileName,"Message Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Sent Notification");
+		String linkTextInPage=UIActions.getText(fileName,"Message Sent Notification",GlobalVariables.configuration.getAttrSearchList(), "Message Sent Notification");
+		String linkTextInXML=dataController.getPageDataElements(fileName,"Message Sent Notification Name" , "Name");
+		if(!linkTextInPage.contains(linkTextInXML)){
+		throw new UIAutomationException( "'"+linkTextInXML +"' not found");
+			}
 		}
 	
 		}

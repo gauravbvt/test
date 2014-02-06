@@ -80,10 +80,22 @@ public class HeaderController {
 	 * 'clickSendButton' method clicks on 'Send Feedback' button
 	 * @throws UIAutomationException 
 	 */
-	public String clickSendButton() throws UIAutomationException{
+	public void clickSendButton() throws UIAutomationException{
 	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
 	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
-		return UIActions.getText(fileName, "Send Feedback Notification", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Notification");
+	    try{
+			Thread.sleep(3500);
+			}
+			catch(Exception e){}
+
+	    elementController.requireElementSmart(fileName,"Feedback Sent notification",GlobalVariables.configuration.getAttrSearchList(), "Feedback Sent notification");
+		String tabTextInPage=UIActions.getText(fileName,"Feedback Sent notification",GlobalVariables.configuration.getAttrSearchList(), "Feedback Sent notification");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Send Feedback Notification" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+		
+		
 	}
 	
 	/**
@@ -96,7 +108,7 @@ public class HeaderController {
 	
 		String alert=dataController.getPageDataElements(fileName, "Send Blank Feedback Alert Window", "Title");
 		try{
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 			}
 			catch(Exception e){}
 		UIActions.assertAlert(alert);
@@ -160,7 +172,6 @@ public class HeaderController {
 	    elementController.requireElementSmart(fileName, "Cancel Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Cancel Feedback Button");
 	    UIActions.click(fileName, "Cancel Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Cancel Feedback Button");
 
-	
 	}
 	
 	/**
