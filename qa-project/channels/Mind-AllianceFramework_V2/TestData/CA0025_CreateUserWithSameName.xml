@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <elements>
-<user>User 21</user>
+<user>User_3221</user>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
-<email>user@gmail.com</email>
+<email>use11r@gmail.com</email>
 <password>@test2345</password>
-<userTwo>User_21</userTwo>
+<userTwo>User_3221</userTwo>
 </elements>
