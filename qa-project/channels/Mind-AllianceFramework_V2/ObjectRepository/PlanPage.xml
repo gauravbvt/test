@@ -264,7 +264,10 @@
 		<GivenName>Message Sent Notification</GivenName>
 		<Name>Message Sent</Name>
 	</Element>
-	
+	<Element>
+		<GivenName>Messages Tab in Collaboration Panel Name</GivenName>
+		<Name>Messages</Name>
+	</Element>
 	
 	<Element>
 		<GivenName>Strench Up Forms</GivenName>

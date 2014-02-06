@@ -7,7 +7,7 @@
 	
 	<Element>
  		<GivenName>About Me Tab Text</GivenName>
- 		<Title>About me</Title>
+ 		<Name>About me</Name>
  	</Element>
  	
  	<Element>

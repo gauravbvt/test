@@ -21,13 +21,23 @@
  	</Element>
 
  	<Element>
- 		<GivenName>Settings Changed Notification</GivenName>
- 		<Title>Settings changed for template</Title>
+ 		<GivenName>Settings Changed Notification Name</GivenName>
+ 		<Name>Settings changed for template</Name>
  	</Element>
  	
  	<Element>
- 		<GivenName>Invalid Template Notification</GivenName>
- 		<Title>Invalid template identifier - New collaboration template not added.</Title>
+ 		<GivenName>Invalid Template Notification Name</GivenName>
+ 		<Name>Invalid template identifier - New collaboration template not added.</Name>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Settings changed notification for users Name</GivenName>
+ 		<Name>Settings changed</Name>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Settings not changed notification for users Name</GivenName>
+ 		<Name>Settings not changed</Name>
  	</Element>
  	
  	<Element>
@@ -40,6 +50,25 @@
     	<ClassName></ClassName>
  	</Element>
  	
+ 	<Element>
+ 		<GivenName>Settings Changed Notification</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name>notifier</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Invalid Template Notification</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name>notifier</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	
  		<Element>
  		<GivenName>Notification for same plan</GivenName>
@@ -287,9 +316,19 @@
  	
  	<Element>
  		<GivenName>Settings changed notification for users</GivenName>
- 		<Xpath>/html/body/div[2]</Xpath>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
  		<Name></Name>
- 		<Id></Id>
+ 		<Id>notifier</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Settings not changed notification for users</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name></Name>
+ 		<Id>notifier</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>

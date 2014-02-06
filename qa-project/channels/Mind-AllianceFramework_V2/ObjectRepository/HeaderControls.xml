@@ -23,7 +23,7 @@
 	
 	<Element>
 			<GivenName>Send Feedback Notification</GivenName>
-			<Title>Feedback sent. Thank you!</Title>
+			<Name>Feedback sent. Thank you!</Name>
 	</Element>
 	
 	<Element>
@@ -63,6 +63,16 @@
  		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input</Xpath>
  		<Name></Name>
  		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Feedback Sent notification</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name></Name>
+ 		<Id>notifier</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>

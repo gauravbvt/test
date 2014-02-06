@@ -68,15 +68,19 @@
 	</Element>
 	
 	<Element>
-			<GivenName>Message Sent Notification</GivenName>
-			<Title>Message sent</Title>
+			<GivenName>Message Sent Notification Name</GivenName>
+			<Name>Message sent</Name>
+	</Element>
+
+	<Element>
+			<GivenName>Message Not Sent Notification Name</GivenName>
+			<Name>Message is empty. Not sent</Name>
 	</Element>
 	
 	<Element>
-			<GivenName>No Changes Applied Notification</GivenName>
-			<Title>No changes were made</Title>
+			<GivenName>No Changes Notification Name</GivenName>
+			<Name>No changes were made</Name>
 	</Element>
-	
 	
 	<Element>
 			<GivenName>Password Changed Notification</GivenName>
@@ -115,6 +119,16 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Welcome To Channels Title</GivenName>
+ 		<Xpath>//div[contains(@class,'about-plan')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Domain Plan Editor</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
  		<Name></Name>
@@ -137,6 +151,12 @@
 	<Element>
 		<GivenName>Show Received Text</GivenName>
 		<Title>show received</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>No Changes Applied Notification</GivenName>
+			<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		    <Id>notifier</Id>
 	</Element>
 	
  	<Element>
@@ -510,7 +530,26 @@
     	<ClassName></ClassName>
  	</Element>
  	
- 
+ 	<Element>
+ 		<GivenName>Message Sent Notification</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name></Name>
+ 		<Id>notifier</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ <Element>
+ 		<GivenName>Message Not Sent Notification</GivenName>
+ 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+ 		<Name></Name>
+ 		<Id>notifier</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
  	
  	<ImplicitWaitTimeMilliSecs>500</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
