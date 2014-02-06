@@ -154,7 +154,7 @@ public class CA0030_CreateUserWithInvalidEmailID extends TestCase{
  			//Add User Details
  			stepNo++;
  			description="Add User Details";
-			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"),testData.get("isAdministrator"),testData.get("isDisabled"));
+			channelsAdmin.addInvalidUserDetails(testData.get("Email"),testData.get("Password"),testData.get("isAdministrator"),testData.get("isDisabled"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

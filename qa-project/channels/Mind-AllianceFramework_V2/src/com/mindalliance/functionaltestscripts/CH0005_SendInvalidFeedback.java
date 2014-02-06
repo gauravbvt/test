@@ -155,6 +155,15 @@ public class CH0005_SendInvalidFeedback extends TestCase{
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send Button");
 	 		
+	    	// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

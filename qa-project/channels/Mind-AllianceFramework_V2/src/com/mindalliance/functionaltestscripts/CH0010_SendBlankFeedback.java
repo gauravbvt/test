@@ -157,7 +157,6 @@ public class CH0010_SendBlankFeedback extends TestCase{
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Click Send button");
 	 			
-	
 			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
