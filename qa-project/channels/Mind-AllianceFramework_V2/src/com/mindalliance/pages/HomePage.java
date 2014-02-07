@@ -222,8 +222,6 @@ public class HomePage {
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
-
-		
 		}
 		
 	/**
@@ -371,8 +369,7 @@ public class HomePage {
 		if(!linkTextInPage.contains(linkTextInXML)){
 		throw new UIAutomationException( "'"+linkTextInXML +"' not found");
 			}
-		}
-	
+		}	
 		}
 	
 	/**
@@ -401,7 +398,6 @@ public class HomePage {
 		UIActions.selectByTextAndClick(To);
 		
 	}
-	
 	
 	/**
 	 * Clicks on 'Password' tab

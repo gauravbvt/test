@@ -63,7 +63,7 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(3500);
 		}
 		catch(Exception e){}
 		
@@ -101,7 +101,7 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(3500);
 		}
 		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
@@ -207,6 +207,10 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
+		try{
+			Thread.sleep(5000);
+			}
+		catch(Exception e){}
 		UIActions.assertAlert(headingOfWindowInXML);
 	}
 	
@@ -375,6 +379,10 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 		UIActions.click(fileName,"Apply Button For User Details",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Details");
 	
+		try{
+			Thread.sleep(5000);
+		}
+		catch(Exception e){}
 		//Settings not changed notification after entering invalid details
 		/*elementController.requireElementSmart(fileName,"Settings not changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings not changed notification for users");
 		String tabTextInPage=UIActions.getText(fileName,"Settings not changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings not changed notification for users");
