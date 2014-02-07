@@ -111,7 +111,7 @@ public class TypesPanel extends AbstractCommandablePanel {
                     }
             );
         } else {
-            choices = null;
+            choices = new ArrayList<String>();
         }
         // text field
         AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(

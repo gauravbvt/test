@@ -58,6 +58,7 @@ public class TaskMoverFloatingPanel  extends AbstractFloatingCommandablePanel {
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
+        segmentPartMoverPanel.releaseLocks();
         Change change = new Change( Change.Type.Collapsed, Channels.TASK_MOVER);
         update( target, change );
     }

@@ -108,6 +108,10 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
         adjustFields();
     }
 
+    public void releaseLocks() {
+        getCommander().getLockManager().requestRelease(  getUsername(), getSegment().getId() );
+    }
+
     private void addDestinationSegmentSelector() {
         destinationSegmentSelector = new DropDownChoice<Segment>( "destinationSegment",
                                                                   new PropertyModel<Segment>( this,

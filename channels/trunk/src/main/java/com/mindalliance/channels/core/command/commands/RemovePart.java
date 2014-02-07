@@ -40,7 +40,7 @@ public class RemovePart extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "cut task";
+        return "remove task";
     }
 
     @Override

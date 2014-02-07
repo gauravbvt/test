@@ -272,6 +272,10 @@ public class Agency extends AbstractUnicastChannelable implements Waivable {
 
     public List<Job> getFixedJobs( CommunityService communityService ) {
         List<Job> jobs = new ArrayList<Job>();
+        RegisteredOrganization registeredOrganization = getRegisteredOrganization();
+        if ( registeredOrganization != null ) {
+            jobs.addAll( registeredOrganization.getFixedJobs( communityService ) );
+        }
         for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
             jobs.addAll( organizationParticipation.getFixedJobs( communityService ) );
         }

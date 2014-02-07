@@ -363,7 +363,7 @@ public interface ParticipationManager {
     Boolean canBeMadeLocal( Agency agency, CommunityService communityService );
 
     /**
-     * Whether users can directly participate as a given agent in a given agency.
+     * Whether users can directly participate as a given agent in a given agency (i.e. is it a hiring position, not a linked one.
      *
      * @param agent            an agent
      * @param agency           an agency
