@@ -27,8 +27,8 @@ import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
-import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
 /**
@@ -119,11 +119,11 @@ public class HP0006_ClickCollaborationTemplatesLink extends TestCase{
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
 				
-			// Click on Channels Settings Link
+			// Click on Collaboration Templates Link
 			stepNo++;
 			description="Collaboration Template page";
-			HomePage homePage=new HomePage();
-			homePage.clickDomainPlanEditor();
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
