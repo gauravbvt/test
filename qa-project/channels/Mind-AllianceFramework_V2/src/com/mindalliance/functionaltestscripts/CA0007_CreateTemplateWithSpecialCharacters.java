@@ -150,7 +150,7 @@ public class CA0007_CreateTemplateWithSpecialCharacters extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
 				
-			/*//Delete the created template
+			//Delete the created template
 			stepNo++;
 			description="Delete created template";
 			channelsAdmin.deletePlan(testData.get("AutomationTestPlan"));
@@ -158,7 +158,7 @@ public class CA0007_CreateTemplateWithSpecialCharacters extends TestCase {
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Delete created template");
-				*/
+			
 			// Sign Out from 'Admin' page
 			stepNo++;
 			description="SignOut Successful";

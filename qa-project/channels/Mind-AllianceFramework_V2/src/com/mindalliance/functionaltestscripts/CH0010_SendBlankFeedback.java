@@ -129,7 +129,7 @@ public class CH0010_SendBlankFeedback extends TestCase{
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
 	 		
-	 		//Click on Send Feedback button, 
+	 		//Click on Send Feedback button
 	 		stepNo++;
 	 		description="Click on Send Feedback Button";
 	 	    HeaderController headerController=new HeaderController();

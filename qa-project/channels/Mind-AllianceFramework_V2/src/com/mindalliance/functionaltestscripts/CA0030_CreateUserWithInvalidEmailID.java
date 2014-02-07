@@ -135,12 +135,13 @@ public class CA0030_CreateUserWithInvalidEmailID extends TestCase{
 			
  			//Click Users tab
  			stepNo++;
+ 			description="Click Users tab";
  			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
  			channelsAdmin.clickUsersTab();
  		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Users tab");
 			
 			// Add user
 			stepNo++;

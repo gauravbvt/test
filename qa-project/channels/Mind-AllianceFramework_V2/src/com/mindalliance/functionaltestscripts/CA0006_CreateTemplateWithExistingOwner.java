@@ -179,7 +179,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButtonSamePlan();
+			channelsAdmin.clickAddPlanButton();
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -202,6 +202,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
+			
 			
 			// Sign Out from 'Admin' page
 			stepNo++;

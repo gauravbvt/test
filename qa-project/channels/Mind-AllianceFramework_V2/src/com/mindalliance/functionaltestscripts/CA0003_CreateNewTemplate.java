@@ -149,7 +149,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan button");
 					
-			//Click Save button
+		   /*//Click Save button
 			stepNo++;
 			description="Click Save button";
 			channelsAdmin.clickSavePlanButton();
@@ -157,7 +157,8 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
-				
+			*/	
+			
 			//Delete the created template
 			stepNo++;
 			description="Delete created template";
@@ -241,7 +242,6 @@ public class CA0003_CreateNewTemplate extends TestCase {
 	              
 	        Element oXmlEleCA0003_CreateNewTemplate = (Element) eleCA0003_CreateNewTemplate;
 	       	
-	        
 	        this.testData.put("AutomationTestPlan",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("automationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
