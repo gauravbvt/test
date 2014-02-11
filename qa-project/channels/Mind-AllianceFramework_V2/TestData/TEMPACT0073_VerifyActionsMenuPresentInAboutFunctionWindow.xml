@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<elements>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<actions>Actions</actions>
+<function>Function1</function>
+<showInTask>Show In Task Panel</showInTask>
+<details>Details In Task Panel</details>
+</elements>
