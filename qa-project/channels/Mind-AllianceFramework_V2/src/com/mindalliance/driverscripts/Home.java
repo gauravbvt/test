@@ -256,7 +256,6 @@ public class Home {
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
 */		
-    	
     	// Channels Login
 
     	suite.addTestSuite(CL0001_LoginPage.class);
