@@ -30,7 +30,7 @@ public class TooManyUsersParticipatingAsAgent extends AbstractIssueDetector {
 
     @Override
     public String getKindLabel() {
-        return "Too many users participate as agent";
+        return "Too many users assigned to position";
     }
 
     @Override

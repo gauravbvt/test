@@ -30,7 +30,7 @@ public class MissingUserParticipation extends AbstractIssueDetector {
 
     @Override
     public String getKindLabel() {
-        return "No user participates as agent";
+        return "No user assigned to position";
     }
 
     @Override

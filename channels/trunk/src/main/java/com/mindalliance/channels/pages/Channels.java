@@ -31,6 +31,7 @@ import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
+import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -251,6 +252,7 @@ public class Channels extends WebApplication
         mountPage( RFIsPage.SURVEYS, RFIsPage.class );
         mountPage( "requirements", RequirementsPage.class );
         mountPage(  "participation", PlanParticipationPage.class );
+        mountPage(  "issues", IssuesPage.class );
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
