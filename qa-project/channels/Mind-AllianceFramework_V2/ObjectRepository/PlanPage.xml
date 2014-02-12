@@ -45,7 +45,7 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Alert Window Title Of Cut Task</GivenName>
+		<GivenName>Alert Window Title Of Remove Task</GivenName>
 		<Title>Are you sure?</Title>
 	</Element>
 	<Element>
@@ -1512,9 +1512,9 @@
 	
 	<Element>
 		<GivenName>New Issue Text</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/span/ol/li[3]/span/span[2]/span</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span[2]/div/span/ol/li[3]</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id1e5</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -1826,12 +1826,12 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
-		<GivenName>Redo Cut Task</GivenName>
+		<GivenName>Redo Remove Task</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Redo Cut Task</LinkText>
+		<LinkText>Redo Remove Task</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -2053,7 +2053,7 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
-		<GivenName>Undo Add New Issue</GivenName>
+		<GivenName>Undo New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -2093,6 +2093,16 @@
 	
 	<Element>
 		<GivenName>Redo Add New Issue</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Add New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -2162,7 +2172,7 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Undo Cut Task</GivenName>
+		<GivenName>Undo Remove Task</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -2668,12 +2678,12 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Cut Task</GivenName>
-		<Xpath></Xpath>
+		<GivenName>Remove Task</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Cut Task</LinkText>
+		<LinkText>Remove Task</LinkText>
 		<ClassName>dropmenu</ClassName>
 	</Element>
 	
