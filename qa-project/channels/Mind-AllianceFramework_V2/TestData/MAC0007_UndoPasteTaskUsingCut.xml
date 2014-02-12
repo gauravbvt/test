@@ -2,16 +2,21 @@
 <elements>
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
-<segmentForUndoPasteTask>Segment For Undo Paste Task</segmentForUndoPasteTask>
+<segmentForUndoCutTask>Segment For Undo Cut Task</segmentForUndoCutTask>
 <addNewTask>Add New Task</addNewTask>
 <taskName>Task 1</taskName>
+<removeTask>Remove Task</removeTask>
 <removeThisSegment>Remove This Segment</removeThisSegment>
-<undoPasteTask>Undo Paste Task</undoPasteTask>
+<undoRemoveTask>Undo Remove Task</undoRemoveTask>
 <actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
-<cutTaskInActionsInTaskPanel>Cut Task</cutTaskInActionsInTaskPanel>
-<otherSegmentForUndoPasteTask>Other Segment For Undo Paste Task</otherSegmentForUndoPasteTask>
+<removeTaskInActionsInTaskPanel>Cut Task</removeTaskInActionsInTaskPanel>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <pasteTask>Paste Task</pasteTask>
 <undoPasteTask>Undo Paste Task</undoPasteTask>
+<segmentForUndoPasteTask>Segment For Undo Paste Task</segmentForUndoPasteTask>
+<otherSegmentForUndoPasteTask>Other Segment For Undo Paste Task</otherSegmentForUndoPasteTask>
 </elements>
+
+
+

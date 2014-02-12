@@ -8,7 +8,7 @@
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <undoPasteTask>Undo Paste Task</undoPasteTask>
 <actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
-<cutTaskInActionsInTaskPanel>Cut Task</cutTaskInActionsInTaskPanel>
+<removeTask>Remove Task</removeTask>
 <otherSegmentForRedoPasteTask>Other Segment For Redo Paste Task</otherSegmentForRedoPasteTask>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>

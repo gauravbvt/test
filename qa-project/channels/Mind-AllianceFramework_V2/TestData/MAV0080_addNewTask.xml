@@ -2,6 +2,7 @@
 <elements>
 <actions>Actions</actions>
 <addNewTask>Add New Task</addNewTask>
+<undoAddNewTask>Add New Task</undoAddNewTask>
 <taskName>Task 1</taskName>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>

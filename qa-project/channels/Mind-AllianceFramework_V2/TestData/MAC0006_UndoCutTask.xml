@@ -5,10 +5,11 @@
 <segmentForUndoCutTask>Segment For Undo Cut Task</segmentForUndoCutTask>
 <addNewTask>Add New Task</addNewTask>
 <taskName>Task 1</taskName>
+<removeTask>Remove Task</removeTask>
 <removeThisSegment>Remove This Segment</removeThisSegment>
-<undoCutTask>Undo Cut Task</undoCutTask>
+<undoRemoveTask>Undo Remove Task</undoRemoveTask>
 <actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
-<cutTaskInActionsInTaskPanel>Cut Task</cutTaskInActionsInTaskPanel>
+<removeTaskInActionsInTaskPanel>Cut Task</removeTaskInActionsInTaskPanel>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>
