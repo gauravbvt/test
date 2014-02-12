@@ -181,19 +181,19 @@ public class MAC0006_UndoCutTask extends TestCase {
  			
 			// Click on Actions popup in Task Panel and also click on 'Cut Task'
 			stepNo++;
-			description="Cut Task";
+			description="Remove Task";
 			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
-			planPage.clickSubmenu(testData.get("CutTaskInActionsInTaskPanel"));
+			planPage.clickSubmenu(testData.get("RemoveTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Cut Task");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Task");
  			
 			// Undo Cut Task
 			stepNo++;
 			description="Undo Cut Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoCutTask"));
+			planPage.clickSubmenu(testData.get("UndoRemoveTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -290,11 +290,13 @@ public class MAC0006_UndoCutTask extends TestCase {
 			this.testData.put("AddNewTask",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("addNewTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("TaskName",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("UndoCutTask",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("undoCutTask").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UndoRemoveTask",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("undoRemoveTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInTaskPanel",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("actionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("CutTaskInActionsInTaskPanel",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("cutTaskInActionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveTaskInActionsInTaskPanel",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("removeTaskInActionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveTask",oXmlEleMAC0006_UndoCutTask.getElementsByTagName("removeTask").item(0).getChildNodes().item(0).getNodeValue());
+			 
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAC0006_UndoCutTask not found.");

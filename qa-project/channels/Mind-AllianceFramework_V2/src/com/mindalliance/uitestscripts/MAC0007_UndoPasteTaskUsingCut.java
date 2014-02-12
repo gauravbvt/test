@@ -175,13 +175,13 @@ public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
  			
 			// Click on Actions popup in Task Panel and also click on 'Cut Task'
 			stepNo++;
-			description="Cut Task";
+			description="Remove Task";
 			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
-			planPage.clickSubmenu(testData.get("CutTaskInActionsInTaskPanel"));
+			planPage.clickSubmenu(testData.get("RemoveTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Cut Task");
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Task");
  			
 			// Add New Segment, Click on Actions pop up and Add New Segment
 			stepNo++;
@@ -327,7 +327,7 @@ public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("UndoPasteTask",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("undoPasteTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInTaskPanel",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("actionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("CutTaskInActionsInTaskPanel",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("cutTaskInActionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveTask",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("removeTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("OtherSegmentForUndoPasteTask",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("otherSegmentForUndoPasteTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0007_UndoPasteTaskUsingCut.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());

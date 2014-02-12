@@ -217,7 +217,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			planPage.clickStrenchUpForm();
 			// Click on Actions popup in Task Panel and also click on 'Cut Task'
 			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
-			planPage.clickSubmenu(testData.get("CutTaskInActionsInTaskPanel"));
+			planPage.clickSubmenu(testData.get("RemoveTask"));
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
@@ -526,7 +526,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("UndoPasteTask",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("undoPasteTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInTaskPanel",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("actionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("CutTaskInActionsInTaskPanel",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("cutTaskInActionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveTask",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("removeTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("OtherSegmentForRedoPasteTask",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("otherSegmentForRedoPasteTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0037_RedoPasteTaskUsingCut.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
