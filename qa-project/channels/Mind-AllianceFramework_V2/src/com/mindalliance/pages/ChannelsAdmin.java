@@ -101,7 +101,7 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		try{
-			Thread.sleep(3500);
+			Thread.sleep(3800);
 		}
 		catch(Exception e){}
 		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");

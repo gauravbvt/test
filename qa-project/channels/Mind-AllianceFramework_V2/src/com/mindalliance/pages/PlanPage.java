@@ -791,7 +791,7 @@ public class PlanPage {
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;
 		
-	case "Cut Task":
+	case "Remove Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		
@@ -799,7 +799,7 @@ public class PlanPage {
 			Thread.sleep(3000);
 		}
 		catch(Exception e){}
-		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Cut Task", "Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Remove Task", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 		break;
 		
@@ -1098,6 +1098,7 @@ public class PlanPage {
 		if(!newIssueTextInPage.equals(newIssueTextInXML)){
 			throw new UIAutomationException("Issue with name '"+newIssueTextInXML+"' not found");
 		}
+		UIActions.scrollDown();
 		break;
 		
 	case "Undo Add New Issue":
@@ -1170,7 +1171,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
-	case "Redo Cut Task":
+	case "Redo Remove Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
@@ -1464,7 +1465,7 @@ public class PlanPage {
 			Thread.sleep(3000);
 		}
 		catch (Exception e) {}
-		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Cut Task", "Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Remove Task", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 		break;
 		
@@ -1481,8 +1482,13 @@ public class PlanPage {
 	case "Redo New Issue":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;		
-	
+		break;	
+		
+	case "Undo Add New Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
+		
 	case "Undo New Issue":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);

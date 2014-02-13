@@ -211,7 +211,7 @@ public class HomePage {
 	public void clickApplyButtonInAboutMe() throws UIAutomationException{	
 		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 		UIActions.click(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
-		try
+	/*	try
 		{
 			Thread.sleep(3500);
 		}
@@ -221,7 +221,7 @@ public class HomePage {
 		String tabTextInXML=dataController.getPageDataElements(fileName,"No Changes Notification Name" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}
+		}*/
 		}
 		
 	/**
