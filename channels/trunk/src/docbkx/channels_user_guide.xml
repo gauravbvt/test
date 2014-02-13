@@ -10963,23 +10963,7 @@
                 <entry><para>No</para></entry>
               </row>
 
-              <row>
-                <entry><para>An agent with supervised user participation has no supervisor to confirm participation</para></entry>
-                
-                <entry><para>Medium</para></entry>
-                
-                <entry><itemizedlist>
-                  <listitem>
-                    <para>Do not require participation confirmation</para>
-                  </listitem>
-                  <listitem>
-                    <para>or add a job in an organization for the agent that has a supervisor</para>
-                  </listitem>
-                </itemizedlist></entry>
-                <entry><para>No</para></entry>
-              </row>
-              
-              <row>
+               <row>
                 <entry><para>Information product defines no standard element of information</para></entry>
                 
                 <entry><para>Low</para></entry>
@@ -11539,6 +11523,22 @@
                     </itemizedlist></entry>
 
                     <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>An agent with supervised user participation has no supervisor to confirm participation</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Do not require participation confirmation</para>
+                        </listitem>
+                        <listitem>
+                            <para>or add a job in an organization for the agent that has a supervisor</para>
+                        </listitem>
+                    </itemizedlist></entry>
+                    <entry><para>No</para></entry>
                 </row>
 
 

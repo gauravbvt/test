@@ -15,10 +15,9 @@
 @import url('help.css');
 @import url('viz.css');
 
-
 /* Display - None */
 div.about {
-	display:none;
+    display: none;
 }
 
 * {
@@ -59,9 +58,9 @@ div.header {
     height: 51px;
     background: url('../images/global-header-bg.png') #c3d9ff;
     border-left: 1px solid #999999;
-    border-right:1px solid #999999;
-    font-size:12px;
-    float:left;
+    border-right: 1px solid #999999;
+    font-size: 12px;
+    float: left;
 }
 
 div.pathway-cont {
@@ -69,148 +68,148 @@ div.pathway-cont {
     height: 27px;
     background: url('../images/headerbar-bg.png') repeat-x;
     border-left: 1px solid #999999;
-    border-right:1px solid #999999;
+    border-right: 1px solid #999999;
     border-top: 1px solid #999999;
-    font-size:11px;
+    font-size: 11px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    float:left;
+    float: left;
 }
 
 div.pathway {
-	color: #727272;
-	float: left;
-	font-family: arial;
-	font-size: 11px;
-	font-weight: bold;
-	padding: 0 10px;
-	width: 753px;
-	height: 27px;
+    color: #727272;
+    float: left;
+    font-family: arial;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 0 10px;
+    width: 753px;
+    height: 27px;
 }
 
 div.pathway a {
-	color: #727272;
-	font-size: 11px;
-	font-weight: bold;
-	border: none;
-	text-decoration: none;
-	height: 27px;
-	line-height: 27px;
+    color: #727272;
+    font-size: 11px;
+    font-weight: bold;
+    border: none;
+    text-decoration: none;
+    height: 27px;
+    line-height: 27px;
 }
 
 div.pathway li.plan-description a {
-	color: #999999;
+    color: #999999;
 }
 
 div.pathway a:hover,
 div.pathway ul li:hover a {
-	color: #333333;
+    color: #333333;
 }
 
 div.pathway ul li:hover ul li a {
-	color: #727272;
+    color: #727272;
 }
 
 div.pathway ul li:hover ul li a:hover {
-	color: #333333;
+    color: #333333;
 }
 
 div.pathway ul {
-	display: inline;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;
+    display: inline;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
 }
 
 div.pathway ul li {
-	background: url("../images/pathway-arrow.png") no-repeat scroll right center transparent;
-	float: left;
-	list-style: none outside none;
-	margin: 0 5px 0 0;
-	padding: 0 12px 0 0;
+    background: url("../images/pathway-arrow.png") no-repeat scroll right center transparent;
+    float: left;
+    list-style: none outside none;
+    margin: 0 5px 0 0;
+    padding: 0 12px 0 0;
 }
 
 div.pathway ul li.plan:hover {
-	background: url("../images/pathway-arrow-down.png") no-repeat scroll right center transparent;
+    background: url("../images/pathway-arrow-down.png") no-repeat scroll right center transparent;
 }
 
 div.pathway ul li.last {
-	margin: 0;
-	padding: 0;
-	background: none;
-	display: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    display: none;
 }
 
 div.pathway ul li:last-child {
-	background: none;
+    background: none;
 }
 
 div.pathway ul li ul {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border-bottom: 1px solid #999999;
-	border-left: 1px solid #999999;
-	border-right: 1px solid #999999;
-	display: none;
-	list-style: none outside none;
-	margin: 0 0 0 -9px;
-	padding: 0;
-	position: absolute;
-	text-align: left;
-	z-index: 10000;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #999999;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #999999;
+    display: none;
+    list-style: none outside none;
+    margin: 0 0 0 -9px;
+    padding: 0;
+    position: absolute;
+    text-align: left;
+    z-index: 10000;
 }
 
 div.pathway ul li:hover ul {
-	display: block;
+    display: block;
 }
 
 div.pathway ul li ul li {
-	background: none repeat scroll 0 0 transparent;
-	display: block;
-	float: none;
-	margin: 0;
-	padding: 0;
-	position: relative;
+    background: none repeat scroll 0 0 transparent;
+    display: block;
+    float: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
 
 div.pathway ul li ul li a {
-	color: #727272;
-	display: block;
-	font-size: 11px;
-	font-weight: bold;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 8px;
-	text-decoration: none;
-	border-top: 1px solid #cccccc;
+    color: #727272;
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 8px;
+    text-decoration: none;
+    border-top: 1px solid #cccccc;
 }
 
 div.icon-menu {
-	float: right;
+    float: right;
 }
 
 div.icon-menu div.group {
-	float: right;
-	height: 22px;
-	padding: 5px 0 0 5px;
-	width: 22px;
+    float: right;
+    height: 22px;
+    padding: 5px 0 0 5px;
+    width: 22px;
 }
 
 div#buttonspinner-cont {
-	float:right;
+    float: right;
     margin: 0 17px 0 0;
-	width:400px;
+    width: 400px;
 }
 
 div#spinner-cont {
-	float:right;
-	height:17px;
-	width:400px;
+    float: right;
+    height: 17px;
+    width: 400px;
 }
 
 div.menu {
-	float:right;
-	width:500px;
-	padding:0;
+    float: right;
+    width: 500px;
+    padding: 0;
 }
 
 div.menu div.group {
@@ -225,20 +224,19 @@ div.menu div.group.first {
 }
 
 div#contents {
-	padding:17px;
-	width:766px;
+    padding: 17px;
+    width: 766px;
     border: 1px solid #999999;
-	background:#f6f6f6;
-	float:left;
+    background: #f6f6f6;
+    float: left;
 }
-
 
 /* ----- Header ----- */
 
 div.header img {
-	float: left;
-	border: 0;
-	padding: 0;
+    float: left;
+    border: 0;
+    padding: 0;
 }
 
 div.header h1 {
@@ -254,54 +252,54 @@ div.header a.logout,
 div.header a.help,
 a.feedback-button,
 a.back {
-	background: url('../images/signout-bg.png') repeat-x;
-	border: 1px solid #a7a9ac;
-	color: #727272;
-	font-size: 10px;
-	font-weight: bold;
-	padding: 2px 4px;
-	margin:0;
-	text-transform: capitalize;
-	outline: none;
-	float:right;
-	font-family: Arial,Helvetica,sans-serif;
+    background: url('../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 0;
+    text-transform: capitalize;
+    outline: none;
+    float: right;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: normal;
 }
 
 a.back {
-	margin-left: 5px;
+    margin-left: 5px;
 }
 
 div.header a.help,
 div.header a.feedback-button {
-	margin:0 8px 0 0;
+    margin: 0 8px 0 0;
 }
 
 a.feedback-button {
-	margin:0 0 0 0;
+    margin: 0 0 0 0;
 }
 
 a.feedback-button.feedback-button-active {
-	background: #F6F6F6;
+    background: #F6F6F6;
 }
 
 div.header a.logout:hover,
 div.header a.help:hover,
 a.feedback-button:hover,
 a.back:hover {
-	color: #000000;
-	border:1px solid #000000;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 /* ----- Header - Feedback ----- */
 
 span.feedback-container {
-	float:right;
-	padding:0;
+    float: right;
+    padding: 0;
 }
 
 div.feedback {
-	float:right;
+    float: right;
 }
 
 span.feedback-container div.feedback-form-cont {
@@ -322,142 +320,141 @@ span.feedback-container.home div.feedback-form-cont {
 }
 
 div.feedback-urgency {
-	padding:5px 0 5px 0;
-	/*display: none;*/
+    padding: 5px 0 5px 0;
+    /*display: none;*/
 }
 
 div.feedback-form-cont textarea {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border: 1px solid #999999;
-	font-size: 11px;
-	height: 60px;
-	padding: 3px;
-	width: 280px;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 11px;
+    height: 60px;
+    padding: 3px;
+    width: 280px;
 }
 
 div.feedback-options {
-	float: left;
-	padding: 7px 0 0;
-	width: 100px;
+    float: left;
+    padding: 7px 0 0;
+    width: 100px;
 }
 
 div.feedback-options a {
-	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
-	border: 1px solid #A7A9AC;
-	color: #727272;
-	font-size: 10px;
-	font-weight: bold;
-	height: 16px;
-	line-height: 16px;
-	margin: 0;
-	outline: medium none;
-	padding: 2px 4px;
-	text-decoration: none;
-	text-transform: capitalize;
-	font-family: Arial,Helvetica,sans-serif;
+    background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+    border: 1px solid #A7A9AC;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 16px;
+    margin: 0;
+    outline: medium none;
+    padding: 2px 4px;
+    text-decoration: none;
+    text-transform: capitalize;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 div.feedback-options a span {
-	background: url("../images/pathway-arrow-down.png") no-repeat right;
-	padding-right: 15px;
+    background: url("../images/pathway-arrow-down.png") no-repeat right;
+    padding-right: 15px;
 }
 
 div.feedback-options ul li ul li a span {
-	background: none;
-	padding-right: 0;
+    background: none;
+    padding-right: 0;
 }
 
 div.feedback-options a:hover,
 div.feedback-options ul li:hover a {
-	color: #333333;
+    color: #333333;
 }
 
 div.feedback-options ul li:hover ul li a {
-	color: #727272;
+    color: #727272;
 }
 
 div.feedback-options ul li:hover ul li a:hover {
-	color: #333333;
+    color: #333333;
 }
 
 div.feedback-options ul {
-	display: inline;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;
+    display: inline;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
 }
 
 div.feedback-options ul li {
-	float: left;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;
+    float: left;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
 }
 
 div.feedback-options ul li ul {
-	background: none repeat scroll 0 0 #E8E8E8;
-	display: none;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;
-	position: absolute;
-	text-align: left;
-	z-index: 10000;
+    background: none repeat scroll 0 0 #E8E8E8;
+    display: none;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    text-align: left;
+    z-index: 10000;
 }
 
 div.feedback-options ul li:hover ul {
-	display: block;
+    display: block;
 }
 
 div.feedback-options ul li ul li {
-	background: none repeat scroll 0 0 transparent;
-	display: block;
-	float: none;
-	margin: 0;
-	padding: 0;
-	position: relative;
+    background: none repeat scroll 0 0 transparent;
+    display: block;
+    float: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
 
 div.feedback-options ul li ul li a {
-	color: #727272;
-	display: block;
-	font-size: 10px;
-	font-weight: bold;
-	height: 16px;
-	line-height: 17px;
-	padding: 2px 4px;
-	text-decoration: none;
-	width: 69px;
+    color: #727272;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 17px;
+    padding: 2px 4px;
+    text-decoration: none;
+    width: 69px;
 }
 
 div.feedback-options ul li ul li:last-child a {
-	border-top: none;
+    border-top: none;
 }
 
 div.cancelSend {
-	float: right;
-	padding: 5px 0 0;
-	text-align: right;
-	width: 100px;
+    float: right;
+    padding: 5px 0 0;
+    text-align: right;
+    width: 100px;
 }
 
 div.cancelSend input {
-	border: 1px solid #A7A9AC;
-	color: #727272;
-	font-family: Arial,Helvetica,sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	margin: 0 0 0 3px;
-	outline: medium none;
-	padding: 1px 4px;
-	text-transform: capitalize;
+    border: 1px solid #A7A9AC;
+    color: #727272;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 0 0 0 3px;
+    outline: medium none;
+    padding: 1px 4px;
+    text-transform: capitalize;
 }
 
 div.cancelSend input:hover {
-	color: #000000;
-	border:1px solid #000000;
+    color: #000000;
+    border: 1px solid #000000;
 }
-
 
 /*
 
@@ -488,8 +485,8 @@ div.header span.spinner {
 }
 
 div.header span.spinner img {
-	float:left;
-	padding:0;
+    float: left;
+    padding: 0;
 }
 
 div.header span.spinner span {
@@ -511,32 +508,30 @@ div.title-switchplan {
 h1.title {
     display: block;
     float: left;
-	font-family:Georgia, "Times New Roman", Times, serif;
+    font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 14px;
     font-weight: bold;
     padding-top: 8px;
 }
 
 div.switch-plan {
-	float:right;
-	padding:3px 0 0 0;
+    float: right;
+    padding: 3px 0 0 0;
 }
 
 div.switch-plan select {
-    padding:3px;
-	width:300px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+    padding: 3px;
+    width: 300px;
+    font-family: Georgia, "Times New Roman", Times, serif;
 }
 
-
-
 div.switch-plan select option {
-	padding:0 3px;
+    padding: 0 3px;
 }
 
 div.aboutplan-quickicons {
-	float:left;
-	width:465px;
+    float: left;
+    width: 465px;
 }
 
 div.about-plan {
@@ -568,16 +563,16 @@ div.about-plan h4.community {
     font-weight: normal;
     margin: 0 0 15px;
     padding: 7px 7px 7px 25px;
-    text-transform: uppercase;	
+    text-transform: uppercase;
 }
 
 img.plan-image {
-	float:left;
-	padding:5px;
-	border:1px solid #999999;
-	background:#e8e8e8;
-	margin:0 5px 0 15px;
-	display: none;
+    float: left;
+    padding: 5px;
+    border: 1px solid #999999;
+    background: #e8e8e8;
+    margin: 0 5px 0 15px;
+    display: none;
 }
 
 span.plan-name {
@@ -591,11 +586,11 @@ span.plan-name {
 }
 
 span.plan-client {
-	display:block;
-	float:left;
-	font-size:14px;
-	padding:3px 0 0 0;
-   width: 320px;
+    display: block;
+    float: left;
+    font-size: 14px;
+    padding: 3px 0 0 0;
+    width: 320px;
 }
 
 div.plan-references {
@@ -607,12 +602,12 @@ div.plan-references {
 span.locale,
 span.description,
 span.status {
-	display: block;
-	float: left;
-	font-size: 11px;
-	width: 100%;
-	padding: 5px 0 0 0;
-	line-height: 150%;
+    display: block;
+    float: left;
+    font-size: 11px;
+    width: 100%;
+    padding: 5px 0 0 0;
+    line-height: 150%;
 }
 
 span.locale {
@@ -622,7 +617,7 @@ span.locale {
 }
 
 span.status div {
-	display: inline;
+    display: inline;
 }
 
 div.attachment-panel {
@@ -660,8 +655,8 @@ h2.attachment-panel-add a {
 }
 
 h2.attachment-panel-title {
-	margin: 0 0 0 35px;
-	width: 359px;
+    margin: 0 0 0 35px;
+    width: 359px;
 }
 
 h3.resolved, h3.not-resolved {
@@ -728,15 +723,15 @@ div.quick-icons.big div.goto a {
 }
 
 div.goto a:hover {
-	text-decoration:none;
-	background:#ffffff;
-	border-right:1px solid #999999;
-	border-bottom:1px solid #999999;
+    text-decoration: none;
+    background: #ffffff;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999;
 }
 
 div.goto img.icon {
-	padding:0 0 5px 0;
-	border:0;
+    padding: 0 0 5px 0;
+    border: 0;
 }
 
 div.quick-icons.big div.goto img.icon {
@@ -760,23 +755,21 @@ div.quick-icons.big div.goto span {
     font-size: 14px;
     padding: 6px 0 0;
     text-align: left;
-    width: 250px;	
+    width: 250px;
 }
 
 div.goto a:hover span {
-  color: #0143b4;
+    color: #0143b4;
 }
-
 
 div.right-accordion {
-	float:right;
-	width:300px;
-	font-size:11px;
+    float: right;
+    width: 300px;
+    font-size: 11px;
 }
 
-
 div.title-desc {
-	padding: 0 0 10px 0;
+    padding: 0 0 10px 0;
 }
 
 h1.subtitle {
@@ -807,7 +800,7 @@ div.participation h4 {
     float: left;
     font-size: 12px;
     padding: 4px 0 0;
-    text-transform: uppercase;	
+    text-transform: uppercase;
 }
 
 div.new-community select,
@@ -833,23 +826,22 @@ div.participation input[type="button"] {
 
 #social {
     width: 300px;
-	float:right;
-	overflow:hidden;
+    float: right;
+    overflow: hidden;
 }
 
 #social div.tabpanel {
-	float:right;
-	background:#f6f6f6;
+    float: right;
+    background: #f6f6f6;
 }
-
 
 /* ----- Social - Tabbed Panels ----- */
 
 #social div.tab-row {
     float: left;
-	background: url( '../images/tab-social-bg-home.png' ) repeat-x #c3d9ff;
+    background: url('../images/tab-social-bg-home.png') repeat-x #c3d9ff;
     line-height: normal;
-	width:300px;
+    width: 300px;
 }
 
 #social div.tab-row ul {
@@ -883,7 +875,7 @@ div.participation input[type="button"] {
 }
 
 #social div.tab-row li.selected {
-	background:none;
+    background: none;
 }
 
 #social div.tab-row li.selected a {
@@ -899,9 +891,8 @@ div.participation input[type="button"] {
 }
 
 #social div.tab-row li.last a {
-	border-right: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
 }
-
 
 /* ----- Social - Global ----- */
 
@@ -916,54 +907,54 @@ div.participation input[type="button"] {
 }
 
 #social div.social-controls {
-	float:right;
-	width:100%;
+    float: right;
+    width: 100%;
 }
 
 #social div.social-controls a img {
-	border:none;
-	padding-top:3px;
+    border: none;
+    padding-top: 3px;
 }
 
 #social div.social-controls div.text-controls {
-	height:20px;
-	float:right;
-	padding:0 10px 0 0;
+    height: 20px;
+    float: right;
+    padding: 0 10px 0 0;
 }
 
 #social div.social-controls div.text-controls a {
-	font-size:10px;
-	font-weight:bold;
-	color:#666666;
-	float:left;
-	padding:2px 0 0 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #666666;
+    float: left;
+    padding: 2px 0 0 10px;
 }
 
 #social div.social-controls div.text-controls a:hover {
-	color:#333333;
-	text-decoration:none;
-	border:none;
+    color: #333333;
+    text-decoration: none;
+    border: none;
 }
 
 #social div.social-list {
-	width:100%;
-	float:right;
+    width: 100%;
+    float: right;
 }
 
 #social div.social-list.messages {
-float: right;
+    float: right;
     height: 323px;
     overflow: auto;
     width: 100%;
 }
 
 #social div.social-list > span > div {
-	width:100%;
-	float:left;
+    width: 100%;
+    float: left;
 }
 
 #social div.social-list div.even {
-	/*background:#e8e8e8;*/
+    /*background:#e8e8e8;*/
 }
 
 #social div.social-list > span > div > div {
@@ -974,37 +965,37 @@ float: right;
 }
 
 #social table {
-	width:100%;
-	display:table;
-	line-height:100%;
-	border:none;
+    width: 100%;
+    display: table;
+    line-height: 100%;
+    border: none;
 }
 
 #social table td.photo-cont {
-	width:50px;
+    width: 50px;
 }
 
 #social table td table {
-	width:100%;
+    width: 100%;
 }
 
 #social table td,
 #social table td table td {
-	/*vertical-align:top;*/
+    /*vertical-align:top;*/
 }
 
 #social div.social-list img.photo {
-	background:#E8E8E8;
-	border:1px solid #999999;
-	padding:2px;
-	margin:9px;
-	width:32px;
-	height:32px;
-	float:left;
+    background: #E8E8E8;
+    border: 1px solid #999999;
+    padding: 2px;
+    margin: 9px;
+    width: 32px;
+    height: 32px;
+    float: left;
 }
 
 #social div.social-list div.even img.photo {
-	background:#dadada;
+    background: #dadada;
 }
 
 #social div.social-list div.joining span.name,
@@ -1020,14 +1011,14 @@ float: right;
 
 #social div.social-list div.even img.present,
 #social div.social-list div.odd img.present {
-	display:block;
-	float:left;
-	background:none;
+    display: block;
+    float: left;
+    background: none;
 }
 
 #social div.social-list span.menubar {
     float: left;
-	padding:6px 0 0 0;
+    padding: 6px 0 0 0;
     position: relative;
 }
 
@@ -1042,9 +1033,9 @@ float: right;
 }
 
 #social div.social-list td.info-container {
-	font-size:11px;
-	line-height:140%;
-	color:#333333;
+    font-size: 11px;
+    line-height: 140%;
+    color: #333333;
 }
 
 /*
@@ -1064,28 +1055,28 @@ float: right;
 */
 
 #social div.social-list div.time {
-	font-size:10px;
-	font-weight:bold;
-	color:#959595;
+    font-size: 10px;
+    font-weight: bold;
+    color: #959595;
 }
 
 #social div.social-list div.show-more-less {
-	border-bottom:1px solid #BCBEC0;
-	float:left;
-	text-align:center;
-	width:100%;
+    border-bottom: 1px solid #BCBEC0;
+    float: left;
+    text-align: center;
+    width: 100%;
 }
 
 #social div.social-list div.show-more-less a {
-	color:#666666;
-	font-size:11px;
-	font-weight:bold;
-	padding:5px;
-	text-transform:lowercase;
+    color: #666666;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px;
+    text-transform: lowercase;
 }
 
 #social div.social-list div.show-more-less a:hover {
-	color:#333333;
+    color: #333333;
 }
 
 #social div.no-commands,
@@ -1103,85 +1094,99 @@ float: right;
 
 #social div.no-commands span,
 #social div.no-messages span {
-	color:#666666;
-	font-size:11px;
-	font-weight:bold;
-	padding:5px;
-	text-transform:lowercase;
+    color: #666666;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px;
+    text-transform: lowercase;
 }
-
 
 /* ----- Social - Presence ----- */
 
 #social div.social-list.presence > span > div > div {
-	padding:0 5px 0 0;
+    padding: 0 5px 0 0;
 }
 
-#social div.social-list.presence div.joining img.present {padding:15px 0 0 5px;}
+#social div.social-list.presence div.joining img.present {
+    padding: 15px 0 0 5px;
+}
 
-#social div.social-list.presence div.joining div.time {line-height:100%;}
+#social div.social-list.presence div.joining div.time {
+    line-height: 100%;
+}
 
-#social div.social-list.presence div.employed.joining span.name {padding:7px 0 0 0;}
+#social div.social-list.presence div.employed.joining span.name {
+    padding: 7px 0 0 0;
+}
 
-#social div.social-list.presence div.employed.joining img.present {padding:9px 0 0 5px;}
+#social div.social-list.presence div.employed.joining img.present {
+    padding: 9px 0 0 5px;
+}
 
-#social div.social-list.presence div.employed.joining span.menubar {padding:3px 0 0 0;}
+#social div.social-list.presence div.employed.joining span.menubar {
+    padding: 3px 0 0 0;
+}
 
-#social div.social-list.presence div.employed.joining div.time {line-height:100%;}
+#social div.social-list.presence div.employed.joining div.time {
+    line-height: 100%;
+}
 
-#social div.social-list.presence div.employed.leaving span.name {padding:12px 0 2px 0;}
+#social div.social-list.presence div.employed.leaving span.name {
+    padding: 12px 0 2px 0;
+}
 
-#social div.social-list.presence div.employed.leaving span.menubar {padding:3px 0 0 0;}
-
-
+#social div.social-list.presence div.employed.leaving span.menubar {
+    padding: 3px 0 0 0;
+}
 
 #social div.social-list.presence div.joining span.name {
-	padding:13px 0 0 0;
+    padding: 13px 0 0 0;
 }
 
 #social div.social-list.presence div.leaving span.name {
-	padding:20px 0 0 0;
+    padding: 20px 0 0 0;
 }
 
 #social div.social-list.presence img.present {
-	padding:14px 0 0 5px;
+    padding: 14px 0 0 5px;
 }
 
 /* ----- Social - Activities ----- */
 
 #social div.social-list.commands div span.name {
-	padding:11px 0 0 0;
+    padding: 11px 0 0 0;
 }
 
 #social div.social-list.commands img.present {
-	padding:13px 0 0 5px;
+    padding: 13px 0 0 5px;
 }
 
 #social div.social-list.commands td.jobtitle span.titles {
-	padding:1px 0 2px 0;
+    padding: 1px 0 2px 0;
 }
 
 #social div.social-list.commands td.info-container {
-	padding:0 0 8px 1px;
+    padding: 0 0 8px 1px;
 }
 
 /* ----- Social - Messages ----- */
 
 #social div.social-list.messages div span.name {
-	padding:7px 0 0;
+    padding: 7px 0 0;
 }
 
 #social div.social-list.messages img.present {
-	padding:11px 0 0 5px;
+    padding: 11px 0 0 5px;
 }
+
 /*
 #social div.social-list.messages td.jobtitle span.titles {
 	padding:0 0 6px;
 }
 */
 #social div.social-list.messages td.info-container {
-	padding:6px 0 8px;
-   border-top: 2px dotted #CCCCCC;
+    padding: 6px 0 8px;
+    border-top: 2px dotted #CCCCCC;
 }
 
 /* ----- Social - New Message ----- */
@@ -1197,51 +1202,51 @@ float: right;
 }
 
 #social div.new-message > div {
-	padding:5px 0;
+    padding: 5px 0;
 }
 
 #social div.new-message > div > span {
-	font-weight:bold;
+    font-weight: bold;
 }
 
 #social div.new-message > div > select {
-	background:#F6F6F6;
-	border:1px solid #666666;
-	margin-left:5px;
-	font-size:11px;
+    background: #F6F6F6;
+    border: 1px solid #666666;
+    margin-left: 5px;
+    font-size: 11px;
 }
 
 #social div.new-message textarea {
-	background:#F6F6F6;
-	border:1px solid #999999;
-	margin:2px 0 5px 0;
-	overflow-x:hidden;
-	font-size:11px;
-	width:279px;
+    background: #F6F6F6;
+    border: 1px solid #999999;
+    margin: 2px 0 5px 0;
+    overflow-x: hidden;
+    font-size: 11px;
+    width: 279px;
 }
 
 #social div.new-message input {
-	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
-	border: 1px solid #A7A9AC;
-	color: #727272;
-	font-family: Arial,Helvetica,sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	margin: 0 3px 0 0;
-	outline: medium none;
-	padding: 1px 4px;
-	text-transform: capitalize;
+    background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+    border: 1px solid #A7A9AC;
+    color: #727272;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 0 3px 0 0;
+    outline: medium none;
+    padding: 1px 4px;
+    text-transform: capitalize;
 }
 
 #social div.new-message input:hover {
-	color: #000000;
-	border:1px solid #000000;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 /* ----- Social - About Me ----- */
 
 #social div.userInfo {
-	margin:10px;
+    margin: 10px;
 }
 
 #social div.tabcontent-group {
@@ -1252,7 +1257,7 @@ float: right;
 }
 
 #social div.tabcontent-content {
-	padding: 7px;	
+    padding: 7px;
 }
 
 #social div.userInfo h3 {
@@ -1278,53 +1283,53 @@ float: right;
 }
 
 #social div.userInfo table {
-	font-size:11px;
+    font-size: 11px;
 }
 
 #social div.userInfo table tr td {
-	padding:2px 0 5px;
+    padding: 2px 0 5px;
 }
 
 #social div.userInfo table tr td span {
-	margin: 5px 0;
-	display: block;
+    margin: 5px 0;
+    display: block;
 }
 
 #social div.userInfo table input {
-	font-size:11px;
+    font-size: 11px;
 }
 
 #social div.userInfo ul {
-	margin:0 0 0 24px;
+    margin: 0 0 0 24px;
 }
 
 #social div.userInfo ul li {
-	padding:0 0 2px 0;
+    padding: 0 0 2px 0;
 }
 
 #social div.userInfo ul.check-list {
-	list-style: none outside none;
-	margin: 0 0 0 5px;
-	padding: 0;
+    list-style: none outside none;
+    margin: 0 0 0 5px;
+    padding: 0;
 }
 
 #social div.userInfo ul.check-list li {
-	margin: 0;
-	padding: 5px 0;
+    margin: 0;
+    padding: 5px 0;
 }
 
 #social div.userInfo ol,
 ol.channels {
-	margin:6px 0 0 20px;
-	padding: 0;
+    margin: 6px 0 0 20px;
+    padding: 0;
 }
 
 #social div.userInfo ol li,
 ol.channels li {
-	font-weight: bold;
-	margin: 0;
-	padding: 0 0 10px;
-	text-align: left;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 0 10px;
+    text-align: left;
 }
 
 #social div.userInfo ol li input[type="checkbox"],
@@ -1347,16 +1352,16 @@ ol.channels li input[type="checkbox"] {
 }
 
 #social div.userInfo select {
-	width: 100%;
+    width: 100%;
 }
 
 #social div.userInfo ol li input.address {
     margin: 4px 0 0 0;
-	font-size:11px;
+    font-size: 11px;
 }
 
 #social div.userInfo ol li select {
-	font-size:11px;
+    font-size: 11px;
 }
 
 #social div.userInfo div.buttons {
@@ -1369,7 +1374,7 @@ ol.channels li input[type="checkbox"] {
     background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #A7A9AC;
     color: #727272;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
     font-weight: bold;
     margin: 0 3px 0 0;
@@ -1380,15 +1385,12 @@ ol.channels li input[type="checkbox"] {
 
 #social div.userInfo div.buttons input:hover {
     color: #000000;
-	border:1px solid #000000;
+    border: 1px solid #000000;
 }
 
 #social div.userInfo table {
-	width: 100%;
+    width: 100%;
 }
-
-
-
 
 /* ----- Dropdown Menu - Default ----- */
 
@@ -1443,48 +1445,53 @@ td.name-title-icon-menu .menubar .dropmenu:hover {
 td.name-title-icon-menu .menubar .dropmenu ul {
     display: none;
     position: absolute;
-*/    /* right: 0; */ /* Changed by JF */ /*
-    background-color: #e6e6e6;
-    color: #000000;
-    list-style: none;
-    margin: 0 2px 0 0;
-    padding: 0;
-    z-index: 100000;
-	border:1px solid #C7C8CA;
-	top:1.5em;
+*/
+/* right: 0; */
+/* Changed by JF */
+/*
+   background-color: #e6e6e6;
+   color: #000000;
+   list-style: none;
+   margin: 0 2px 0 0;
+   padding: 0;
+   z-index: 100000;
+   border:1px solid #C7C8CA;
+   top:1.5em;
 }
 
 #social .menubar .dropmenu ul li,
 td.name-title-icon-menu .menubar .dropmenu ul li {
-    display: block;
-*/    /* padding: 2px 4px; */ /* Changed by JF */ /*
-    z-index: 100000;
-	border-bottom:1px solid #D1D3D4;
+   display: block;
+*/
+/* padding: 2px 4px; */
+/* Changed by JF */
+/*
+   z-index: 100000;
+   border-bottom:1px solid #D1D3D4;
 }
 
 #social .menubar .dropmenu li span.disabled,
 td.name-title-icon-menu .menubar .dropmenu li span.disabled {
-    font-style: oblique;
-    color: #808080;
+   font-style: oblique;
+   color: #808080;
 }
 
 #social .menubar .dropmenu:hover ul,
 td.name-title-icon-menu .menubar .dropmenu:hover ul {
-    display: block;
+   display: block;
 }
 
 #social .menubar .dropmenu ul li:hover,
 td.name-title-icon-menu .menubar .dropmenu ul li:hover {
-    background-color: #ccccff;
+   background-color: #ccccff;
 }
 
 #social .menubar .dropmenu ul li a:hover,
 td.name-title-icon-menu .menubar .dropmenu ul li a:hover {
-	border:none;
+   border:none;
 }
 
 */
-
 
 /* ----- Floating Panels - Data Tables ----- */
 
@@ -1494,15 +1501,15 @@ h3.data-table-header {
     color: #333333;
     font-size: 12px;
     padding: 4px;
-    text-transform: uppercase;	
+    text-transform: uppercase;
 }
 
 table.data-table {
     border-collapse: collapse;
-    font-size:11px;
-    margin:0 0 5px 0;
-    border-top:1px solid #999999;
-    width: 100%; 
+    font-size: 11px;
+    margin: 0 0 5px 0;
+    border-top: 1px solid #999999;
+    width: 100%;
 }
 
 table.data-table.big {
@@ -1512,51 +1519,51 @@ table.data-table.big {
 
 table.data-table td {
     vertical-align: middle;
-    padding:5px;
-    color:#333333;
+    padding: 5px;
+    color: #333333;
 }
 
 table.data-table.users td,
 table.data-table.big td {
-	padding: 10px;
+    padding: 10px;
 }
 
 table.data-table.big td:nth-child(4) span {
-	display: block;
-	width: 150px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    display: block;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table.data-table td table td {
-    padding:0;
+    padding: 0;
 }
 
 table.data-table td table td.subjects-container {
-    padding:0 0 0 25px;
+    padding: 0 0 0 25px;
 }
 
 table.data-table td table.classifications tr td {
-    padding:0 5px 0 0;
+    padding: 0 5px 0 0;
 }
 
 table.data-table tr.headers {
-    background:#DCDDDE;
+    background: #DCDDDE;
     font-weight: bold;
 }
 
 table.data-table tr.headers.first {
-    border-bottom:1px solid #999999;
+    border-bottom: 1px solid #999999;
 }
 
 table.data-table tr.headers td {
-    border-bottom:1px solid #999999;
+    border-bottom: 1px solid #999999;
 }
 
 table.data-table tr.headers th {
     text-align: left;
-    padding:0 5px;
-    vertical-align:middle;
+    padding: 0 5px;
+    vertical-align: middle;
 }
 
 table.data-table.users tr.headers th,
@@ -1577,17 +1584,17 @@ table.data-table tr.even td,
 table.data-table tr.odd td,
 table.data-table tr.parent td,
 table.data-table tr.child td {
-    border-bottom:1px solid #c7c8ca;
+    border-bottom: 1px solid #c7c8ca;
 }
 
 table.data-table tr.even td table tr td,
 table.data-table tr.odd td table td {
-    border:none;
+    border: none;
 }
 
 table.data-table tr.odd.last,
 table.data-table tr.even.last {
-    border-bottom:1px solid #999999;
+    border-bottom: 1px solid #999999;
 }
 
 table.data-table ul {
@@ -1596,22 +1603,22 @@ table.data-table ul {
 }
 
 table.data-table a.survey-button {
-    display:block;
-    text-align:center;
+    display: block;
+    text-align: center;
 }
 
 table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
 table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li {
-    margin:0;
-    padding:0 0 7px 0;
+    margin: 0;
+    padding: 0 0 7px 0;
 }
 
 table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li > a > img {
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
 table.data-table input[type="text"],
@@ -1636,8 +1643,8 @@ td, th {
 
 td.feedback-new-message-cont,
 td.feedback-messages-cont {
-	vertical-align: top;
-	padding: 0;
+    vertical-align: top;
+    padding: 0;
 }
 
 td.feedback-messages-cont {
@@ -1646,7 +1653,7 @@ td.feedback-messages-cont {
 }
 
 tbody th {
-    padding:0 5px 0 10px;
+    padding: 0 5px 0 10px;
 }
 
 tbody th a {
@@ -1656,24 +1663,23 @@ tbody th a {
 a.more,
 a.less,
 a.window {
-	border:1px solid #C7C8CA;
-	color:#666666;
-	padding:0 3px 0 14px;
-	font-size:10px;
-	font-family: Verdana, Geneva, sans-serif;
-	text-transform: uppercase;
-	font-weight: normal;
+    border: 1px solid #C7C8CA;
+    color: #666666;
+    padding: 0 3px 0 14px;
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-transform: uppercase;
+    font-weight: normal;
 }
 
 a.more {
-	background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
+    background: url('../images/link.more.png') no-repeat 2px 3px #DCDDDE;
 }
 
 a.more:hover {
-	border:1px solid #999999;
-	color:#333333;
+    border: 1px solid #999999;
+    color: #333333;
 }
-
 
 /* ----- Data Tables - Controls ----- */
 
@@ -1713,7 +1719,7 @@ div.filters select {
 }
 
 div.filters input[type="text"] {
-	width: auto;
+    width: auto;
 }
 
 thead tr.navigation {
@@ -1770,20 +1776,19 @@ div.filters ul.ranges li {
     display: inline;
 }
 
-
 /* ----- Tabs ----- */
 
 .page-content div.tabpanel > div,
 .page-content div.tabpanel div.tab-panel {
-    clear:both;
+    clear: both;
 }
 
 .page-content div.tabpanel div.tab-row {
     float: left;
     width: 100%;
     line-height: normal;
-    background: url( '../images/tab-bg.png' ) repeat-x;
-    margin:10px 0;
+    background: url('../images/tab-bg.png') repeat-x;
+    margin: 10px 0;
 }
 
 .page-content div.tabpanel div.tab-row ul {
@@ -1801,14 +1806,14 @@ div.filters ul.ranges li {
 .page-content div.tabpanel div.tab-row a {
     display: block;
     background: #E8E8E8;
-    height:20px;
+    height: 20px;
     padding: 4px 10px 0 10px;
     text-decoration: none;
     font-weight: bold;
     color: #666666;
     white-space: nowrap;
-    border:1px solid #999999;
-    margin:0 0 0 5px;
+    border: 1px solid #999999;
+    margin: 0 0 0 5px;
 }
 
 .page-content div.tabpanel div.tab-row a:hover {
@@ -1818,7 +1823,7 @@ div.filters ul.ranges li {
 .page-content div.tabpanel div.tab-row li.selected a {
     display: block;
     background: #f6f6f6;
-    border-bottom:1px solid #f6f6f6;
+    border-bottom: 1px solid #f6f6f6;
     height: 20px;
     padding: 4px 10px 0 10px;
     text-decoration: none;
@@ -1836,13 +1841,11 @@ div.filters ul.ranges li {
     color: red;
 }
 
-
 div.feedback-new-message {
     float: left;
     margin: 0 0 10px;
     padding: 0 15px 0 0;
 }
-
 
 div.feedback-new-message textarea {
     background: none repeat scroll 0 0 #E8E8E8;
@@ -1854,7 +1857,7 @@ div.feedback-new-message textarea {
 }
 
 td.resolved {
-	padding: 0 15px 0 0;
+    padding: 0 15px 0 0;
 }
 
 div.feedback-new-message input[type="button"],
@@ -1880,18 +1883,18 @@ td.resolved input[type="button"]:hover {
 }
 
 td.photo-cont {
-	float: left;
+    float: left;
     margin: 0 10px 0 0;
 }
 
 td.photo-cont img.photo {
-	background:#dadada;
-	border:1px solid #999999;
-	padding:2px;
-	margin:9px;
-	width:32px;
-	height:32px;
-	float:left;
+    background: #dadada;
+    border: 1px solid #999999;
+    padding: 2px;
+    margin: 9px;
+    width: 32px;
+    height: 32px;
+    float: left;
 }
 
 td.name-title-icon-menu {
@@ -1928,7 +1931,7 @@ span.time {
 }
 
 span.text {
-	display: block;
+    display: block;
 }
 
 /* Added by JF */
@@ -1952,7 +1955,7 @@ span.menuitem a {
     padding: 2px 4px;
     text-decoration: none;
     text-transform: capitalize;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 div.feedback-options a span,
@@ -2056,7 +2059,7 @@ span.menuitem ul li ul li:last-child a {
 
 /* Added by JF -- much copied from channels.css -- TODO: CLEAN UP*/
 
-    /* name range filter */
+/* name range filter */
 
 ul.ranges {
     font-size: 8pt;
@@ -2128,7 +2131,7 @@ div.wicket-aa-container {
     margin: 2px;
 }
 
-    /* auto complete */
+/* auto complete */
 
 div.wicket-aa {
     text-align: left;
@@ -2148,7 +2151,11 @@ div.wicket-aa ul li:hover {
     background: #c3d9ff;
 }
 
-div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0; }
+div.wicket-aa ul li.selected {
+    background-color: #e6e6e6;
+    padding: 2px;
+    margin: 0;
+}
 
 /* participation user name input */
 
@@ -2180,13 +2187,12 @@ div.participation h4 {
     margin-left: 5px;
 }
 
-
 /* issue details */
 
 div.issues table.issue-details {
-	width: 100%;
-	font-family: Lucida Console,monospace;
-	font-size: 11px;
+    width: 100%;
+    font-family: Lucida Console, monospace;
+    font-size: 11px;
 }
 
 div.issues {
@@ -2270,7 +2276,6 @@ table.issue-details {
     margin: 10px 0;
 }
 
-
 /***/
 
 ul.menu {
@@ -2278,7 +2283,6 @@ ul.menu {
     list-style: none;
     white-space: nowrap;
 }
-
 
 table.issue-details td {
     padding: 5px;
@@ -2312,7 +2316,7 @@ div.zoom {
     text-align: right;
     text-transform: uppercase;
     top: 0;
-    z-index: 1;	
+    z-index: 1;
 }
 
 div.zoom span {
@@ -2337,7 +2341,7 @@ div.controls {
     color: #666666;
     font-size: 10px;
     font-weight: bold;
-    padding:10px 5px 5px;
+    padding: 10px 5px 5px;
 }
 
 a.button,
@@ -2382,7 +2386,7 @@ input[type='text'] {
 
 .req label,
 .w_content_container label {
-	font-size: 11px;
+    font-size: 11px;
 }
 
 .req textarea,
@@ -2424,7 +2428,7 @@ input[type='text'] {
 }
 
 .w_content_container table td.location-panel {
-	padding: 2px 0 10px;
+    padding: 2px 0 10px;
 }
 
 .w_content_container table table td {
@@ -2433,7 +2437,7 @@ input[type='text'] {
 }
 
 .w_content_container table th {
-	text-align: right;
+    text-align: right;
 }
 
 .w_content_container table th.location-panel-label {
@@ -2455,7 +2459,7 @@ input[type='text'] {
 }
 
 .req-section table {
-	width: 65%;
+    width: 65%;
 }
 
 .req-sections {
@@ -2488,9 +2492,9 @@ input[type='text'] {
 }
 
 .req-section {
-    float: right;  /* was left */
+    float: right; /* was left */
     margin-top: 10px;
-   /* padding: 5px 10px;*/
+    /* padding: 5px 10px;*/
 }
 
 .req-defs .button {
@@ -2566,7 +2570,7 @@ ul.attach {
 }
 
 ul.attach input[type="button"] {
-	margin: 15px 0 0 0;
+    margin: 15px 0 0 0;
 }
 
 /*
@@ -2589,9 +2593,9 @@ ul.attach li.controls {
 }
 
 ul.attach li.controls select {
-   background: none repeat scroll 0 0 #E8E8E8;
-   border: 1px solid #999999;
-	font-size: 12px;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 12px;
 }
 
 ul.attach li.controls input[type="text"] {
@@ -2638,20 +2642,21 @@ ul.attach li ul.menu li a:hover {
     border: 1px solid #000000;
 }
 
-.attachment-panel-add-container .attach-controls {   /*added by JF */
+.attachment-panel-add-container .attach-controls {
+    /*added by JF */
     table-layout: fixed;
 }
 
 /* ----- Settings Page ----- */
 
 div.issues.settings {
-	background: none repeat scroll 0 0 #C9252C;
-	border: medium none;
-	color: #FFFFFF;
-	margin: 10px 0 20px;
-	padding: 5px;
-	text-align: center;
-	text-transform: uppercase;
+    background: none repeat scroll 0 0 #C9252C;
+    border: medium none;
+    color: #FFFFFF;
+    margin: 10px 0 20px;
+    padding: 5px;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 div.issues.settings li {
@@ -2694,34 +2699,34 @@ div.attachment-panel-add-container table {
 }
 
 div.attachment-panel-add-container table {
-	width: 100%;
+    width: 100%;
 }
 
 div.registering-container table td,
 div.assignment-container table td,
 div.authorizing-container table td,
 div.attachment-panel-add-container table td {
-	padding: 10px 5px 10px 10px;
+    padding: 10px 5px 10px 10px;
 }
 
 div.registering-container input[type="text"],
 div.assignment-container input[type="text"],
 div.authorizing-container input[type="text"],
 div.attachment-panel-add-container input[type="text"] {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border: 1px solid #999999;
-	float: right;
-	font-size: 11px;
-	padding: 3px;
-	width: 292px;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    float: right;
+    font-size: 11px;
+    padding: 3px;
+    width: 292px;
 }
 
 div.attachment-panel-add-container input[type="text"] {
-	width: 192px;
+    width: 192px;
 }
 
 div.attachment-panel-add-container input[type="file"] {
-	float: right;
+    float: right;
 }
 
 div.registering-container select,
@@ -2737,28 +2742,24 @@ div.attachment-panel-add-container select {
 }
 
 div.attachment-panel-add-container select {
-	width: 200px;
+    width: 200px;
 }
-
 
 /* Added by JF */
 .issues .help-icon {
     float: right;
-    cursor:pointer;
+    cursor: pointer;
     margin-right: 10px;
     margin-top: 3px;
 }
 
 .chains-icon {
-    float:right;
+    float: right;
     cursor: pointer;
     margin-right: 5px;
 }
 
-
 /*  participation manager */
-
-
 
 div.participationManager {
     padding: 10px 0 0;
@@ -2769,7 +2770,7 @@ div.participationManager div.participation {
     float: left;
     height: 300px;
     margin: 0 0 10px;
-    overflow-x:hidden;
+    overflow-x: hidden;
     overflow-y: auto;
     padding: 0;
     width: 220px;
@@ -2778,18 +2779,18 @@ div.participationManager div.participation {
 }
 
 div.participationManager div.participation.org {
-	width: 382px;
+    width: 382px;
     overflow-y: auto;
 }
 
 div.participationManager div.participation.org select {
-	font-size: 10px;
+    font-size: 10px;
     padding: 0;
 }
 
 div.participationManager div.participation.users {
-	width: 322px;
-	border-right: 1px solid #cccccc;
+    width: 322px;
+    border-right: 1px solid #cccccc;
 }
 
 div.participation table {
@@ -2812,32 +2813,32 @@ div.participation table th {
 
 div.participation.users table th.accepted,
 div.participation.users table th.confirmed {
-	text-align: center;
+    text-align: center;
 }
 
 div.participation table td {
-	border-bottom: 1px solid #CCCCCC;
-	height: 50px;
+    border-bottom: 1px solid #CCCCCC;
+    height: 50px;
 }
 
 div.participation table td.check {
-	padding: 0 10px;	
+    padding: 0 10px;
 }
 
 div.participation.users table td.accepted,
 div.participation.users table td.confirmed {
-	text-align: center;
+    text-align: center;
     font-size: 10px;
     text-transform: uppercase;
 }
 
 div.participation.org table.org td.check {
-	width: 15px;
+    width: 15px;
 }
 
 div.participation.org table.org td.name span {
     color: #727272;
-    font-weight: bold;	
+    font-weight: bold;
 }
 
 div.participation.org table.org td.remove,
@@ -2847,13 +2848,13 @@ div.participation.org table.org td.profile {
 
 div.participation.org table.org td.remove a,
 div.participation.org table.org td.profile a {
-	padding: 0 3px 0 14px;
-	width: auto;
- }
+    padding: 0 3px 0 14px;
+    width: auto;
+}
 
 span.full-name {
-	color: #727272;
-	font-weight: bold;
+    color: #727272;
+    font-weight: bold;
 }
 
 span.username {
@@ -2867,7 +2868,7 @@ div.participationManager div.participation h3 {
     font-size: 14px;
     padding: 5px;
     text-transform: uppercase;
-}	
+}
 
 div.participationManager div.participation h3 input {
     height: 11px;
@@ -2886,29 +2887,30 @@ div.participation div.participation-table-cont a {
 }
 
 div.participation div.participation-table-cont a span,
-div.participationManager div.participation-table-cont a span { /* Account for vertical scrollbar */
+div.participationManager div.participation-table-cont a span {
+    /* Account for vertical scrollbar */
     display: block;
     width: 183px;
 }
 
 div.participation.org div.participation-table-cont a {
-	width: 362px;
+    width: 362px;
 }
 
 div.participation div.participation-table-cont a:hover,
 div.participation div.participation-table-cont a.selected {
-	color: #333333;
+    color: #333333;
     background: url("../images/part-arrow.png") no-repeat scroll 195px center #e8e8e8;
 }
 
 div.participation.org div.participation-table-cont a:hover,
 div.participation.org div.participation-table-cont a.selected {
-	color: #333333;
+    color: #333333;
     background: url("../images/part-arrow.png") no-repeat scroll 357px center #e8e8e8;
 }
 
 div.participation div.participation-table-cont img {
-	display: none;
+    display: none;
 }
 
 span.metrics {
@@ -2921,7 +2923,7 @@ span.metrics {
 div.participation-filtering,
 div.participation-table-cont,
 div.participation-table-cont div {
-	float: left;
+    float: left;
     padding: 0;
     width: inherit;
 }
@@ -2931,22 +2933,22 @@ table div.participation-filtering {
 }
 
 div.participation-filtering {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border-bottom: 1px solid #CCCCCC;
-	float: left;
-	font-size: 10px;
-	text-transform: uppercase;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #CCCCCC;
+    float: left;
+    font-size: 10px;
+    text-transform: uppercase;
 }
 
 div.participation-filtering input {
     float: left;
-    margin: 4px 0 4px 4px;	
+    margin: 4px 0 4px 4px;
 }
 
 div.participation-filtering span {
-	display: block;
-	float: left;
-	margin: 3px 0 0 4px;
+    display: block;
+    float: left;
+    margin: 3px 0 0 4px;
 }
 
 span.empty-note {
@@ -2971,18 +2973,17 @@ div.partman-note {
     width: 744px;
 }
 
-
 /* ----- Channels Admin ----- */
 
 div.manage-plan.admin,
 div.manage-users.admin {
-	border: none;
-	margin: 0;	
+    border: none;
+    margin: 0;
 }
 
 div.manage-plan.admin div.plan-left-col,
 div.manage-users.admin div.user-left-col {
-	float: left;
+    float: left;
 }
 
 div.manage-plan.admin div.new-plan,
@@ -2997,7 +2998,7 @@ div.manage-users.admin div.new-user {
 
 div.manage-plan.admin div.new-plan h3,
 div.manage-users.admin div.new-user h3 {
-	background: none repeat scroll 0 0 #D95B43;
+    background: none repeat scroll 0 0 #D95B43;
     color: #FFFFFF;
     font-family: montserrat;
     font-size: 14px;
@@ -3015,7 +3016,7 @@ div.manage-plan.admin div.select-plan {
 }
 
 div.manage-plan.admin div.select-plan h3 {
-	background: none repeat scroll 0 0 #679177;
+    background: none repeat scroll 0 0 #679177;
     color: #FFFFFF;
     font-family: montserrat;
     font-size: 14px;
@@ -3024,12 +3025,11 @@ div.manage-plan.admin div.select-plan h3 {
     text-transform: uppercase;
 }
 
-
 div.manage-plan.admin div.select-plan div,
 div.manage-plan.admin div.new-plan div,
 div.manage-users.admin div.new-user div {
-	padding: 10px;
-	float: left;
+    padding: 10px;
+    float: left;
 }
 
 div.manage-plan.admin div.new-plan a.button,
@@ -3039,10 +3039,10 @@ div.manage-users.admin div.new-user a.button {
 }
 
 div.manage-users.admin div.usernames {
-	float: left;
-	width: 198px;
-	background: #eeeeee;
-	border: 1px solid #679177;
+    float: left;
+    width: 198px;
+    background: #eeeeee;
+    border: 1px solid #679177;
 }
 
 div.usernames div.namelist-cont {
@@ -3053,45 +3053,45 @@ div.usernames div.namelist-cont {
 }
 
 div.manage-users.admin div.usernames ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 div.manage-users.admin div.usernames ul li {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 div.manage-users.admin div.usernames ul li a {
     display: block;
-    padding: 10px;	
+    padding: 10px;
     color: #333333;
     border-bottom: 1px solid #999999;
 }
 
 div.manage-users.admin div.usernames ul li a:hover,
 div.manage-users.admin div.usernames ul li a.selected {
-	background: #cccccc;
-	border: 0;
-	border-bottom: 1px solid #999999;
+    background: #cccccc;
+    border: 0;
+    border-bottom: 1px solid #999999;
 }
 
 div.manage-users.admin div.usernames ul li a span.name {
-	display: block;
-	font-family: 'Montserrat',sans-serif;
+    display: block;
+    font-family: 'Montserrat', sans-serif;
 }
 
 div.manage-users.admin div.usernames ul li a span.disabled-name {
     display: block;
-    font-family: 'Montserrat',sans-serif;
+    font-family: 'Montserrat', sans-serif;
     text-decoration: line-through;
 }
 
 div.manage-users.admin div.usernames ul li a span.username {
-	display: block;
-	font-size: 10px;
-	color: #999999;
+    display: block;
+    font-size: 10px;
+    color: #999999;
 }
 
 div.manage-plan.admin div.plan,
@@ -3102,17 +3102,17 @@ div.manage-users.admin div.user {
 }
 
 div.manage-users.admin div.user a {
-	float: right;
+    float: right;
 }
 
 div.plan-details,
 div.user-details,
 div.user-priviledges {
-	background: #EEEEEE;
-	float: left;
-	margin: 0 0 10px;
-	width: 554px;
-	border: 1px solid #7E9ABF;
+    background: #EEEEEE;
+    float: left;
+    margin: 0 0 10px;
+    width: 554px;
+    border: 1px solid #7E9ABF;
 }
 
 div.plan-details h3,
@@ -3134,13 +3134,13 @@ div.user-priviledges div.button-bar {
     float: left;
     height: 34px;
     padding: 11px 10px 0 0;
-    width: 544px;	
+    width: 544px;
 }
 
 div.plan-details div.button-bar a.button,
 div.user-details div.button-bar a.button,
 div.user-priviledges div.button-bar a.button {
-	background: #D8D8D8;
+    background: #D8D8D8;
 }
 
 div.usernames div.header-cont {
@@ -3156,7 +3156,7 @@ div.usernames h3 {
     font-size: 14px;
     font-weight: normal;
     padding: 10px;
-    text-transform: uppercase;	
+    text-transform: uppercase;
 }
 
 div.usernames div.header-cont span {
@@ -3185,7 +3185,7 @@ div.user-details table,
 div.user-priviledges table {
     border-collapse: collapse;
     float: left;
-    font-family: 'Open Sans',sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     width: 554px;
 }
@@ -3193,16 +3193,16 @@ div.user-priviledges table {
 div.plan-details table tr.odd,
 div.user-details table tr.odd,
 div.user-priviledges table tr.odd {
-	background: #DDDEDE;
+    background: #DDDEDE;
 }
 
 div.plan-details table td,
 div.user-details table td,
 div.user-priviledges table td {
-	padding: 10px;
+    padding: 10px;
 }
 
-div.new-plan input[type=text], 
+div.new-plan input[type=text],
 div.new-user input[type=text],
 div.user-details table input[type=text],
 div.user-priviledges table input[type=text],
@@ -3210,7 +3210,7 @@ div.plan-details table input[type="text"] {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #999999;
     float: right;
-    font-family: 'Open Sans',sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     padding: 3px 5px;
     width: 250px;
@@ -3218,7 +3218,7 @@ div.plan-details table input[type="text"] {
 
 div.new-plan input[type=text],
 div.new-user input[type=text] {
-	width: 166px;
+    width: 166px;
 }
 
 div.manage-plan.admin div.select-plan select,
@@ -3233,7 +3233,7 @@ div.user-priviledges table select {
 }
 
 div.manage-plan.admin div.select-plan select {
-	width: 178px;
+    width: 178px;
 }
 
 .ui-notify {
@@ -3241,7 +3241,7 @@ div.manage-plan.admin div.select-plan select {
     position: fixed;
     top: 10px;
     right: 10px;
-    z-index: 1000000;  /* added */
+    z-index: 1000000; /* added */
 }
 
 .plan-selector {
@@ -3253,5 +3253,13 @@ div.manage-plan.admin div.select-plan select {
 }
 
 .error-message:before {
-    content:"* ";
+    content: "* ";
+}
+
+.copyright {
+    position: fixed;
+    bottom: 2px;
+    left: 2px;
+    color: gray;
+    font-size: xx-small;
 }

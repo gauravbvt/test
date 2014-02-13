@@ -34,7 +34,7 @@ public class UnsupervisedJob extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
             if ( job.getSupervisor() == null ) {
-                Issue issue = makeIssue( communityService, Issue.COMPLETENESS, organization );
+                Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, organization );
                 issue.setDescription( "No supervisor for " + job.getLabel() + "." );
                 issue.setRemediation( "Add a supervisor to the job\nor remove the job" );
                 issue.setSeverity( Level.Low );
@@ -62,7 +62,7 @@ public class UnsupervisedJob extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Agent job has no supervisor";
+        return "Agent has a job without supervisor";
     }
 
     /**

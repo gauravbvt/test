@@ -4059,4 +4059,12 @@ ul.attach li.controls {
     z-index: 1000000; /* added */
 }
 
+.copyright {
+    position: fixed;
+    bottom: -4px;
+    left: 2px;
+    color: gray;
+    font-size: xx-small;
+}
+
 
