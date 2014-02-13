@@ -344,7 +344,7 @@ public class HomePage {
 		UIActions.click(fileName,"Send Button In Messages Tab",GlobalVariables.configuration.getAttrSearchList(), "Send Button In Messages Tab");
 		try
 		{
-			Thread.sleep(3500);
+			Thread.sleep(4000);
 		}
 		catch(Exception e){}
 		
