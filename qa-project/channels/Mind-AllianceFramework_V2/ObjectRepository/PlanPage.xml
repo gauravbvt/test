@@ -1512,9 +1512,9 @@
 	
 	<Element>
 		<GivenName>New Issue Text</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span[2]/div/span/ol/li[3]</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span[2]/div/span/ol/li[3]/span/span[2]</Xpath>
 		<Name></Name>
-		<Id>id1e5</Id>
+		<Id>id1e7</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -2092,7 +2092,7 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Redo Add New Issue</GivenName>
+		<GivenName>Redo New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
