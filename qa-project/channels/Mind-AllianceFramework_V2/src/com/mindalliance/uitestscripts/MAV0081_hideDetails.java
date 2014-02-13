@@ -161,7 +161,17 @@ public class MAV0081_hideDetails extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Details under task panel gets hidden");	
-							
+						
+			// Click 'Undo Add New Task' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Undo Add New Task";
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("UndoAddNewTask"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Add New Task");	
+			
 			//Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -232,11 +242,11 @@ public class MAV0081_hideDetails extends TestCase{
 			Element eleMAV0081_hideDetails=docMAV0081_hideDetails.getDocumentElement();
 	              
 	        Element oXmlEleMAV0081_hideDetails = (Element) eleMAV0081_hideDetails;
-	        
 	               	
 	        this.testData.put("Actions",oXmlEleMAV0081_hideDetails.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("AddNewTask",oXmlEleMAV0081_hideDetails.getElementsByTagName("addNewTask").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("ChannelsURL",oXmlEleMAV0081_hideDetails.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+	       	this.testData.put("UndoAddNewTask",oXmlEleMAV0081_hideDetails.getElementsByTagName("undoAddNewTask").item(0).getChildNodes().item(0).getNodeValue());
+	       	this.testData.put("ChannelsURL",oXmlEleMAV0081_hideDetails.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("ShowInTask",oXmlEleMAV0081_hideDetails.getElementsByTagName("showInTask").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("HideDetails",oXmlEleMAV0081_hideDetails.getElementsByTagName("hideDetails").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAV0081_hideDetails.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());

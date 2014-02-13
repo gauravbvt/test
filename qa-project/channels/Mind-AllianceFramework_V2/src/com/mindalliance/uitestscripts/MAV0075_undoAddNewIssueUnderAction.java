@@ -148,7 +148,7 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
 			description="New issue is added to segment";
 			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewIssue"));
+			planPage.clickSubmenu(testData.get("NewIssue"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -167,7 +167,7 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
  			stepNo++;
 			description="Added issue is undone";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoAddNewIssue"));
+			planPage.clickSubmenu(testData.get("UndoNewIssue"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -246,8 +246,8 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
 	        Element oXmlEleMAV0075_undoAddNewIssueUnderAction = (Element) eleMAV0075_undoAddNewIssueUnderAction;
 	       	
 	        this.testData.put("Actions",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddNewIssue",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("addNewIssue").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UndoAddNewIssue",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("undoAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("NewIssue",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("newIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UndoNewIssue",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("undoNewIssue").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleMAV0075_undoAddNewIssueUnderAction.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			

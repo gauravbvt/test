@@ -150,7 +150,7 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
 			description="New issue is added to the segment";
 			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewIssue"));
+			planPage.clickSubmenu(testData.get("NewIssue"));
 			 // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -160,7 +160,7 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
  			stepNo++;
 			description="Added issue is undone";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoAddNewIssue"));		
+			planPage.clickSubmenu(testData.get("UndoNewIssue"));		
 			 // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -170,7 +170,7 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
  			stepNo++;
 			description="Undone issue is redone";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RedoAddNewIssue"));	
+			planPage.clickSubmenu(testData.get("RedoNewIssue"));	
 			 // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -250,9 +250,9 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
 	        Element oXmlEleMAV0076_redoAddNewIssueUnderAction = (Element) eleMAV0076_redoAddNewIssueUnderAction;
 	       	
 	        this.testData.put("Actions",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddNewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("addNewIssue").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("RedoAddNewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("redoAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UndoAddNewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("undoAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("NewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("newIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("RedoNewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("redoNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UndoNewIssue",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("undoNewIssue").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleMAV0076_redoAddNewIssueUnderAction.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			

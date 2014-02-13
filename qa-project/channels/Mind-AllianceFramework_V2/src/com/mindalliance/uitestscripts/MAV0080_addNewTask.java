@@ -152,7 +152,17 @@ public class MAV0080_addNewTask extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			Log4J.getlogger(this.getClass()).info(testCaseId +"New task is added");	
-								
+						
+			// Click 'Undo Add New Task' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Undo Add New Task";
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("UndoAddNewTask"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Add New Task");	
+			
 			//Sign Out from 'Plan' page
 			stepNo++;
 			description="Logout successful";
@@ -227,7 +237,8 @@ public class MAV0080_addNewTask extends TestCase{
 	               	
 	        this.testData.put("Actions",oXmlEleMAV0080_addNewTask.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("AddNewTask",oXmlEleMAV0080_addNewTask.getElementsByTagName("addNewTask").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("TaskName",oXmlEleMAV0080_addNewTask.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
+	       	this.testData.put("UndoAddNewTask",oXmlEleMAV0080_addNewTask.getElementsByTagName("undoAddNewTask").item(0).getChildNodes().item(0).getNodeValue());
+	       	this.testData.put("TaskName",oXmlEleMAV0080_addNewTask.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAV0080_addNewTask.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAV0080_addNewTask.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 		}

@@ -145,7 +145,7 @@ public class MAV0091_closeNewIssue extends TestCase{
 			description="New issue is added";
 			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewIssue"));	
+			planPage.clickSubmenu(testData.get("NewIssue"));	
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -236,7 +236,7 @@ public class MAV0091_closeNewIssue extends TestCase{
 	        Element oXmlEleMAV0091_closeNewIssue = (Element) eleMAV0091_closeNewIssue;
 	       	
 	        this.testData.put("Actions",oXmlEleMAV0091_closeNewIssue.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddNewIssue",oXmlEleMAV0091_closeNewIssue.getElementsByTagName("addNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("NewIssue",oXmlEleMAV0091_closeNewIssue.getElementsByTagName("newIssue").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("ChannelsURL",oXmlEleMAV0091_closeNewIssue.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleMAV0091_closeNewIssue.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			
