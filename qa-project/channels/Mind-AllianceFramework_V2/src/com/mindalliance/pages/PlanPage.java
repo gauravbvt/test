@@ -628,6 +628,37 @@ public class PlanPage {
 		}
 	}
 	
+	/**
+	 * 'verifyImprovingPopupMenuIsPresent' method verifies that Improving popup menu is present on the Plan Editor Page
+	 * @param actions
+	 * @throws UIAutomationException 
+	 */
+	public void verifyImprovingPopupMenuIsPresent(String improving) throws UIAutomationException{
+		
+		// Assertion: Verify 'improving' is present
+		elementController.requireElementSmart(fileName,"Improving",GlobalVariables.configuration.getAttrSearchList(), "Improving");
+		String popUpName=UIActions.getText(fileName,"Improving",GlobalVariables.configuration.getAttrSearchList(), "Improving");
+		if(!improving.equals(popUpName)){
+		throw new UIAutomationException( "'"+improving +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifyLearningPopupMenuIsPresent' method verifies that Learning popup menu is present on the Plan Editor Page
+	 * @param actions
+	 * @throws UIAutomationException 
+	 */
+	public void verifyLearningPopupMenuIsPresent(String learning) throws UIAutomationException{
+		
+		// Assertion: Verify 'learning' is present
+		elementController.requireElementSmart(fileName,"Learning",GlobalVariables.configuration.getAttrSearchList(), "Learning");
+		String popUpName=UIActions.getText(fileName,"Learning",GlobalVariables.configuration.getAttrSearchList(), "Learning");
+		if(!learning.equals(popUpName)){
+		throw new UIAutomationException( "'"+learning +"' not found");
+		}
+	}
+	
+	
 	
 	/**
 	 * 'clickPopupMenu' method click on Pop up menu and Submenu under that Popup menu
@@ -1022,7 +1053,7 @@ public class PlanPage {
 				Thread.sleep(2000);
 				}
 				catch(Exception e){}		
-			// Assertion : Verify 'All Attachments' window is present 
+			// Assertion : Verify 'All events and phases' window is present 
 			elementController.requireElementSmart(fileName, "All Events And Phases Title", GlobalVariables.configuration.getAttrSearchList(),"All Events And Phases Title");
 			headingOfWindowInPage=UIActions.getText(fileName, "All Events And Phases Title", GlobalVariables.configuration.getAttrSearchList(),"All Events And Phases Title");
 			headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Events And Phases Window Title", "Title");
@@ -1047,20 +1078,71 @@ public class PlanPage {
 			}
 			break;
 			
+		case "All Checklists":
+			elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+					
+			// Assertion : Verify 'All Checklists' window is present 
+			elementController.requireElementSmart(fileName, "All Checklists Title", GlobalVariables.configuration.getAttrSearchList(),"All Checklists Title");
+			headingOfWindowInPage=UIActions.getText(fileName, "All Checklists Title", GlobalVariables.configuration.getAttrSearchList(),"All Checklists Title");
+			headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Checklists Window Title", "Title");
+			if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+				throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+			}
+			break;	
+			
+		case "Checklists Map":
+			elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+			UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+					
+			// Assertion : Verify 'Checklists Map' window is present 
+			elementController.requireElementSmart(fileName, "Checklists Map Title", GlobalVariables.configuration.getAttrSearchList(),"Checklists Map Title");
+			headingOfWindowInPage=UIActions.getText(fileName, "Checklists Map Title", GlobalVariables.configuration.getAttrSearchList(),"Checklists Map Title");
+			headingOfWindowInXML=dataController.getPageDataElements(fileName, "Checklists Map Window Title", "Title");
+			if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+				throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+			}
+			break;	
+			
+			
 	case "Template Evaluation":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 				
 		// Assertion : Verify 'Plan Evaluation' window is present 
-		//elementController.requireElementSmart(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
-		//headingOfWindowInPage=UIActions.getText(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
-		//headingOfWindowInXML=dataController.getPageDataElements(fileName, "Plan Evaluation Window Title", "Title");
-		//if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
-		//	throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
-		//}
+		elementController.requireElementSmart(fileName, "Template Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Template Evaluation Title");
+		headingOfWindowInPage=UIActions.getText(fileName, "Template Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Template Evaluation Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Template Evaluation Window Title", "Title");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
 		break;	
 		
-	
+	case "Template Versions":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+				
+		// Assertion : Verify 'Template Versions' window is present 
+		elementController.requireElementSmart(fileName, "Template Versions Title", GlobalVariables.configuration.getAttrSearchList(),"Template Versions Title");
+		headingOfWindowInPage=UIActions.getText(fileName, "Template Versions Title", GlobalVariables.configuration.getAttrSearchList(),"Template Versions Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Template Versions Window Title", "Title");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+		break;	
+		
+	case "All Feedback":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+				
+		// Assertion : Verify 'All Feedback' window is present 
+		elementController.requireElementSmart(fileName, "All Feedback Title", GlobalVariables.configuration.getAttrSearchList(),"All Feedback Title");
+		headingOfWindowInPage=UIActions.getText(fileName, "All Feedback Title", GlobalVariables.configuration.getAttrSearchList(),"All Feedback Title");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "All Feedback Window Title", "Title");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+		break;	
 		
 	case "All Surveys":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1666,7 +1748,18 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(orgName,fileName,"Organization In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Organization In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
-	
+	/**
+	 * Enter classification name in Classification Systems textbox
+	 * @param classificationName
+	 * @throws UIAutomationException 
+	 */
+	public void enterClassificationName(String classificationName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Classification Systems Text Field",GlobalVariables.configuration.getAttrSearchList(), "Classification Systems Text Field");
+		UIActions.click(fileName,"Classification Systems Text Field",GlobalVariables.configuration.getAttrSearchList(), "Classification Systems Text Field");
+		UIActions.clearTextBox(fileName,"Classification Systems Text Field",GlobalVariables.configuration.getAttrSearchList(), "Classification Systems Text Field");
+		UIActions.enterValueInTextBox(classificationName,fileName,"Classification Systems Text Field",GlobalVariables.configuration.getAttrSearchList(), "Classification Systems Text Field");
+		UIActions.enterKey(Keys.TAB);
+	}
 	/**
 	 * Function name in task panel
 	 * @param funcName
