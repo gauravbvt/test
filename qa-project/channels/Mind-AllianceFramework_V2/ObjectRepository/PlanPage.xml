@@ -6,6 +6,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>All Checklists Window Title</GivenName>
+		<Title>All Checklists</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Checklists Map Window Title</GivenName>
+		<Title>Checklists Map</Title>
+	</Element>
+	
+	<Element>
 		<GivenName>Delete Phase Window Title</GivenName>
 		<Title>Delete phase?</Title>
 	</Element>
@@ -138,6 +148,11 @@
 	</Element>
 	
 	<Element>
+		<GivenName>All Feedback Window Title</GivenName>
+		<Title>Feedback From All Users</Title>
+	</Element>
+	
+	<Element>
 		<GivenName>Index Window Title</GivenName>
 		<Title>INDEX</Title>
 	</Element>
@@ -150,6 +165,11 @@
 	<Element>
 		<GivenName>Template Evaluation Window Title</GivenName>
 		<Title>Collaboration Template Evaluation</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Template Versions Window Title</GivenName>
+		<Title>Collaboration Template Versions</Title>
 	</Element>
 	
 	<Element>
@@ -3463,6 +3483,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Classification Systems Text Field</GivenName>
+		<Xpath>//input[contains(@name,'classifications:content:classifications:classification-systems-container:new-classification-system-container:new-classification-system')]</Xpath>
+		<Name>classifications:content:classifications:classification-systems-container:new-classification-system-container:new-classification-system</Name>
+		<Id>id207</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Classification Systems Title</GivenName>
 		<Xpath>/html/body/form/div[20]/div/span/div/div/h1</Xpath>
 		<Name></Name>
@@ -3589,6 +3619,46 @@
 		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li/a/span</Xpath>
 	</Element>
 	
+	<Element>
+		<GivenName>All Checklists Title</GivenName>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+	</Element>
+	
+	<Element>
+		<GivenName>Checklists Map Title</GivenName>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+	</Element>
+	
+	<Element>
+		<GivenName>All Checklists</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Checklists Map</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Feedback</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	
 	 <Element>
 		<GivenName>All Issues</GivenName>
@@ -3643,6 +3713,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Template Versions</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Plan Versions</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
 		<Name></Name>
@@ -3654,7 +3734,27 @@
 	
 	<Element>
 		<GivenName>Template Evaluation Title</GivenName>
-		<Xpath>/html/body/form/div[23]/div/div/div/span</Xpath>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Template Versions Title</GivenName>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Feedback Title</GivenName>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
