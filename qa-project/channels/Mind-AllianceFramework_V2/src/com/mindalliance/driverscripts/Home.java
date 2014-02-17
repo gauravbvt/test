@@ -234,7 +234,7 @@ public class Home {
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
     	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
-/*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
 		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
@@ -255,7 +255,7 @@ public class Home {
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
-*/		
+		
     	// Channels Login
 
     	suite.addTestSuite(CL0001_LoginPage.class);
@@ -332,6 +332,20 @@ public class Home {
         suite.addTestSuite(SRCH0059_ClickWhosWhoOptionFromSearchingPopupMenu.class);
         suite.addTestSuite(SRCH0070_ShowAllAttachments.class);
         suite.addTestSuite(SRCH0077_ShowTags.class);
+        
+        //Scoping Popup Menu
+        suite.addTestSuite(SCP0001_VerifyScopingPopupMenuIsPresent.class);
+        suite.addTestSuite(SCP0003_ClickAllEventsAndPhasesOptionFromScopingPopupMenu.class);
+        suite.addTestSuite(SCP0022_ClickAllInvolvementsOptionFromScopingPopupMenu.class);
+        suite.addTestSuite(SCP0067_ClickOnClassificationSystemsOptionFromScopingPopupMenu.class);
+        
+        //Improving Popup Menu
+        suite.addTestSuite(IMP0001_VerifyImprovingPoupupMenuIsPresent.class);
+        suite.addTestSuite(IMP0003_ClickAllChecklistsOptionInImprovingPopupMenu.class);
+        suite.addTestSuite(IMP0033_ClickChecklistsMapOptionInImprovingPopupMenu.class);
+        suite.addTestSuite(IMP0056_ClickTemplateEvaluationOptionInImprovingPopupMenu.class);
+        suite.addTestSuite(IMP0066_ClickAllIssuesOptionInImprovingPopupMenu.class);
+        suite.addTestSuite(IMP0100_ClickTemplateVersionsOptionInImprovingPopupMenu.class);
         
         //Collaboration Panel
         suite.addTestSuite(CPA0002_HideCollaborationPanel.class);
