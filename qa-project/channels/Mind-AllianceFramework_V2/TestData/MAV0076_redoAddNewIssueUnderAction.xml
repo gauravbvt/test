@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <elements>
 <actions>Actions</actions>
-<addNewIssue>New Issue</addNewIssue>
-<undoAddNewIssue>Undo Add New Issue</undoAddNewIssue>
-<redoAddNewIssue>Redo Add New Issue</redoAddNewIssue>
+<newIssue>New Issue</newIssue>
+<undoNewIssue>Undo New Issue</undoNewIssue>
+<redoNewIssue>Redo New Issue</redoNewIssue>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>
