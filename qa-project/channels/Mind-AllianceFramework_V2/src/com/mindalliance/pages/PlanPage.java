@@ -443,7 +443,39 @@ public class PlanPage {
 	}
 	
 	/**
+	 * 'verifyReceivesPanelIsPresent' method verifies that Receives panel is present on the Plan Editor Page
+	 * @param receives
+	 * @throws UIAutomationException 
+	 */
+	public void verifyReceivesPanelIsPresent(String receives) throws UIAutomationException{
+		
+		// Assertion: Verify 'Receives' is present
+		elementController.requireElementSmart(fileName,"Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Receives Panel");
+		String receivesPanelText=UIActions.getText(fileName,"Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Receives Panel");
+		if(!receives.equals(receivesPanelText)){
+		throw new UIAutomationException( "'"+receives +"' not found");
+		}
+	}
+	
+	/**
+	 * 'verifySendsPanelIsPresent' method verifies that Receives panel is present on the Plan Editor Page
+	 * @param sends
+	 * @throws UIAutomationException 
+	 */
+	public void verifySendsPanelIsPresent(String sends) throws UIAutomationException{
+		
+		// Assertion: Verify 'Sends Panel' is present
+		elementController.requireElementSmart(fileName,"Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Sends Panel");
+		String sendsPanelText=UIActions.getText(fileName,"Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Sends Panel");
+		if(!sends.equals(sendsPanelText)){
+		throw new UIAutomationException( "'"+sends +"' not found");
+		}
+	}
+	
+	
+	/**
 	 * 'verifyShowPopupMenuIsPresent' method verifies that Show popup menu is present on the Plan Page
+	 * @param show
 	 * @throws UIAutomationException 
 	 */
 	public void verifyShowPopupMenuIsPresent(String show) throws UIAutomationException{
@@ -476,8 +508,8 @@ public class PlanPage {
 	 */
 	public void verifyShowPopupMenuIsPresentInReceivesPanel(String show) throws UIAutomationException{
 		// Assertion: Verify 'show' is present
-		elementController.requireElementSmart(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
-		String popUpName=UIActions.getText(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		elementController.requireElementSmart(fileName,"Show In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Receives Panel");
+		String popUpName=UIActions.getText(fileName,"Show In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Receives Panel");
 		if(!show.equals(popUpName)){
 		throw new UIAutomationException( "'"+show +"' not found");
 		}
@@ -489,8 +521,8 @@ public class PlanPage {
 	 */
 	public void verifyShowPopupMenuIsPresentInSendsPanel(String show) throws UIAutomationException{
 		// Assertion: Verify 'show' is present
-		elementController.requireElementSmart(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
-		String popUpName=UIActions.getText(fileName,"Show In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Task Panel");
+		elementController.requireElementSmart(fileName,"Show In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Sends Panel");
+		String popUpName=UIActions.getText(fileName,"Show In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Show In Sends Panel");
 		if(!show.equals(popUpName)){
 		throw new UIAutomationException( "'"+show +"' not found");
 		}
@@ -2810,7 +2842,20 @@ public class PlanPage {
 		
 	}
 	
-	
+	/**
+	 * Close About Function window
+	 * @throws UIAutomationException
+	 */
+	public void closeAboutFunctionWindow() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Close About Function Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Function Window");
+		UIActions.click(fileName,"Close About Function Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Function Window");
+		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		
+	}
 	/**
 	 * Clicks on 'Strench Up' form icon
 	 * @throws UIAutomationException
