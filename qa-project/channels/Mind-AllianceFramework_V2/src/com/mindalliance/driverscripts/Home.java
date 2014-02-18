@@ -324,8 +324,8 @@ public class Home {
         suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
         suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
         suite.addTestSuite(TEMPACT0063_VerifyActionsMenuPresentInAboutTemplateSegmentWindow.class);
-    //    suite.addTestSuite(TEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.class);
-  //      suite.addTestSuite(TEMPACT0083_VerifyActionsMenuPresentInAboutLocationWindow.class);
+        suite.addTestSuite(TEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.class);
+        suite.addTestSuite(TEMPACT0083_VerifyActionsMenuPresentInAboutLocationWindow.class);
         
         //Searching Popup Menu
         suite.addTestSuite(SRCH0001_VerifySearchingPopupPresent.class);
