@@ -253,6 +253,7 @@ public class TEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow extends T
 			this.testData.put("Function",oXmlEleTEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.getElementsByTagName("function").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ShowInTask",oXmlEleTEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.getElementsByTagName("showInTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Details",oXmlEleTEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.getElementsByTagName("details").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Actions",oXmlEleTEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 			
 			
 		}
