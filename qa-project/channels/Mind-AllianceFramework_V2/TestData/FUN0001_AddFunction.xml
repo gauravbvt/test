@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<elements>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForAddTask>Segment For Add Task</segmentForAddTask>
+<addNewTask>Add New Task</addNewTask>
+<taskName>Task For Add Task</taskName>
+<functionName>Function One</functionName>
+</elements>
+
