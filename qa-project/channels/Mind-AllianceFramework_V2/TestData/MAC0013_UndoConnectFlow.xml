@@ -11,8 +11,6 @@
 <detailsInTaskPanel>Details In Task Panel</detailsInTaskPanel>
 <undoConnectFlow>Undo Connect Flow</undoConnectFlow>
 
-
-
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <undoMoveTask>Undo Move Task</undoMoveTask>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
@@ -22,4 +20,5 @@
 <show>Show</show>
 <aboutPlanSegment>About Plan Segment</aboutPlanSegment>
 <undoMoveTask>Undo Move Tasks</undoMoveTask>
+<other>Other...</other>
 </elements>
