@@ -234,7 +234,7 @@ public class Home {
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
     	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
-		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+/*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
 		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
@@ -254,7 +254,7 @@ public class Home {
 		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
-		suite.addTestSuite(MAC0036_RedoCutTask.class);
+		suite.addTestSuite(MAC0036_RedoCutTask.class);*/
 		
     	// Channels Login
 
@@ -324,6 +324,8 @@ public class Home {
         suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
         suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
         suite.addTestSuite(TEMPACT0063_VerifyActionsMenuPresentInAboutTemplateSegmentWindow.class);
+    //    suite.addTestSuite(TEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.class);
+  //      suite.addTestSuite(TEMPACT0083_VerifyActionsMenuPresentInAboutLocationWindow.class);
         
         //Searching Popup Menu
         suite.addTestSuite(SRCH0001_VerifySearchingPopupPresent.class);
@@ -339,6 +341,12 @@ public class Home {
         suite.addTestSuite(SCP0022_ClickAllInvolvementsOptionFromScopingPopupMenu.class);
         suite.addTestSuite(SCP0067_ClickOnClassificationSystemsOptionFromScopingPopupMenu.class);
         
+        //Show Popup Menu
+        suite.addTestSuite(TEMPSHOW0001_VerifyShowPopupPresent.class);
+        suite.addTestSuite(TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.class);
+        suite.addTestSuite(TEMPSHOW0091_VerifyShowPopupMenuPresentInReceivesPanel.class);
+        suite.addTestSuite(TEMPSHOW0101_VerifyShowPopupMenuPresentInSendsPanel.class);
+        
         //Improving Popup Menu
         suite.addTestSuite(IMP0001_VerifyImprovingPoupupMenuIsPresent.class);
         suite.addTestSuite(IMP0003_ClickAllChecklistsOptionInImprovingPopupMenu.class);
@@ -347,11 +355,18 @@ public class Home {
         suite.addTestSuite(IMP0066_ClickAllIssuesOptionInImprovingPopupMenu.class);
         suite.addTestSuite(IMP0100_ClickTemplateVersionsOptionInImprovingPopupMenu.class);
         
+        //Learning Popup Menu
+        suite.addTestSuite(LRN0001_VerifyLearningPopupMenuIsPresent.class);
+        suite.addTestSuite(LRN0003_ClickAllFeedbackOptionInLearningPopupMenu.class);
+        suite.addTestSuite(LRN0022_SelectAllSurveysOptionInLearningPopupMenu.class);
+        
         //Collaboration Panel
         suite.addTestSuite(CPA0002_HideCollaborationPanel.class);
         suite.addTestSuite(CPA0010_ClickActivitiesTab.class);
         suite.addTestSuite(CPA0020_SendMessageToAllDevelopers.class);
         suite.addTestSuite(CPA0022_SendMessageToEveryone.class);
+        
+        
 		return suite;
 	}
 }
