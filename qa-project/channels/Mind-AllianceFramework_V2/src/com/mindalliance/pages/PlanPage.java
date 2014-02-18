@@ -458,7 +458,7 @@ public class PlanPage {
 	}
 	
 	/**
-	 * 'verifySendsPanelIsPresent' method verifies that Receives panel is present on the Plan Editor Page
+	 * 'verifySendsPanelIsPresent' method verifies that Sends panel is present on the Plan Editor Page
 	 * @param sends
 	 * @throws UIAutomationException 
 	 */
@@ -626,9 +626,9 @@ public class PlanPage {
 		// Assertion: Verify 'actions' is present in About Location window
 		elementController.requireElementSmart(fileName,"Actions In About Location",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Location");
 		String popUpName=UIActions.getText(fileName,"Actions In About Location",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Location");
-	/*	if(!actions.equals(popUpName)){
+		if(!actions.equals(popUpName)){
 		throw new UIAutomationException( "'"+actions +"' not found");
-		}*/
+		}
 	}
 	/**
 	 * 'verifySearchingPopupMenuIsPresent' method verifies that Searching popup menu is present on the Plan Editor Page
