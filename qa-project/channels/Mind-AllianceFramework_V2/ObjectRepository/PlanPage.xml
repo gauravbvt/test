@@ -201,16 +201,18 @@
 		<Title>Events</Title>
 	</Element>
 	
-	
 	<Element>
 		<GivenName>All Involvements Window Title</GivenName>
 		<Title>All Involvements</Title>
 	</Element>
 	
-	
 	<Element>
 		<GivenName>Actions In About Plan Segment</GivenName>
 		<Name>Actions</Name>
+	</Element>
+	<Element>
+		<GivenName>Receives Panel Text</GivenName>
+		<Name>RECEIVES</Name>
 	</Element>
 	<Element>
 		<GivenName>Actions Menu In Task Panel</GivenName>
@@ -981,9 +983,9 @@
 	</Element>
 	<Element>
 		<GivenName>Function In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[4]/td/span/input</Xpath>
-		<Name></Name>
-		<Id></Id>
+		<Xpath>//input[contains(@name,'segment:partAndFlows:part:function:name')]</Xpath>
+		<Name>segment:partAndFlows:part:function:name</Name>
+		<Id>id184</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -1578,6 +1580,15 @@
  	
  	<Element>
  		<GivenName>Close Actual Organization Window</GivenName>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[4]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Close About Function Window</GivenName>
  		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
