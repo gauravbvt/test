@@ -141,6 +141,7 @@ public class TEMPSHOW0091_VerifyShowPopupMenuPresentInReceivesPanel extends Test
  			stepNo++;
  			description="Show popup menu is present";
  			PlanPage planPage=new PlanPage();
+ 			planPage.clickAddInfoReceivesPanel();
  			planPage.verifyShowPopupMenuIsPresentInReceivesPanel(testData.get("Show"));
  			 // Write log
  			LogFunctions.writeLogs(description);

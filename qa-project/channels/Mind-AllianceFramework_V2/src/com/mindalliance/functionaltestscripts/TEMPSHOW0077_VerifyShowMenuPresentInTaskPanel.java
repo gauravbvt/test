@@ -34,7 +34,7 @@ import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.PlanPage;
 
 /**
- * Testcase ID: SHOW0077_VerifyShowMenuPresentInTaskPanel
+ * Testcase ID: TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel
  * 	   Summary: Verify that the Show popup menu is present
  * @author Afour
  *
@@ -42,7 +42,7 @@ import com.mindalliance.pages.PlanPage;
 
 public class TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="SHOW0077_VerifyShowMenuPresentInTaskPanel";
+	public String testCaseId="TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -95,7 +95,7 @@ public class TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel extends TestCase {
 	}
 	
 	@Test
-	public void testSHOW0077_VerifyShowMenuPresentInTaskPanel() throws UIAutomationException, IOException {
+	public void testTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel() throws UIAutomationException, IOException {
 		try{
 			stepNo++;
 			description="URL Entered";
@@ -137,7 +137,7 @@ public class TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
  			
- 			//Verify whether Show popup menu is present in Task panel
+ 			//Verify whether Show popup menu is present
  			stepNo++;
  			description="Show popup menu is present";
  			PlanPage planPage=new PlanPage();
@@ -202,7 +202,7 @@ public class TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for SHOW0077_VerifyShowMenuPresentInTaskPanel.
+     * Loads Test Data for TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{
@@ -215,27 +215,27 @@ public class TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File SHOW0077_VerifyShowMenuPresentInTaskPanel=new File(path + "SHOW0077_VerifyShowMenuPresentInTaskPanel.xml");
+			File TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel=new File(path + "TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.xml");
 			
-			Document docSHOW0077_VerifyShowMenuPresentInTaskPanel=db.parse(SHOW0077_VerifyShowMenuPresentInTaskPanel);
-			Element eleSHOW0077_VerifyShowMenuPresentInTaskPanel=docSHOW0077_VerifyShowMenuPresentInTaskPanel.getDocumentElement();
+			Document docTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel=db.parse(TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel);
+			Element eleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel=docTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.getDocumentElement();
 	              
-	        Element oXmlEleSHOW0077_VerifyShowMenuPresentInTaskPanel = (Element) eleSHOW0077_VerifyShowMenuPresentInTaskPanel;
+	        Element oXmlEleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel = (Element) eleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel;
 	       	
-			this.testData.put("ChannelsURL",oXmlEleSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Title",oXmlEleSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Show",oXmlEleSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ChannelsURL",oXmlEleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Title",oXmlEleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Show",oXmlEleTEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
 			
 			
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File SHOW0077_VerifyShowMenuPresentInTaskPanel can not be parsed.");
+			throw new UIAutomationException("File TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel can not be parsed.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File SHOW0077_VerifyShowMenuPresentInTaskPanel.xml not found.");
+			throw new UIAutomationException("File TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File SHOW0077_VerifyShowMenuPresentInTaskPanel can not be parsed.");
+			throw new UIAutomationException("File TEMPSHOW0077_VerifyShowMenuPresentInTaskPanel can not be parsed.");
 		}
 			
 	}
