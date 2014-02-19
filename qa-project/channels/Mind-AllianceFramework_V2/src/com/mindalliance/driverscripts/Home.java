@@ -209,7 +209,7 @@ public class Home {
 */
     	//		Command
 
-    	suite.addTestSuite(MAC0001_UndoAddSegment.class);
+   /* 	suite.addTestSuite(MAC0001_UndoAddSegment.class);
 		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
 		suite.addTestSuite(MAC0003_UndoAddGoal.class);
 		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
@@ -232,7 +232,7 @@ public class Home {
 		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
     	suite.addTestSuite(MAC0045_RedoAddIssue.class);
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
-    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
+    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);*/
     	
 /*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
