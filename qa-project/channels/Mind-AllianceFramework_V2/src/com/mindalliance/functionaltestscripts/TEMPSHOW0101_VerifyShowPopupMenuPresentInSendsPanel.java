@@ -141,6 +141,7 @@ public class TEMPSHOW0101_VerifyShowPopupMenuPresentInSendsPanel extends TestCas
  			stepNo++;
  			description="Show popup menu is present";
  			PlanPage planPage=new PlanPage();
+ 			planPage.clickAddInfoSendsPanel();
  			planPage.verifyShowPopupMenuIsPresentInSendsPanel(testData.get("Show"));
  			 // Write log
  			LogFunctions.writeLogs(description);
