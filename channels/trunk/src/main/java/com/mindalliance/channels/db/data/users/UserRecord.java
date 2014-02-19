@@ -138,6 +138,10 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
                 userRecord.getFullName(),
                 userRecord.getEmail() );
         password = userRecord.getPassword();
+        setPhoto( userRecord.getPhoto() );
+        for ( ContactInfo contactInfo : userRecord.getContactInfoList() ) {
+            addContactInfo( new ContactInfo( contactInfo ) );
+        }
         for ( UserAccess userAccess : userRecord.getAccessList() ) {
             addUserAccess( new UserAccess( userAccess ) );
         }
