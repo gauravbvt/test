@@ -294,7 +294,7 @@ public class Home {
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
 		
 		//About Me Home Page
-		suite.addTestSuite(AMHP0009_InvalidEmail.class);
+		suite.addTestSuite(AMHP0009_InvalidEmail.class);	
 		suite.addTestSuite(AMHP0010_BlankEmail.class);
 		suite.addTestSuite(AMHP0011_BlankName.class);
 		suite.addTestSuite(AMHP0012_InvalidName.class);
