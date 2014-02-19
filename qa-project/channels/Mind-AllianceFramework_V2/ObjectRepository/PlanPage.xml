@@ -290,6 +290,20 @@
 		<GivenName>Messages Tab in Collaboration Panel Name</GivenName>
 		<Name>Messages</Name>
 	</Element>
+	<Element>
+		<GivenName>Checklists Window Title</GivenName>
+		<Name>Unconfirmed Checklist</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Checklists Title</GivenName>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
 	<Element>
 		<GivenName>Strench Up Forms</GivenName>
@@ -1355,7 +1369,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Actions</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -2818,6 +2832,16 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	<Element>
+		<GivenName>Checklists Icon</GivenName>
+		<Xpath>//*[@id="id12b"]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Flow Copied Message</GivenName>
 		<Xpath>/html/body/div[3]/div</Xpath>
