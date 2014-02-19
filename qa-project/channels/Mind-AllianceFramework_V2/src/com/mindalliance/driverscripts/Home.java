@@ -178,7 +178,7 @@ public class Home {
 		//		Plan
 		suite.addTestSuite(MAP0001_AddPlan.class);
 		suite.addTestSuite(MAP0005_DeletePlan.class);
-	/*	suite.addTestSuite(MAP0006_addOrganizations.class);
+		suite.addTestSuite(MAP0006_addOrganizations.class);
 		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
 		suite.addTestSuite(MAP0008_removeExpectation.class);
 		suite.addTestSuite(MAP0009_addTask.class);
@@ -186,13 +186,13 @@ public class Home {
     	suite.addTestSuite(MAP0012_addPhase.class);
 		suite.addTestSuite(MAP0013_addPhaseDetails.class);
 		suite.addTestSuite(MAP0014_addSegment.class);
-		suite.addTestSuite(MAP0015_removeSegment.class);*/
+		suite.addTestSuite(MAP0015_removeSegment.class);
 		suite.addTestSuite(MAP0016_addEvent.class);
 		suite.addTestSuite(MAP0017_deleteEvent.class);
-	/*	suite.addTestSuite(MAP0022_addGoal.class);
+		suite.addTestSuite(MAP0022_addGoal.class);
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-    	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);*/
+    	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
     	/*		suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 		suite.addTestSuite(MAP0004_DeleteUser.class);
@@ -364,6 +364,12 @@ public class Home {
         suite.addTestSuite(CPA0010_ClickActivitiesTab.class);
         suite.addTestSuite(CPA0020_SendMessageToAllDevelopers.class);
         suite.addTestSuite(CPA0022_SendMessageToEveryone.class);
+        
+        //Task And Flow Panel
+        suite.addTestSuite(TFP0001_VerifyReceivesPanelIsPresent.class);
+        suite.addTestSuite(TFP0002_VerifySendsPanelIsPresent.class);
+        suite.addTestSuite(TFP0003_AddInfoReceive.class);
+        suite.addTestSuite(TFP0004_AddInfoSends.class);
         
         
 		return suite;
