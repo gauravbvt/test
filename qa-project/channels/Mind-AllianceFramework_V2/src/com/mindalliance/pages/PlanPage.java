@@ -472,6 +472,18 @@ public class PlanPage {
 		}
 	}
 	
+	/**
+	 * 'verifyChecklistsIconIsPresentInTaskPanel' method verifies that Checklists icon is present on home page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyChecklistsIconIsPresentInTaskPanel() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Checklists Icon",GlobalVariables.configuration.getAttrSearchList(), "Checklists Icon");
+				
+		// Assertion : Check Icon is present on page
+		String Xpath=dataController.getPageDataElements(fileName, "Checklists Icon", "Xpath");
+		System.out.println(Xpath);
+//       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
 	
 	/**
 	 * 'verifyShowPopupMenuIsPresent' method verifies that Show popup menu is present on the Plan Page
@@ -2742,6 +2754,7 @@ public class PlanPage {
 		}
 	}
 	
+	
 	/**
 	 * Clicks on 'Unnamed' link in 'can end event unnamed'
 	 * @throws UIAutomationException
@@ -2856,6 +2869,25 @@ public class PlanPage {
 		catch(Exception e){}
 		
 	}
+	
+	/** 
+	 * Clicks on 'Tags' link in task panel
+	 * @throws UIAutomationException
+	 */
+	public void clickChecklistsIcon() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Checklists Icon", GlobalVariables.configuration.getAttrSearchList(), "Checklists Icon");
+		UIActions.click(fileName,"Checklists Icon", GlobalVariables.configuration.getAttrSearchList(), "Checklists Icon");
+				
+		// Assertion : Verify 'Checklist' window is present 
+		elementController.requireElementSmart(fileName, "Checklists Title", GlobalVariables.configuration.getAttrSearchList(),"Tags Title");
+		String headingOfWindowInPage=UIActions.getText(fileName, "Checklists Title", GlobalVariables.configuration.getAttrSearchList(),"Tags Title");
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Checklists Window Title", "Name");
+		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+	}
+	
+	
 	/**
 	 * Clicks on 'Strench Up' form icon
 	 * @throws UIAutomationException

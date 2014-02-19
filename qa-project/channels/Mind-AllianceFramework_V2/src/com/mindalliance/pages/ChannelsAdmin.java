@@ -208,7 +208,7 @@ public class ChannelsAdmin {
 		
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(5200);
 			}
 		catch(Exception e){}
 		UIActions.assertAlert(headingOfWindowInXML);
