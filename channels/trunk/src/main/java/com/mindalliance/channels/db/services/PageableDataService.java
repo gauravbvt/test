@@ -4,24 +4,21 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.db.data.ChannelsDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+
+import java.util.Map;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 4/25/13
- * Time: 3:40 PM
+ * Date: 2/18/14
+ * Time: 4:20 PM
  */
-public interface DataService<T extends ChannelsDocument> {
+public interface PageableDataService<T extends ChannelsDocument> extends DataService<T>  {
 
-    MongoOperations getDb();
+    Page<T> loadPage( Pageable pageable, PlanCommunity planCommunity );
 
-    void save(T object);
-
-    T load( String uid );
-
-    T refresh( T channelsDocument );
+    Page<T> loadPage( Pageable pageable, Map<String, Object> params, PlanCommunity planCommunity );
 
 }

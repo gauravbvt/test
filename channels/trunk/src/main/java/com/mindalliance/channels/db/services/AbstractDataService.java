@@ -1,8 +1,11 @@
 package com.mindalliance.channels.db.services;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.db.data.ChannelsDocument;
 import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -37,5 +40,6 @@ public abstract class AbstractDataService<T extends ChannelsDocument>  implement
     protected List<T> toList( Iterable<T> iterable ) {
         return IteratorUtils.toList( iterable.iterator() );
     }
+
 
 }

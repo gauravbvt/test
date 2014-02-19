@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.db.data.ChannelsDocument;
+import com.mindalliance.channels.db.data.PagedDataPeekableIterator;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.data.messages.UserStatement;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -12,6 +14,8 @@ import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -34,8 +38,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Planner messages panel.
@@ -84,7 +90,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_DEVELOPERS = new ChannelsUser( new UserRecord( "_channels_" , UserRecord.PLANNERS ) );
+        ALL_DEVELOPERS = new ChannelsUser( new UserRecord( "_channels_", UserRecord.PLANNERS ) );
         ALL_USERS = new ChannelsUser( new UserRecord( "_channels_", UserRecord.USERS ) );
     }
 
@@ -465,15 +471,39 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                                 : getUserFullName( message.getToUsername( UserStatement.STATEMENT ) ) ) ) );
     }
 
+    @SuppressWarnings( "unchecked" )
     public List<UserMessage> getUserMessages( ChannelsUser user ) {
-        CommunityService communityService = getCommunityService();
-        String username = getUser().getUsername();
+        final CommunityService communityService = getCommunityService();
+        final String username = getUser().getUsername();
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put( UserMessageService.USERNAME_PARAM, username );
+        params.put(
+                UserMessageService.TYPE_PARAM,
+                isShowReceived() ? UserMessageService.RECEIVED : UserMessageService.SENT );
         Iterator<UserMessage> iterator;
+        Iterator<UserMessage> messageIterator = new PagedDataPeekableIterator<UserMessage>(
+                userMessageService,
+                params,
+                ChannelsDocument.SORT_CREATED_DESC,
+                getPlanCommunity()
+        );
         if ( isShowReceived() ) {
-            iterator = userMessageService.getReceivedMessages( username, communityService );
+            // filter on privileges
+            iterator = (Iterator<UserMessage>) IteratorUtils.filteredIterator(
+                    messageIterator,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            UserMessage userMessage = (UserMessage) object;
+                            return ( !userMessage.isToAllPlanners()
+                                    || userInfoService.isPlanner( username, communityService.getPlan().getUri() ) )
+                                    && ( !userMessage.isToAllUsers()
+                                    || userInfoService.isParticipant( username, communityService.getPlan().getUri() ) );
+                        }
+                    } );
         } else {
-            iterator = userMessageService.getSentMessages( username, communityService );
+            iterator = messageIterator;
         }
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.util.PeekAheadIterator;
+import com.mindalliance.channels.db.data.ChannelsDocument;
+import com.mindalliance.channels.db.data.PagedDataPeekableIterator;
 import com.mindalliance.channels.db.data.activities.ExecutedCommand;
 import com.mindalliance.channels.db.services.activities.ExecutedCommandService;
 import com.mindalliance.channels.pages.Updatable;
@@ -163,16 +163,17 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     public List<ExecutedCommand> getExecutedCommands() {
-        Plan plan = getPlan();
         List<ExecutedCommand> executedCommands = new ArrayList<ExecutedCommand>();
-        PeekAheadIterator<ExecutedCommand> iterator = new PeekAheadIterator<ExecutedCommand>(
-                executedCommandService.getExecutedCommands( getPlanCommunity() ) );
+        PagedDataPeekableIterator<ExecutedCommand> iterator = new PagedDataPeekableIterator<ExecutedCommand>(
+                executedCommandService,
+                ChannelsDocument.SORT_CREATED_DESC,
+                getPlanCommunity() );
         while ( iterator.hasNext() && executedCommands.size() < numberToShow ) {
             ExecutedCommand executedCommand = iterator.next();
             if ( executedCommand != null ) {
                 ExecutedCommand nextExecutedCommand = iterator.peek();
                 if ( !( isOthersOnly() && executedCommand.getUsername().equals( getUsername() ) )
-                        && !isFollwedByAnotherUpdate( executedCommand, nextExecutedCommand ) )
+                        && !isFollowedByAnotherUpdate( executedCommand, nextExecutedCommand ) )
                     executedCommands.add( executedCommand );
             }
         }
@@ -180,7 +181,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
         return executedCommands;
     }
 
-    private boolean isFollwedByAnotherUpdate( ExecutedCommand executedCommand, ExecutedCommand nextExecutedCommand ) {
+    private boolean isFollowedByAnotherUpdate( ExecutedCommand executedCommand, ExecutedCommand nextExecutedCommand ) {
         if ( !executedCommand.isDone() ) return false;
         if ( !( executedCommand.isUpdate() ) ) return false;
         if ( nextExecutedCommand == null ) return false;

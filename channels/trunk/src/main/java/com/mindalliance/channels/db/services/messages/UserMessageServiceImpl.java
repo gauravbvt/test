@@ -1,6 +1,7 @@
 package com.mindalliance.channels.db.services.messages;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.db.data.messages.QUserMessage;
 import com.mindalliance.channels.db.data.messages.UserMessage;
@@ -12,6 +13,8 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
@@ -74,6 +77,45 @@ public class UserMessageServiceImpl extends AbstractDataService<UserMessage> imp
     public void deleteMessage( UserMessage message ) {
         getDb().remove( message );
         changed( message.getPlanUri() );
+    }
+
+    @Override
+    public Page<UserMessage> loadPage( Pageable pageable, PlanCommunity planCommunity ) {
+        return loadPage( pageable, new HashMap<String,Object>(), planCommunity );
+    }
+
+    @Override
+    public Page<UserMessage> loadPage( Pageable pageable, Map<String,Object> params, PlanCommunity planCommunity ) {
+        String type = (String) params.get( TYPE_PARAM );
+        String username = (String) params.get( USERNAME_PARAM );
+        if ( type != null && type.equals( RECEIVED ) ) {
+            return loadReceivedPage( pageable, username, planCommunity );
+        } else if ( type != null && type.equals( SENT ) ) {
+            return loadSentPage( pageable, username, planCommunity );
+        } else {
+            throw new IllegalStateException( type + " is not supported" );
+        }
+    }
+
+    // Does NOT filter on privileges (all received messages that COULD be for username are loaded one page at a time)
+    private Page<UserMessage> loadReceivedPage( Pageable pageable, String username, PlanCommunity planCommunity ) {
+        String[] toValues = new String[3];
+        toValues[0] = username;
+        toValues[1] = UserRecord.PLANNERS;
+        toValues[2] = UserRecord.USERS;
+        QUserMessage qUserMessage = QUserMessage.userMessage;
+        return repository.findAll(
+                qUserMessage.communityUri.eq( planCommunity.getUri() )
+                        .and( qUserMessage.toUsername.in( toValues ) ),
+                pageable );
+    }
+
+    private Page<UserMessage> loadSentPage( Pageable pageable, String username, PlanCommunity planCommunity ) {
+        QUserMessage qUserMessage = QUserMessage.userMessage;
+        return repository.findAll(
+                qUserMessage.communityUri.eq( planCommunity.getUri() )
+                        .and( qUserMessage.username.eq( username ) ),
+                pageable );
     }
 
     @Override
