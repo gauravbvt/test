@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <elements>
-<automationTestPlan>Automation Test Plan1</automationTestPlan>
-<authorAutomationTestPlan>Afourtech</authorAutomationTestPlan>
+<automationTestPlan>Demo1 Automation Template</automationTestPlan>
+<authorAutomationTestPlan>Afour technologies</authorAutomationTestPlan>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
-<planName>Afourtech's New Plan v.1 (dev)</planName>
+<planName>New Unnamed Template</planName>
 </elements>
