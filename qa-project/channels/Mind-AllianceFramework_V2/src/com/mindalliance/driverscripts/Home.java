@@ -22,7 +22,7 @@ public class Home {
 		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
 
 		//		View
-	/*	suite.addTestSuite(MAV0001_viewLoginPage.class);		
+		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
 		suite.addTestSuite(MAV0004_viewAdminHome.class);
@@ -113,9 +113,9 @@ public class Home {
 		suite.addTestSuite(MAV0187_OngoingOrStartsWith.class);
 		suite.addTestSuite(MAV0188_EndEventUnnamed.class);
 		suite.addTestSuite(MAV0189_GoalsLink.class);
-		suite.addTestSuite(MAV0190_GoalsOption.class);*/
+		suite.addTestSuite(MAV0190_GoalsOption.class);
 		suite.addTestSuite(MAV0191_GoalsOptionUnchecked.class);
-		/*suite.addTestSuite(MAV0193_TaskAttachOptions.class);
+		suite.addTestSuite(MAV0193_TaskAttachOptions.class);
 		suite.addTestSuite(MAV0195_TaskIssueDetails.class);
 		suite.addTestSuite(MAV0196_TaskIssueTypeOption.class);
 		suite.addTestSuite(MAV0197_TaskIssueSeverityOption.class);
@@ -209,7 +209,7 @@ public class Home {
 */
     	//		Command
 
-   /* 	suite.addTestSuite(MAC0001_UndoAddSegment.class);
+    	suite.addTestSuite(MAC0001_UndoAddSegment.class);
 		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
 		suite.addTestSuite(MAC0003_UndoAddGoal.class);
 		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
@@ -232,7 +232,7 @@ public class Home {
 		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
     	suite.addTestSuite(MAC0045_RedoAddIssue.class);
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
-    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);*/
+    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
 /*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
@@ -258,7 +258,7 @@ public class Home {
 		
     	// Channels Login
 
-    /*	suite.addTestSuite(CL0001_LoginPage.class);
+    	suite.addTestSuite(CL0001_LoginPage.class);
 		suite.addTestSuite(CL0007_ClickSignInButton.class);
 		suite.addTestSuite(CL0009_LogInvalidUserName.class);
 		suite.addTestSuite(CL0010_LoginWithInvalidPassword.class);
@@ -294,7 +294,7 @@ public class Home {
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
 		
 		//About Me Home Page
-		suite.addTestSuite(AMHP0009_InvalidEmail.class);	
+		suite.addTestSuite(AMHP0009_InvalidEmail.class);
 		suite.addTestSuite(AMHP0010_BlankEmail.class);
 		suite.addTestSuite(AMHP0011_BlankName.class);
 		suite.addTestSuite(AMHP0012_InvalidName.class);
@@ -304,7 +304,7 @@ public class Home {
         suite.addTestSuite(MSGS0007_SendBlankMessage.class);
         suite.addTestSuite(MSGS0008_SendMessageToEveryone.class);
         suite.addTestSuite(MSGS0009_SendMessageToAllDevelopers.class);
-        suite.addTestSuite(MSGS0014_ResetMessage.class);*/
+        suite.addTestSuite(MSGS0014_ResetMessage.class);
         
         //Channels Admin
         suite.addTestSuite(CA0003_CreateNewTemplate.class);
@@ -320,7 +320,7 @@ public class Home {
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
         
         //Actions Popup Menu
-     /*   suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
+        suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
         suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
         suite.addTestSuite(TEMPACT0063_VerifyActionsMenuPresentInAboutTemplateSegmentWindow.class);
         suite.addTestSuite(TEMPACT0073_VerifyActionsMenuPresentInAboutFunctionWindow.class);
@@ -363,7 +363,7 @@ public class Home {
         suite.addTestSuite(CPA0002_HideCollaborationPanel.class);
         suite.addTestSuite(CPA0010_ClickActivitiesTab.class);
         suite.addTestSuite(CPA0020_SendMessageToAllDevelopers.class);
-        suite.addTestSuite(CPA0022_SendMessageToEveryone.class);*/
+        suite.addTestSuite(CPA0022_SendMessageToEveryone.class);
         
         
 		return suite;
