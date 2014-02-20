@@ -183,7 +183,7 @@ public class MAV0190_GoalsOption extends TestCase{
 			// Add goal
 			stepNo++;
 			description="Add Goal";
-			planPage.addGoal(testData.get("AddGoal"),testData.get("SelectgoalFromList"),testData.get("Type"));
+			planPage.addGoal(testData.get("SelectgoalFromList"),testData.get("Type"),testData.get("Organization"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -308,7 +308,7 @@ public class MAV0190_GoalsOption extends TestCase{
 	        this.testData.put("AddNewSegment",oXmlEleMAV0190_GoalsOption.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAV0190_GoalsOption.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("SelectgoalFromList",oXmlEleMAV0190_GoalsOption.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddGoal",oXmlEleMAV0190_GoalsOption.getElementsByTagName("addGoal").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Organization",oXmlEleMAV0190_GoalsOption.getElementsByTagName("organization").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Type",oXmlEleMAV0190_GoalsOption.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("SelectgoalFromListInTask",oXmlEleMAV0190_GoalsOption.getElementsByTagName("selectgoalFromListInTask").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AcheivedAtTheEnd",oXmlEleMAV0190_GoalsOption.getElementsByTagName("acheivedAtTheEnd").item(0).getChildNodes().item(0).getNodeValue());		

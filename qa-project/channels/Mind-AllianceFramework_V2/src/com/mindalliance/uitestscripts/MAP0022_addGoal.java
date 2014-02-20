@@ -160,7 +160,7 @@ public class MAP0022_addGoal extends TestCase {
 			// Add Goal
 			stepNo++;
 			description="Goal Added";
-			planPage.addGoal(testData.get("AddGoal"),testData.get("SelectgoalFromList"),testData.get("Type"));
+			planPage.addGoal(testData.get("SelectgoalFromList"),testData.get("Type"),testData.get("OrganizationForGoal"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -272,6 +272,7 @@ public class MAP0022_addGoal extends TestCase {
 	     	this.testData.put("Title",oXmlEleMAP0022_addGoal.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("SelectgoalFromList",oXmlEleMAP0022_addGoal.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Type",oXmlEleMAP0022_addGoal.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
+	     	this.testData.put("OrganizationForGoal",oXmlEleMAP0022_addGoal.getElementsByTagName("organizationForGoal").item(0).getChildNodes().item(0).getNodeValue());
 	     	
 		}
 		catch(SAXException se){

@@ -150,7 +150,6 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Details Task");
 			
-		
  		    // Click on 'Goals' link in task panel
  			stepNo++;
  			description="Goals Link";
@@ -163,7 +162,7 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
  		 	// Add goal
 			stepNo++;
 			description="Add Goal";
-			planPage.addGoal(testData.get("AddGoal"),testData.get("SelectgoalFromList"),testData.get("Type"));
+			planPage.addGoal(testData.get("SelectgoalFromList"),testData.get("Type"),testData.get("OrganizationForGoal"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -283,10 +282,12 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
 	        this.testData.put("AddNewSegment",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("SelectgoalFromList",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddGoal",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("addGoal").item(0).getChildNodes().item(0).getNodeValue());
+	        //this.testData.put("SelectGoal",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("selectGoal").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Type",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("SelectgoalFromListInTask",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("selectgoalFromListInTask").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChooseOne",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("chooseOne").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("OrganizationForGoal",oXmlEleMAV0191_GoalsOptionUnchecked.getElementsByTagName("organizationForGoal").item(0).getChildNodes().item(0).getNodeValue());
+		      
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0191_GoalsOptionUnchecked not found.");
