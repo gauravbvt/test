@@ -12,7 +12,7 @@
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <selectgoalFromList>Financial - Asset devaluation</selectgoalFromList>
 <selectgoalFromListInTask>Minor financial risk to Add Goal of asset devaluation</selectgoalFromListInTask>
-<addGoal>Add Goal</addGoal>
+<organization>Organization For Add Goal</organization>
 <type>Actual</type>
 <acheivedAtTheEnd>Acheived at end</acheivedAtTheEnd>
 </elements>

@@ -12,4 +12,5 @@
 <title>Channels - Sign in</title>
 <selectgoalFromList>Financial - Asset devaluation</selectgoalFromList>
 <type>Actual</type>
+<organizationForGoal>Organization for Goal</organizationForGoal>
 </elements>
