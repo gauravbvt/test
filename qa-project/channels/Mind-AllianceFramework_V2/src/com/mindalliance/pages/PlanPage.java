@@ -623,9 +623,9 @@ public class PlanPage {
 		// Assertion: Verify 'actions' is present in About Function window
 		elementController.requireElementSmart(fileName,"Actions In About Function",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Function");
 		String popUpName=UIActions.getText(fileName,"Actions In About Function",GlobalVariables.configuration.getAttrSearchList(), "Actions In About Function");
-	/*	if(!actions.equals(popUpName)){
+		if(!actions.equals(popUpName)){
 		throw new UIAutomationException( "'"+actions +"' not found");
-		}*/
+		}
 	}
 	
 	/**
@@ -3869,14 +3869,16 @@ public class PlanPage {
 		}
 	}
 
+	
+	
 	/**
 	 * Adds goal to Segment
-	 * @param goalName 
-	 * @param selectGoal
+	 * @param slectGoal 
 	 * @param type
+	 * @param organization
 	 * @throws UIAutomationException
 	 */
-	public void addGoal(String goalName,String selectGoal,String type) throws UIAutomationException
+	public void addGoal(String selectGoal,String type,String organization) throws UIAutomationException
 	{
 		// Select goal from dropdown
 		elementController.requireElementSmart(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
@@ -3885,8 +3887,9 @@ public class PlanPage {
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
 		UIActions.selectByTextAndClick(selectGoal);
+		UIActions.enterKey(Keys.TAB);
 		
-		// Select Organization
+		// Select Organization (Type/Actual)
 		elementController.requireElementSmart(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
 		UIActions.click(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
 		UIActions.enterKey(Keys.TAB);
@@ -3897,26 +3900,29 @@ public class PlanPage {
 		UIActions.enterKey(Keys.TAB);
 		
 		elementController.requireElementSmart(fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
-		UIActions.enterValueInTextBox(goalName,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
+		UIActions.enterValueInTextBox(organization,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
 		UIActions.enterKey(Keys.TAB);
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// Enter name in Goal text box
-		//elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		//UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		//elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		//UIActions.enterValueInTextBox(goalName,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		
 		// Achieved at the end checkbox
 		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 		UIActions.click(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
-	}
-
+	    UIActions.enterKey(Keys.ENTER);
+	try {
+		Thread.sleep(5000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	}
+	
+	
+	
 	/**
 	 * Deletes goal from Segment
 	 * @throws UIAutomationException

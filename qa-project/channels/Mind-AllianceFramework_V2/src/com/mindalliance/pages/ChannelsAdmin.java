@@ -37,7 +37,7 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
 		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");	
+		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 	}
 	
 	/**
@@ -57,54 +57,34 @@ public class ChannelsAdmin {
 	 * Click the Add Plan button
 	 * @throws UIAutomationException 
 	 */
-	public void clickAddPlanButton() throws UIAutomationException
+	public void clickAddPlanButton(String planName) throws UIAutomationException
 	{
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		
-		try{
-			Thread.sleep(3500);
+
+		elementController.requireElementSmart(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
+		String newPlan=UIActions.getText(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
+		if(!planName.equals(newPlan)){
+		throw new UIAutomationException( "'"+planName +"' not found");
 		}
-		catch(Exception e){}
-		
 	}
 	
 	/**
-	 * Click the Add Plan button when same plan name is entered
+	 * Click the Add Plan button after entering invalid plan name
 	 * @throws UIAutomationException 
 	 */
-	public void clickAddPlanButtonSamePlan() throws UIAutomationException
-	{
+	public void clickAddPlanForBlankTemplateName() throws UIAutomationException{
+		
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		try{
-			Thread.sleep(3500);
-		}
-		catch(Exception e){}
 		
-		//Check whether the "Settings Changed" notification appears
+		//Check whether the "Invalid Template" notification appears
 		elementController.requireElementSmart(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 		String tabTextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
-					
-		}
-	/**
-	 * Click the Add Plan button after entering invalid plan name
-	 * @throws UIAutomationException 
-	 */
-	public String clickAddPlanButtonInvalidPlan() throws UIAutomationException
-	{
-		
-		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
-		try{
-			Thread.sleep(3800);
-		}
-		catch(Exception e){}
-		return UIActions.getText(fileName, "Invalid Template Notification", GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 	}
 	
 	/**
@@ -130,29 +110,29 @@ public class ChannelsAdmin {
 	
 	}
 	
-	
 	/**
 	 * Click the Save Plan button when Plan ids are the same
 	 * @throws UIAutomationException 
 	 */
-	public String clickSavePlanButtonSamePlanId(String planName) throws UIAutomationException
+	public void clickSavePlanButtonSamePlanId(String planName) throws UIAutomationException
 	{
-		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
-		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		
-		
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "Add Plan");
+	
+		//Check whether the "Invalid Template" notification appears
+		elementController.requireElementSmart(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+		String tabTextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
 		
-		elementController.requireElementSmart(fileName,"Notification for same plan",GlobalVariables.configuration.getAttrSearchList(), "Notification for same plan");
-		try{
-			Thread.sleep(5000);
+		
+//		String alert=dataController.getPageDataElements(fileName, "Invalid Template Notification", "Xpath");
+//		elementController.waitForElement("Name", "Invalid Template Notification Name");
+//		UIActions.assertAlert(alert);
+	
+		if(!tabTextInPage.contains(tabTextInXML)){
+		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
-		catch(Exception e){}
-		return UIActions.getText(fileName, "Same Plan Notification",GlobalVariables.configuration.getAttrSearchList() , "Same Plan Notification");
-	 
+		
 	}
 	
 	/**
@@ -192,26 +172,27 @@ public class ChannelsAdmin {
 		Configuration.getConfigurationObject().setSelect(planDropDownList);
 		UIActions.selectByTextAndClick(planName);
 	}
-	
-
 	/**
 	 * Delete the plan
 	 * @param planName
 	 * @throws UIAutomationException
 	 */
 	public void deletePlan(String planName) throws UIAutomationException{
-		String headingOfWindowInXML=null;
+		
 		selectPlan(planName);
 		
 		elementController.requireElementSmart(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		
-		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
-		try{
-			Thread.sleep(5200);
-			}
-		catch(Exception e){}
-		UIActions.assertAlert(headingOfWindowInXML);
+		String alert=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
+//		try{
+//			Thread.sleep(5200);
+//			}
+//		catch(Exception e){}
+		elementController.waitForElement("Title", "Alert Window Title Of Delete Plan");
+		UIActions.assertAlert(alert);
+	
+		
 	}
 	
 	/**
