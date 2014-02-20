@@ -227,4 +227,16 @@ public interface CommunityService {
      * @return a list of transmission media
      */
     List<TransmissionMedium> findMissingContactInfoMedia( ChannelsUser user );
+
+    /**
+     * Make plan community url.
+     * @return a string
+     */
+    String makePlanCommunityUrl();
+
+    /**
+     * Make plan community participation url.
+     * @return a string
+     */
+    String makePlanCommunityParticipationUrl();
 }

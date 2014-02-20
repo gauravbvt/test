@@ -204,20 +204,28 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     @Override
     public String getContent( String topic, Format format, CommunityService communityService ) {
+        StringBuilder sb = new StringBuilder(  );
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return "As supervisor, you are requested to confirm "
-                    + asString( communityService )
-                    + " in community " + communityService.getPlanCommunity().getName()
-                    + ".\n\nThank you!\n";
+            sb.append( "As supervisor, you are requested to confirm " )
+                    .append( asString( communityService ) )
+                    .append( " in community " )
+                    .append( communityService.getPlanCommunity().getName() )
+                    .append(". (Go to ")
+                    .append( communityService.makePlanCommunityParticipationUrl( ))
+                    .append( ")\n\nThank you!\n" );
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
-            return "You are requested to participate as "
-                    + getAgent( communityService ).getName()
-                    + " in community " + communityService.getPlanCommunity().getName()
-                    + ". You are invited to either accept or reject the request."
-                    + "\n\nThank you!\n";
+            sb.append( "You are requested to participate as " )
+                    .append( getAgent( communityService ).getName() )
+                    .append( " in community " )
+                    .append( communityService.getPlanCommunity().getName() )
+                    .append( ". You are invited to either accept or reject the request." )
+                    .append(". (Go to ")
+                    .append( communityService.makePlanCommunityUrl( ))
+                    .append( ") \n\nThank you!\n" );
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }
+        return sb.toString();
     }
 
     @Override

@@ -14,8 +14,13 @@ import org.apache.wicket.Component;
  */
 public class SubTaskStepDataPanel extends ChecklistStepDataPanel {
 
-    public SubTaskStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
-        super( id, part, stepData, index, finder );
+    public SubTaskStepDataPanel( String id,
+                                 Part part,
+                                 ChecklistStepData stepData,
+                                 int index,
+                                 ProtocolsFinder finder,
+                                 boolean allExpanded ) {
+        super( id, part, stepData, index, finder, allExpanded );
     }
 
     @Override

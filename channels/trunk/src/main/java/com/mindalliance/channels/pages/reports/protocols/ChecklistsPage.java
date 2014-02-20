@@ -11,7 +11,6 @@ import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -27,10 +26,10 @@ import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.PagePathItem;
-import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -70,6 +69,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private String registeredOrganizationId;
     private Agent agent;
     private ChannelsUser protocolsUser;
+    private boolean allExpanded;
 
     @SpringBean( name = "planCommunityEndPoint" )
     private PlanCommunityEndPoint planCommunityEndPoint;
@@ -85,6 +85,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private WebMarkupContainer protocolsContainer;
     private WebMarkupContainer directoryContainer;
     private WebMarkupContainer queriesContainer;
+    private AjaxLink<String> expandCollapseAllLink;
 
     public ChecklistsPage( PageParameters parameters ) {
         super( parameters );
@@ -211,6 +212,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     }
 
     private void doAddContent() {
+        addExpandCollapseAll();
         addAboutProtocols();
         addParticipation();
         addDocumentation();
@@ -218,6 +220,23 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         addExpectedQueries();
         addProtocols();
         addDirectory();
+    }
+
+    private void addExpandCollapseAll() {
+        expandCollapseAllLink = new AjaxLink<String>( "expandCollapseAll") {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                allExpanded = !allExpanded;
+                addExpandCollapseAll();
+                target.add( expandCollapseAllLink );
+                addProtocols();
+                target.add( protocolsContainer );
+            }
+        };
+        Label collapseExpandLabel = new Label( "expandOrCollapse", allExpanded ? "Collapse all" : "Expand all" );
+        expandCollapseAllLink.add( collapseExpandLabel );
+        expandCollapseAllLink.setOutputMarkupId( true );
+        getContainer().addOrReplace( expandCollapseAllLink );
     }
 
     // ABOUT
@@ -446,7 +465,8 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     private void addProtocols() {
         protocolsContainer = new WebMarkupContainer( "protocols" );
-        getContainer().add( protocolsContainer );
+        protocolsContainer.setOutputMarkupId( true );
+        getContainer().addOrReplace( protocolsContainer );
         addOngoingChecklists();
         addOnObservationChecklists();
         addOnRequestChecklists();
@@ -477,7 +497,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ChecklistData> item ) {
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
             }
         };
         ongoingContainer.add( ongoingChecklistsListView );
@@ -590,7 +610,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
             }
         };
     }
@@ -607,7 +627,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( makeTriggerDataPanel( "trigger", triggerData ) );
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
             }
         };
     }

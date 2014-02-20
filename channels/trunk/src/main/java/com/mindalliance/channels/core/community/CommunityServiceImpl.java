@@ -36,6 +36,8 @@ import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.CollaborationPlanPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -462,6 +464,30 @@ public class CommunityServiceImpl implements CommunityService {
             }
         }
         return missingMedia;
+    }
+
+    @Override
+    public String makePlanCommunityUrl() {
+        String serverUrl = getPlanService().getServerUrl();
+        return serverUrl
+                + ( serverUrl.endsWith( "/" ) ? "" : "/" )
+                + CollaborationPlanPage.COLLAB_PLAN
+                + "?"
+                + AbstractChannelsWebPage.COLLAB_PLAN_PARM
+                + "="
+                + planCommunity.getUri();
+    }
+
+    @Override
+    public String makePlanCommunityParticipationUrl() {
+        String serverUrl = getPlanService().getServerUrl();
+        return serverUrl
+                + ( serverUrl.endsWith( "/" ) ? "" : "/" )
+                + CollaborationPlanPage.PARTICIPATION
+                + "?"
+                + AbstractChannelsWebPage.COLLAB_PLAN_PARM
+                + "="
+                + planCommunity.getUri();
     }
 
     private Set<TransmissionMedium> findRequireMedia( CommunityCommitments communityCommitments, boolean isBeneficiary ) {

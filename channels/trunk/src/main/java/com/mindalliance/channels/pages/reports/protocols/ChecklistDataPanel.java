@@ -39,6 +39,7 @@ import java.util.Set;
 public class ChecklistDataPanel extends AbstractDataPanel {
 
     private ChecklistData checklistData;
+    private boolean allExpanded;
     private WebMarkupContainer taskDetailsContainer;
     private WebMarkupContainer receivesContainer;
     private WebMarkupContainer sendsContainer;
@@ -49,9 +50,11 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
     public ChecklistDataPanel( String id,
                                ChecklistData checklistData,
-                               ProtocolsFinder finder ) {
+                               ProtocolsFinder finder,
+                               boolean allExpanded ) {
         super( id, finder );
         this.checklistData = checklistData;
+        this.allExpanded = allExpanded;
         init();
     }
 
@@ -199,7 +202,8 @@ public class ChecklistDataPanel extends AbstractDataPanel {
                         checklistData.getAssignment().getPart(),
                         stepData,
                         item.getIndex(),
-                        getFinder() ) );
+                        getFinder(),
+                        allExpanded ) );
             }
         };
         checklistContainer.setVisible( !checklistData.getSteps().isEmpty() );
@@ -221,15 +225,16 @@ public class ChecklistDataPanel extends AbstractDataPanel {
                                                                Part part,
                                                                ChecklistStepData stepData,
                                                                int index,
-                                                               ProtocolsFinder finder ) {
+                                                               ProtocolsFinder finder,
+                                                               boolean allExpanded ) {
         Step aStep = stepData.getStep();
         return aStep.isActionStep()
-                ? new ActionStepDataPanel( "step", part, stepData, index, finder )
+                ? new ActionStepDataPanel( "step", part, stepData, index, finder, allExpanded )
                 : aStep.isCommunicationStep()
-                ? new CommunicationStepDataPanel( "step", part, stepData, index, finder )
+                ? new CommunicationStepDataPanel( "step", part, stepData, index, finder, allExpanded )
                 : aStep.isReceiptConfirmation()
-                ? new ReceiptConfirmationDataPanel( "step", part, stepData, index, finder )
-                : new SubTaskStepDataPanel( "step", part, stepData, index, finder );
+                ? new ReceiptConfirmationDataPanel( "step", part, stepData, index, finder, allExpanded )
+                : new SubTaskStepDataPanel( "step", part, stepData, index, finder, allExpanded );
     }
 
 

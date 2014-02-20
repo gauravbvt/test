@@ -58,7 +58,7 @@ import org.springframework.security.core.session.SessionIdentifierAware;
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
- *
+ * <p/>
  * TODO split into a bona fide service-level object
  */
 public class Channels extends WebApplication
@@ -97,7 +97,7 @@ public class Channels extends WebApplication
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;
     public static final Long UNKNOWN_RFI_SURVEY_ID = Long.MIN_VALUE + 2;
     public static final long UNKNOWN_RFI_ID = Long.MIN_VALUE + 3;
-    public static final long UNKNOWN_REQUIREMENT_ID =  Long.MIN_VALUE + 4;
+    public static final long UNKNOWN_REQUIREMENT_ID = Long.MIN_VALUE + 4;
 
     /**
      * Analyst.
@@ -134,7 +134,7 @@ public class Channels extends WebApplication
     private UserUploadService userUploadService;
 
     private AttachmentManager attachmentManager;
-    
+
     private UserRecordService userDao;
 
     private CommunityServiceFactory communityServiceFactory;
@@ -219,8 +219,8 @@ public class Channels extends WebApplication
         /*JQContributionConfig jqContributionConfig = new JQContributionConfig().withDefaultJQueryUi();*/
 
         JQContributionConfig jqContributionConfig =
-                new JQContributionConfig( new JavaScriptResourceReference(Channels.class, "res/jquery-1.7.2.min.js"  ) )
-                        .withJQueryUiJs( new JavaScriptResourceReference(Channels.class, "res/jquery-1.8.16-ui.min.js"  ) )
+                new JQContributionConfig( new JavaScriptResourceReference( Channels.class, "res/jquery-1.7.2.min.js" ) )
+                        .withJQueryUiJs( new JavaScriptResourceReference( Channels.class, "res/jquery-1.8.16-ui.min.js" ) )
                         .withJQueryUiCss( new CssResourceReference( Channels.class, "res/jquery-1.8.16-ui.css" ) );
 
         /*
@@ -246,16 +246,16 @@ public class Channels extends WebApplication
         mountPage( "geomap", GeoMapPage.class );
         mountPage( "home", HomePage.class );
         mountPage( "collabPlans", CollaborationPlansPage.class );
-        mountPage( "collabPlan", CollaborationPlanPage.class );
+        mountPage( CollaborationPlanPage.COLLAB_PLAN, CollaborationPlanPage.class );
         mountPage( "templates", PlansPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( RFIsPage.SURVEYS, RFIsPage.class );
         mountPage( "requirements", RequirementsPage.class );
-        mountPage(  "participation", PlanParticipationPage.class );
-        mountPage(  "issues", IssuesPage.class );
+        mountPage( CollaborationPlanPage.PARTICIPATION, PlanParticipationPage.class );
+        mountPage( "issues", IssuesPage.class );
         mountPage( "help", HelpPage.class );
 
-        mountResource( "uploads/${name}", new UploadedReference(  ) );
+        mountResource( "uploads/${name}", new UploadedReference() );
 
         mountResource( "users/photos/${name}", new PngReference(
                 UserPhotoPng.class,
@@ -263,7 +263,7 @@ public class Channels extends WebApplication
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
-                ) );
+        ) );
         mountResource( "icons/${name}", new PngReference(
                 IconPng.class,
                 getUserDao(),

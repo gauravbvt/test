@@ -13,8 +13,13 @@ import com.mindalliance.channels.core.model.checklist.ActionStep;
  */
 public class ActionStepDataPanel extends ChecklistStepDataPanel {
 
-    public ActionStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
-        super( id, part, stepData, index, finder );
+    public ActionStepDataPanel( String id,
+                                Part part,
+                                ChecklistStepData stepData,
+                                int index,
+                                ProtocolsFinder finder,
+                                boolean allExpanded ) {
+        super( id, part, stepData, index, finder, allExpanded );
     }
 
     @Override

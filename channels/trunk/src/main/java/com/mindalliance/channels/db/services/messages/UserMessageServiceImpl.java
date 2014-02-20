@@ -106,7 +106,8 @@ public class UserMessageServiceImpl extends AbstractDataService<UserMessage> imp
         QUserMessage qUserMessage = QUserMessage.userMessage;
         return repository.findAll(
                 qUserMessage.communityUri.eq( planCommunity.getUri() )
-                        .and( qUserMessage.toUsername.in( toValues ) ),
+                        .and( qUserMessage.toUsername.in( toValues ) )
+                        .and( qUserMessage.username.ne( username ) ),
                 pageable );
     }
 

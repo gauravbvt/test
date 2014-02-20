@@ -8,6 +8,8 @@ import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -20,6 +22,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * Time: 7:50 AM
  */
 public class IssuesPage extends AbstractChannelsBasicPage {
+
+    private boolean allExpanded;
+    private AjaxLink<String> expandCollapseAllLink;
+
 
     public IssuesPage() {
         this( new PageParameters() );
@@ -58,11 +64,28 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     }
 
     protected void addContent() {
+        addExpandCollapseAll();
         addTitle();
         IssueMetrics issueMetrics = new IssueMetrics( getCommunityService() );
         addIssuesSummary( issueMetrics );
         addIssueMetrics( issueMetrics );
     }
+
+    private void addExpandCollapseAll() {
+        expandCollapseAllLink = new AjaxLink<String>( "expandCollapseAll") {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                allExpanded = !allExpanded;
+                addContent();
+                target.add( getContainer() );
+            }
+        };
+        Label collapseExpandLabel = new Label( "expandOrCollapse", allExpanded ? "Collapse all" : "Expand all" );
+        expandCollapseAllLink.add( collapseExpandLabel );
+        expandCollapseAllLink.setOutputMarkupId( true );
+        getContainer().addOrReplace( expandCollapseAllLink );
+    }
+
 
     @Override
     protected String getContentsCssClass() {
@@ -85,17 +108,18 @@ public class IssuesPage extends AbstractChannelsBasicPage {
                 ? "template " + communityService.getPlan().getVersionedName()
                 : "plan " + communityService.getPlanCommunity().getName();
         Label title = new Label("context", context );
-        getContainer().add( title );
+        title.setOutputMarkupId( true );
+        getContainer().addOrReplace( title );
     }
 
     private void addIssuesSummary( IssueMetrics issueMetrics ) {
-        getContainer().add( new IssuesSummaryTable( "issuesSummary", issueMetrics ) );
+        getContainer().addOrReplace( new IssuesSummaryTable( "issuesSummary", issueMetrics ) );
     }
 
     private void addIssueMetrics( IssueMetrics issueMetrics ) {
-        getContainer().add( new IssuesMetricsPanel( "robustnessMetrics", Issue.ROBUSTNESS, issueMetrics ) );
-        getContainer().add( new IssuesMetricsPanel( "completenessMetrics", Issue.COMPLETENESS, issueMetrics ) );
-        getContainer().add( new IssuesMetricsPanel( "validityMetrics", Issue.VALIDITY, issueMetrics ) );
+        getContainer().addOrReplace( new IssuesMetricsPanel( "robustnessMetrics", Issue.ROBUSTNESS, issueMetrics, allExpanded ) );
+        getContainer().addOrReplace( new IssuesMetricsPanel( "completenessMetrics", Issue.COMPLETENESS, issueMetrics, allExpanded ) );
+        getContainer().addOrReplace( new IssuesMetricsPanel( "validityMetrics", Issue.VALIDITY, issueMetrics, allExpanded ) );
     }
 
 }

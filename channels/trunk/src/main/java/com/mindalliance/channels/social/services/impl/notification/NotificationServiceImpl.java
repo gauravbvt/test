@@ -338,7 +338,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             ParticipationManager participationManager = communityService.getParticipationManager();
             UserParticipationService userParticipationService = communityService.getUserParticipationService();
             for ( UserParticipation userParticipation : participationManager.getAllParticipations( communityService ) ) {
-                if ( userParticipation.isSupervised( communityService ) ) {
+                if ( userParticipation.isSupervised( communityService )
+                        && userParticipation.getSupervisorsNotified().isEmpty() ) { // todo - assumes all then supervisors were notified
                     List<String> successes = sendMessages(
                             userParticipation,
                             UserParticipation.VALIDATION_REQUESTED,

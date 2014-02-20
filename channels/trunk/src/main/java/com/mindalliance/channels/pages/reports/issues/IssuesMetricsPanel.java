@@ -6,20 +6,12 @@
 
 package com.mindalliance.channels.pages.reports.issues;
 
-import com.mindalliance.channels.core.IssueDetectionWaiver;
-import com.mindalliance.channels.core.command.Command;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.core.util.AbstractIssueWrapper;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -48,16 +40,19 @@ public class IssuesMetricsPanel extends AbstractUpdatablePanel {
     private IssueMetrics.IssueTypeMetrics issueTypeMetrics;
     private Set<String> expandedKinds = new HashSet<String>();
 
-    public IssuesMetricsPanel( String id, String issueType, IssueMetrics issueMetrics ) {
+    public IssuesMetricsPanel( String id, String issueType, IssueMetrics issueMetrics, boolean allExpanded ) {
         super( id );
         this.issueType = issueType;
-        init( issueMetrics );
+        init( issueMetrics, allExpanded );
     }
 
-    private void init( IssueMetrics issueMetrics ) {
+    private void init( IssueMetrics issueMetrics, boolean allExpanded ) {
         issueMetricsContainer = new WebMarkupContainer( "issue-metrics" );
         issueTypeMetrics = issueMetrics.getIssueTypeMetrics( issueType );
         issueMetricsContainer.setVisible( !issueTypeMetrics.isEmpty() );
+        if ( allExpanded ) {
+            expandedKinds.addAll( issueTypeMetrics.getIssueKinds() );
+        }
         add( issueMetricsContainer );
         addKinds();
         addNoIssues();

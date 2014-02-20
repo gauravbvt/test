@@ -18,8 +18,13 @@ import org.apache.wicket.Component;
  */
 public class CommunicationStepDataPanel extends ChecklistStepDataPanel {
 
-   public CommunicationStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
-        super( id, part, stepData, index, finder );
+   public CommunicationStepDataPanel( String id,
+                                      Part part,
+                                      ChecklistStepData stepData,
+                                      int index,
+                                      ProtocolsFinder finder,
+                                      boolean allExpanded ) {
+        super( id, part, stepData, index, finder, allExpanded );
     }
 
     @Override

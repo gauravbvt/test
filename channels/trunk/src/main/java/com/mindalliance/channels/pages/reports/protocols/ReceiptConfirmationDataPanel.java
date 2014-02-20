@@ -14,8 +14,13 @@ import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
  */
 public class ReceiptConfirmationDataPanel extends ChecklistStepDataPanel {
 
-    public ReceiptConfirmationDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
-        super( id, part, stepData, index, finder );
+    public ReceiptConfirmationDataPanel( String id,
+                                         Part part,
+                                         ChecklistStepData stepData,
+                                         int index,
+                                         ProtocolsFinder finder,
+                                         boolean allExpanded ) {
+        super( id, part, stepData, index, finder, allExpanded );
     }
 
     @Override

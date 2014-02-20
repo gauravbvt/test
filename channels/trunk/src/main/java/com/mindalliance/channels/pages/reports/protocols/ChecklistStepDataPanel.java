@@ -34,11 +34,17 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
     private WebMarkupContainer moreContainer;
     private Label actLabel;
 
-    public ChecklistStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
+    public ChecklistStepDataPanel( String id,
+                                   Part part,
+                                   ChecklistStepData stepData,
+                                   int index,
+                                   ProtocolsFinder finder,
+                                   boolean allExpanded ) {
         super( id, finder );
         this.part = part;
         this.stepData = stepData;
         this.index = index;
+        showingMore = allExpanded;
         init();
     }
 
@@ -109,9 +115,13 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
         };
         moreLessButton.setVisible( hasMore() );
         moreLessButton.setOutputMarkupId( true );
-        moreLessButton.add( new Label( "moreLess", showingMore ? "- Less" : "+ More" ) );
+        moreLessButton.add( new Label( "moreLess", isExpanded() ? "- Less" : "+ More" ) );
         moreLessButton.add( new AttributeModifier( "class", "more" ) );
         stepContainer.addOrReplace( moreLessButton );
+    }
+
+    private boolean isExpanded() {
+        return showingMore;
     }
 
     private void addFeedbackPanel() {

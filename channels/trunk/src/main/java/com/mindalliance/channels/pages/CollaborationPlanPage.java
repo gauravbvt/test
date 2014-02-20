@@ -59,6 +59,9 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
      */
     private static final Logger LOG = LoggerFactory.getLogger( CollaborationPlanPage.class );
 
+    public static final String COLLAB_PLAN = "collabPlan";
+    public static final String PARTICIPATION = "participation";
+
 
     @SpringBean
     private RFIService rfiService;

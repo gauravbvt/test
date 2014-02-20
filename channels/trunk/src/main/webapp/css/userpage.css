@@ -2345,6 +2345,7 @@ div.controls {
 }
 
 a.button,
+a.expandCollapseButton,
 input[type='button'],
 table.data-table.big a.link,
 span.status a,
@@ -2364,7 +2365,12 @@ input.submit {
     font-style: normal;
 }
 
+a.expandCollapseButton {
+    margin: 5px;
+}
+
 a.button:hover,
+a.expandCollapseButton:hover,
 input[type='button']:hover,
 table.data-table.big a.link:hover,
 span.status a:hover,
