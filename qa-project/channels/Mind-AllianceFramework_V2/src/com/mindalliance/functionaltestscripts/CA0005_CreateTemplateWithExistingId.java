@@ -143,7 +143,7 @@ public class CA0005_CreateTemplateWithExistingId extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButtonSamePlan();
+			channelsAdmin.clickSavePlanButtonSamePlanId(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	

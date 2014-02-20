@@ -135,21 +135,20 @@ public class CA0007_CreateTemplateWithSpecialCharacters extends TestCase {
 			description="Enter Template name";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.clickAddPlanButton();
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Template name");
-							
-			//Click Save button
+					
+			//Click Add Plan Button
 			stepNo++;
-			description="Click Save button";
-			channelsAdmin.clickAddPlanButtonInvalidPlan();
+			description="Click Add Plan Button";
+			channelsAdmin.clickAddPlanButton(testData.get("InvalidAutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan Button");
+							
 			//Delete the created template
 			stepNo++;
 			description="Delete created template";
@@ -237,7 +236,8 @@ public class CA0007_CreateTemplateWithSpecialCharacters extends TestCase {
 	        this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	 
+	        this.testData.put("InvalidAutomationTestPlan",oXmlEleCA0007_CreateTemplateWithSpecialCharacters.getElementsByTagName("invalidAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
+	        
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File CA0007_CreateTemplateWithSpecialCharacters can not be parsed.");

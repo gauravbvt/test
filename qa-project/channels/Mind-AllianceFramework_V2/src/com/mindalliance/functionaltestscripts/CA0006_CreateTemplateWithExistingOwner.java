@@ -143,7 +143,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButton();
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -179,7 +179,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButton();
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	

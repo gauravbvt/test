@@ -135,7 +135,7 @@ public class CA0009_CreateTemplateWithoutOwnerName extends TestCase {
 			description="Enter Template name";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.clickAddPlanButton();
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	

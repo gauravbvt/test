@@ -143,21 +143,11 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			// Enter Plan name
 			stepNo++;
 			description="Click Add Plan button";
-			channelsAdmin.clickAddPlanButton();
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan button");
-					
-		   /*//Click Save button
-			stepNo++;
-			description="Click Save button";
-			channelsAdmin.clickSavePlanButton();
-			// Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
-			*/	
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan button");	
 			
 			//Delete the created template
 			stepNo++;
