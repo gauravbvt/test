@@ -312,7 +312,7 @@ public class Home {
         suite.addTestSuite(CA0006_CreateTemplateWithExistingOwner.class);
         suite.addTestSuite(CA0007_CreateTemplateWithSpecialCharacters.class);
         suite.addTestSuite(CA0009_CreateTemplateWithoutOwnerName.class);
-        suite.addTestSuite(CA0010_CreateNewTemplateWithoutTemplateId.class);
+        suite.addTestSuite(CA0010_CreateNewBlankNameTemplate.class);
         suite.addTestSuite(CA0016_CreateUser.class);
         suite.addTestSuite(CA0021_DisableUser.class);
         suite.addTestSuite(CA0025_CreateUserWithSameName.class);
