@@ -203,7 +203,6 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
 			
-			
 			// Sign Out from 'Admin' page
 			stepNo++;
 			description="SignOut Successful";
