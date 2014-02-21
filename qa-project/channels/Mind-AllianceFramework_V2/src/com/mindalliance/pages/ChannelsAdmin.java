@@ -121,18 +121,18 @@ public class ChannelsAdmin {
 	
 		//Check whether the "Invalid Template" notification appears
 		elementController.requireElementSmart(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
-		String tabTextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
-		String tabTextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
+		String TextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
+		String TextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
+		
+		if(!TextInPage.contains(TextInXML)){
+		throw new UIAutomationException( "'"+TextInXML +"' not found");
+		}
 		
 		
 //		String alert=dataController.getPageDataElements(fileName, "Invalid Template Notification", "Xpath");
 //		elementController.waitForElement("Name", "Invalid Template Notification Name");
 //		UIActions.assertAlert(alert);
 	
-		if(!tabTextInPage.contains(tabTextInXML)){
-		throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}
-		
 	}
 	
 	/**
