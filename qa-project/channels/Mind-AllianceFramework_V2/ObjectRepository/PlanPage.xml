@@ -64,7 +64,7 @@
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Delete Event</GivenName>
-		<Title>Delete event?</Title>
+		<Title>Remove from segment context?</Title>
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Goal</GivenName>
@@ -3188,29 +3188,24 @@
 	
 	 <Element>
 		<GivenName>Occurring Dropdown In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/select</Xpath>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:contextContainer:context:container:creationDiv:timing')]</Xpath>
 		<Name></Name>
+		<Id>id407</Id>
 		
 	</Element>
-
-
-	//<Element>
-		//<GivenName>Context Dropdown In About Plan Segment</GivenName>
-		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing')]</Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing</Name>
-	//</Element>
-	
 	
 	<Element>
 		<GivenName>Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[2]/td/input</Xpath>
+		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:event')]</Xpath>
 		<Name></Name>
+		<Id>event</Id>
 	</Element>
 	
 	<Element>
 		<GivenName>Second Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/input</Xpath>
+		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:contextContainer:context:container:creationDiv:event')]</Xpath>
 		<Name></Name>
+		<Id>id39e</Id>
 	</Element>
 	
    <Element>
@@ -3298,7 +3293,7 @@
 	
 	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/span/div/table/tbody/tr/td[3]/a</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table/tbody/tr/td[2]/a/img</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3326,23 +3321,17 @@
 	
 	<Element>
 		<GivenName>First Rated Dropdown In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[3]/td/select
-		</Xpath>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:event-level')]</Xpath>
 		<Name></Name>
+		<Id>event-level</Id>
 	</Element>
 	
 	<Element>
 		<GivenName>Second Rated Dropdown In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/select[2]</Xpath>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:contextContainer:context:container:creationDiv:level')]</Xpath>
 		<Name></Name>
+		<Id>id3c1</Id>
 	</Element>
-	
-	
-	//<Element>
-		//<GivenName>Between Level Dropdown In About Plan Segment</GivenName>
-		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:level')]</Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:level</Name>
-	//</Element>
 	
 	<Element>
 		<GivenName>New Issue In Receives Panel</GivenName>
