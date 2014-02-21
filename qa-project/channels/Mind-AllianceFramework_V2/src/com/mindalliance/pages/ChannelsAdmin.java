@@ -181,14 +181,15 @@ public class ChannelsAdmin {
 		
 		elementController.requireElementSmart(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
-		
+	
 		String alert=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
+		UIActions.assertAlert(alert);
 //		try{
 //			Thread.sleep(5200);
 //			}
 //		catch(Exception e){}
-		elementController.waitForElement("Title", "Alert Window Title Of Delete Plan");
-		UIActions.assertAlert(alert);
+	//	elementController.waitForElement("Title", "Alert Window Title Of Delete Plan");
+	//	UIActions.assertAlert(alert);
 	
 		
 	}
