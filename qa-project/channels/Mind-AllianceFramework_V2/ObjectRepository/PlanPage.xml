@@ -3248,19 +3248,6 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Attach File Name Textbox In About Plan Segment</GivenName>
-		//<Xpath></Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:attachments:container:controls:name</Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-		//<ClassName></ClassName>
-	//</Element>
-	
-	
-
-	
 	<Element>
 		<GivenName>Attach File Upload Button In About Plan Segment</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/div[2]/table/tbody/tr[3]/td[2]/input</Xpath>
