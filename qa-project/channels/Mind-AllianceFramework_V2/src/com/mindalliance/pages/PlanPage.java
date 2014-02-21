@@ -3919,7 +3919,16 @@ public class PlanPage {
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}	}
+	}	
+	
+//	elementController.requireElementSmart(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
+//	String showLinkTextInPage=UIActions.getText(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
+//	String showLinkTextInXML=dataController.getPageDataElements(fileName,"Goal Added In About Segment Name" , "Name");
+//	if(!showLinkTextInPage.contains(showLinkTextInXML)){
+//		throw new UIAutomationException( "'"+showLinkTextInXML +"' not found");
+//	}
+	
+	}
 	
 	
 	
