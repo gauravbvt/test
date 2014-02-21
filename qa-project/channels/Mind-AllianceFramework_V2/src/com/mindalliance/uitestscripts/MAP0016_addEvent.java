@@ -234,8 +234,8 @@ public class MAP0016_addEvent extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event Added To About Plan Segment");	*/
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event Added To About Plan Segment");	
+			*/
 			// Close Segment window
 			stepNo++;
 			description="Closed About Plan Segment";

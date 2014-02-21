@@ -137,22 +137,20 @@ public class MAP0005_DeletePlan extends TestCase {
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Plan Created");	
-			
- 			//Click Save button 
+		
+ 		    //Click Add Plan Button
  			stepNo++;
- 			description="Click Save button";
- 			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
-			channelsAdmin.clickSavePlanButton();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");	
-			
+ 			description="Click Add Plan Button";
+ 			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+ 			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 		 	Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan Button");	
+ 					
 			// Delete  Plan
 			stepNo++;
 			description="Plan Deleted";

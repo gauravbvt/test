@@ -198,7 +198,7 @@ public class MAP0017_deleteEvent extends TestCase{
  		    // Select After from Occurring dropdown list
  			stepNo++;
 			description="Select Option From Occurring Dropdown";
- 			planPage.selectFromOccurringDropdown(testData.get("After"));
+ 			planPage.selectFromOccurringDropdown(testData.get("AfterOption"));
  			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
@@ -351,7 +351,7 @@ public class MAP0017_deleteEvent extends TestCase{
 		 	this.testData.put("Show",oXmlEleMAP0017_deleteEvent.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AboutPlanSegment",oXmlEleMAP0017_deleteEvent.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        
-	        this.testData.put("After",oXmlEleMAP0017_deleteEvent.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AfterOption",oXmlEleMAP0017_deleteEvent.getElementsByTagName("afterOption").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Low",oXmlEleMAP0017_deleteEvent.getElementsByTagName("low").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Event",oXmlEleMAP0017_deleteEvent.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Event2",oXmlEleMAP0017_deleteEvent.getElementsByTagName("event2").item(0).getChildNodes().item(0).getNodeValue());
