@@ -135,7 +135,7 @@ public class CA0009_CreateTemplateWithoutOwnerName extends TestCase {
 			description="Enter Template name";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan1"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -235,6 +235,7 @@ public class CA0009_CreateTemplateWithoutOwnerName extends TestCase {
 	       	
 	        
 	        this.testData.put("AutomationTestPlan",oXmlEleCA0009_CreateTemplateWithoutOwnerName.getElementsByTagName("automationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AutomationTestPlan1",oXmlEleCA0009_CreateTemplateWithoutOwnerName.getElementsByTagName("automationTestPlan1").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0009_CreateTemplateWithoutOwnerName.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleCA0009_CreateTemplateWithoutOwnerName.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("PlanName",oXmlEleCA0009_CreateTemplateWithoutOwnerName.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());

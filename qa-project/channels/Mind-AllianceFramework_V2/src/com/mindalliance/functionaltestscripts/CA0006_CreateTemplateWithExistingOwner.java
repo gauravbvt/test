@@ -143,7 +143,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan2"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -179,7 +179,7 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			//Click Add button
 			stepNo++;
 			description="Click Add button";
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan3"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -286,7 +286,9 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 	        this.testData.put("Title",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("PlanName",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());
 	     //   this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
-		
+	        this.testData.put("AutomationTestPlan2",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("automationTestPlan2").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AutomationTestPlan3",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("automationTestPlan3").item(0).getChildNodes().item(0).getNodeValue());
+		       
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File CA0006_CreateTemplateWithExistingOwner can not be parsed.");

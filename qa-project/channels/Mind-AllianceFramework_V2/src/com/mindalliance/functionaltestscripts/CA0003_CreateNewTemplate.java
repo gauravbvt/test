@@ -143,7 +143,7 @@ public class CA0003_CreateNewTemplate extends TestCase {
 			// Enter Plan name
 			stepNo++;
 			description="Click Add Plan button";
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan1"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -237,6 +237,8 @@ public class CA0003_CreateNewTemplate extends TestCase {
 	        this.testData.put("ChannelsURL",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("PlanName",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AutomationTestPlan1",oXmlEleCA0003_CreateNewTemplate.getElementsByTagName("automationTestPlan1").item(0).getChildNodes().item(0).getNodeValue());
+	        
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File CA0003_CreateNewTemplate can not be parsed.");
