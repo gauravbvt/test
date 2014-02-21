@@ -6,4 +6,6 @@
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <planName>New Demo Plan v.1 (dev)</planName>
+<automationTestPlan2>Automation_Test_Plan_1</automationTestPlan2>
+<automationTestPlan3>Automation_Test_Plan_2</automationTestPlan3>
 </elements>
