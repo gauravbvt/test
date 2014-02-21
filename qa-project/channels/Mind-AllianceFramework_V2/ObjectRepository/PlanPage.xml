@@ -2283,11 +2283,6 @@
 		<Name></Name>
 	</Element>
 	
-	//<Element>
-		//<GivenName>Category in goal</GivenName>
-		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category')]</Xpath>
-		//<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</Name>
-	//</Element>
 	
 	<Element>
 		<GivenName>Organization in goal dropdown</GivenName>

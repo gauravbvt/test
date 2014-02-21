@@ -41,6 +41,11 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>New Plan Added Assertion Name</GivenName>
+ 		<Name>Settings not changed</Name>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Plan Name</GivenName>
  		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri')]</Xpath>
  		<Name></Name>
@@ -70,9 +75,19 @@
     	<ClassName></ClassName>
  	</Element>
  	
- 		<Element>
+ 	<Element>
  		<GivenName>Notification for same plan</GivenName>
  		<Xpath>/html/body/div[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>New Plan Added Assertion</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
