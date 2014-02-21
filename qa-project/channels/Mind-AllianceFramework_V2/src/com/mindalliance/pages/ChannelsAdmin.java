@@ -126,13 +126,11 @@ public class ChannelsAdmin {
 		
 		if(!TextInPage.contains(TextInXML)){
 		throw new UIAutomationException( "'"+TextInXML +"' not found");
-		}
-		
+		}		
 		
 //		String alert=dataController.getPageDataElements(fileName, "Invalid Template Notification", "Xpath");
 //		elementController.waitForElement("Name", "Invalid Template Notification Name");
 //		UIActions.assertAlert(alert);
-	
 	}
 	
 	/**
