@@ -22,7 +22,7 @@ public class Home {
 		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
 
 		//		View
-	/*	suite.addTestSuite(MAV0001_viewLoginPage.class);		
+		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
 		suite.addTestSuite(MAV0004_viewAdminHome.class);
@@ -146,7 +146,7 @@ public class Home {
     	suite.addTestSuite(MAV0269_ViewOrganizationsNetworkTab.class);
 		suite.addTestSuite(MAV0270_ViewOrganizationStructureTab.class);
 		suite.addTestSuite(MAV0272_ViewOrganizationAnalyticsTab.class);
-		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);*/
+		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
 /*		suite.addTestSuite(MAV0243_ShowRequirements.class);
 		suite.addTestSuite(MAV0245_ShowRequirementDefinition.class);
 		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
@@ -176,7 +176,7 @@ public class Home {
 		suite.addTestSuite(MAV0213_AttachReceiveSentAttachOption.class);
 */		
 		//		Plan
-/*		suite.addTestSuite(MAP0001_AddPlan.class);
+		suite.addTestSuite(MAP0001_AddPlan.class);
 		suite.addTestSuite(MAP0005_DeletePlan.class);
 		suite.addTestSuite(MAP0006_addOrganizations.class);
 		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
@@ -192,7 +192,7 @@ public class Home {
 		suite.addTestSuite(MAP0022_addGoal.class);
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-    	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);*/
+    	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
     	/*		suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 		suite.addTestSuite(MAP0004_DeleteUser.class);
@@ -209,7 +209,7 @@ public class Home {
 */
     	//		Command
 
-    /*	suite.addTestSuite(MAC0001_UndoAddSegment.class);
+    	suite.addTestSuite(MAC0001_UndoAddSegment.class);
 		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
 		suite.addTestSuite(MAC0003_UndoAddGoal.class);
 		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
@@ -232,7 +232,7 @@ public class Home {
 		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
     	suite.addTestSuite(MAC0045_RedoAddIssue.class);
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
-    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);*/
+    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
 /*		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
@@ -258,7 +258,7 @@ public class Home {
 		
     	// Channels Login
 
-    	/*suite.addTestSuite(CL0001_LoginPage.class);
+    	suite.addTestSuite(CL0001_LoginPage.class);
 		suite.addTestSuite(CL0007_ClickSignInButton.class);
 		suite.addTestSuite(CL0009_LogInvalidUserName.class);
 		suite.addTestSuite(CL0010_LoginWithInvalidPassword.class);
@@ -304,7 +304,7 @@ public class Home {
         suite.addTestSuite(MSGS0007_SendBlankMessage.class);
         suite.addTestSuite(MSGS0008_SendMessageToEveryone.class);
         suite.addTestSuite(MSGS0009_SendMessageToAllDevelopers.class);
-        suite.addTestSuite(MSGS0014_ResetMessage.class);*/
+        suite.addTestSuite(MSGS0014_ResetMessage.class);
         
         //Channels Admin
         suite.addTestSuite(CA0003_CreateNewTemplate.class);
@@ -313,13 +313,13 @@ public class Home {
         suite.addTestSuite(CA0007_CreateTemplateWithSpecialCharacters.class);
         suite.addTestSuite(CA0009_CreateTemplateWithoutOwnerName.class);
         suite.addTestSuite(CA0010_CreateNewBlankNameTemplate.class);
-     /*   suite.addTestSuite(CA0016_CreateUser.class);*/
-        /*suite.addTestSuite(CA0021_DisableUser.class);
+        suite.addTestSuite(CA0016_CreateUser.class);
+        suite.addTestSuite(CA0021_DisableUser.class);
         suite.addTestSuite(CA0025_CreateUserWithSameName.class);
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
-        suite.addTestSuite(CA0033_UpdateOwnerName.class);*/
+        suite.addTestSuite(CA0033_UpdateOwnerName.class);
         
-   /*     //Actions Popup Menu
+        //Actions Popup Menu
         suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
         suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
         suite.addTestSuite(TEMPACT0063_VerifyActionsMenuPresentInAboutTemplateSegmentWindow.class);
@@ -369,7 +369,7 @@ public class Home {
         suite.addTestSuite(TFP0001_VerifyReceivesPanelIsPresent.class);
         suite.addTestSuite(TFP0002_VerifySendsPanelIsPresent.class);
         suite.addTestSuite(TFP0003_AddInfoReceive.class);
-        suite.addTestSuite(TFP0004_AddInfoSends.class);*/
+        suite.addTestSuite(TFP0004_AddInfoSends.class);
         
         
 		return suite;
