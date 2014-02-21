@@ -23,7 +23,6 @@ public class BrowserController{
 	 * @throws UIAutomationException 
 	*/
 	
-	@SuppressWarnings("deprecation")
 	public void initializeDriver() throws UIAutomationException	{
 		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
 		try{

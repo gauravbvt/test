@@ -239,7 +239,7 @@ public class UIActions {
 	 */
 	public static void assertAlert(String assertMessage) {
 		int alertWaitTimeoutSeconds = Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
-
+      
 		Wait<WebDriver> wait = new WebDriverWait(GlobalVariables.configuration.getWebDriver(),alertWaitTimeoutSeconds);
 		Alert alert = wait.until(alertAvailable());
 
@@ -353,6 +353,15 @@ public class UIActions {
 		
 	}
 	
+
+	public static String getAlert(WebDriver webDriver)
+	{ 
+		
+		Alert alert = webDriver.switchTo().alert();
+		String alertText = alert.getText();
+		alert.accept();
+		return alertText;
+	}
 	
 //	/**
 //	 * Gets title of page
