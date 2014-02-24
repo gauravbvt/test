@@ -199,7 +199,6 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 	              
 	        Element oXmlEleAMHP0006_VerifyApplyButtonIsPresent = (Element) eleAMHP0006_VerifyApplyButtonIsPresent;
 	       	
-			this.testData.put("ChannelsURL",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("UserName",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Password",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
