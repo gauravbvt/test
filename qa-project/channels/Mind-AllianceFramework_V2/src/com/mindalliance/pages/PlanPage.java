@@ -1559,13 +1559,14 @@ public class PlanPage {
 			Thread.sleep(3000);
 		}
 		catch (Exception e) {}
-		// Assertion : Verify new issue is added 
+	/*	// Assertion : Verify new issue is added 
+	
 		elementController.requireElementSmart(fileName, "New Issue Text In Task Panel", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text In Task Panel");
 		headingOfWindowInPage=UIActions.getText(fileName, "New Issue Text In Task Panel", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text In Task Panel");
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "New Issue Actual Text", "Name");
 		if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
 			throw new UIAutomationException("'"+headingOfWindowInXML+"' not found");
-		}
+		}*/
 		break;	
 		
 	case "Plan Requirements":
@@ -3744,6 +3745,35 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		UIActions.enterKey(Keys.ENTER);
 	}
+	
+	/**
+	 * Activate Questionnaire
+	 * @throws UIAutomationException
+	 */
+	public void activateQuestionnaire() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Activate Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Activate Questionnaire");
+		UIActions.click(fileName,"Activate Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Activate Questionnaire");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Activate Questionnaire", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+		
+		//verifyQuestionnaireIsActivated();
+	}
+
+	public void verifyQuestionnaireIsActivated() throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Status Column In Questionnaires",GlobalVariables.configuration.getAttrSearchList(), "Status Column In Questionnaires");
+		String textInQuestionnairesTab=UIActions.getText(fileName,"Status Column In Questionnaires",GlobalVariables.configuration.getAttrSearchList(), "Status Column In Questionnaires");
+		String active=dataController.getPageDataElements(fileName,"Status Column In Questionnaires Text" , "Name");
+		if(!textInQuestionnairesTab.contains(active)){
+			throw new UIAutomationException( "'"+active +"' not found");
+		}
+	}
+
 	/**
 	 * Delete Questionnaire
 	 * @throws UIAutomationException
