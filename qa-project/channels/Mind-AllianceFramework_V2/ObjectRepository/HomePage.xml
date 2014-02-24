@@ -187,9 +187,9 @@
  	
  	<Element>
  		<GivenName>Cancel Feedback Button</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[4]/input</Xpath>
+ 		<Xpath>//input[contains(@class,'cancelSend')]</Xpath>
  		<Name></Name>
- 		<Id></Id>
+ 		<Id>id10f</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
@@ -504,7 +504,7 @@
  		<GivenName>Send Button In Messages Tab</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div[4]/input</Xpath>
  		<Name></Name>
- 		<Id></Id>
+ 		<Id>id140</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>

@@ -63,6 +63,14 @@
 		<Title>Delete this questionnaire?</Title>
 	</Element>
 	<Element>
+		<GivenName>Alert Window Title Of Activate Questionnaire</GivenName>
+		<Title>Activate this questionnaire?</Title>
+	</Element>
+	<Element>
+		<GivenName>Status Column In Questionnaires Text</GivenName>
+		<Name>ACTIVE</Name>
+	</Element>
+	<Element>
 		<GivenName>Alert Window Title Of Delete Event</GivenName>
 		<Title>Remove from segment context?</Title>
 	</Element>
@@ -2457,11 +2465,11 @@
 	
 	<Element>
 		<GivenName>New Issue Text In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span[2]/div/span/ol/li/span/span[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>(Minor) (No description)</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -3801,6 +3809,24 @@
 		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/a</Xpath>
 		<Name></Name>
 		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Activate Questionnaire</GivenName>
+		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/a[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Status Column In Questionnaires</GivenName>
+		<Xpath>//table[contains(@class,'data-table')]/tr/td[3]/span</Xpath>
+		<Name></Name>
+		<Id>id1d7</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
