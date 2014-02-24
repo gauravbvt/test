@@ -118,12 +118,13 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"Template Issues Link",GlobalVariables.configuration.getAttrSearchList(), "Template Issues Link");
 		UIActions.click(fileName,"Template Issues Link",GlobalVariables.configuration.getAttrSearchList(), "Template Issues Link");
 
-		// Assertion : Check Title of Page
-    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
-       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
-	
-       	UIActions.getText(fileName, "IssueSummaryReportPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
-	}
+		// Assertion : Check the text present on Issues Summary Report page
+		elementController.requireElementSmart(fileName,"Issue Summary Report Page Title",GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
+		String title1=UIActions.getText(fileName,"Issue Summary Report Page Title",GlobalVariables.configuration.getAttrSearchList(), "Issue Summary Report Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Issue Summary Report Page Title Name" , "Name");
+		if(!title1.contains(textInTitle)){
+			throw new UIAutomationException( "'"+textInTitle +"' not found");
+	}}
 	/**
 	 * Click on Template link on Issue Summary Report Page
 	 * @throws UIAutomationException
@@ -142,12 +143,14 @@ public class DomainPlanPage {
 	public void clickSurveysLink() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
 		UIActions.click(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
-
-		// Assertion : Check Title of Page
-    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
-       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+        
+		//Assertion: Check the text present on Surveys Page
+		elementController.requireElementSmart(fileName,"Surveys Page Title",GlobalVariables.configuration.getAttrSearchList(), "Surveys Page Title");
+		String surveysPageTitle=UIActions.getText(fileName,"Surveys Page Title",GlobalVariables.configuration.getAttrSearchList(), "Surveys Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Surveys Page Title Text" , "Name");
+		if(!surveysPageTitle.contains(textInTitle)){
+			throw new UIAutomationException( "'"+textInTitle +"' not found");}
 	
-       	UIActions.getText(fileName, "SurveysTitle", GlobalVariables.configuration.getAttrSearchList(), "Surveys Title");
 	}
 
 	/**
@@ -158,11 +161,13 @@ public class DomainPlanPage {
 		elementController.requireElementSmart(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
 		UIActions.click(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
 
-		// Assertion : Check Title of Page
-    	//String title1=dataController.getPageDataElements(fileName, "Issue Summary Report Page Title", "Title");
-       	//UIActions.waitForTitle(title1,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
-	
-       	UIActions.getText(fileName, "FeedbackAndRepliesTitle", GlobalVariables.configuration.getAttrSearchList(), "FeedbackAndRepliesTitle");
+		//Assertion: Check the text present on Surveys Page
+		elementController.requireElementSmart(fileName,"Feedback And Replies Page Title",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Page Title");
+		String feedbackPageTitle=UIActions.getText(fileName,"Feedback And Replies Page Title",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Feedback And Replies Page Title Text" , "Name");
+		if(!feedbackPageTitle.contains(textInTitle)){
+		throw new UIAutomationException( "'"+textInTitle +"' not found");}
+			
 	}
 
 	
