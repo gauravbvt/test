@@ -116,6 +116,7 @@ public class Home {
 		suite.addTestSuite(MAV0190_GoalsOption.class);
 		suite.addTestSuite(MAV0191_GoalsOptionUnchecked.class);
 		suite.addTestSuite(MAV0193_TaskAttachOptions.class);
+		suite.addTestSuite(MAV0194_TaskNewIssue.class);
 		suite.addTestSuite(MAV0195_TaskIssueDetails.class);
 		suite.addTestSuite(MAV0196_TaskIssueTypeOption.class);
 		suite.addTestSuite(MAV0197_TaskIssueSeverityOption.class);
@@ -319,6 +320,10 @@ public class Home {
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
         
+        //Issues Summary Report Page
+        suite.addTestSuite(ISR0001_ViewIssuesSummaryReport.class);
+        suite.addTestSuite(ISR0016_ClickTemplateLinkOnIssueSummaryReportPage.class);
+        
         //Actions Popup Menu
         suite.addTestSuite(TEMPACT0001_VerifyActionsPopupMenuPresentOnCollaborationTemplateEditorPage.class);
         suite.addTestSuite(TEMPACT0055_VerifyActionsPopupMenuPresentInAboutTemplateWindow.class);
@@ -364,13 +369,14 @@ public class Home {
         suite.addTestSuite(CPA0010_ClickActivitiesTab.class);
         suite.addTestSuite(CPA0020_SendMessageToAllDevelopers.class);
         suite.addTestSuite(CPA0022_SendMessageToEveryone.class);
+        suite.addTestSuite(CPA0006_ViewPresenceTab.class);
         
         //Task And Flow Panel
         suite.addTestSuite(TFP0001_VerifyReceivesPanelIsPresent.class);
         suite.addTestSuite(TFP0002_VerifySendsPanelIsPresent.class);
         suite.addTestSuite(TFP0003_AddInfoReceive.class);
         suite.addTestSuite(TFP0004_AddInfoSends.class);
-        
+        suite.addTestSuite(TFP0113_AddNewIssueInTask.class);
         
 		return suite;
 	}
