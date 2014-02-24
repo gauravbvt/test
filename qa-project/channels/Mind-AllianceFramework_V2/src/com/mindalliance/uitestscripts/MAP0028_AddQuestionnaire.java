@@ -34,7 +34,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * Test Case ID: MAP0023_removeGoal
+ * Test Case ID: MAP0028_AddQuestionnaire
  * Summary: Verify that Questionnaire can be added
  * @author afour
  *
@@ -263,7 +263,6 @@ public class MAP0028_AddQuestionnaire extends TestCase {
 	              
 	        Element oXmlEleMAP0028_AddQuestionnaire = (Element) eleMAP0028_AddQuestionnaire;           
 	        
-	        this.testData.put("ChannelsURL", oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Unnamed",oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("unnamed").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Learning", oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("learning").item(0).getChildNodes().item(0).getNodeValue());
