@@ -1,18 +1,17 @@
 package com.mindalliance.uitestscripts;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
@@ -27,17 +26,16 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
  * TestCase Id: MAV0194_TaskNewIssue 
- * Summary: Verify new issue is added in task panel
+ * Summary: Verify new issue details are entered in task panel
  * @author afour
  *
  */
-public class MAV0194_TaskNewIssue extends TestCase{
+public class MAV0194_TaskNewIssue extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAV0194_TaskNewIssue";
 	public String description=null;
@@ -138,7 +136,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
 			// Add New Segment
  			stepNo++;
 			description="Add New Segment";
-			PlanPage planPage = new PlanPage();
+			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			// Write log
@@ -168,7 +166,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Details Task");
-			
+				
 			// Click on 'New Issue' under 'Actions' pop up menu in task panel
 			stepNo++;
 			description="New Issue";
@@ -178,7 +176,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"New Issue");
-			
+		
 			// Remove This segment
  			stepNo++;
 			description="Remove This Segment";
@@ -238,8 +236,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
-			
-		}
+			}
 	}
 	
 	/**
@@ -276,7 +273,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
 			this.testData.put("Actions",oXmlEleMAV0194_TaskNewIssue.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("AddNewSegment",oXmlEleMAV0194_TaskNewIssue.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAV0194_TaskNewIssue.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			
+		
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0194_TaskNewIssue not found.");
@@ -288,5 +285,4 @@ public class MAV0194_TaskNewIssue extends TestCase{
 			throw new UIAutomationException("File MAV0194_TaskNewIssue can not be parsed.");
 		}
 	}
-	
 }
