@@ -92,7 +92,7 @@ public class CT0007_ClickSurveysLink extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verify that the Surveys page opens after clicking on Surveys link
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

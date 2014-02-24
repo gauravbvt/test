@@ -91,7 +91,7 @@ public class CT0009_ClickFeedbackAndRepliesLink extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verify that Feedback and Replies page opens after clicking the "Feedback And Replies" link
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

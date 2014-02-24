@@ -92,7 +92,7 @@ public class CT0005_ClickTemplateIssuesLink extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that home page is displayed after login to the Channels
+	 * This method verify that the Issues Summary Report Page is shown after "Template Issues" link is clicked
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 

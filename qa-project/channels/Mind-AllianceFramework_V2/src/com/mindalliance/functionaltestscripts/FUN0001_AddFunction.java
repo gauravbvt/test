@@ -95,7 +95,7 @@ public class FUN0001_AddFunction extends TestCase{
 	}
 	
 	/**
-	 * This method adds task to the plan and verify if the task is added
+	 * This method adds function to the task
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
