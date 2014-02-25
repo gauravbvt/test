@@ -148,6 +148,8 @@ public class Home {
 		suite.addTestSuite(MAV0270_ViewOrganizationStructureTab.class);
 		suite.addTestSuite(MAV0272_ViewOrganizationAnalyticsTab.class);
 		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
+		suite.addTestSuite(MAV0274_ViewEventAnalyticsTab.class);
+		suite.addTestSuite(MAV0275_ViewEventIssueTab.class);
 /*		suite.addTestSuite(MAV0243_ShowRequirements.class);
 		suite.addTestSuite(MAV0245_ShowRequirementDefinition.class);
 		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
@@ -159,8 +161,6 @@ public class Home {
 		suite.addTestSuite(MAV0252_ViewRequirementAfter.class);
 		suite.addTestSuite(MAV0253_ViewRequirementDuring.class);
 		suite.addTestSuite(MAV0254_ViewRequirementAtAnyEvent.class);
-		suite.addTestSuite(MAV0274_ViewEventAnalyticsTab.class);
-		suite.addTestSuite(MAV0275_ViewEventIssueTab.class);
 		suite.addTestSuite(MAV0201_AddInfoReceiveSendIntent.class);
 		suite.addTestSuite(MAV0271_ViewOrganizationAgreementTab.class);
 		suite.addTestSuite(MAV0102_viewHelpForm.class);
@@ -168,12 +168,9 @@ public class Home {
 		suite.addTestSuite(MAV0209_AddInfoReceiveSendAttachOptions.class);
 		suite.addTestSuite(MAV0103_viewHelpFormWithFeedback.class);
 		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
-		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);
-		suite.addTestSuite(MAV0007_logoutOnPlanPage.class);
 		suite.addTestSuite(MAV0125_copyFlow.class);
 		suite.addTestSuite(MAV0030_viewMapWindow.class);
 		suite.addTestSuite(MAV0157_viewSocialPanelCalender.class);
-		suite.addTestSuite(MAV0194_TaskNewIssue.class);
 		suite.addTestSuite(MAV0213_AttachReceiveSentAttachOption.class);
 */		
 		//		Plan
@@ -295,13 +292,21 @@ public class Home {
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
 		
 		//About Me Home Page
+		suite.addTestSuite(AMHP0001_ViewAboutMeTab.class);		
 		suite.addTestSuite(AMHP0009_InvalidEmail.class);
 		suite.addTestSuite(AMHP0010_BlankEmail.class);
 		suite.addTestSuite(AMHP0011_BlankName.class);
 		suite.addTestSuite(AMHP0012_InvalidName.class);
         suite.addTestSuite(AMHP0013_EditName.class);		
         
+        //My Password Home Page
+        suite.addTestSuite(MPHP0001_ViewMyPasswordTab.class);
+        
+        //What I Do Tab
+        suite.addTestSuite(WID0002_ViewWhatIDoTab.class);
+        
         //Messages
+        suite.addTestSuite(MSGS0001_ViewMessagesTabOnCollaborationTemplatePage.class);
         suite.addTestSuite(MSGS0007_SendBlankMessage.class);
         suite.addTestSuite(MSGS0008_SendMessageToEveryone.class);
         suite.addTestSuite(MSGS0009_SendMessageToAllDevelopers.class);
