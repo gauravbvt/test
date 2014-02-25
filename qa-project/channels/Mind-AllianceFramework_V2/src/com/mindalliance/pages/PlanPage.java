@@ -479,10 +479,12 @@ public class PlanPage {
 	public void verifyChecklistsIconIsPresentInTaskPanel() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Checklists Icon",GlobalVariables.configuration.getAttrSearchList(), "Checklists Icon");
 				
-		// Assertion : Check Icon is present on page
+		// Assertion : Verify Checklists Icon is present on page
 		String Xpath=dataController.getPageDataElements(fileName, "Checklists Icon", "Xpath");
 		System.out.println(Xpath);
-//       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+
+		elementController.waitForElement("Xpath", "Checklists Icon");
+		
 	}
 	
 	/**

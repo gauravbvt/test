@@ -163,6 +163,23 @@ public class HomePage {
 	}
 	
 	/**
+	 * 'clickAboutMeTab' method clicks on About Me Tab
+	 * @throws UIAutomationException 
+	 */
+	public void clickAboutMeTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"About Me Tab",GlobalVariables.configuration.getAttrSearchList(), "About Me Tab");
+		UIActions.click(fileName,"About Me Tab",GlobalVariables.configuration.getAttrSearchList(), "About Me Tab");
+		
+		// Assertion: Verify if the What I Do Tab is clicked
+		elementController.requireElementSmart(fileName,"About Me Tab",GlobalVariables.configuration.getAttrSearchList(), "About Me Tab");
+		String whatIDoTab=UIActions.getText(fileName,"About Me Tab",GlobalVariables.configuration.getAttrSearchList(), "About Me Tab");
+		
+		if(!whatIDoTab.contains(whatIDoTab)){
+			throw new UIAutomationException("What I Do Tab not selected");
+		}
+	}
+	
+	/**
 	 * 'verifyApplyButtonInAboutMe' method verifies that Apply button is present on home page
 	 * @throws UIAutomationException 
 	 */
