@@ -23,6 +23,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -73,6 +74,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			
 			
 		}catch(UIAutomationException ue){
 			stepNo++;
@@ -81,11 +84,13 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+			
 		}
 	}
 	
 	/**
-	 * This method adds event to the plan and verify if the event is added
+	 * This method clicks on Issues tab in the About Event window
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -100,7 +105,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+			
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -109,7 +115,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+							
  		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
@@ -118,7 +125,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+			
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -127,7 +135,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			 							
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+										
 			// Click on 'Events In Scope' under 'Scoping' pop up menu
  			stepNo++;
 			description="Event in Scope";
@@ -137,7 +146,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event in Scope");
+			
 			// Click default Event UNNAMED
  			stepNo++;
  			description="Default Event 'UNNAMED'";
@@ -145,15 +155,17 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Default Event 'UNNAMED'");
 			
- 			// Click Event's Analytics Tab
+ 			// Click Event's Issues Tab
  			stepNo++;
- 			description="Analytics Tab";
+ 			description="Issues Tab";
  			planPage.clickIssuesTabForEvent();
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Issues Tab");
+			
 			// Close Events window
  			stepNo++;
 			description="Close Event Window";
@@ -162,7 +174,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Event Window");
+			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -171,7 +184,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -180,7 +194,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -189,7 +204,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

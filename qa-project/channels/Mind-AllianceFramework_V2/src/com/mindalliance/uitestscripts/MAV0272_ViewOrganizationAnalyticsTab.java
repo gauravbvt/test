@@ -45,7 +45,7 @@ public class MAV0272_ViewOrganizationAnalyticsTab  extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -86,7 +86,7 @@ public class MAV0272_ViewOrganizationAnalyticsTab  extends TestCase{
 	}
 	
 	/**
-	 * This method adds organization to the plan and verify if the organization is added
+	 * This method clicks on Analytics tab in About Actual Organization window
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
