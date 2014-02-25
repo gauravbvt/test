@@ -2,6 +2,7 @@ package com.mindalliance.channels.db.data;
 
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Identifiable;
 
 import java.util.Date;
@@ -52,6 +53,7 @@ public interface PersistentPlanObject extends Timestamped, Identifiable, Channel
 
     /**
      * Get the full name of the owner.
+     *
      * @param communityService a community service
      * @return a string
      */

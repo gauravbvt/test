@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -370,9 +371,10 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
         AjaxLink newQuestionnaireButton = new AjaxLink( "newQuestionnaire" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                selectedQuestionnaire = new Questionnaire( getPlanCommunity(), getUsername() );
-                selectedQuestionnaire.setAbout( getDefaultAbout() );
-                questionnaireService.save( selectedQuestionnaire );
+                Questionnaire questionnaire = new Questionnaire( getPlanCommunity(), getUsername() );
+                questionnaire.setAbout( getDefaultAbout() );
+                questionnaireService.save( questionnaire );
+                setSelectedQuestionnaire( questionnaire );
                 addQuestionnaireTable();
                 target.add( questionnaireTable );
                 addQuestionnaireContainer();
@@ -386,16 +388,15 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
     public void changed( Change change ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) ) {
             QuestionnaireWrapper qw = (QuestionnaireWrapper) change.getSubject( getCommunityService() );
-            Questionnaire questionnaire = qw.getQuestionnaire();
-            if ( selectedQuestionnaire != null & questionnaire.equals( selectedQuestionnaire ) ) {
-                selectedQuestionnaire = questionnaireService.refresh( selectedQuestionnaire );
-            }
-            if ( change.isExpanded() ) {
-                if ( selectedQuestionnaire != null && questionnaire.equals( selectedQuestionnaire ) ) {
-                    setSelectedQuestionnaire( null );
-                } else {
-                    if ( !isLockedByOtherUser( questionnaire ) )
-                        setSelectedQuestionnaire( questionnaire );  // acquires lock
+            Questionnaire questionnaire = questionnaireService.refresh( qw.getQuestionnaire() );
+            if ( questionnaire != null ) {
+                if ( change.isExpanded() ) {
+                    if ( selectedQuestionnaire != null && questionnaire.equals( selectedQuestionnaire ) ) {
+                        setSelectedQuestionnaire( null ); // collapse
+                    } else {
+                        if ( !isLockedByOtherUser( questionnaire ) )
+                            setSelectedQuestionnaire( questionnaire );  // acquires lock
+                    }
                 }
             }
         } else {
@@ -407,24 +408,27 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) && change.isExpanded() ) {
             QuestionnaireWrapper qw = (QuestionnaireWrapper) change.getSubject( getCommunityService() );
-            if ( isLockedByOtherUser( qw.getQuestionnaire() ) ) {
-                addQuestionnaireTable();
-                target.add( questionnaireTable );
+            Questionnaire questionnaire = questionnaireService.refresh( qw.getQuestionnaire() );
+            if ( questionnaire != null ) {
+                if ( isLockedByOtherUser( questionnaire ) ) {
+                    addQuestionnaireTable();
+                    target.add( questionnaireTable );
+                } else {
+                    addQuestionnaireContainer();
+                    target.add( questionnaireContainer );
+                }
             } else {
-                addQuestionnaireContainer();
-                target.add( questionnaireContainer );
+                if ( change.isUpdated() && change.isForInstanceOf( Questionnaire.class ) ) {
+                    addQuestionnaireTable();
+                    target.add( questionnaireTable );
+                    addQuestionnaireLabel();
+                    target.add( questionnaireContainer );
+                } else {
+                    super.updateWith( target, change, updated );
+                }
             }
-        } else {
-            if ( change.isUpdated() && change.isForInstanceOf( Questionnaire.class ) ) {
-                addQuestionnaireTable();
-                target.add( questionnaireTable );
-                addQuestionnaireLabel();
-                target.add( questionnaireContainer );
-            } else {
-                super.updateWith( target, change, updated );
-            }
+            target.add( this );
         }
-        target.add( this );
     }
 
     public void clearSelectionWith( Releaseable releaseable ) {
@@ -517,11 +521,17 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
 
         public String getExpandLabel() {
             Questionnaire selected = getSelectedQuestionnaire();
-            return selected != null && selected.equals( questionnaire )
-                    ? "Close"
-                    : isLockedByOtherUser( questionnaire )
-                    ? ( getUserFullName( getLockOwner( questionnaire ) ) + " editing" )
-                    : "Edit";
+            if ( selected != null && isLockedByOtherUser( selected ) ) {
+                String lockOwnerUsername = getLockOwner( selected );
+                String fullName = lockOwnerUsername != null ? getUserFullName( lockOwnerUsername ) : "?";
+                return fullName + " is editing it";
+            } else {
+                return selected != null && selected.equals( questionnaire )
+                        ? "Close"
+                        : isLockedByOtherUser( questionnaire )
+                        ? ( getUserFullName( getLockOwner( questionnaire ) ) + " editing" )
+                        : "Edit";
+            }
         }
 
     }
@@ -537,7 +547,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
             initialize();
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns

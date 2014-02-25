@@ -26,17 +26,18 @@
         <input wicket:id="usedOnly" type="checkbox"/> only if used in surveys
     </div>
     <div wicket:id="questionnaires">[Questionnaires table]</div>
-    <input class="add-new-questionnaire" wicket:id="newQuestionnaire" type="button" value="Add new"/>
+    <input class="add-new-questionnaire" wicket:id="newQuestionnaire" type="button" value="Add new questionnaire"/>
 
     <div class="questionnaire-cont" wicket:id="questionnaire">
 
-        <a wicket:id="deleteQuestionnaire" class="button">Delete</a>
-        <a wicket:id="activateQuestionnaire" class="button">Activate</a>
-        <a wicket:id="retireQuestionnaire" class="button">Deactivate</a>
-
-
         <h4 class="questionnaire-label" wicket:id="questionnaireLabel">Questionnaire about event"</h4>
         <span wicket:id="questionnaireManager">[Questionnaire manager panel]</span>
+
+        <div>
+            <a wicket:id="deleteQuestionnaire" class="button">Delete questionnaire</a>
+            <a wicket:id="activateQuestionnaire" class="button">Activate questionnaire</a>
+            <a wicket:id="retireQuestionnaire" class="button">Deactivate questionnaire</a>
+        </div>
     </div>
 </wicket:panel>
 </body>

@@ -3,6 +3,7 @@ package com.mindalliance.channels.db.data;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.db.services.DataService;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -45,6 +46,7 @@ public class AbstractChannelsDocument implements ChannelsDocument {
     private String planUri;
     private int planVersion;
     private String classLabel;
+    private DataLock dataLock;
 
 
     public AbstractChannelsDocument() {
@@ -114,6 +116,14 @@ public class AbstractChannelsDocument implements ChannelsDocument {
 
     public void setUid( String uid ) {
         this.uid = uid;
+    }
+
+    public DataLock getDataLock() {
+        return dataLock;
+    }
+
+    public void setDataLock( DataLock dataLock ) {
+        this.dataLock = dataLock;
     }
 
     public String toString() {
@@ -210,4 +220,5 @@ public class AbstractChannelsDocument implements ChannelsDocument {
     public boolean isPersisted() {
         return getUid() != null;
     }
+
 }

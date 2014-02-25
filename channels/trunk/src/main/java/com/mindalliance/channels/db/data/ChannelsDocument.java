@@ -11,9 +11,13 @@ import org.springframework.data.domain.Sort;
  */
 public interface ChannelsDocument extends PersistentPlanObject {
 
-    static final Sort SORT_CREATED_DESC = new Sort(Sort.Direction.DESC, "created" );
+    static final Sort SORT_CREATED_DESC = new Sort( Sort.Direction.DESC, "created" );
 
     String getUid();
 
     void setUid( String uid );
+
+    DataLock getDataLock();
+
+    void setDataLock( DataLock dataLock );
 }

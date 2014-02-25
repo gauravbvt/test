@@ -105,7 +105,7 @@ public class Change implements Serializable {
         /**
          * Communication requested to other planner..
          */
-        Communicated,
+        Communicated, // subject is what the communication is about and the property is the target
         /**
          * Change failed because refresh needed.
          */
