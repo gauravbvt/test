@@ -46,6 +46,16 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Collaboration Templates Tab</GivenName>
+ 		<Xpath>//li[contains(@class,'tab0 selected')]</Xpath>
+ 		<Name></Name>
+ 		<Id>id192</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Plan Name</GivenName>
  		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri')]</Xpath>
  		<Name></Name>

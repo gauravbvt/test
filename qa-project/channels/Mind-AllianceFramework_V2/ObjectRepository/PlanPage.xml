@@ -458,7 +458,7 @@
 	
 	<Element>
 		<GivenName>Analytics Tab</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-tabs')]/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -468,7 +468,17 @@
 	
 	<Element>
 		<GivenName>Issues Tab For Event</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[3]/a/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-tabs')]/span[3]/a/span</Xpath>
+		<Name></Name>
+		<Id>id3fa</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Issue Column In Issues Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/table/thead/tr/th/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -823,9 +833,9 @@
 	
 	<Element>
 		<GivenName>Issues Tab</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[6]/a/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-tabs')]/span[6]/a/span</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id1ca</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>

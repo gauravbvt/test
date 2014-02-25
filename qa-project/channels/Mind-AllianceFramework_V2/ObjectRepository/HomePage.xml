@@ -98,6 +98,16 @@
 			<Title>hide broadcasts</Title>
 	</Element>
 	
+	<Element>
+			<GivenName>Add Attachment Panel On Collaboration Template Page Name</GivenName>
+			<Name>ADD ATTACHMENT</Name>
+	</Element>
+	
+	<Element>
+			<GivenName>Apply Button Name In About Me</GivenName>
+			<Name>Apply</Name>
+	</Element>
+	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
  		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
@@ -359,6 +369,16 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>About Me Tab</GivenName>
+ 		<Xpath>//li[contains(@class,'tab0 selected')]</Xpath>
+ 		<Name></Name>
+ 		<Id>idb4</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
  		<GivenName>Apply Button In About Me</GivenName>
  		<Xpath>//div[contains(@class,'buttons')]</Xpath>
  		<Name></Name>
@@ -366,6 +386,20 @@
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>What I Do</GivenName>
+ 		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>My User Privileges In What I Do</GivenName>
+ 		<Xpath>//div[contains(@class,'tabcontent-group')]/h3</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
  	</Element>
  	
  	<Element>
@@ -540,17 +574,26 @@
     	<ClassName></ClassName>
  	</Element>
  	
- <Element>
- 		<GivenName>Message Not Sent Notification</GivenName>
- 		<Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+    <Element>
+	   <GivenName>Message Not Sent Notification</GivenName>
+	   <Xpath>//div[contains(@class,'ui-notify')]</Xpath>
+	   <Name></Name>
+	   <Id>notifier</Id>
+	   <PartialLinkText></PartialLinkText>
+	   <LinkText></LinkText>
+	   <ClassName></ClassName>
+    </Element>
+
+   <Element>
+ 		<GivenName>Add Attachment Panel On Collaboration Template Page</GivenName>
+ 		<Xpath>//div[contains(@class,'attachment-panel-add-container')]</Xpath>
  		<Name></Name>
- 		<Id>notifier</Id>
+ 		<Id>idec</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
- 	
- 	
+	
  	<ImplicitWaitTimeMilliSecs>500</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
  	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
