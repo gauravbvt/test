@@ -2470,13 +2470,14 @@ public class PlanPage {
 	public void clickDefaultEvent() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
 		UIActions.click(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
+		
 		// Assertion : Verify 'About Event' window is present		
-	//	elementController.requireElementSmart(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
-	//	String headingOfWindowInPage=UIActions.getText(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
-	//	String headingOfWindowInXML=dataController.getPageDataElements(fileName, "About Event Unnamed Title Actual Text", "Title");
-	//	if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
-	//		throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
-	//	}
+		elementController.requireElementSmart(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+		String headingOfWindowInPage=UIActions.getText(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "About Event Unnamed Title Actual Text", "Title");
+		if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
 	}
 	
 	/**
@@ -2486,13 +2487,14 @@ public class PlanPage {
 	public void clickAnalyticsTab() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
 		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
-	//	 Assertion: Verify if the Default Event is clicked
-	//	elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
-	//	String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+	
+		//	 Assertion: Verify if the Default Event is clicked
+		elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		String analyticsTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
 		
-//		if(!networkTab.contains(networkTab)){
-//			throw new UIAutomationException("Analytics Tab not selected");
-//		}	
+		if(!analyticsTab.contains(analyticsTab)){
+			throw new UIAutomationException("Analytics Tab not selected");
+		}	
 	}
 	
 	/**
@@ -2503,12 +2505,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Issues Tab For Event",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab For Event");
 		UIActions.click(fileName,"Issues Tab For Event",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab For Event");
 	//	 Assertion: Verify if the Default Event is clicked
-	//	elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
-	//	String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		elementController.requireElementSmart(fileName,"Issue Column In Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issue Column In Issues Tab");
+		String issuesTab=UIActions.getText(fileName,"Issue Column In Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issue Column In Issues Tab");
 		
-//		if(!networkTab.contains(networkTab)){
-//			throw new UIAutomationException("Analytics Tab not selected");
-//		}	
+		if(!issuesTab.contains(issuesTab)){
+			throw new UIAutomationException("Issues Tab not selected");
+		}	
 	}
 	
 	/**

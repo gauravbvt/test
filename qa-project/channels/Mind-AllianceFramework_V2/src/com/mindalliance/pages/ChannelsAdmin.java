@@ -54,6 +54,23 @@ public class ChannelsAdmin {
 	}
 	
 	/**
+	 * Click the Collaboration Templates Tab
+	 * @throws UIAutomationException 
+	 */
+	public void clickCollaborationTemplatesTab() throws UIAutomationException
+	{
+		elementController.requireElementSmart(fileName,"Collaboration Templates Tab",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Templates Tab");
+		UIActions.click(fileName,"Collaboration Templates Tab",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Templates Tab");
+
+		elementController.requireElementSmart(fileName,"Collaboration Templates Tab",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Templates Tab");
+		String collaborationTemplatesTab=UIActions.getText(fileName,"Collaboration Templates Tab",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Templates Tab");
+		
+		if(!collaborationTemplatesTab.contains(collaborationTemplatesTab)){
+			throw new UIAutomationException("Collaboration Templates Tab not selected");
+		}
+	}
+	
+	/**
 	 * Click the Add Plan button
 	 * @throws UIAutomationException 
 	 */

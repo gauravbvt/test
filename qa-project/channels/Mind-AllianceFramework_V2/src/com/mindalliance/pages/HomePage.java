@@ -128,6 +128,41 @@ public class HomePage {
 	}
 	
 	/**
+	 * 'verifyAddAttachmentPanelPresentOnCollaborationTemplatePage' method verifies whether Add attachment panel is 
+	 * present on Collaboration Template Page
+	 * @throws UIAutomationException 
+	 */
+	public void verifyAddAttachmentPanelPresentOnCollaborationTemplatePage() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Add Attachment Panel On Collaboration Template Page",GlobalVariables.configuration.getAttrSearchList(), "Add Attachment Panel On Collaboration Template Page");
+		UIActions.click(fileName,"Add Attachment Panel On Collaboration Template Page",GlobalVariables.configuration.getAttrSearchList(), "Add Attachment Panel On Collaboration Template Page");
+		
+		// Assertion: Verify the text present on the Add attachment panel
+		elementController.requireElementSmart(fileName,"Add Attachment Panel On Collaboration Template Page",GlobalVariables.configuration.getAttrSearchList(), "Add Attachment Panel On Collaboration Template Page");
+		String tabTextInPage=UIActions.getText(fileName,"Add Attachment Panel On Collaboration Template Page",GlobalVariables.configuration.getAttrSearchList(), "Add Attachment Panel On Collaboration Template Page");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Add Attachment Panel On Collaboration Template Page Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+	}
+	
+	/**
+	 * 'clickWhatIDoTab' method clicks on What I Do Tab
+	 * @throws UIAutomationException 
+	 */
+	public void clickWhatIDoTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"What I Do",GlobalVariables.configuration.getAttrSearchList(), "What I Do");
+		UIActions.click(fileName,"What I Do",GlobalVariables.configuration.getAttrSearchList(), "What I Do");
+		
+		// Assertion: Verify if the What I Do Tab is clicked
+		elementController.requireElementSmart(fileName,"My User Privileges In What I Do",GlobalVariables.configuration.getAttrSearchList(), "My User Privileges In What I Do");
+		String whatIDoTab=UIActions.getText(fileName,"My User Privileges In What I Do",GlobalVariables.configuration.getAttrSearchList(), "My User Privileges In What I Do");
+		
+		if(!whatIDoTab.contains(whatIDoTab)){
+			throw new UIAutomationException("What I Do Tab not selected");
+		}
+	}
+	
+	/**
 	 * 'verifyApplyButtonInAboutMe' method verifies that Apply button is present on home page
 	 * @throws UIAutomationException 
 	 */
@@ -135,9 +170,9 @@ public class HomePage {
 		elementController.requireElementSmart(fileName,"Apply Button In About Me",GlobalVariables.configuration.getAttrSearchList(), "Apply Button In About Me");
 				
 		// Assertion : Check Button is present on page
-		String linkText=dataController.getPageDataElements(fileName, "Apply Button Name In About Me", "LinkText");
+		String linkText=dataController.getPageDataElements(fileName, "Apply Button Name In About Me", "Name");
 		System.out.println(linkText);
-//       	UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+  //      UIActions.waitForLinkText(linkText,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
@@ -407,9 +442,12 @@ public class HomePage {
 	
 		elementController.requireElementSmart(fileName,"My Password In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "My Password In Social Panel");
 		UIActions.click(fileName,"My Password In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "My Password In Social Panel");
-		
-		UIActions.getText(fileName, "My Password Tab Text", GlobalVariables.configuration.getAttrSearchList(), "My Password Tab Text");
-	
+
+		String TextInPage=UIActions.getText(fileName,"My Password In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "My Password In Social Panel");
+		String TextInXML=dataController.getPageDataElements(fileName,"My Password Tab Text" , "Name");
+		if(!TextInPage.contains(TextInXML)){
+			throw new UIAutomationException( "'"+TextInXML +"' not found");
+		}
 	}
 	
 	/**
