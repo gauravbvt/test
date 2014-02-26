@@ -117,7 +117,7 @@ public class CCS0001_VerifyCheckListsIconIsPresentInTaskPanel extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  			
- 			 // Domain Plans
+ 			// Domain Plans
  		    stepNo++;
  			description="Domain Plans";
  			DomainPlanPage domainPlanPage= new DomainPlanPage();
