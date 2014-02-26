@@ -124,7 +124,10 @@
 		<GivenName>Show Received Name</GivenName>
 		<Name>show received</Name>
 	</Element>
-	
+	<Element>
+ 		<GivenName>Surveys Page Title Text</GivenName>
+ 		<Name>Surveys About The</Name>
+ 	</Element>
 	<Element>
 		<GivenName>Classification Systems Window Title</GivenName>
 		<Title>Classification Systems</Title>
@@ -298,6 +301,12 @@
 		<GivenName>Messages Tab in Collaboration Panel Name</GivenName>
 		<Name>Messages</Name>
 	</Element>
+	
+	<Element>
+		<GivenName>All Surveys Text</GivenName>
+		<Name>Show surveys about</Name>
+	</Element>
+	
 	<Element>
 		<GivenName>Checklists Window Title</GivenName>
 		<Name>Unconfirmed Checklist</Name>
@@ -444,7 +453,6 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	
 	<Element>
 		<GivenName>Hide Collaboration Panel Button</GivenName>
 		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div/a/img</Xpath>
@@ -455,7 +463,6 @@
 		<ClassName></ClassName>
 	</Element>
 
-	
 	<Element>
 		<GivenName>Analytics Tab</GivenName>
 		<Xpath>//div[contains(@class,'fp-tabs')]/span[2]/a/span</Xpath>
@@ -2108,13 +2115,24 @@
 	</Element>
 	<Element>
 		<GivenName>Description In Actual Organization</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[3]/td/textarea</Xpath>
+		<Xpath>//textarea[contains(@name,'entity:fp-content:mo:aspect:mo-details:description')]</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id460</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Category In Actual Organization</GivenName>
+		<Xpath>//input[contains(@name,'entity:fp-content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType')]</Xpath>
+		<Name></Name>
+		<Id>id446</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Undo New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -2357,8 +2375,6 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	
-
 	<Element>
 		<GivenName>Undo Remove Goal</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -2458,6 +2474,16 @@
 		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Create Survey In Task Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id>id139</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
