@@ -54,6 +54,19 @@ public class ChannelsAdmin {
 	}
 	
 	/**
+	 * Delete owner name in 'Plan Owner' text box.
+	 * @throws UIAutomationException 
+	 */
+	public void deletePlanOwnerName()throws UIAutomationException
+	{
+		UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
+		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		UIActions.clearTextBox(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");;
+	}
+	
+	/**
 	 * Click the Collaboration Templates Tab
 	 * @throws UIAutomationException 
 	 */

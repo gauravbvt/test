@@ -2542,6 +2542,22 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Click Create Survey Button In Task Panel
+	 * @throws UIAutomationException
+	 */
+	public void clickCreateSurveyButtonInTaskPanel() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Create Survey In Task Panel", GlobalVariables.configuration.getAttrSearchList(),"Create Survey In Task Panel");
+        UIActions.click(fileName, "Create Survey In Task Panel", GlobalVariables.configuration.getAttrSearchList(), "Create Survey In Task Panel");   	
+	
+       /* //Assertion: Check the text present on Surveys Page
+        elementController.requireElementSmart(fileName,"All Surveys Title",GlobalVariables.configuration.getAttrSearchList(), "All Surveys Title");
+      	String surveysPageTitle=UIActions.getText(fileName,"All Surveys Title",GlobalVariables.configuration.getAttrSearchList(), "All Surveys Title");
+      	String textInTitle=dataController.getPageDataElements(fileName,"All Surveys Text" , "Name");
+      	if(!surveysPageTitle.contains(textInTitle)){
+      		throw new UIAutomationException( "'"+textInTitle +"' not found");}*/
+	}
+	
+	/**
 	 * Enter event in about plan window
 	 * @param eventName
 	 * @throws UIAutomationException
@@ -4795,6 +4811,18 @@ public class PlanPage {
 		UIActions.click(fileName,"Description In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
 		
 		UIActions.enterValueInTextBox(description,fileName,"Description In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
+		UIActions.enterKey(Keys.TAB);
+		
+	}
+	/**
+	 * Enters value in Categorization textbox in actual organization
+	 * @param category
+	 * @throws UIAutomationException
+	 */
+	public void enterCategoryInActualOrganization(String category) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Category In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Category In Actual Organization");
+		UIActions.click(fileName,"Category In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Category In Actual Organization");
+		UIActions.enterValueInTextBox(category,fileName,"Category In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
 		UIActions.enterKey(Keys.TAB);
 		
 	}
