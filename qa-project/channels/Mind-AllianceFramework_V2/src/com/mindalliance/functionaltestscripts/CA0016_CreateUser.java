@@ -79,8 +79,7 @@ public class CA0016_CreateUser extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Initialized");
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Initialized");	
 			
 		}
 		catch(UIAutomationException ue){
