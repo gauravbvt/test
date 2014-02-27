@@ -13,6 +13,8 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Objective;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Add missing goals, info needs and capabilities to implement function (as much as possible).
@@ -23,6 +25,12 @@ import com.mindalliance.channels.core.model.Segment;
  * Time: 8:45 PM
  */
 public class ImplementFunction extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ImplementFunction.class );
+
 
     public ImplementFunction() {
         super( "daemon" );
@@ -40,6 +48,7 @@ public class ImplementFunction extends AbstractCommand {
         return "implement function";
     }
 
+
     @Override
     public boolean canDo( Commander commander ) {
         try {
@@ -48,7 +57,8 @@ public class ImplementFunction extends AbstractCommand {
             return super.canDo( commander ) &&
                     part != null
                     && part.getFunction() != null
-                    && !part.getFunction().implementedBy( part, commander.getQueryService() );
+                    && !part.getFunction().implementedBy( part, commander.getQueryService() )
+                    && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
         } catch ( CommandException e ) {
             return false;
         }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.plan.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
@@ -49,9 +50,9 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
      * {@inheritDoc}
      */
     @Override
-    protected List<CommandWrapper> getCommandWrappers() {
+    protected List<CommandWrapper> getCommandWrappers( CommunityService communityService ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        if ( isLockable( ) ) {
+        if ( isLockable( communityService ) ) {
             commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(), getPlan() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

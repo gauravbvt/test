@@ -18,6 +18,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -25,6 +27,11 @@ import java.util.Iterator;
  * Command to remove a part from a segment after taking a copy.
  */
 public class RemovePart extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( RemovePart.class );
 
     public RemovePart() {
         super( "daemon" );
@@ -45,7 +52,16 @@ public class RemovePart extends AbstractCommand {
 
     @Override
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander ) && isNotDefaultPart( commander );
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && isNotDefaultPart( commander )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
     }
 
     private boolean isNotDefaultPart( Commander commander ) {

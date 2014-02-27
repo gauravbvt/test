@@ -29,6 +29,8 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
@@ -281,10 +283,22 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                                     && getUser().isPlannerOrAdmin( getPlan().getUri() ) )
                             ||
                             ( getPlan().isDevelopment()
-                                    && getUser().isPlannerOrAdmin( getPlan().getUri() ) ) ) )
+                                    && canLock( identifiable ) ) ) )
                     ) {
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
             }
+        }
+    }
+
+    private boolean canLock( Identifiable identifiable ) {
+        if ( identifiable instanceof SegmentObject ) {
+            SegmentObject segmentObject = (SegmentObject) identifiable;
+            return segmentObject.getSegment().isModifiabledBy( getUser().getUsername(), getCommunityService() );
+        } if ( identifiable instanceof Segment ) {
+            Segment segment = (Segment) identifiable;
+            return segment.isModifiabledBy( getUser().getUsername(), getCommunityService() );
+        } else {
+            return getUser().isPlannerOrAdmin( getPlan().getUri() );
         }
     }
 

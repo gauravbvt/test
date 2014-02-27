@@ -112,6 +112,12 @@ public class SegmentConverter extends AbstractChannelsConverter {
             context.convertAnother( goal );
             writer.endNode();
         }
+        // Owners
+        for ( String username : segment.getOwners() ) {
+            writer.startNode( "owner" );
+            writer.setValue( username );
+            writer.endNode();
+        }
         // Parts
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() ) {
@@ -219,6 +225,9 @@ public class SegmentConverter extends AbstractChannelsConverter {
                 Goal goal = (Goal) context.convertAnother( segment, Goal.class );
                 segment.addGoal( goal );
                 // Parts and flows
+            } else if ( nodeName.equals( "owner" ) ) {
+                String username = reader.getValue();
+                segment.addOwner( username );
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( segment, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {

@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.DisconnectAndRemoveSegment;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.PastePart;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
@@ -42,7 +43,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     }
 
     @Override
-    protected List<CommandWrapper> getCommandWrappers() {
+    protected List<CommandWrapper> getCommandWrappers( CommunityService communityService ) {
         final Segment segment = getSegment();
 
         String userName = getUser().getUsername();
@@ -53,7 +54,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                 newWrapper( new AddPart( userName, segment ) ),
                 newWrapper( new AddUserIssue( userName, segment ) ),
                 newWrapper( new AddSegment( userName ) ) ) );
-        if ( getLockManager().isLockableByUser( getUser().getUsername(), segment ) ) {
+        if ( segment.isModifiabledBy( userName, communityService ) && getLockManager().isLockableByUser( getUser().getUsername(), segment ) ) {
             commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveSegment( getUser().getUsername(), segment ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {

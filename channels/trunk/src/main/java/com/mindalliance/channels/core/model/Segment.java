@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -59,6 +61,11 @@ public class Segment extends ModelObject {
      * Goals (risk mitigations, gains to be made) for the segment.
      */
     private List<Goal> goals = new ArrayList<Goal>();
+
+    /**
+     * Usernames of developers who own the segment.
+     */
+    private List<String> owners = new ArrayList<String>(  );
 
     /**
      * Whether this segment is in the process of being deleted.
@@ -152,6 +159,42 @@ public class Segment extends ModelObject {
             part.getGoals().remove( goal );
         }
         goals.remove( goal );
+    }
+
+    public List<String> getOwners() {
+        return owners;
+    }
+
+
+    public boolean isOwnedBy( String username ) {
+        return getOwners().contains( username );
+    }
+
+    public void setOwners( List<String> owners ) {
+        this.owners = owners;
+    }
+
+    public void addOwner( String username ) {
+        if (!owners.contains( username) ) {
+            owners.add( username );
+        }
+    }
+
+    public void removeOwner( String username ) {
+        owners.remove( username );
+    }
+
+    public boolean isModifiabledBy( String username, CommunityService communityService ) {
+        ChannelsUser user = communityService.getUserRecordService().getUserWithIdentity( username );
+        return isModifiableBy( user, communityService );
+    }
+
+    public boolean isModifiableBy( ChannelsUser user, CommunityService communityService ) {
+        return user != null
+                && user.isPlannerOrAdmin( communityService.getPlan().getUri() )
+                && ( owners.isEmpty()
+                || owners.contains( user.getUsername() )
+                || user.isAdmin() );
     }
 
 
@@ -783,7 +826,6 @@ public class Segment extends ModelObject {
     public boolean isSegmentObject() {
         return false;
     }
-
 
 
 //=================================================

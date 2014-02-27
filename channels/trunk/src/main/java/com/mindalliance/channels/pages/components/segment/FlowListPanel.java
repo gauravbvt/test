@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -119,11 +120,16 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
-        newLink.setVisible( getPlan().isDevelopment() );
+        newLink.setVisible( getPlan().isDevelopment()
+                && getSegment().isModifiabledBy( getUsername(), getCommunityService() ) );
         addTipTitle( newLink, "Click to add a new " + ( isSends() ? "info capability" : "info need" ) );
         titleContainer.add( newLink );
         newLink.add( new Label( "addFlow", "Add +" ) );
         titleContainer.add( makeHelpIcon( "help", "info-sharing", isSends() ? "add-capability" : "add-need" ) );
+    }
+
+    private Segment getSegment() {
+        return getNode().getSegment();
     }
 
     private void addShowMenu() {

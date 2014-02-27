@@ -304,6 +304,10 @@ div.pathway ul li:hover ul li a {
     color: #727272;
 }
 
+div.pathway a.locked-breadcrumb:after {
+content: url('../images/lock_black_small.png');
+}
+
 div.pathway ul li:hover ul li a:hover {
     color: #333333;
 }
@@ -4065,6 +4069,15 @@ ul.attach li.controls {
     left: 2px;
     color: gray;
     font-size: xx-small;
+}
+
+div.explanation {
+    background: #E8E8E8;
+    border: 1px dashed #999999;
+    font-size: 11px;
+    font-style: normal;
+    margin: 15px 0 15px 0;
+    padding: 10px;
 }
 
 

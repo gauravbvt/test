@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import org.apache.wicket.model.IModel;
 
@@ -34,7 +35,7 @@ public abstract class ActionMenuPanel extends MenuPanel {
                 menuItems.add( getRedoMenuItem( "menuItem" ) );
             }
             // Commands
-            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
+            menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers( getCommunityService() ) ) );
          }
         return menuItems;
     }
@@ -48,12 +49,12 @@ public abstract class ActionMenuPanel extends MenuPanel {
 
     /**
      * Get command wrappers from which menu items will be constructed.
-     *
+     * @param communityService a community service
      * @return a list of command wrappers
      */
-    protected abstract List<CommandWrapper> getCommandWrappers();
+    protected abstract List<CommandWrapper> getCommandWrappers( CommunityService communityService );
 
-    protected boolean isLockable( ) {
+    protected boolean isLockable( CommunityService communityService ) {
         return getLockManager().isLockableByUser( getUser().getUsername(), getIdentifiable() );
     }
 

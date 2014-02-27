@@ -152,6 +152,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private WebMarkupContainer checklistIcon;
     private WebMarkupContainer partAndFlowsContainer;
     private WebMarkupContainer flowMapIssuesContainer;
+    private AjaxLink addPartLink;
 
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
@@ -223,7 +224,11 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addPartMenuBar() {
         addPartActionsMenu();
         addPartShowMenu();
-        AjaxLink addPartLink = new AjaxLink( "addPart" ) {
+        addAddPartButton();
+    }
+
+    private void addAddPartButton() {
+        addPartLink = new AjaxLink( "addPart" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Command command = new AddPart( getUser().getUsername(), getSegment() );
                 Change change = doCommand( command );
@@ -232,7 +237,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         };
         addTipTitle( addPartLink, "Click to add a new task" );
         addPartLink.setOutputMarkupId( true );
-        addPartLink.setVisible( getPlan().isDevelopment() );
+        makeVisible( addPartLink, getPlan().isDevelopment()
+                && getSegment().isModifiabledBy( getUsername(), getCommunityService() ) );
         partAndFlowsContainer.addOrReplace( addPartLink );
     }
 
@@ -546,6 +552,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         resizeSocialAndGuidePanels( target, change );
+        refreshAddPartButton( target );
         refreshMenus( target );
         Identifiable identifiable = change.getSubject( getCommunityService() );
         boolean stopUpdates = false;
@@ -602,6 +609,11 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     public void refreshFlowMapImage( AjaxRequestTarget target ) {
         flowMapDiagramPanel.refreshImage( target );
+    }
+
+    private void refreshAddPartButton( AjaxRequestTarget target ) {
+        addAddPartButton();
+        target.add( addPartLink );
     }
 
     /**

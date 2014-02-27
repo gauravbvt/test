@@ -39,12 +39,13 @@ public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
     public static final String ORGANIZATIONS = "organizations";
 
     public static final String SCENARIO = "scenario";
+    public static final String OWNERS = "owners";
     /**
      * Actionable aspects.
      */
-    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, SCENARIO, GOALS};
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, SCENARIO, GOALS, OWNERS};
 
-    private static final String[] ASPECTS = {DETAILS, SCENARIO, GOALS, ORGANIZATIONS };
+    private static final String[] ASPECTS = {DETAILS, SCENARIO, GOALS, ORGANIZATIONS, OWNERS };
 
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -101,6 +102,8 @@ public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
             return getSegmentGoalsPanel();
         } else if ( aspect.equals( ORGANIZATIONS ) ) {
             return getSegmentOrganizationsPanel();
+        } else if ( aspect.equals( OWNERS ) ) {
+            return getSegmentOwnersPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -127,6 +130,13 @@ public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
 
     private Component getSegmentOrganizationsPanel() {
         return new SegmentOrganizationsPanel(
+                "aspect",
+                new PropertyModel<Segment>( this, "segment" ),
+                getExpansions() );
+    }
+
+    private Component getSegmentOwnersPanel() {
+        return new SegmentOwnersPanel(
                 "aspect",
                 new PropertyModel<Segment>( this, "segment" ),
                 getExpansions() );

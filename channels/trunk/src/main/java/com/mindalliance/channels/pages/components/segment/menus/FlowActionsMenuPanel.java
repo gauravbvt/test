@@ -9,8 +9,10 @@ import com.mindalliance.channels.core.command.commands.DuplicateFlow;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -64,8 +66,8 @@ public class FlowActionsMenuPanel extends MenuPanel {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             // Undo and redo
-            menuItems.add( getUndoMenuItem( "menuItem" ) );
-            menuItems.add( getRedoMenuItem( "menuItem" ) );
+                menuItems.add( getUndoMenuItem( "menuItem" ) );
+                menuItems.add( getRedoMenuItem( "menuItem" ) );
 
             if ( getCommander().isTimedOut( getUser().getUsername() ) ) {
                 menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
@@ -77,6 +79,10 @@ public class FlowActionsMenuPanel extends MenuPanel {
 
             return menuItems;
         }
+    }
+
+    private Segment getSegment() {
+        return getPart().getSegment();
     }
 
     private List<CommandWrapper> getCommandWrappers( Flow flow ) {

@@ -37,6 +37,7 @@ public class AddSegment extends AbstractCommand {
         Long priorId = (Long) get( "segment" );
         Long priorDefaultPartId = (Long) get( "defaultPart" );
         Segment segment = commander.getQueryService().createSegment( priorId, priorDefaultPartId );
+        segment.addOwner( getUserName() );
         commander.getPlan().addSegment( segment );
         set( "segment", segment.getId() );
         set( "defaultPart", segment.getDefaultPart().getId() );

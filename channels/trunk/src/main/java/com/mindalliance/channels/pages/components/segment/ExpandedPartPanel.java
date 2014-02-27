@@ -248,7 +248,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private WebMarkupContainer timingContainer;
     /**
-     * Terminates sgement container.
+     * Terminates segment container.
      */
     private WebMarkupContainer terminatesEventPhaseContainer;
 

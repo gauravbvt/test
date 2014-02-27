@@ -108,7 +108,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
         return (Issue) getModel().getObject();
     }
 
-    private List<CommandWrapper> getCommandWrappers() {
+    private List<CommandWrapper> getCommandWrappers( ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {

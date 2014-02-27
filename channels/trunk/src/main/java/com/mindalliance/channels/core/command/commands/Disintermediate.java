@@ -19,6 +19,8 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +33,12 @@ import java.util.Set;
  * Remove a part from flows where the part acts as an intermediate.
  */
 public class Disintermediate extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Disintermediate.class );
+
 
     public Disintermediate() {
         super( "daemon" );
@@ -51,8 +59,18 @@ public class Disintermediate extends AbstractCommand {
 
     @Override
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander ) && isIntermediate( commander );
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() )
+                && isIntermediate( commander );
     }
+
 
     private boolean isIntermediate( Commander commander ) {
         try {

@@ -29,6 +29,7 @@ public class PagePathItem implements Serializable {
     private PageParameters pageParameters;
     private String name;
     private AjaxLink namedLink;
+    private boolean locked;
 
     public PagePathItem(  ) {
     }
@@ -45,12 +46,29 @@ public class PagePathItem implements Serializable {
         this.namedLink = namedLink;
     }
 
+    public PagePathItem( AjaxLink namedLink, boolean locked ) {
+        this.namedLink = namedLink;
+        this.locked = locked;
+    }
+
     public Component getLink() {
-        return namedLink != null
+        Component link = namedLink != null
                 ? getInPageLink()
                 : pageClass != null
                     ? getPageLink()
                     : makeEmptyLink();
+        if ( isLocked() ) {
+            link.add( new AttributeModifier( "class", "locked-breadcrumb") );
+        }
+        return link;
+    }
+
+    public void setLocked( boolean locked ) {
+        this.locked = locked;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     private BookmarkablePageLink<String> getPageLink() {

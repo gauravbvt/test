@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.Channels;
@@ -39,7 +40,7 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = super.getMenuItems();
         // Task mover
-        if ( isPlanner() )
+        if ( isPlanner() && getSegment().isModifiabledBy( getUsername(), getCommunityService() )  )
             menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Move tasks..." ) );
         // Locked
        /* Segment segment = getSegment();
@@ -52,9 +53,9 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
-    protected List<CommandWrapper> getCommandWrappers() {
+    protected List<CommandWrapper> getCommandWrappers( CommunityService communityService ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        if ( isLockable() ) {
+        if ( isLockable( communityService ) ) {
             commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(), getSegment() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

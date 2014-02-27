@@ -14,6 +14,8 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Segment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,13 @@ import java.util.Map;
  * Paste copied part.
  */
 public class PastePart extends AbstractCommand {
+
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PastePart.class );
+
 
     public PastePart() {
         super( "daemon" );
@@ -40,7 +49,16 @@ public class PastePart extends AbstractCommand {
 
     @Override
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander ) && commander.isPartCopied( getUserName() );
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && commander.isPartCopied( getUserName() )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
     }
 
     @Override

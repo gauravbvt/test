@@ -46,7 +46,7 @@ public class SatisfyAllNeeds extends AbstractCommand {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Part part = (Part) segment.getNode( (Long) get( "part" ) );
-            if ( part == null )
+            if ( part == null || !segment.isModifiabledBy( getUserName(), commander.getCommunityService() ) )
                 return false;
             else {
                 List<Flow[]> satisfactions = commander.getQueryService().findUntappedSatisfactions( part );

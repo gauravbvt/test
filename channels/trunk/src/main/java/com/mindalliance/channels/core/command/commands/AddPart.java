@@ -16,6 +16,8 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -23,6 +25,11 @@ import java.util.Map;
  * Command to add a new part to a segment.
  */
 public class AddPart extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AddPart.class );
 
     public AddPart() {
         this( "daemon" );
@@ -46,6 +53,19 @@ public class AddPart extends AbstractCommand {
     @Override
     public String getName() {
         return "add new task";
+    }
+
+    @Override
+    public boolean canDo( Commander commander ) {
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
     }
 
     @Override

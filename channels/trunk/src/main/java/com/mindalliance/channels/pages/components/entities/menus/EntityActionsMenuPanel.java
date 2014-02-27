@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
@@ -37,9 +38,9 @@ public class EntityActionsMenuPanel extends ActionMenuPanel {
     /**
      * {@inheritDoc}
      */
-    protected List<CommandWrapper> getCommandWrappers() {
+    protected List<CommandWrapper> getCommandWrappers( CommunityService communityService ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        if ( isLockable() ) {
+        if ( isLockable( communityService ) ) {
             commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(), getEntity() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

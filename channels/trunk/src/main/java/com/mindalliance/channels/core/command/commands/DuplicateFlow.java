@@ -17,8 +17,16 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DuplicateFlow extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( DuplicateFlow.class );
+
 
     public DuplicateFlow() {
         super( "daemon" );
@@ -54,6 +62,20 @@ public class DuplicateFlow extends AbstractCommand {
             throw new CommandException( "You need to refresh.", e );
         }
     }
+
+    @Override
+    public boolean canDo( Commander commander ) {
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
+    }
+
 
     @Override
     public boolean isUndoable() {

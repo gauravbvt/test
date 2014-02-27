@@ -29,10 +29,8 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
-import com.mindalliance.channels.pages.components.AbstractFloatingTabbedCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -880,7 +878,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     @Override
     public PagePathItem getSelectedInnerPagePathItem() {
-        return new PagePathItem( getSelectedSegmentLink() );
+        return new PagePathItem( getSelectedSegmentLink(), !getSegment().isModifiableBy( getUser(), getCommunityService() ) );
     }
 
     @Override
@@ -900,17 +898,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 update( target, new Change( Change.Type.Expanded, getSegment() ) );
             }
         };
-        // planPath.add( selectedSegmentLink );
         String segmentName = getSegment().getName();
         Label selectedSegmentNameLabel = new Label(
                 Breadcrumbable.PAGE_ITEM_LINK_NAME,
                 StringUtils.abbreviate( segmentName, SEGMENT_NAME_MAX_LENGTH )
         );
+        String title = "";
         if ( segmentName.length() > SEGMENT_NAME_MAX_LENGTH ) {
-            addTipTitle( selectedSegmentNameLabel, segmentName );
-        } else {
-            addTipTitle( selectedSegmentNameLabel, "Click to edit the segment's details" );
+            title = segmentName + " - ";
         }
+        title += "Click to see the segment's details.";
+        if ( !getSegment().isModifiableBy( getUser(), getCommunityService() ) ) {
+            title +=" (You are not allowed to modify it)";
+        }
+        addTipTitle( selectedSegmentNameLabel, title );
         selectedSegmentLink.add( selectedSegmentNameLabel );
         return selectedSegmentLink;
     }

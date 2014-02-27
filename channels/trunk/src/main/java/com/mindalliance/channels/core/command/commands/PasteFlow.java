@@ -18,6 +18,8 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -25,6 +27,12 @@ import java.util.Map;
  * Paste copied flow into edited part.
  */
 public class PasteFlow extends AbstractCommand {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PasteFlow.class );
+
 
     public PasteFlow() {
         super( "daemon" );
@@ -44,7 +52,16 @@ public class PasteFlow extends AbstractCommand {
 
     @Override
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander ) && commander.isFlowCopied( getUserName() );
+        Segment segment = null;
+        try {
+            segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        } catch( CommandException e ) {
+            LOG.warn( "Segment not found", e );
+            return false;
+        }
+        return super.canDo( commander )
+                && commander.isFlowCopied( getUserName() )
+                && segment.isModifiabledBy( getUserName(), commander.getCommunityService() );
     }
 
     @Override
