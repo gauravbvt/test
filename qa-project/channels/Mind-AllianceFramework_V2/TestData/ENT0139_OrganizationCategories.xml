@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<elements>
+<scoping>Scoping</scoping>
+<organizationsInScope>Organizations In Scope</organizationsInScope>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<organization2>Organization 2</organization2>
+<organization2Description>Organization 2 description</organization2Description>
+<category>Category1</category>
+</elements>
