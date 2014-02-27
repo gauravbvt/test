@@ -228,7 +228,6 @@ public class CA0005_CreateTemplateWithExistingId extends TestCase {
 	        this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0005_CreateTemplateWithExistingId.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0005_CreateTemplateWithExistingId.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleCA0005_CreateTemplateWithExistingId.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("PlanName",oXmlEleCA0005_CreateTemplateWithExistingId.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File CA0005_CreateTemplateWithExistingId can not be parsed.");

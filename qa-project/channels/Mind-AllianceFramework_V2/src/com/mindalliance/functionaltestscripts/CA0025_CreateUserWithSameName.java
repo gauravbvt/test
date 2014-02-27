@@ -132,7 +132,6 @@ public class CA0025_CreateUserWithSameName extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels Admin Page");
-			
 	
  			//Click Users tab
  			stepNo++;
@@ -145,21 +144,30 @@ public class CA0025_CreateUserWithSameName extends TestCase{
 			
 			// Add user
 			stepNo++;
-			description="User created";
+			description="User1 created";
+			channelsAdmin.addUser(testData.get("User"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"User Created");
+ 			
+ 			// Add user
+			stepNo++;
+			description="User2 created";
 			channelsAdmin.addUser(testData.get("User"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"User Created");
 			
- 		    // Add user with same name 
- 			stepNo++;
- 			description="Enter same username";
- 			channelsAdmin.addUser(testData.get("UserTwo"));
- 			// Write log
- 		 	LogFunctions.writeLogs(description);
- 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 		 	Log4J.getlogger(this.getClass()).info(testCaseId +"Enter same username");
+// 		    // Add user with same name 
+// 			stepNo++;
+// 			description="Enter same username";
+// 			channelsAdmin.addUser(testData.get("UserTwo"));
+// 			// Write log
+// 		 	LogFunctions.writeLogs(description);
+// 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 		 	Log4J.getlogger(this.getClass()).info(testCaseId +"Enter same username");
  					
 			//Sign Out from 'Admin' page
 			stepNo++;

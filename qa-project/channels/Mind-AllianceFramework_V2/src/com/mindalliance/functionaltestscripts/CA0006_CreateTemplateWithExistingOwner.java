@@ -139,15 +139,15 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Template name");
-						
-			//Click Add button
+				
+			// Enter Plan name
 			stepNo++;
-			description="Click Add button";
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan2"));
+			description="Click Add Plan button";
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan1"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add button");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add Plan button");	
 			
 			// Enter Owner name
 			stepNo++;
@@ -167,41 +167,14 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
 			
-			// Enter Plan name for second plan
+			//Delete the created template
 			stepNo++;
-			description="Enter New Template name";
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan1"));
+			description="Delete created template";
+			channelsAdmin.deletePlan(testData.get("AutomationTestPlan"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Template name");
-									
-			//Click Add button
-			stepNo++;
-			description="Click Add button";
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan3"));
-			// Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Add button");
-						
-			// Enter Same(Existing) Owner name
-			stepNo++;
-			description="Enter Same Owner name";
-			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
-			// Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Enter existing Owner name");
-						
-			//Click Save button to Save plan
-			stepNo++;
-			description="Click Save button";
-			channelsAdmin.clickSavePlanButton();
-			// Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Save button");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Delete created template");
 			
 			// Sign Out from 'Admin' page
 			stepNo++;
@@ -284,9 +257,6 @@ public class CA0006_CreateTemplateWithExistingOwner extends TestCase {
 	        this.testData.put("ChannelsURL",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("PlanName",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());
-	     //   this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AutomationTestPlan2",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("automationTestPlan2").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AutomationTestPlan3",oXmlEleCA0006_CreateTemplateWithExistingOwner.getElementsByTagName("automationTestPlan3").item(0).getChildNodes().item(0).getNodeValue());
 		       
 		}
 		catch(SAXException se){
