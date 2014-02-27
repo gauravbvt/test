@@ -23,7 +23,7 @@ public class Home {
 
 		//		View
 		suite.addTestSuite(MAV0001_viewLoginPage.class);		
-		/*suite.addTestSuite(MAV0002_viewHomePage.class);
+		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
 		suite.addTestSuite(MAV0004_viewAdminHome.class);
 		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);	
@@ -162,7 +162,7 @@ public class Home {
 		suite.addTestSuite(MAV0253_ViewRequirementDuring.class);
 		suite.addTestSuite(MAV0254_ViewRequirementAtAnyEvent.class);
 		suite.addTestSuite(MAV0201_AddInfoReceiveSendIntent.class);
-		suite.addTestSuite(MAV0271_ViewOrganizationAgreementTab.class);
+//		suite.addTestSuite(MAV0271_ViewOrganizationAgreementTab.class);
 		suite.addTestSuite(MAV0102_viewHelpForm.class);
 		suite.addTestSuite(MAV0208_AddInfoReceiveSendWithin.class);
 		suite.addTestSuite(MAV0209_AddInfoReceiveSendAttachOptions.class);
@@ -381,7 +381,7 @@ public class Home {
         suite.addTestSuite(TFP0002_VerifySendsPanelIsPresent.class);
         suite.addTestSuite(TFP0003_AddInfoReceive.class);
         suite.addTestSuite(TFP0004_AddInfoSends.class);
-        suite.addTestSuite(TFP0113_AddNewIssueInTask.class);*/
+        suite.addTestSuite(TFP0113_AddNewIssueInTask.class);
         
 		return suite;
 	}
