@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -73,6 +74,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+	 		
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -81,6 +84,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+	 		
 		}
 	}
 	
@@ -95,7 +100,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
+	 		
 			// Login page
 			stepNo++;
 			description="Login Successful";
@@ -104,8 +110,9 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
- 		// Domain Plans
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+	 					
+ 	    	// Domain Plans
  		    stepNo++;
  			description="Domain Plans";
  			DomainPlanPage domainPlanPage= new DomainPlanPage();
@@ -113,7 +120,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
  			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+	 		
 			// Plan Page
 		    stepNo++;
 			description="Domain Plan Editor";
@@ -122,7 +130,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");
+	 		
 			// Add New Segment
  			stepNo++;
 			description="Add New Segment";
@@ -132,8 +141,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+	 		
 			// Close segment window
 			stepNo++;
 			description="Close About Plan Segment Window";
@@ -141,8 +150,9 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'strench up' form icon
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+	 		
+			// Click on 'stretch up' form icon
 			planPage.clickStrenchUpForm();
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
@@ -151,7 +161,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Receives");
+	 		
 			// Click on 'Copy Need' under 'Actions' pop up menu
 			stepNo++;
 			description="Copy Need";
@@ -160,7 +171,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Copy Need");
+	 		
 			// Remove This segment
 			stepNo++;
 			description="Remove This Segment";
@@ -169,7 +181,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-				
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+	 				
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -178,7 +191,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+	 		
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -187,7 +201,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+	 		
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -196,7 +211,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
+	 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -215,7 +231,8 @@ public class MAV0224_AddInfoReceiveCopyNeed extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-		}
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+	 		}
 	}
 	
 	/**

@@ -185,10 +185,10 @@ public class MAV0190_GoalsOption extends TestCase{
 			description="Add Goal";
 			planPage.addGoal(testData.get("SelectgoalFromList"),testData.get("Type"),testData.get("Organization"));
 			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Goal");
-					
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Goal");
+
 			// Close segment window
 			stepNo++;
 			description="Close About Plan Segment Window";
@@ -196,12 +196,12 @@ public class MAV0190_GoalsOption extends TestCase{
 			// Strench up form
 			planPage.clickStrenchUpForm();
 			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			// Stretch up form
 			planPage.clickStrenchUpForm();
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
-						
+
 			/*// Select goal from dropdown list
 			stepNo++;
 			description="Goal From Drop Down";

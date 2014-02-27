@@ -20,6 +20,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
@@ -66,13 +67,16 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			loadTestData();
 			// Write log			
 			LogFunctions.writeLogs(description);
-						
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 					
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();		
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+ 			
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -81,6 +85,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Log4J.getlogger(this.getClass()).error(testCaseId +"Unable to initialize the driver");
+ 			
 		}
 	}
 	
@@ -95,6 +101,7 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"URL Entered");
  			
 			// Login page
 			stepNo++;
@@ -104,6 +111,7 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
  							
 			// Domain Plans
 			stepNo++;
@@ -113,7 +121,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");
+ 			
 			// Plan Page
 			stepNo++;
 			description="Navigated to Plan page";
@@ -122,7 +131,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");
+ 			
 			// Add New Segment
  			stepNo++;
 			description="Add New Segment";
@@ -132,17 +142,19 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");
+ 			
 			// Close segment window
 			stepNo++;
 			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
-			// Click on 'strench Up forms' icon 
+			// Click on 'stretch Up forms' icon 
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+ 			
 			// Click on 'Add' in sends panel
 			stepNo++;
 			description="Add Info Sends";
@@ -150,7 +162,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Sends");
+ 			
 			// Click on 'Show Advanced Form' in sends panel
 			stepNo++;
 			description="Advance Form - Sends Panel";
@@ -158,7 +171,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Advance Form - Sends Panel");
+ 			
 			// Click on 'Channels' dropdown in sends panel
 			stepNo++;
 			description="Channels - Sends Panel";
@@ -168,7 +182,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels - Sends Panel");
+ 			
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
@@ -176,7 +191,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Info Receives");
+ 			
 			// Click on 'Show advanced form' in receives panel
 			stepNo++;
 			description="Advance Form - Receives Panel";
@@ -184,7 +200,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Advance Form - Receives Panel");
+ 					
 			// Click on 'Channels' dropdown in receives panel
 			stepNo++;
 			description="Channels - Receives Panel";
@@ -194,7 +211,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels - Receives Panel");
+ 			
 			// Remove This segment
  			stepNo++;
 			description="Remove This Segment";
@@ -203,7 +221,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");
+ 						
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
@@ -212,7 +231,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"SignOut Successful");
+ 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -221,7 +241,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			Log4J.getlogger(this.getClass()).info(testCaseId +ue.getErrorMessage());
+ 			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -230,7 +251,8 @@ public class MAV0206_AddInfoReceiveSendChannels extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
+ 			
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    

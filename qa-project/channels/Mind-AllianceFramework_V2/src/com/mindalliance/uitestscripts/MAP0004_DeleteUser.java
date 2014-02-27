@@ -131,10 +131,19 @@ public class MAP0004_DeleteUser extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Channels Admin");	
 			
+ 		     // Click Users tab
+ 			stepNo++;
+			description="Click Users tab";
+		    ChannelsAdmin channelsAdmin=new ChannelsAdmin();
+			channelsAdmin.clickUsersTab();	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Click Users Tab");	
+			
 			// Add user
  			stepNo++;
 			description="Add User";
-		    ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));	
 			// Write log
  			LogFunctions.writeLogs(description);
