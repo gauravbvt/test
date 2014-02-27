@@ -311,20 +311,7 @@ public class Home {
         suite.addTestSuite(MSGS0008_SendMessageToEveryone.class);
         suite.addTestSuite(MSGS0009_SendMessageToAllDevelopers.class);
         suite.addTestSuite(MSGS0014_ResetMessage.class);
-        
-        //Channels Admin
-        suite.addTestSuite(CA0003_CreateNewTemplate.class);
-        suite.addTestSuite(CA0005_CreateTemplateWithExistingId.class);
-        suite.addTestSuite(CA0006_CreateTemplateWithExistingOwner.class);
-        suite.addTestSuite(CA0007_CreateTemplateWithSpecialCharacters.class);
-        suite.addTestSuite(CA0009_CreateTemplateWithoutOwnerName.class);
-        suite.addTestSuite(CA0010_CreateNewBlankNameTemplate.class);
-        suite.addTestSuite(CA0016_CreateUser.class);
-        suite.addTestSuite(CA0021_DisableUser.class);
-        suite.addTestSuite(CA0025_CreateUserWithSameName.class);
-        suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
-        suite.addTestSuite(CA0033_UpdateOwnerName.class);
-        
+    
         //Issues Summary Report Page
         suite.addTestSuite(ISR0001_ViewIssuesSummaryReport.class);
         suite.addTestSuite(ISR0016_ClickTemplateLinkOnIssueSummaryReportPage.class);
@@ -382,6 +369,21 @@ public class Home {
         suite.addTestSuite(TFP0003_AddInfoReceive.class);
         suite.addTestSuite(TFP0004_AddInfoSends.class);
         suite.addTestSuite(TFP0113_AddNewIssueInTask.class);
+       
+        //Channels Admin
+        suite.addTestSuite(CA0003_CreateNewTemplate.class);
+        suite.addTestSuite(CA0005_CreateTemplateWithExistingId.class);
+        suite.addTestSuite(CA0006_CreateTemplateWithExistingOwner.class);
+        suite.addTestSuite(CA0007_CreateTemplateWithSpecialCharacters.class);
+        suite.addTestSuite(CA0009_CreateTemplateWithoutOwnerName.class);
+        suite.addTestSuite(CA0010_CreateNewBlankNameTemplate.class);
+        suite.addTestSuite(CA0016_CreateUser.class);
+        suite.addTestSuite(CA0021_DisableUser.class);
+        suite.addTestSuite(CA0025_CreateUserWithSameName.class);
+        suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
+        suite.addTestSuite(CA0033_UpdateOwnerName.class);
+        
+        
         
 		return suite;
 	}
