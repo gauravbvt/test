@@ -699,9 +699,9 @@
 	
 	<Element>
 		<GivenName>Organization Name Textbox In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/fieldset/input</Xpath>
+		<Xpath>//input[contains(@name,'allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved')]</Xpath>
 		<Name>allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved</Name>
-		<Id></Id>
+		<Id>idce</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -3842,7 +3842,7 @@
 	</Element>
 	<Element>
 		<GivenName>Delete Querstionnaire</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/a</Xpath>
+		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/div/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
