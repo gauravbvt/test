@@ -105,6 +105,10 @@ public class UIActions {
 		GlobalVariables.configuration.getWebElement().clear();
 	}
 	
+	
+	public static void sendRefresh(){
+		GlobalVariables.configuration.getWebDriver().navigate().refresh();
+	}
 	/**
 	 * Gets the text value of WebElement
 	 */
