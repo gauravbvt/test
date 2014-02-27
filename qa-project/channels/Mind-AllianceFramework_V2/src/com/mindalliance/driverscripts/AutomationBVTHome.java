@@ -13,6 +13,7 @@ public class AutomationBVTHome {
 		suite.addTestSuite(MABVT0001_VerifyBrowsersVersion.class);
 		suite.addTestSuite(MABVT0002_VerifyOSInstalled.class);
 		suite.addTestSuite(MABVT0003_VerifyJavaVersion.class);
+		suite.addTestSuite(MABVT0004_VerifyXMLFiles.class);
 		suite.addTestSuite(MABVT0005_VerifyBrowsersInstalled.class);
 		return suite;
 	
