@@ -203,7 +203,6 @@ public class AMHP0006_VerifyApplyButtonIsPresent extends TestCase {
 			this.testData.put("UserName",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Password",oXmlEleAMHP0006_VerifyApplyButtonIsPresent.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 			
-			
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File AMHP0006_VerifyApplyButtonIsPresent can not be parsed.");
