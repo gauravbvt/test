@@ -4,7 +4,7 @@
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Mind-Alliance Concurrent User Testing" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
@@ -145,7 +145,7 @@
         <boolProp name="useGroupName">true</boolProp>
       </ResultCollector>
       <hashTree/>
-      <ResultCollector guiclass="AssertionVisualizer" testclass="ResultCollector" testname="Assertion Results" enabled="true">
+      <ResultCollector guiclass="AssertionVisualizer" testclass="ResultCollector" testname="Assertion Results" enabled="false">
         <boolProp name="ResultCollector.error_logging">true</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -242,7 +242,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">192.168.31.5</stringProp>
+        <stringProp name="HTTPSampler.domain">192.168.31.144</stringProp>
         <stringProp name="HTTPSampler.port">8080</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
@@ -256,7 +256,7 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">300</stringProp>
+          <stringProp name="LoopController.loops">10</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -8991,8 +8991,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1391496134000</longProp>
         <longProp name="ThreadGroup.end_time">1391496134000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -9006,14 +9006,16 @@
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -9313,14 +9315,16 @@
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -9448,7 +9452,7 @@
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -9515,7 +9519,7 @@
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -9582,16 +9586,16 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -9664,13 +9668,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-name&amp;template=Locking_TC004_UpdatePlan&amp;v=${planValue}&amp;random=0.403242238205${planValue}${planValue}074" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-name&amp;template=Locking_TC004_UpdatePlan&amp;v=${planValue}&amp;random=0.403242238205${planValue}${planValue}074" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="plan:fp-content:mo:aspect:name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">plan:fp-content:mo:aspect:name</stringProp>
-                <stringProp name="Argument.value">Locking TC004_UpdatePlan ${planValue}</stringProp>
+                <stringProp name="Argument.value">Locking TC004_UpdatePlan ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -9682,7 +9686,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-name&amp;template=Locking_TC004_UpdatePlan&amp;v=${planValue}&amp;random=0.403242238205${planValue}${planValue}074</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-name&amp;template=Locking_TC004_UpdatePlan&amp;v=${planValue}&amp;random=0.403242238205${planValue}${planValue}074</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -9745,23 +9749,25 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -9828,23 +9834,25 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">Locking_TC004_UpdatePlan</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -10004,7 +10012,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1379482304000</longProp>
         <longProp name="ThreadGroup.end_time">1379482304000</longProp>
@@ -10035,6 +10043,71 @@
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="j_username" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.name">j_username</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="j_password" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.name">j_password</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/login.do</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+              </elementProp>
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -10265,12 +10338,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -10389,12 +10464,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -10519,9 +10596,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -10604,9 +10681,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -10693,9 +10770,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -10704,12 +10781,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="q" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
@@ -10782,9 +10861,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -10865,9 +10944,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -10951,14 +11030,15 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.${planValue}3568504929304437" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.${planValue}3568504929304437" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="allEvents:content:tabs:panel:incidents:eventsDiv:event:${planValue}:name-container:name-input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">allEvents:content:tabs:panel:incidents:eventsDiv:event:${planValue}:name-container:name-input</stringProp>
-                <stringProp name="Argument.value">Event Locking</stringProp>
+                <stringProp name="Argument.value">Event Locking ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -10968,7 +11048,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.${planValue}3568504929304437</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-incidents-eventsDiv-event-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.${planValue}3568504929304437</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -11031,9 +11111,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -11211,7 +11291,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1379482693000</longProp>
         <longProp name="ThreadGroup.end_time">1379482693000</longProp>
@@ -11220,20 +11300,68 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -11259,52 +11387,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -11659,12 +11741,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -11724,12 +11808,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -11774,13 +11860,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-2-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-2-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-2-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-2-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -11789,12 +11884,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -11861,9 +11958,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -11872,12 +11969,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="q" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -11947,14 +12046,15 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved&amp;template=${template}&amp;v=${planValue}&amp;random=0.328860303${planValue}0423253" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved&amp;template=${template}&amp;v=${planValue}&amp;random=0.328860303${planValue}0423253" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved</stringProp>
-                <stringProp name="Argument.value">Org</stringProp>
+                <stringProp name="Argument.value">Locking Organization ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -11964,7 +12064,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved&amp;template=${template}&amp;v=${planValue}&amp;random=0.328860303${planValue}0423253</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-allOrganizations-fp~content-mo-aspect-newInvolvedContainer-newInvolved&amp;template=${template}&amp;v=${planValue}&amp;random=0.328860303${planValue}0423253</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -12027,9 +12127,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allOrganizations-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -12161,7 +12261,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1379482825000</longProp>
         <longProp name="ThreadGroup.end_time">1379482825000</longProp>
@@ -12170,20 +12270,66 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -12211,52 +12357,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -12734,13 +12834,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -12823,9 +12932,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -12909,9 +13018,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -12992,13 +13101,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.5088065${planValue}09032${planValue}37" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.5088065${planValue}09032${planValue}37" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="sg-editor:fp-content:mo:aspect:name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">sg-editor:fp-content:mo:aspect:name</stringProp>
-                <stringProp name="Argument.value">Segment</stringProp>
+                <stringProp name="Argument.value">Locking For Segment ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -13010,7 +13119,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.5088065${planValue}09032${planValue}37</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.5088065${planValue}09032${planValue}37</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -13073,9 +13182,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -13209,7 +13318,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1379482909000</longProp>
         <longProp name="ThreadGroup.end_time">1379482909000</longProp>
@@ -13218,20 +13327,68 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -13257,52 +13414,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -13722,12 +13833,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -13772,13 +13885,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-2-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -13787,12 +13909,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -13859,9 +13983,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -13942,9 +14066,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-header-tabs-2-tabLink" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-header-tabs-2-tabLink" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-header-tabs-2-tabLink</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-header-tabs-2-tabLink</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -14022,7 +14146,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-kind&amp;template=${template}&amp;v=${planValue}&amp;random=0.4659239556326723" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-kind&amp;template=${template}&amp;v=${planValue}&amp;random=0.4659239556326723" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:kind" elementType="HTTPArgument">
@@ -14030,6 +14154,7 @@
                 <stringProp name="Argument.name">sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:kind</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -14039,7 +14164,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-kind&amp;template=${template}&amp;v=${planValue}&amp;random=0.4659239556326723</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-kind&amp;template=${template}&amp;v=${planValue}&amp;random=0.4659239556326723</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -14099,7 +14224,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-category&amp;template=${template}&amp;v=${planValue}&amp;random=0.9${planValue}76204066${planValue}54443" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-category&amp;template=${template}&amp;v=${planValue}&amp;random=0.9${planValue}76204066${planValue}54443" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category" elementType="HTTPArgument">
@@ -14107,6 +14232,7 @@
                 <stringProp name="Argument.name">sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</stringProp>
                 <stringProp name="Argument.value">6</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -14116,7 +14242,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-category&amp;template=${template}&amp;v=${planValue}&amp;random=0.9${planValue}76204066${planValue}54443</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-category&amp;template=${template}&amp;v=${planValue}&amp;random=0.9${planValue}76204066${planValue}54443</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -14176,7 +14302,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-actualOrType&amp;template=${template}&amp;v=${planValue}&amp;random=0.4603630${planValue}0368953${planValue}" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-actualOrType&amp;template=${template}&amp;v=${planValue}&amp;random=0.4603630${planValue}0368953${planValue}" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType" elementType="HTTPArgument">
@@ -14184,6 +14310,7 @@
                 <stringProp name="Argument.name">sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -14193,7 +14320,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-actualOrType&amp;template=${template}&amp;v=${planValue}&amp;random=0.4603630${planValue}0368953${planValue}</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-actualOrType&amp;template=${template}&amp;v=${planValue}&amp;random=0.4603630${planValue}0368953${planValue}</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -14253,14 +14380,15 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.25246668995533383" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.25246668995533383" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:name</stringProp>
-                <stringProp name="Argument.value">goal</stringProp>
+                <stringProp name="Argument.value">Locking For Goal ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -14270,7 +14398,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.25246668995533383</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.25246668995533383</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -14333,9 +14461,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-fp~content-mo-aspect-goalsDiv-goal-0-organization-name</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -14422,9 +14550,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -14433,12 +14561,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -14501,9 +14631,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-sg~editor-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -14635,7 +14765,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1379483008000</longProp>
         <longProp name="ThreadGroup.end_time">1379483008000</longProp>
@@ -14644,20 +14774,68 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -14683,52 +14861,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -14959,12 +15091,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -15024,12 +15158,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -15083,12 +15219,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -15148,12 +15286,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -15198,13 +15338,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-controls-minimized" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-controls-minimized" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-controls-minimized</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-controls-minimized</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15213,12 +15362,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="random" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -15281,9 +15432,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-segment-partAndFlows-partShowMenu-items-0-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-segment-partAndFlows-partShowMenu-items-0-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-segment-partAndFlows-partShowMenu-items-0-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-segment-partAndFlows-partShowMenu-items-0-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15364,9 +15515,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15375,12 +15526,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="q" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
@@ -15453,9 +15606,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15539,14 +15692,15 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-segment-partAndFlows-part-task&amp;template=${template}&amp;v=${planValue}&amp;random=0.2859059${planValue}597229054" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-segment-partAndFlows-part-task&amp;template=${template}&amp;v=${planValue}&amp;random=0.2859059${planValue}597229054" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="segment:partAndFlows:part:task" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">segment:partAndFlows:part:task</stringProp>
-                <stringProp name="Argument.value">Task ${planValue}</stringProp>
+                <stringProp name="Argument.value">Locking For Task ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -15556,7 +15710,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-segment-partAndFlows-part-task&amp;template=${template}&amp;v=${planValue}&amp;random=0.2859059${planValue}597229054</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-segment-partAndFlows-part-task&amp;template=${template}&amp;v=${planValue}&amp;random=0.2859059${planValue}597229054</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -15619,9 +15773,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-task</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15708,9 +15862,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-partSummary" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-partSummary" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-partSummary</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-segment-partAndFlows-part-partSummary</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15787,9 +15941,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -15910,7 +16064,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Locking TC0010_AddFlow" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Locking TC0010_AddFlow" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -15932,7 +16086,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1345531791000</longProp>
         <longProp name="ThreadGroup.end_time">1345531791000</longProp>
@@ -15941,20 +16095,66 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -15982,52 +16182,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -16256,7 +16410,7 @@
               <elementProp name="template" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">template</stringProp>
-                <stringProp name="Argument.value">mindalliance_com_channels_plans_acme</stringProp>
+                <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -16438,13 +16592,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-scopingMenu-items-0-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -16527,9 +16690,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-tabs~container-tabs-${planValue}-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-tabs~container-tabs-${planValue}-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-tabs~container-tabs-${planValue}-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-tabs~container-tabs-${planValue}-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -16609,13 +16772,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?5-${planValue}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.0${planValue}78772${planValue}6${planValue}2033988" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.0${planValue}78772${planValue}6${planValue}2033988" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="allEvents:content:tabs:panel:phasesDiv:phase:${planValue}:name-container:name-input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">allEvents:content:tabs:panel:phasesDiv:phase:${planValue}:name-container:name-input</stringProp>
-                <stringProp name="Argument.value">Phase</stringProp>
+                <stringProp name="Argument.value">Phase ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -16627,7 +16790,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?5-${planValue}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.0${planValue}78772${planValue}6${planValue}2033988</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.3-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-${planValue}-name~container-name~input&amp;template=${template}&amp;v=${planValue}&amp;random=0.0${planValue}78772${planValue}6${planValue}2033988</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -16690,9 +16853,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -16771,9 +16934,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-0-name~container-phase~link-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-0-name~container-phase~link-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-0-name~container-phase~link-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-allEvents-content-tabs-panel-phasesDiv-phase-0-name~container-phase~link-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -16856,9 +17019,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -16944,13 +17107,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?5-${planValue}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.0072567533276988${planValue}7" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.0072567533276988${planValue}7" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="entity:fp-content:mo:aspect:mo-details:name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">entity:fp-content:mo:aspect:mo-details:name</stringProp>
-                <stringProp name="Argument.value">Phase ${planValue}</stringProp>
+                <stringProp name="Argument.value">Locking For Phase ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -16962,7 +17125,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?5-${planValue}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.0072567533276988${planValue}7</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.0072567533276988${planValue}7</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -17025,9 +17188,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -17114,9 +17277,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -17197,9 +17360,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">5-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-allEvents-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -17347,7 +17510,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1345535384000</longProp>
         <longProp name="ThreadGroup.end_time">1345535384000</longProp>
@@ -17356,20 +17519,68 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/channels/</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/login.do" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">user${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">admin</stringProp>
+                <stringProp name="Argument.value">@test123</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -17395,52 +17606,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
               </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.${planValue}; WOW64; rv:25.0) Gecko/20${planValue}00${planValue}0${planValue} Firefox/25.0</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${planValue}92.${planValue}68.3${planValue}.5:8080/channels/login.html</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/channels/</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
                 <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
@@ -17918,13 +18083,22 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form-planShowMenu-items-${planValue}-menuItem-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18007,9 +18181,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18098,9 +18272,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18186,13 +18360,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-plan-fp~content-mo-aspect-locale&amp;template=${template}&amp;v=${planValue}&amp;random=0.588503459255024" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-plan-fp~content-mo-aspect-locale&amp;template=${template}&amp;v=${planValue}&amp;random=0.588503459255024" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="plan:fp-content:mo:aspect:locale" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">plan:fp-content:mo:aspect:locale</stringProp>
-                <stringProp name="Argument.value">Places</stringProp>
+                <stringProp name="Argument.value">Places ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -18204,7 +18378,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-plan-fp~content-mo-aspect-locale&amp;template=${template}&amp;v=${planValue}&amp;random=0.588503459255024</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-plan-fp~content-mo-aspect-locale&amp;template=${template}&amp;v=${planValue}&amp;random=0.588503459255024</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -18267,9 +18441,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18278,12 +18452,14 @@
                 <stringProp name="Argument.name">template</stringProp>
                 <stringProp name="Argument.value">${template}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="v" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">v</stringProp>
                 <stringProp name="Argument.value">${planValue}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="q" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -18356,9 +18532,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale~link-link" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale~link-link" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale~link-link</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-plan-fp~content-mo-aspect-locale~link-link</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18439,9 +18615,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.0-indicator-big~form</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.0-indicator-big~form</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18522,9 +18698,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18608,13 +18784,13 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.883687827284${planValue}469" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.883687827284${planValue}469" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="entity:fp-content:mo:aspect:mo-details:name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">entity:fp-content:mo:aspect:mo-details:name</stringProp>
-                <stringProp name="Argument.value">Places ${planValue}</stringProp>
+                <stringProp name="Argument.value">Locking For Places ${Counter}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -18626,7 +18802,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">/channels/template?4-${planValue}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.883687827284${planValue}469</stringProp>
+          <stringProp name="HTTPSampler.path">/channels/template?${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.2-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name&amp;template=${template}&amp;v=${planValue}&amp;random=0.883687827284${planValue}469</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -18689,9 +18865,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-fp~content-mo-aspect-mo~details-name</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -18778,9 +18954,9 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/template" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close" elementType="HTTPArgument">
+              <elementProp name="${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">4-${planValue}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close</stringProp>
+                <stringProp name="Argument.name">${ChannelsRegex_g1}-${ChannelsRegex_g2}.IBehaviorListener.${planValue}-indicator-big~form-entity-moveBar-close</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata"></stringProp>
               </elementProp>
@@ -19813,6 +19989,15 @@
           </HeaderManager>
           <hashTree/>
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
+            <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
             <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
@@ -21862,7 +22047,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ChannelsRegex" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ChannelsRegex</stringProp>
             <stringProp name="RegexExtractor.regex">(\d+)-(\d+).IBehaviorListener</stringProp>
