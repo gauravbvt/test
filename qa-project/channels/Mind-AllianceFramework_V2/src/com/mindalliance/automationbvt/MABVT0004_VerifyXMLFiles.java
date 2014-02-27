@@ -4,9 +4,12 @@ import java.io.File;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
-public class MABVT0004_VerifyXMLFiles {
+public class MABVT0004_VerifyXMLFiles extends TestCase{
 	
 	@Test
 	public void test() throws Exception {
