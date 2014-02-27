@@ -153,14 +153,20 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 		String TextInPage=UIActions.getText(fileName,"Invalid Template Notification",GlobalVariables.configuration.getAttrSearchList(), "Invalid Template Notification");
 		String TextInXML=dataController.getPageDataElements(fileName,"Invalid Template Notification Name" , "Name");
+		System.out.println(GlobalVariables.configuration.getWebDriver().getTitle());
 		
 		if(!TextInPage.contains(TextInXML)){
 		throw new UIAutomationException( "'"+TextInXML +"' not found");
 		}		
+	
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-//		String alert=dataController.getPageDataElements(fileName, "Invalid Template Notification", "Xpath");
-//		elementController.waitForElement("Name", "Invalid Template Notification Name");
-//		UIActions.assertAlert(alert);
+		UIActions.sendRefresh();
 	}
 	
 	/**
@@ -207,7 +213,7 @@ public class ChannelsAdmin {
 	 */
 	public void deletePlan(String planName) throws UIAutomationException{
 		
-		selectPlan(planName);
+		//selectPlan(planName);
 		
 		elementController.requireElementSmart(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
 		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
@@ -247,7 +253,7 @@ public class ChannelsAdmin {
 	 * @throws UIAutomationException
 	 */
 	public void addUser(String userName) throws UIAutomationException{
-		
+		UIActions.sendRefresh();
 		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.enterValueInTextBox(userName,fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
@@ -260,15 +266,15 @@ public class ChannelsAdmin {
 			Thread.sleep(4000);
 		}
 		catch(Exception e){}
-		/*if(userName.equals(userName))
-		{
-			elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
-			String tabTextInPage=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
-			String tabTextInXML=dataController.getPageDataElements(fileName,"Settings changed notification for users Name" , "Name");
-			if(!tabTextInPage.contains(tabTextInXML)){
-			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-			}
-		}*/
+//		if(userName.equals(userName))
+//		{
+//			elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+//			String tabTextInPage=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
+//			String tabTextInXML=dataController.getPageDataElements(fileName,"Settings changed notification for users Name" , "Name");
+//			if(!tabTextInPage.contains(tabTextInXML)){
+//			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+//			}
+//		}
 		
 	}
 	

@@ -213,6 +213,7 @@ public class HeaderController {
 	 * @throws UIAutomationException 
 	 */
 	public void signOutAdmin() throws UIAutomationException{
+		UIActions.sendRefresh();
 		elementController.requireElementSmart(fileName, "Sign Out Admin", GlobalVariables.configuration.getAttrSearchList(), "Sign out admin Button");
 	    UIActions.click(fileName, "Sign Out Admin", GlobalVariables.configuration.getAttrSearchList(), "Sign out admin Button");
 	    
