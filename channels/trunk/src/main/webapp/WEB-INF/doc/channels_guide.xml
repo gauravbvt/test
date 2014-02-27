@@ -1462,6 +1462,12 @@
 
                         Two segments are connected by the flows that span them and by how a task in one segment can
                         start or end an events, thus initiating the other segment.
+
+                        A segment can be owned by one or more developers, or by none. If owned then only its owners
+                        (and administrators) are allowed to modify it (in the development version of the template),
+                        otherwise all developers can modify the segment.
+                        A segment is initially owned by the developer who created it.
+                        Ownership of a segment can be changed by its owners and by administrators.
                     </description>
                 </item>
             </topic>
@@ -2448,6 +2454,7 @@
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
+                <next section="scoping" topic="segment-owners"/>
             </topic>
             <topic id="segment-details">
                 <name>Segment details</name>
@@ -2465,6 +2472,7 @@
                 </item>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
+                <next section="scoping" topic="segment-owners"/>
             </topic>
             <topic id="segment-scenario">
                 <name>Define a segment's planning scenario</name>
@@ -2481,6 +2489,7 @@
                 </item>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-goals"/>
+                <next section="scoping" topic="segment-owners"/>
             </topic>
             <topic id="segment-goals">
                 <name>Define a segment's goals</name>
@@ -2508,6 +2517,27 @@
                     </script>
                 </item>
                 <next section="scoping" topic="all-goals"/>
+            </topic>
+            <topic id="segment-owners">
+                <name>Segment owners and editing privileges</name>
+                <item>
+                    <description>
+                        A segment can be owned by one or more developers, or by none. If it is owned, then only its owners (and
+                        administrators) can make changes to the segment, including removing it.
+
+                        [[File:segment_ownership.png|Managing segment ownership]]
+
+                        If it is not owned by anyone then all developers (and administrators) can modify the segment.
+
+                        Modifications to a segment controlled by ownership include...
+                        * changing its details (name, description, tags etc.)
+                        * changing its planning scenario
+                        * changing its goals
+                        * adding or removing owners (an owner can resign his/her own ownership)
+
+                        A segment is initially owned by the developer who added it to the collaboration template.
+                    </description>
+                </item>
             </topic>
             <topic id="all-goals">
                 <name>All goals</name>

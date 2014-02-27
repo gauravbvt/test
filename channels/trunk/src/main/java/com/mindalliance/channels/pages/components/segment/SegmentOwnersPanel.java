@@ -105,24 +105,24 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
     private void addOwnersTable() {
         segmentOwnersTable = new SegmentOwnersTable(
                 "ownersTable",
-                new PropertyModel<List<SegmentOwner>>( this, "segmentOwners" ) );
+                new PropertyModel<List<SegmentOwnership>>( this, "segmentOwnerships" ) );
         addOrReplace( segmentOwnersTable );
     }
 
-    public List<SegmentOwner> getSegmentOwners() {
-        List<SegmentOwner> segmentOwners = new ArrayList<SegmentOwner>();
+    public List<SegmentOwnership> getSegmentOwnerships() {
+        List<SegmentOwnership> segmentOwnerships = new ArrayList<SegmentOwnership>();
         String uri = getPlan().getUri();
         for ( ChannelsUser user : getCommunityService().getUserRecordService().getAllEnabledUsers() ) {
             if ( user.isPlannerOrAdmin( uri ) ) {
-                segmentOwners.add( new SegmentOwner( user ) );
+                segmentOwnerships.add( new SegmentOwnership( user ) );
             }
         }
-        return segmentOwners;
+        return segmentOwnerships;
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof SegmentOwner ) {
-            if ( action.equals( "owner" ) ) {
+        if ( object instanceof SegmentOwnership ) {
+            if ( action.equals( "user" ) ) {
                 addNote();
                 target.add( note );
                 addOwnersTable();
@@ -131,47 +131,47 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
         }
     }
 
-    public class SegmentOwner implements Serializable {
+    public class SegmentOwnership implements Serializable {
 
-        private ChannelsUser owner;
+        private ChannelsUser user;
 
-        public SegmentOwner( ChannelsUser user ) {
-            this.owner = user;
+        public SegmentOwnership( ChannelsUser user ) {
+            this.user = user;
         }
 
-        public boolean isOwner() {
+        public boolean getUser() {
             return getSegment().isOwnedBy( getOwnerUsername() );
         }
 
-        public void setOwner( boolean val ) {
+        public void setUser( boolean val ) {
             doCommand(
                     new UpdatePlanObject(
                             getUsername(),
                             getSegment(),
                             "owners",
-                            owner.getUsername(),
+                            user.getUsername(),
                             val ? UpdateObject.Action.Add : UpdateObject.Action.Remove )
             );
         }
 
         public String getOwnerUsername() {
-            return owner.getUsername();
+            return user.getUsername();
         }
 
         public String getNormalizedFullName() {
-            return owner.getNormalizedFullName();
+            return user.getNormalizedFullName();
         }
 
         public String getPrivileges() {
             StringBuilder sb = new StringBuilder(  );
-            if ( owner.isAdmin() ) {
+            if ( user.isAdmin() ) {
                 sb.append("Administrator");
             }
-            if ( owner.isPlanner( getPlan().getUri() ) ) {
+            if ( user.isPlanner( getPlan().getUri() ) ) {
                 if ( sb.length() > 0 ) sb.append(", ");
                 sb.append( "Developer");
             }
-            if ( isOwner() ) {
+            if ( getUser() ) {
                 if ( sb.length() > 0 ) sb.append(", ");
                 sb.append( "Owner");
             }
@@ -180,21 +180,21 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
 
         public boolean isCanBeChanged() {
             return isLockedByUser( getSegment() )
-                    && owner.isPlanner( getPlan().getUri() );
+                    && user.isPlanner( getPlan().getUri() );
         }
 
         public String getCanModifyYesNo() {
-            return getSegment().isModifiableBy( owner, getCommunityService() )
+            return getSegment().isModifiableBy( user, getCommunityService() )
                     ? "Yes"
                     : "No";
         }
     }
 
-    private class SegmentOwnersTable extends AbstractTablePanel<SegmentOwner> {
+    private class SegmentOwnersTable extends AbstractTablePanel<SegmentOwnership> {
 
-        private IModel<List<SegmentOwner>> segmentOwners;
+        private IModel<List<SegmentOwnership>> segmentOwners;
 
-        private SegmentOwnersTable( String s, IModel<List<SegmentOwner>> segmentOwners ) {
+        private SegmentOwnersTable( String s, IModel<List<SegmentOwnership>> segmentOwners ) {
             super( s );
             this.segmentOwners = segmentOwners;
             initTable();
@@ -202,16 +202,16 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            final List<IColumn<SegmentOwner>> columns = new ArrayList<IColumn<SegmentOwner>>();
+            final List<IColumn<SegmentOwnership>> columns = new ArrayList<IColumn<SegmentOwnership>>();
             columns.add( makeColumn( "Name", "normalizedFullName", EMPTY ) );
             columns.add( makeColumn( "User id", "ownerUsername", EMPTY ) );
             columns.add( makeColumn( "Privileges", "privileges", EMPTY ) );
-            columns.add( makeCheckBoxColumn( "Is owner", "owner", "canBeChanged", SegmentOwnersPanel.this ) );
+            columns.add( makeCheckBoxColumn( "Is owner", "user", "canBeChanged", SegmentOwnersPanel.this ) );
             columns.add( makeColumn( "Can modify", "canModifyYesNo", EMPTY ) );
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "segmentOwners",
                     columns,
-                    new SortableBeanProvider<SegmentOwner>( segmentOwners.getObject(), "normalizedFullName" ),
+                    new SortableBeanProvider<SegmentOwnership>( segmentOwners.getObject(), "normalizedFullName" ),
                     getPageSize()
             ) );
         }

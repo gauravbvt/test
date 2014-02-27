@@ -230,6 +230,7 @@ public abstract class UpdateObject extends AbstractCommand {
                 Object oldValue = get( "old", commander );
                 return createUndoCommand( identifiable, property, oldValue, Action.Set );
             case AddUnique:
+            case Add:
                 value = get( "value", commander );
                 return createUndoCommand( identifiable, property, value, Action.Remove );
             case Remove:
