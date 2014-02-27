@@ -17,19 +17,20 @@ public class MABVT0005_VerifyBrowsersInstalled extends TestCase {
 		if (Desktop.isDesktopSupported()) {
 			Desktop dt = Desktop.getDesktop();
 			if (dt.isSupported(Desktop.Action.BROWSE)) {
-				File f1=new File("firefox.exe");
+				File f1=new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
 				File f = new File(f1.getCanonicalPath().toString());
 				if (f.exists()) {
 					try {
 						Process p = Runtime.getRuntime().exec("firefox.exe");
 						Thread.sleep(2000);
 						p.destroy();
+						System.out.println("Firefox is installed!!!");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("Firefox browser has not been installed!!!");
+					System.out.println("Firefox has not been installed!!!");
 				}
 
 			}
@@ -47,13 +48,13 @@ public class MABVT0005_VerifyBrowsersInstalled extends TestCase {
 						Process p = Runtime.getRuntime().exec("iexplore.exe");
 						Thread.sleep(3000);
 						p.destroy();
-
+						System.out.println("Internet Explorer is installed!!!");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("Internet Explorer browser has not been installed!!!");
+					System.out.println("Internet Explorer has not been installed!!!");
 				}
 
 			}
@@ -71,12 +72,13 @@ public class MABVT0005_VerifyBrowsersInstalled extends TestCase {
 						Process p = Runtime.getRuntime().exec("Chrome.exe");
 						Thread.sleep(3000);
 						p.destroy();
+						System.out.println("Chrome is installed!!!");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("Chrome browser has not been installed!!!");
+					System.out.println("Chrome has not been installed!!!");
 				}
 			}
 
