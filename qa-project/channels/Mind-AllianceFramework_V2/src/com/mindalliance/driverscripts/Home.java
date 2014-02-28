@@ -191,7 +191,7 @@ public class Home {
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
     	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
-    			suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
+    	/*		suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 		suite.addTestSuite(MAP0004_DeleteUser.class);
     	suite.addTestSuite(MAP0018_attachFile.class);
@@ -203,7 +203,7 @@ public class Home {
 		suite.addTestSuite(MAP0024_moveTask.class);
 		suite.addTestSuite(MAP0025_receiveTask.class);
 		suite.addTestSuite(MAP0026_sendTask.class);
-		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);
+		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);*/
 
     	//		Command
 
