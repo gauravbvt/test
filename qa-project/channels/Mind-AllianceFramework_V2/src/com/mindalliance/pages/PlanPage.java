@@ -2542,6 +2542,60 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Verify Owners Tab is present in the About Plan Segment window
+	 * @throws UIAutomationException
+	 */
+	public void verifyOwnersTabIsPresent() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(),"Owners Tab");
+       
+        //Assertion: Verify that the Owners tab is present
+        elementController.requireElementSmart(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(), "Owners Tab");
+	    String ownersTab=UIActions.getText(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(), "Owners Tab");
+	
+	    if(!ownersTab.contains(ownersTab))
+	    {
+	    	throw new UIAutomationException("Owners Tab not present");
+	    }
+	}
+	
+	/**
+	 * Click Owners Tab present in the About Plan Segment window
+	 * @throws UIAutomationException
+	 */
+	public void clickOwnersTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(),"Owners Tab");
+		  UIActions.click(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(), "Owners Tab");   	
+			
+        //Assertion: Verify the title on  Owners tab
+        elementController.requireElementSmart(fileName, "Who Can Modify This Segment", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
+	    String ownersTab=UIActions.getText(fileName, "Who Can Modify This Segment ", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
+	    String ownersTabText=dataController.getPageDataElements(fileName, "Who Can Modify This Segment Text", "Name");
+	/*	if(!ownersTab.contains(ownersTabText)){
+			throw new UIAutomationException("Tab with Text '"+ownersTabText+"' not found");
+		}*/
+	    System.out.println(ownersTabText);
+	}
+	
+	/**
+	 * Admin Clicks Owners Tab present in the About Plan Segment window
+	 * @throws UIAutomationException
+	 */
+	public void clickOwnersTabAsAdmin() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(),"Owners Tab");
+		  UIActions.click(fileName, "Owners Tab", GlobalVariables.configuration.getAttrSearchList(), "Owners Tab");   	
+			
+        //Assertion: Verify the title on  Owners tab
+        elementController.requireElementSmart(fileName, "Message On Owners Tab For Admin", GlobalVariables.configuration.getAttrSearchList(), "Message On Owners Tab For Admin");
+	    String ownersTab=UIActions.getText(fileName, "Message On Owners Tab For Admin", GlobalVariables.configuration.getAttrSearchList(), "Message On Owners Tab For Admin");
+	    String ownersTabText=dataController.getPageDataElements(fileName, "Message On Owners Tab For Admin Text", "Name");
+	/*	if(!ownersTab.contains(ownersTabText)){
+			throw new UIAutomationException("Tab with Text '"+ownersTabText+"' not found");
+		}*/
+	    System.out.println(ownersTabText);
+	    
+	}
+	
+	/**
 	 * Click Create Survey Button In Task Panel
 	 * @throws UIAutomationException
 	 */
@@ -3959,7 +4013,7 @@ public class PlanPage {
 			e.printStackTrace();
 		}
 		
-		// Achieved at the end checkbox
+		/*// Achieved at the end checkbox
 		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 		UIActions.click(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 	    UIActions.enterKey(Keys.ENTER);
@@ -3968,7 +4022,7 @@ public class PlanPage {
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}	
+	}	*/
 	
 //	elementController.requireElementSmart(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
 //	String showLinkTextInPage=UIActions.getText(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
