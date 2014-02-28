@@ -66,7 +66,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     protected void addContent() {
         processParameters( getParameters() );
         addModalDialog( "dialog", null, getContainer() );
-        getContainer().add( new Label( "templateName", getPlan().getName() ) );
+        getContainer().add( new Label( "modelName", getCollaborationModel().getName() ) );
         addUserRFIsPanel();
         addRFIPanel();
     }

@@ -182,7 +182,7 @@ public class Agency extends AbstractUnicastChannelable implements Waivable {
             List<Actor> actors = new ArrayList<Actor>(  );
             if ( isFixedOrganization() ) {
                 Organization fixedOrg = getRegisteredOrganization().getFixedOrganization( communityService );
-                actors.addAll( communityService.getPlanService().findAllActorsEmployedBy( fixedOrg ) );
+                actors.addAll( communityService.getModelService().findAllActorsEmployedBy( fixedOrg ) );
             } else {
                 for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
                     actors.addAll( organizationParticipation.getAllActors( communityService ) );
@@ -469,7 +469,7 @@ public class Agency extends AbstractUnicastChannelable implements Waivable {
 
     private Job findPrimaryJob( final Job linkedJob, CommunityService communityService ) {
         return (Job) CollectionUtils.find(
-                communityService.getPlanService().findAllConfirmedJobs( linkedJob.getActor() ),
+                communityService.getModelService().findAllConfirmedJobs( linkedJob.getActor() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

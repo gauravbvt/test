@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
@@ -56,7 +55,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                     }
                 } );
         if ( !qualifiedMedia.isEmpty() ) {
-            List<Commitment> commitments = communityService.getPlanService().findAllCommitments( flow );
+            List<Commitment> commitments = communityService.getModelService().findAllCommitments( flow );
             Set<Actor> unqualified = new HashSet<Actor>();
             for ( Commitment commitment : commitments ) {
                 checkQualification(
@@ -85,7 +84,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
 
     private void checkQualification( Actor actor, List<TransmissionMedium> qualifiedMedia, List<Issue> issues, Flow flow,
                                      boolean isCommitter, Set<Actor> unqualified, CommunityService communityService ) {
-        Place planLocale = communityService.getPlanService().getPlanLocale();
+        Place planLocale = communityService.getModelService().getPlanLocale();
         for ( TransmissionMedium medium : qualifiedMedia ) {
             Actor qualification = medium.getQualification();
             if ( !actor.narrowsOrEquals( qualification, planLocale ) && !unqualified.contains( actor ) ) {
@@ -110,7 +109,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                         + "\nor modify the definition of the "
                         + ( isCommitter ? "source " : "target " )
                         + "task so that the unqualified \"" + actor.getName() + "\" is not assigned to it." );
-                issue.setSeverity( computeSharingFailureSeverity( communityService.getPlanService(), flow ) );
+                issue.setSeverity( computeSharingFailureSeverity( communityService.getModelService(), flow ) );
                 issues.add( issue );
                 unqualified.add( actor );
             }

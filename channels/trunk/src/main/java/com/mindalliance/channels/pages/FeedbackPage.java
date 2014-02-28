@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.social.feedback.AllUserFeedbackPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -40,7 +40,7 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
 
 
     protected void addContent() {
-        getContainer().add( new Label( "planName", getPlan().getName() ) );
+        getContainer().add( new Label( "modelName", getCollaborationModel().getName() ) );
         addUserFeedbackPanel();
     }
 
@@ -72,7 +72,7 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
     private void addUserFeedbackPanel() {
         allUserFeedbackPanel = new AllUserFeedbackPanel(
                 "allFeedback",
-                new Model<Plan>( getPlan() ),
+                new Model<CollaborationModel>( getCollaborationModel() ),
                 false,
                 true,
                 true );

@@ -14,10 +14,9 @@ import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,7 +36,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
@@ -47,8 +46,8 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                 Flow send = sends.next();
                 if ( send.isCapability() && Matcher.same( send.getName(), flow.getName() ) ) {
                     List<String> mismatches = new ArrayList<String>();
-                    Plan plan = queryService.getPlan();
-                    findEOIMismatch( plan, flow, send, mismatches );
+                    CollaborationModel collaborationModel = queryService.getCollaborationModel();
+                    findEOIMismatch( collaborationModel, flow, send, mismatches );
                     findIntentMismatch( flow, send, mismatches );
                     findChannelsMismatch( flow, send, mismatches, queryService.getPlanLocale() );
                     findDelayMismatch( flow, send, mismatches );
@@ -74,16 +73,16 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
         }
     }
 
-    private static void findEOIMismatch( Plan plan, Flow sharing, Flow capability, List<String> mismatches ) {
+    private static void findEOIMismatch( CollaborationModel collaborationModel, Flow sharing, Flow capability, List<String> mismatches ) {
         for ( ElementOfInformation sharedEoi : sharing.getEffectiveEois() ) {
             boolean matched = false;
             for ( ElementOfInformation offeredEoi : capability.getEffectiveEois() ) {
                 if ( Matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
                     matched = true;
                     if ( Classification.hasHigherClassification( offeredEoi.getClassifications(),
-                            sharedEoi.getClassifications(), plan )
+                            sharedEoi.getClassifications(), collaborationModel )
                             || Classification.hasHigherClassification( sharedEoi.getClassifications(),
-                            offeredEoi.getClassifications(), plan ) ) {
+                            offeredEoi.getClassifications(), collaborationModel ) ) {
                         mismatches.add( '\"' + sharedEoi.getContent() + "\" has different secrecy classifications." );
                     }
                 }

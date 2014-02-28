@@ -16,7 +16,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -187,12 +187,12 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
-    public Commitments realizable( Analyst analyst, Plan plan, CommunityService communityService ) {
+    public Commitments realizable( Analyst analyst, CollaborationModel collaborationModel, CommunityService communityService ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
         while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
-            if ( analyst.canBeRealized( commitment, plan, communityService ) )
+            if ( analyst.canBeRealized( commitment, collaborationModel, communityService ) )
                 result.add( commitment );
         }
         return result;

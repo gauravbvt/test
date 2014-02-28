@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
@@ -28,7 +28,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
      * Plan manager.
      */
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
 
     /**
@@ -117,11 +117,11 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
      */
     protected String makeSeed() {
         // Force regeneration
-        return getPlan().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
+        return getCollaborationModel().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, getPlan() ) );
+        update( target, new Change( Change.Type.Selected, getCollaborationModel() ) );
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
@@ -11,7 +11,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -99,7 +99,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAGS) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
@@ -187,7 +187,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
     public void setTaskName( String val ) {
         if ( val != null && !val.trim().isEmpty() ) {
             String name = val.trim();
-            doCommand( new UpdatePlanObject( getUsername(), getRequirement(), propertyPath( "taskName" ), name ) );
+            doCommand( new UpdateModelObject( getUsername(), getRequirement(), propertyPath( "taskName" ), name ) );
         }
     }
 
@@ -210,7 +210,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
      */
     public void setTimingName( String name ) {
         Phase.Timing timing = Phase.Timing.translateTiming( name );
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getRequirement(), propertyPath( "timing" ), timing ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getRequirement(), propertyPath( "timing" ), timing ) );
     }
 
     public List<String> getAllEventNames() {
@@ -236,7 +236,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().safeFindOrCreateType( Event.class, name );
         }
-        doCommand( new UpdatePlanObject( getUsername(), getRequirement(), propertyPath( "event" ), newEvent ) );
+        doCommand( new UpdateModelObject( getUsername(), getRequirement(), propertyPath( "event" ), newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 

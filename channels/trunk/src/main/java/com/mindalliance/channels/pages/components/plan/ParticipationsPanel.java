@@ -248,7 +248,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         CommunityService communityService = getCommunityService();
         UserRecordService userDao = communityService.getUserRecordService();
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
-        for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
+        for ( ChannelsUser channelsUser : userDao.getUsers( getCollaborationModel().getUri() ) ) {
             List<UserParticipation> participations = participationManager.getUserParticipations(
                      channelsUser, communityService );
             for ( UserParticipation participation : participations ) {

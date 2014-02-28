@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Taggable;
@@ -148,7 +148,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
 
     private List<String> allFlowNames() {
         Set<String> names = new HashSet<String>();
-        for ( Flow flow : getCommunityService().getPlanService().findAllFlows() ) {
+        for ( Flow flow : getCommunityService().getModelService().findAllFlows() ) {
             String name = flow.getName().trim();
             if ( !name.isEmpty() ) names.add(  name );
         }
@@ -163,7 +163,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
 
     public void setInformation( String val ) {
         String info = val == null ? "" : val.trim();
-        doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "information", info ) );
+        doCommand( new UpdateModelObject( getUsername(), getRequirement(), "information", info ) );
     }
 
     public String getNewEoiName() {
@@ -172,7 +172,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
 
     public void setNewEoiName( String name ) {
         if ( name != null && !name.trim().isEmpty() ) {
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUsername(),
                     getRequirement(),
                     "eois",
@@ -182,7 +182,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
     }
 
     public void deleteEoi( String eoi ) {
-        doCommand( new UpdatePlanObject(
+        doCommand( new UpdateModelObject(
                 getUsername(),
                 getRequirement(),
                 "eois",

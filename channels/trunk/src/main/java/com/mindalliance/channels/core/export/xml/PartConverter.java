@@ -265,7 +265,7 @@ public class PartConverter extends AbstractChannelsConverter {
                 String eventId = reader.getAttribute( "id" );
                 String eventName = reader.getValue();
                 Event event = findOrCreateType( Event.class, eventName, eventId );
-                if ( event == null ) LOG.warn( "Plan has no event named " + eventName );
+                if ( event == null ) LOG.warn( "Model has no event named " + eventName );
                 part.setInitiatedEvent( event );
             } else if ( nodeName.equals( "flow" ) ) {
                 context.convertAnother( segment, Flow.class );

@@ -91,7 +91,7 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     }
 
     public void setId( long id, Segment segment, CommunityService communityService, Analyst analyst ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         setId( id, communityService );
         EntityRelationship entityRel = segment == null ?
                                        analyst.findEntityRelationship( communityService,

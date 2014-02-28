@@ -64,7 +64,7 @@ public class TransferJobs extends AbstractCommand {
         }
         multi.execute( commander );
         describeTarget( toOrg );
-        return new Change( Change.Type.Updated, queryService.getPlan() );
+        return new Change( Change.Type.Updated, queryService.getCollaborationModel() );
     }
 
     private List<Job> unmapJobs( List<MappedObject> mappedObjects, Commander commander ) throws CommandException {
@@ -80,9 +80,9 @@ public class TransferJobs extends AbstractCommand {
         MultiCommand subCommands = new MultiCommand( getUserName(), "transfer jobs - internal" );
         for ( Job job : jobs ) {
             if ( !copying )
-                subCommands.addCommand( new UpdatePlanObject( getUserName(),
+                subCommands.addCommand( new UpdateModelObject( getUserName(),
                                                               fromOrg, "jobs", job, UpdateObject.Action.Remove ) );
-            subCommands.addCommand( new UpdatePlanObject( getUserName(), toOrg,
+            subCommands.addCommand( new UpdateModelObject( getUserName(), toOrg,
                                                           "jobs",
                                                           copying ? new Job( job ) : job,
                                                           UpdateObject.Action.AddUnique ) );

@@ -172,7 +172,7 @@ public class NewPasswordPanel extends AbstractSocialListPanel {
     private void applyChanges( AjaxRequestTarget target ) {
         try {
             if ( save() ) {
-                Change change = new Change( Change.Type.Updated, getPlan() );
+                Change change = new Change( Change.Type.Updated, getCollaborationModel() );
                 change.setProperty( "user" );
                 if ( !newPassword.isEmpty() ) {
                     change.setMessage( isValidNewPassword()

@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.WorkTime;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -109,10 +109,10 @@ public class ActorConverter extends EntityConverter {
     protected void setSpecific( ModelEntity entity, String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getPlan();
         Actor actor = (Actor) entity;
         if ( nodeName.equals( "channel" ) ) {
-            Channel channel = (Channel) context.convertAnother( plan, Channel.class );
+            Channel channel = (Channel) context.convertAnother( collaborationModel, Channel.class );
             actor.addChannel( channel );
         } else if ( nodeName.equals( "system" ) ) {
             boolean isSystem = reader.getValue().equals( "true" );
@@ -147,7 +147,7 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "anonymousParticipation" ) ) {
             actor.setAnonymousParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "clearance" ) ) {
-            Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
+            Classification clearance = (Classification) context.convertAnother( collaborationModel, Classification.class );
             actor.addClearance( clearance );
         } else if ( nodeName.equals( "language" ) ) {
             actor.addLanguage( reader.getValue() );
@@ -155,7 +155,7 @@ public class ActorConverter extends EntityConverter {
             WorkTime availability = new WorkTime( WorkTime.WorkPeriod.valueOf( reader.getValue() ) );
             actor.setAvailability( availability );
         } else if ( nodeName.equals( "availability" ) ) { // OBSOLETE - conversion
-            Availability availability = (Availability) context.convertAnother( plan, Availability.class );
+            Availability availability = (Availability) context.convertAnother( collaborationModel, Availability.class );
             actor.setAvailability( availability.isAlways() ? WorkTime.FullTime() : WorkTime.PartTime() );
         } else {
             LOG.debug( "Unknown element " + nodeName );

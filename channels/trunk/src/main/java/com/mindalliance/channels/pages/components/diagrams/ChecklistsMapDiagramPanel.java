@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
@@ -80,7 +80,7 @@ public class ChecklistsMapDiagramPanel extends AbstractDiagramPanel {
         StringBuilder sb = new StringBuilder();
         sb.append( "procedures.png?" );
         sb.append( "&");
-        sb.append( PlanPage.SEGMENT_PARM );
+        sb.append( ModelPage.SEGMENT_PARM );
         sb.append("=");
         sb.append( segment == null ? "NONE" : segment.getId() );
         sb.append( "&" );
@@ -138,7 +138,7 @@ public class ChecklistsMapDiagramPanel extends AbstractDiagramPanel {
             this.update( target, new Change( Change.Type.Selected, segment ) );
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );
-            this.update( target, new Change( Change.Type.Selected, getPlan() ) );
+            this.update( target, new Change( Change.Type.Selected, getCollaborationModel() ) );
         }
     }
 
@@ -229,7 +229,7 @@ public class ChecklistsMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeSeed() {
         // Force regeneration
-        return getPlan().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
+        return getCollaborationModel().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
     }
 
 }

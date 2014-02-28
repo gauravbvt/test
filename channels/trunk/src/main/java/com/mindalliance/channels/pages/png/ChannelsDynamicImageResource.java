@@ -5,9 +5,9 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
@@ -37,7 +37,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
 
 
     private UserRecordService userRecordService;
-    private PlanManager planManager;
+    private ModelManager modelManager;
     private CommunityServiceFactory communityServiceFactory;
     private PlanCommunityManager planCommunityManager;
 
@@ -49,12 +49,12 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
         super( format );
     }
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
-    public void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    public void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
     public UserRecordService getUserRecordService() {
@@ -92,8 +92,8 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
 
     private PlanCommunity getPlanCommunity() {
         ChannelsUser user = ChannelsUser.current( getUserRecordService() );
-        if ( user.getPlan() != null ) {
-            return planCommunityManager.getDomainPlanCommunity( user.getPlan() );
+        if ( user.getCollaborationModel() != null ) {
+            return planCommunityManager.getDomainPlanCommunity( user.getCollaborationModel() );
         } else {
             return planCommunityManager.getPlanCommunity( user.getPlanCommunityUri() );
         }
@@ -105,9 +105,9 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
 
     public PlanCommunity getPlanCommunity( PageParameters parameters ) {
         ChannelsUser user = ChannelsUser.current( getUserRecordService() );
-        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COLLAB_PLAN_PARM ) ) {
+        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COMMUNITY_PARM ) ) {
             try {
-                String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COLLAB_PLAN_PARM ).toString(), "UTF-8" );
+                String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );
                 PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri );
                 if ( planCommunity != null ) {
                     return planCommunity;
@@ -118,15 +118,15 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
                 LOG.error( "Failed to decode community uri", e );
                 return null;
             }
-        } else if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.TEMPLATE_PARM ) ) {
+        } else if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.MODEL_PARM ) ) {
             try {
-                String planUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.TEMPLATE_PARM ).toString(), "UTF-8" );
+                String planUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.MODEL_PARM ).toString(), "UTF-8" );
                 int planVersion = parameters.get( AbstractChannelsWebPage.VERSION_PARM ).toInt();
-                Plan plan = planManager.getPlan( planUri, planVersion );
+                CollaborationModel collaborationModel = modelManager.getModel( planUri, planVersion );
                 if ( !user.isParticipant( planUri ) )
                     return null;
                 else
-                    return planCommunityManager.getDomainPlanCommunity( plan );
+                    return planCommunityManager.getDomainPlanCommunity( collaborationModel );
             } catch ( UnsupportedEncodingException e ) {
                 LOG.error( "Failed to decode community uri", e );
                 return null;

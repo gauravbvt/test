@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -35,34 +35,34 @@ public class ModelObjectCountData  implements Serializable {
 
     private Class<? extends ModelObject> modelObjectClass;
 
-    public ModelObjectCountData( Class<? extends ModelObject> modelObjectClass, PlanService planService ) {
+    public ModelObjectCountData( Class<? extends ModelObject> modelObjectClass, ModelService modelService ) {
         this.modelObjectClass = modelObjectClass;
-        init( planService );
+        init( modelService );
     }
 
-    private void init( PlanService planService ) {
-        initValue( planService );
-        initCounts( planService );
+    private void init( ModelService modelService ) {
+        initValue( modelService );
+        initCounts( modelService );
     }
 
-    private void initCounts( PlanService planService ) {
+    private void initCounts( ModelService modelService ) {
         connectorCount = 0;
-        for ( Segment segment : planService.getPlan().getSegments() ) {
+        for ( Segment segment : modelService.getCollaborationModel().getSegments() ) {
             connectorCount += segment.listConnectors().size();
         }
         flowCount = 0;
-        for ( Segment segment : planService.getPlan().getSegments() ) {
+        for ( Segment segment : modelService.getCollaborationModel().getSegments() ) {
             flowCount += segment.getAllSharingFlows().size();
         }
         partCount = 0;
-        for ( Segment segment : planService.getPlan().getSegments() ) {
+        for ( Segment segment : modelService.getCollaborationModel().getSegments() ) {
             partCount += segment.listParts().size();
         }
     }
 
-    private void initValue( PlanService planService ) {
+    private void initValue( ModelService modelService ) {
         if ( Segment.class.isAssignableFrom( modelObjectClass ) ) {
-            value = planService.getPlan().getSegmentCount();
+            value = modelService.getCollaborationModel().getSegmentCount();
         } else if ( Part.class.isAssignableFrom( modelObjectClass ) ) {
             value = partCount();
         } else if ( Flow.class.isAssignableFrom( modelObjectClass ) ) {
@@ -70,7 +70,7 @@ public class ModelObjectCountData  implements Serializable {
         } else if ( Connector.class.isAssignableFrom( modelObjectClass ) ) {
             value = connectorCount();
         } else {
-            value = planService.list( modelObjectClass ).size();
+            value = modelService.list( modelObjectClass ).size();
         }
 
     }

@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.query.QueryService;
@@ -30,7 +29,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
 
         Flow flow = (Flow) modelObject;

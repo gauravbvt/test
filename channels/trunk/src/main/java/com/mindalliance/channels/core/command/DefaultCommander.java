@@ -19,8 +19,8 @@ import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.JournalCommand;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -29,8 +29,8 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.PresenceListener;
 import org.slf4j.Logger;
@@ -80,7 +80,7 @@ public class DefaultCommander implements Commander {
      */
     private LockManager lockManager;
 
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     /**
      * Presence listeners.
@@ -127,8 +127,8 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public PlanService getPlanService() {
-        return communityService.getPlanService();
+    public ModelService getPlanService() {
+        return communityService.getModelService();
     }
 
     //-------------------------------
@@ -142,7 +142,7 @@ public class DefaultCommander implements Commander {
     }
 
     private boolean isCommandExecutionAllowed() { // Use this instead of  getPlan().isDevelopment()
-        return !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment();
+        return !getPlanCommunity().isModelCommunity() || getPlan().isDevelopment();
     }
 
     @Override
@@ -285,13 +285,13 @@ public class DefaultCommander implements Commander {
         return history.getLastModifier();
     }
 
-    public Plan getPlan() {
+    public CollaborationModel getPlan() {
         return communityService.getPlan();
     }
 
     @Override
-    public PlanDao getPlanDao() {
-        return (PlanDao)getDao();
+    public ModelDao getPlanDao() {
+        return (ModelDao)getDao();
     }
 
     @Override
@@ -411,7 +411,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public boolean isPlanOutOfSync( String userName ) {
-        return planManager.isOutOfSync( userName, getPlan().getUri() );
+        return modelManager.isOutOfSync( userName, getPlan().getUri() );
     }
 
     @Override
@@ -455,7 +455,7 @@ public class DefaultCommander implements Commander {
     }
 
     private void processDeath( String userName ) {
-        LOG.info( "{} is done planning", userName );
+        LOG.info( "{} is done modeling", userName );
         whenLastActive.remove( userName );
         lockManager.release( userName );
     }
@@ -602,7 +602,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void resynced( String userName ) {
-        planManager.resynced( userName );
+        modelManager.resynced( userName );
     }
 
     @Override
@@ -612,7 +612,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void setPlanResyncRequired() {
-        planManager.setResyncRequired( getPlan().getUri() );
+        modelManager.setResyncRequired( getPlan().getUri() );
     }
 
     @Override
@@ -670,23 +670,23 @@ public class DefaultCommander implements Commander {
 
     @Override
     public AbstractModelObjectDao getDao() {
-        return !getPlanCommunity().isDomainCommunity()
+        return !getPlanCommunity().isModelCommunity()
                 ? communityService.getDao()
-                : communityService.getPlanService().getDao();
+                : communityService.getModelService().getDao();
     }
 
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
-    void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
     @Override
     public QueryService getQueryService() {
-        return communityService.getPlanService();
+        return communityService.getModelService();
     }
 
     public int getTimeout() {

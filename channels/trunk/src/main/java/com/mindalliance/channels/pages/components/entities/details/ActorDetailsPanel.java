@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -50,7 +50,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
      * The plan manager.
      */
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     //Container to add components to.
     private WebMarkupContainer moDetailsDiv;
@@ -150,7 +150,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
                 "deleteLanguage",
                 "Remove language?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(),
+                doCommand( new UpdateModelObject( getUser().getUsername(), getActor(),
                         "languages",
                         language,
                         UpdateObject.Action.Remove ) );
@@ -183,7 +183,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     public void setLanguage( String name ) {
         if ( name != null && !name.isEmpty() ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(),
+            doCommand( new UpdateModelObject( getUser().getUsername(), getActor(),
                     "languages",
                     name.toLowerCase(),
                     UpdateObject.Action.AddUnique ) );
@@ -273,7 +273,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     public void setSystem( boolean isSystem ) {
         Actor actor = getActor();
         if ( actor.isSystem() != isSystem )
-            doCommand( new UpdatePlanObject( getUser().getUsername(), actor, "system", isSystem ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), actor, "system", isSystem ) );
     }
 
     public WorkTime.WorkPeriod getAvailabilityWorkPeriod() {
@@ -282,7 +282,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     public void setAvailabilityWorkPeriod( WorkTime.WorkPeriod workPeriod ) {
         doCommand(
-                new UpdatePlanObject(
+                new UpdateModelObject(
                         getUser().getUsername(),
                         getActor(),
                         "availability",

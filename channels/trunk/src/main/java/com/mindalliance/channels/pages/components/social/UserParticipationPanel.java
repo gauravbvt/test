@@ -100,7 +100,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addCommandChainsDialog();
         addUserParticipationContainer();
         addUserRole();
-        addParticipatesInPlan();
+        addParticipatesInModel();
         addOpenAndConfirmedParticipation();
         addNewParticipation();
         addToBeConfirmedParticipation();
@@ -141,21 +141,21 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addOrReplace( userParticipationContainer );
     }
 
-    private void addParticipatesInPlan() {
+    private void addParticipatesInModel() {
         String uri = getPlanCommunity().getUri();
         boolean isPlanner = getUser().isCommunityPlanner( uri );
         boolean participatesAsAgents = participationManager.isUserParticipatingAsAgents( getUser(), getCommunityService() );
-        WebMarkupContainer participatesInPlanContainer = new WebMarkupContainer( "participatesInPlanContainer" );
-        userParticipationContainer.add( participatesInPlanContainer );
+        WebMarkupContainer participatesInCommunityContainer = new WebMarkupContainer( "participatesInCommunityContainer" );
+        userParticipationContainer.add( participatesInCommunityContainer );
         String whyDisabled = isPlanner
-                ? "You can not leave this plan while you are a planner"
+                ? "You can not leave this community while you are a planner"
                 : participatesAsAgents
-                ? "You can not leave this plan while you participate in one or more positions"
+                ? "You can not leave this community while you participate in one or more positions"
                 : "";
-        if ( !whyDisabled.isEmpty() ) addTipTitle( participatesInPlanContainer, whyDisabled );
+        if ( !whyDisabled.isEmpty() ) addTipTitle( participatesInCommunityContainer, whyDisabled );
         AjaxCheckBox participatesCheckBox = new AjaxCheckBox(
-                "participatesInPlan",
-                new PropertyModel<Boolean>( this, "participatesInPlan" )
+                "participatesInCommunity",
+                new PropertyModel<Boolean>( this, "participatesInCommunity" )
         ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -164,15 +164,15 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
             }
         };
-        participatesCheckBox.setEnabled( !isParticipatesInPlan() || !isPlanner && !participatesAsAgents );
-        participatesInPlanContainer.add(
+        participatesCheckBox.setEnabled( !isParticipatesInCommunity() || !isPlanner && !participatesAsAgents );
+        participatesInCommunityContainer.add(
                 makeHelpIcon(
-                        "helpParticipatesInPlan",
+                        "helpParticipatesInCommunity",
                         "what-i-do",
-                        "participating-in-plan",
+                        "participating-in-community",
                         "images/help_guide_gray.png" ) );
-        participatesInPlanContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
-        participatesInPlanContainer.add( participatesCheckBox );
+        participatesInCommunityContainer.setVisible( !getPlanCommunity().isModelCommunity() );
+        participatesInCommunityContainer.add( participatesCheckBox );
     }
 
     private void addOpenAndConfirmedParticipation() {
@@ -210,7 +210,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
                         resetAll();
-                        // getPlanManager().clearCache();
                         target.add( userParticipationContainer );
                         update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
                     }
@@ -230,7 +229,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         openAndConfirmedParticipationContainer.add( participationList );
         openAndConfirmedParticipationContainer.add( makeCommandChainIcon() );
         openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation", "images/help_guide_gray.png" ) );
-        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
+        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isModelCommunity() && isUserParticipating() );
     }
 
     private WebMarkupContainer makeCommandChainIcon() {
@@ -253,7 +252,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private void addNewParticipation() {
         List<ParticipationWrapper> participationWrappers = openOrConfirmedOrLinkedParticipationWrappers();
         WebMarkupContainer newParticipationContainer = new WebMarkupContainer( "newParticipationContainer" );
-        newParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
+        newParticipationContainer.setVisible( !getPlanCommunity().isModelCommunity() && isUserParticipating() );
         userParticipationContainer.add( newParticipationContainer );
         newParticipationContainer.add(
                 new Label(
@@ -272,7 +271,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private List<ParticipationWrapper> openOrConfirmedOrLinkedParticipationWrappers() {
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
-        if ( !getPlanCommunity().isDomainCommunity() ) {
+        if ( !getPlanCommunity().isModelCommunity() ) {
             Set<UserParticipation> participationSet = new HashSet<UserParticipation>();
             participationSet.addAll( unconstrainedUnacceptedParticipations() );
             participationSet.addAll( unsupervisedPrimaryParticipations() );
@@ -307,7 +306,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<UserParticipation> unconstrainedUnacceptedParticipations() {
         Set<UserParticipation> participations = new HashSet<UserParticipation>();
         PlanCommunity planCommunity = getPlanCommunity();
-        if ( !planCommunity.isDomainCommunity() ) {
+        if ( !planCommunity.isModelCommunity() ) {
             for ( Agent agent : participationManager.findSelfAssignableOpenAgents( getCommunityService(), getUser() ) ) {
                 if ( agent.isUnconstrainedParticipation() ) {
                     if ( !getCommunityService().getParticipationManager().isUserActivelyParticipatingAs(
@@ -358,13 +357,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private String getUserRole() {
         String userRole = null;
         PlanCommunity planCommunity = getPlanCommunity();
-        if ( planCommunity.isDomainCommunity() ) { // context is a plan
+        if ( planCommunity.isModelCommunity() ) { // context is a model
             if ( user.isAdmin() )
                 userRole = "administrator";
             else {
-                userRole = user.isPlannerOrAdmin( getPlan().getUri() )
-                        ? "template developer"
-                        : "template guest";
+                userRole = user.isDeveloperOrAdmin( getCollaborationModel().getUri() )
+                        ? "model developer"
+                        : "model guest";
             }
         } else { // context is a plan community
             userRole = getCommunityService().isCommunityPlanner( user )
@@ -415,7 +414,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         unconfirmedSupervisedParticipationContainer.add( participationList );
-        unconfirmedSupervisedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity()
+        unconfirmedSupervisedParticipationContainer.setVisible( !getPlanCommunity().isModelCommunity()
                 && !participationWrappers.isEmpty() );
         unconfirmedSupervisedParticipationContainer
                 .add( makeHelpIcon( "helpConfirmation", "what-i-do", "my-to-be-confirmed", "images/help_guide_gray.png" ) );
@@ -423,7 +422,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private void resetAllAndUpdate( AjaxRequestTarget target ) {
         resetAll();
-        // getPlanManager().clearCache();
         target.add( userParticipationContainer );
         update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
     }
@@ -629,12 +627,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return participationManager.isParticipationSelfAssignable( agent, getUser(), getCommunityService() );
     }
 
-    public boolean isParticipatesInPlan() {
+    public boolean isParticipatesInCommunity() {
         return getCommunityService().getParticipationManager()
                 .userHasJoinedCommunity( getUser(), getCommunityService() );
     }
 
-    public void setParticipatesInPlan( boolean val ) {
+    public void setParticipatesInModel( boolean val ) {
         if ( val ) {
             getCommunityService().getParticipationManager().joinCommunity( getUser(), getCommunityService() );
         } else {

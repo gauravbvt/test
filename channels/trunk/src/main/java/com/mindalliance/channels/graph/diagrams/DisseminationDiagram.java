@@ -48,7 +48,7 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         DisseminationGraphBuilder graphBuilder = new DisseminationGraphBuilder( segmentObject, subject, showTargets,
-                communityService.getPlanService() );
+                communityService.getModelService() );
         Graph<Node, Dissemination> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Dissemination> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();

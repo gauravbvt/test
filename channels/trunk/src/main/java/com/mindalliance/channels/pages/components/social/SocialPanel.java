@@ -49,7 +49,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private AjaxTabbedPanel<ITab> tabbedPanel;
     private UserMessageListPanel userMessageListPanel;
     private ExecutedCommandsListPanel commandEventListPanel;
-    private UserPresenceListPanel plannerPresenceListPanel;
+    private UserPresenceListPanel userPresenceListPanel;
     private CalendarPanel calendarPanel;
     private UserInfoPanel userProfilePanel;
     private UserParticipationPanel userParticipationPanel;
@@ -134,8 +134,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( showTabs.contains( PRESENCE ) )
             tabs.add( new AbstractTab( new Model<String>( PRESENCE ) ) {
                 public Panel getPanel( String id ) {
-                    plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible, showProfile );
-                    return plannerPresenceListPanel;
+                    userPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible, showProfile );
+                    return userPresenceListPanel;
                 }
             } );
         if ( showTabs.contains( ACTIVITIES ) )
@@ -171,8 +171,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( plannerPresenceListPanel != null && getSelectedTabTitle().equals( PRESENCE ) ) {
-            plannerPresenceListPanel.refresh( target, change );
+        if ( userPresenceListPanel != null && getSelectedTabTitle().equals( PRESENCE ) ) {
+            userPresenceListPanel.refresh( target, change );
         }
         if ( commandEventListPanel != null && getSelectedTabTitle().equals( ACTIVITIES ) ) {
             commandEventListPanel.refresh( target, change );

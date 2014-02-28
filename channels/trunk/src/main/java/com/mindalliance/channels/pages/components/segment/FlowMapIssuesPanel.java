@@ -237,7 +237,7 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
 
     private Set<ModelObject> findPeripheralModelObjects( SegmentObject segmentObject ) {
         Set<ModelObject> mos = new HashSet<ModelObject>();
-        mos.add( getPlan() );
+        mos.add( getCollaborationModel() );
         mos.add( segmentObject.getSegment() );
         if ( segmentObject instanceof Part ) {
             Part part = (Part) segmentObject;

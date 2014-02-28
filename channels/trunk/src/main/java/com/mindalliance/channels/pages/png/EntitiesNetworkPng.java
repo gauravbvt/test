@@ -52,7 +52,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "segment" ).toString().equals( "NONE" ) ) {
             long id = Long.parseLong( parameters.get( "segment" ).toString() );
             try {
-                segment = communityService.getPlanService().find( Segment.class, id );
+                segment = communityService.getModelService().find( Segment.class, id );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Segment not found", e );
             }

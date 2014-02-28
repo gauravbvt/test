@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.FailureImpactsGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
@@ -45,9 +45,9 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
                         DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         FailureImpactsGraphBuilder graphBuilder = new FailureImpactsGraphBuilder( segmentObject, assumeFails,
-                planService );
+                modelService );
         Graph<Node, Flow> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();

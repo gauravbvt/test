@@ -1,7 +1,6 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.model.Plan;
 
 /**
  * A scanner service.

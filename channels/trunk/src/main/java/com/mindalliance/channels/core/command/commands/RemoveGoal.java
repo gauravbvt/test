@@ -76,7 +76,7 @@ public class RemoveGoal extends AbstractCommand {
 
     private MultiCommand makeSubCommands( Segment segment, Goal goal ) {
         MultiCommand subCommands = new MultiCommand( getUserName(), "delete goal - internal" );
-        subCommands.addCommand( new UpdatePlanObject( getUserName(), segment, "goals", goal, Action.Remove ) );
+        subCommands.addCommand( new UpdateModelObject( getUserName(), segment, "goals", goal, Action.Remove ) );
         for ( Part part : segment.getAchievers( goal ) )
             subCommands.addCommand( new UpdateSegmentObject( getUserName(), part, "goals", goal, Action.Remove ) );
         return subCommands;

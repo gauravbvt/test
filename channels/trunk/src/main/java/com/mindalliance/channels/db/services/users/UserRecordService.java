@@ -3,7 +3,7 @@ package com.mindalliance.channels.db.services.users;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -76,7 +76,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param uri the plan uri
      * @return a list of users
      */
-    List<ChannelsUser> getPlanners( String uri );
+    List<ChannelsUser> getDevelopers( String uri );
 
     /**
      * Get all user who are explicitly planners for a given plan (not because of being an admin).
@@ -84,7 +84,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param uri the plan uri
      * @return a list of users
      */
-    List<ChannelsUser> getStrictlyPlanners( String uri );
+    List<ChannelsUser> getStrictlyDevelopers( String uri );
 
     /**
      * Get all users who are explicitly planners for a community given its uri.
@@ -128,12 +128,12 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * Change the user's password and email a notice.
      *
      * @param user        a user
-     * @param planManager a plan manager
+     * @param modelManager a plan manager
      * @param mailSender  a mail sender service
      * @return a boolean indicating success
      */
     boolean changePassword( ChannelsUser user,
-                            PlanManager planManager,
+                            ModelManager modelManager,
                             MailSender mailSender );
 
 

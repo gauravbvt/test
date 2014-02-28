@@ -26,13 +26,13 @@ import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -237,7 +237,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * The containing plan page.
      */
-    private PlanPage planPage;
+    private ModelPage modelPage;
     /**
      * Flow header.
      */
@@ -273,14 +273,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             boolean send,
             Set<Long> expansions,
             int index,
-            PlanPage planPage ) {
+            ModelPage modelPage ) {
         super( id, model, send, false, expansions, index );
-        this.planPage = planPage;
+        this.modelPage = modelPage;
         init();
     }
 
-    private PlanPage getPlanPage() {
-        return planPage;
+    private ModelPage getModelPage() {
+        return modelPage;
     }
 
 
@@ -329,11 +329,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private boolean isShowSimpleForm() {
-        return getPlanPage().isShowSimpleForm( getFlow() );
+        return getModelPage().isShowSimpleForm( getFlow() );
     }
 
     private void setShowSimpleForm( boolean val ) {
-        getPlanPage().setShowSimpleForm( getFlow(), val );
+        getModelPage().setShowSimpleForm( getFlow(), val );
     }
 
     private void addTagsPanel() {
@@ -344,7 +344,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );

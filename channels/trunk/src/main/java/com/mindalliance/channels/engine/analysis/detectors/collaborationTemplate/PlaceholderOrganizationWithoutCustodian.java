@@ -39,7 +39,7 @@ public class PlaceholderOrganizationWithoutCustodian extends AbstractIssueDetect
             issue.setDescription( "Organization \""
                     + org.getName()
                     + "\" is a placeholder for dynamically participating organizations but it has no identified custodian." +
-                    " Planners will be the default custodians." );
+                    " Developers will be the default custodians." );
             issue.setRemediation( "Make the organization NOT a placeholder organization" +
                     "\nor identify the custodian agent." );
             issue.setSeverity( Level.Low );

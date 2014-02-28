@@ -237,8 +237,8 @@ public class CommunityDefinition extends Observable {
         PlanCommunity planCommunity = new PlanCommunity();
         planCommunity.setName( "Unnamed" );
         planCommunity.setUri( uri );
-        planCommunity.setPlanUri( planUri );
-        planCommunity.setPlanVersion( planVersion );
+        planCommunity.setModelUri( planUri );
+        planCommunity.setModelVersion( planVersion );
         setChanged();
         return planCommunity;
     }

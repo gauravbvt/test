@@ -3,8 +3,8 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.CommandException;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Flow;
@@ -95,7 +95,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                         moveToTop( classification );
                         addClassificationsList();
                         target.add( classificationsContainer );
-                        update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
+                        update( target, new Change( Change.Type.Updated, getCollaborationModel(), "classifications" ) );
                     }
                 };
                 moveLink.setVisible( canBeEdited && item.getIndex() != 0 );
@@ -123,7 +123,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                         }
                         addClassificationIndex();
                         target.add( indexContainer );
-                        update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
+                        update( target, new Change( Change.Type.Updated, getCollaborationModel(), "classifications" ) );
                     }
                 };
                 deleteLink.setVisible(
@@ -151,11 +151,11 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     public void moveToTop( Classification classification ) {
-        int index = getPlan().getClassifications().indexOf( classification );
-        int level = getPlan().topLevelFor( classification.getSystem() );
+        int index = getCollaborationModel().getClassifications().indexOf( classification );
+        int level = getCollaborationModel().topLevelFor( classification.getSystem() );
         if ( index >= 0 ) {
             try {
-                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getPlan(),
+                doCommand( UpdateObject.makeCommand( getUser().getUsername(), getCollaborationModel(),
                         "classifications[" + index + "].level",
                         level - 1,
                         UpdateObject.Action.Set ) );
@@ -167,7 +167,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
 
     public void delete( Classification classification ) {
         if ( canBeEdited )
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
+            doCommand( new UpdateModelObject( getUser().getUsername(), getCollaborationModel(),
                     "classifications",
                     classification,
                     UpdateObject.Action.Remove ) );
@@ -177,7 +177,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     private void addNewClassification() {
         WebMarkupContainer newClassificationContainer = new WebMarkupContainer( "new-classification-container" );
         String cssClasses = "last "
-                + ( ( getPlan().classificationsFor( classificationSystem ).size() ) % 2 == 0 ? "even" : "odd" );
+                + ( ( getCollaborationModel().classificationsFor( classificationSystem ).size() ) % 2 == 0 ? "even" : "odd" );
         newClassificationContainer.add( new AttributeModifier(
                 "class",
                 new Model<String>( cssClasses ) ) );
@@ -210,7 +210,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     private boolean isNewClassificationNamed() {
         return newClassificationName != null
                 && !newClassificationName.isEmpty()
-                && !CollectionUtils.exists( getPlan().classificationsFor( classificationSystem ),
+                && !CollectionUtils.exists( getCollaborationModel().classificationsFor( classificationSystem ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -226,8 +226,8 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             classification = new Classification();
             classification.setName( newClassificationName );
             classification.setSystem( classificationSystem );
-            classification.setLevel( getPlan().classificationsFor( classificationSystem ).size() );
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
+            classification.setLevel( getCollaborationModel().classificationsFor( classificationSystem ).size() );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getCollaborationModel(),
                     "classifications",
                     classification,
                     UpdateObject.Action.AddUnique ) );
@@ -267,7 +267,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
 
     public List<Classification> getClassifications() {
         List<Classification> classifications = new ArrayList<Classification>();
-        classifications.addAll( getPlan().classificationsFor( classificationSystem ) );
+        classifications.addAll( getCollaborationModel().classificationsFor( classificationSystem ) );
         return classifications;
     }
 

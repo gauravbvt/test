@@ -76,7 +76,7 @@ public class ActorData extends ModelEntityData {
     @XmlElement( name = "language" )
     public List<String> getLanguages() {
         List<String> languages = new ArrayList<String>();
-        for ( String language : getActor().getEffectiveLanguages( getPlan() ) ) {
+        for ( String language : getActor().getEffectiveLanguages( getCollaborationModel() ) ) {
             languages.add( StringUtils.capitalize( language.toLowerCase() ) );
         }
         return languages;

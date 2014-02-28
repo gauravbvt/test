@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -56,7 +56,7 @@ public class EventListPanel extends AbstractCommandablePanel {
      * Plan manager.
      */
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     /**
      * Collator.
@@ -117,7 +117,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             }
         };
         nameField.setOutputMarkupId( true );
-        makeVisible( nameField, isPlanner() && getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
+        makeVisible( nameField, isPlanner() && getCollaborationModel().isDevelopment() && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
 /*
@@ -128,7 +128,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 target.add( eventsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
-                        getPlan(),
+                        getCollaborationModel(),
                         "incidents"
                 ) );
             }
@@ -163,7 +163,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 target.add( eventsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
-                        getPlan(),
+                        getCollaborationModel(),
                         "incidents"
                 ) );
             }
@@ -173,7 +173,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 isLockedByUser( Channels.ALL_EVENTS )
                         && !mustBeIncident
                         && ( wrapper.isMarkedForCreation()
-                        || !( wrapper.isIncident() && getPlan().getIncidents().size() == 1 ) ) );
+                        || !( wrapper.isIncident() && getCollaborationModel().getIncidents().size() == 1 ) ) );
     }
 
     private void addDeleteCell( ListItem<EventWrapper> item ) {
@@ -189,7 +189,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 target.add( eventsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
-                        getPlan(),
+                        getCollaborationModel(),
                         "incidents"
                 ) );
             }
@@ -207,7 +207,7 @@ public class EventListPanel extends AbstractCommandablePanel {
     public List<EventWrapper> getWrappedEvents() {
         // Existing events
         List<EventWrapper> wrappers = new ArrayList<EventWrapper>();
-        for ( Event event : getPlan().getIncidents() ) {
+        for ( Event event : getCollaborationModel().getIncidents() ) {
             wrappers.add( new EventWrapper( event, true ) );
         }
         // Defined events that are not incidents
@@ -269,22 +269,22 @@ public class EventListPanel extends AbstractCommandablePanel {
 
         public void setIncident( boolean incident ) {
             this.incident = incident;
-            Plan plan = getPlan();
+            CollaborationModel collaborationModel = getCollaborationModel();
             if ( incident ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject(
+                doCommand( new UpdateModelObject(
                         getUser().getUsername(),
-                        plan,
+                        collaborationModel,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.AddUnique ) );
 
-            } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
+            } else if ( !markedForCreation && getCollaborationModel().getIncidents().size() > 1 ) {
                 try {
                     Event confirmedEvent = getCommunityService().find( Event.class, getEvent().getId() );
-                    doCommand( new UpdatePlanObject(
+                    doCommand( new UpdateModelObject(
                             getUser().getUsername(),
-                            plan,
+                            collaborationModel,
                             "incidents",
                             confirmedEvent,
                             UpdateObject.Action.Remove ) );
@@ -299,9 +299,9 @@ public class EventListPanel extends AbstractCommandablePanel {
             if ( canBeRemoved() ) {
                 try {
                     Event confirmedEvent = getCommunityService().find( Event.class, getEvent().getId() );
-                    doCommand( new UpdatePlanObject(
+                    doCommand( new UpdateModelObject(
                             getUser().getUsername(),
-                            getPlan(),
+                            getCollaborationModel(),
                             "incidents",
                             confirmedEvent,
                             UpdateObject.Action.Remove ) );

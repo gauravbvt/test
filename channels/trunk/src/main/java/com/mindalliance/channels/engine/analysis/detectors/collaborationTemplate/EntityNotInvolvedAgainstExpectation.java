@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -32,7 +31,7 @@ public class EntityNotInvolvedAgainstExpectation extends AbstractIssueDetector {
 
     @Override
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>(  );
         ModelEntity entity = (ModelEntity)modelObject;
         if ( queryService.isInvolvementExpected( entity ) ) {

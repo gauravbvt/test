@@ -1,10 +1,7 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
-import com.mindalliance.channels.core.model.Nameable;
-import com.mindalliance.channels.core.model.Waivable;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -106,7 +103,7 @@ public class Agent extends AbstractWaivableIdentifiable {
 
     public boolean isValid( CommunityService communityService ) {
         return actor != null
-                && ( communityService.getPlanService().listActualEntities( Actor.class ).contains( actor ) )/*
+                && ( communityService.getModelService().listActualEntities( Actor.class ).contains( actor ) )/*
                 && ( organizationParticipation == null || organizationParticipation.isValidAgent( this, planCommunity ) )*/;
     }
 

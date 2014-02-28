@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.util.ResponseOutputStream;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
@@ -93,8 +93,8 @@ public abstract class AbstractImageFilePage extends Page {
         }
     }
 
-    protected Plan getPlan() {
-        return user.getPlan();
+    protected CollaborationModel getPlan() {
+        return user.getCollaborationModel();
     }
 
 }

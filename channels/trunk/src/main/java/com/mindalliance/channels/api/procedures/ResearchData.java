@@ -47,7 +47,7 @@ public class ResearchData extends AbstractProcedureElementData {
     private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         initResearchAssignment( serverUrl, communityService, user );
         initConsumingTaskData( serverUrl, communityService );
-        failureImpact = communityService.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+        failureImpact = communityService.getModelService().computeSharingPriority( getSharing() ).getNegativeLabel();
         documentation =  new DocumentationData( serverUrl, requestToSelf );
     }
 

@@ -15,16 +15,16 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
@@ -35,9 +35,9 @@ import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.CollaborationPlanPage;
+import com.mindalliance.channels.pages.CollaborationCommunityPage;
 import com.mindalliance.channels.pages.Modalable;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -84,7 +84,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private Analyst analyst;
 
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @SpringBean
     private DiagramFactory diagramFactory;
@@ -96,7 +96,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private UserRecordService userInfoService;
 
     @SpringBean
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
@@ -224,8 +224,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      *
      * @return the plan manager
      */
-    protected PlanManager getPlanManager() {
-        return planManager;
+    protected ModelManager getModelManager() {
+        return modelManager;
     }
 
     /**
@@ -454,22 +454,22 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a plan
      */
     @Override
-    public Plan getPlan() {
-        Plan plan = getUser().getPlan();
-        if ( plan == null ) {
+    public CollaborationModel getCollaborationModel() {
+        CollaborationModel collaborationModel = getUser().getCollaborationModel();
+        if ( collaborationModel == null ) {
             return getCommunityService().getPlan();
         } else {
-            return plan;
+            return collaborationModel;
         }
     }
 
     public String getPlanCommunityUri() {
         String uri = getUser().getPlanCommunityUri();
-        return uri == null ? getPlan().getUri() : uri;
+        return uri == null ? getCollaborationModel().getUri() : uri;
     }
 
     protected String planVersionUri() {
-        return getPlan().getVersionUri();
+        return getCollaborationModel().getVersionUri();
     }
 
     /**
@@ -545,7 +545,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a label
      */
     protected Label timeOutLabel( String id ) {
-        Label label = new Label( id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "" ) );
+        Label label = new Label( id, new Model<String>( getCollaborationModel().isDevelopment() ? "Timed out" : "" ) );
         label.add( new AttributeModifier( "class", new Model<String>( "disabled timed-out" ) ) );
         return label;
     }
@@ -570,9 +570,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         target.add( this );
     }
 
-    protected PlanPage planPage() {
+    protected ModelPage modelPage() {
         Page page = getPage();
-        return page instanceof PlanPage ? (PlanPage) page : null;
+        return page instanceof ModelPage ? (ModelPage) page : null;
     }
 
     public CommanderFactory getCommanderFactory() {
@@ -667,13 +667,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return getUser().getPlan() != null  // domain context else community context
-                ? planCommunityManager.getDomainPlanCommunity( getUser().getPlan() )
+        return getUser().getCollaborationModel() != null  // domain context else community context
+                ? planCommunityManager.getDomainPlanCommunity( getUser().getCollaborationModel() )
                 : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
     }
 
     protected PlanCommunity getDomainPlanCommunity() {
-        return planCommunityManager.getPlanCommunity( getPlanCommunity().getPlanUri() );
+        return planCommunityManager.getPlanCommunity( getPlanCommunity().getModelUri() );
     }
 
     protected CommunityService getCommunityService() {
@@ -684,8 +684,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return communityServiceFactory.getService( planCommunity );
     }
 
-    protected PlanService getPlanService() {
-        return getCommunityService().getPlanService();
+    protected ModelService getPlanService() {
+        return getCommunityService().getModelService();
     }
 
     protected Place getPlanLocale() {
@@ -717,16 +717,16 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         try {
             PageParameters parameters = new PageParameters();
             parameters.set(
-                    AbstractChannelsBasicPage.COLLAB_PLAN_PARM,
+                    AbstractChannelsBasicPage.COMMUNITY_PARM,
                     URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
-            return urlFor( CollaborationPlanPage.class, parameters ).toString();
+            return urlFor( CollaborationCommunityPage.class, parameters ).toString();
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
     }
 
     protected boolean isPlanner() {
-        return getUser().isPlannerOrAdmin( getPlanCommunity().getPlanUri() );
+        return getUser().isDeveloperOrAdmin( getPlanCommunity().getModelUri() );
     }
 
     protected Component makeHelpIcon( String id, final Guidable guidable, String iconSrc ) {

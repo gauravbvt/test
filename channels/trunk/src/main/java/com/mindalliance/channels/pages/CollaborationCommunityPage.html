@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" xmlns:wicket="http://wicket.apache.org/">
+<body>
+
+<wicket:extend>
+
+    <div class="aboutplan-quickicons">
+        <span wicket:id="details">
+            <div class="about-plan">
+                <input wicket:id="edit" type="button" value="Edit"/>
+                <!--<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>-->
+                <h4 class="community">Collaboration Community</h4>
+                <span wicket:id="name" class="plan-name">Community name</span>
+                <span wicket:id="modelVersion" class="plan-client">Model version</span>
+                <a wicket:id="updateVersion" href="#">
+                    <span wicket:id="updateVersionLabel">Update to version X</span>
+                </a>
+                <span class="locale">
+                    <strong>Locale:</strong>
+                    <span wicket:id="locale">locale</span>
+                </span>
+                <span class="description">
+                    <strong>Description:</strong>
+                    <span wicket:id="description">Description</span>
+                </span>
+                <span class="status">
+                    <strong>Status:</strong>
+                    <div wicket:id="status">[collaboration community status panel]</div>
+                </span>
+            </div>
+        </span>
+        <div wicket:id="detailsDialog" > </div>
+        <div wicket:id="goto-icons" class="quick-icons">
+            <div wicket:id="participationManager" class="goto">
+                <a wicket:id="gotoParticipationManager" href="#">
+                    <img class="icon" src="images/qi.participation.png" width="32" height="32"
+                         alt="Participation manager"/>
+                    <span>Plan<br/>Participation</span>
+                </a>
+            </div>
+
+            <div wicket:id="checklists" class="goto">
+                <a wicket:id="gotoChecklists" href="#">
+                    <img class="icon" src="images/qi.checklists.png" width="32" height="32" alt="Collaboration checklists"/>
+                    <span>Collaboration<br/>checklists</span>
+                </a>
+            </div>
+
+            <div wicket:id="rfis" class="goto">
+                <a wicket:id="gotoRFIs" href="#">
+                    <img class="icon" src="images/qi.surveys.png" width="32" height="32" alt="RFIs"/>
+                    <span wicket:id="rfisLabel">Surveys</span>
+                </a>
+            </div>
+
+            <div wicket:id="allFeedback" class="goto">
+                <a wicket:id="gotoFeedback" href="#">
+                    <img class="icon" src="images/qi.comments.png" width="32" height="32" alt="Feedback"/>
+                    <span wicket:id="feedbackLabel">Feedback</span>
+                </a>
+            </div>
+
+            <div wicket:id="requirements" class="goto">
+                <a wicket:id="gotoRequirements" href="#">
+                    <img class="icon" src="images/qi.requirements.png" width="32" height="32"
+                         alt="Collaboration requirements"/>
+                    <span>Collaboration requirements</span>
+                </a>
+            </div>
+
+            <div wicket:id="issues" class="goto">
+                <a wicket:id="gotoIssues" href="#">
+                    <img class="icon" src="images/qi.error.png" width="32" height="32" alt="Issues found in collaboration community"/>
+                    <span>Community<br/>issues</span>
+                </a>
+            </div>
+
+            <div wicket:id="model" class="goto model">
+                <a wicket:id="gotoModel" href="#">
+                    <img class="icon" src="images/qi.things_digital.png" width="32" height="32"
+                         alt="Collaboration model"/>
+                    <span>Collaboration<br />Model</span>
+                </a>
+            </div>
+
+
+        </div>
+
+        <h2 class="attachment-panel-title" wicket:id="attachmentsLabel">Community documents</h2>
+        <span wicket:id="attachments">[attachments panel]</span>
+    </div>
+
+    <div class="right-accordion">
+
+        <span wicket:id="social">[social panel]</span>
+
+    </div>
+</wicket:extend>
+</body>
+</html>

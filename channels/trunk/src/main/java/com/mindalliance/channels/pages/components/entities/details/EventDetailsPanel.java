@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -148,7 +148,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
         Event event = getPlanEvent();
         boolean oldVal = event.isSelfTerminating();
         if ( oldVal != val ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), event, "selfTerminating", val ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), event, "selfTerminating", val ) );
         }
     }
 
@@ -175,7 +175,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
         }
         Place oldScope = getPlanEvent().getScope();
         if ( !ModelObject.areEqualOrNull( oldScope, scope ) ) {
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUser().getUsername(),
                     getPlanEvent(),
                     "scope",

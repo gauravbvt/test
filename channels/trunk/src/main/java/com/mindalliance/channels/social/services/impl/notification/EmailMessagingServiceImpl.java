@@ -2,7 +2,7 @@ package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
@@ -78,14 +78,14 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             String topic,
             CommunityService communityService ) {
         boolean reported = false;
-        Plan plan = communityService.getPlan();
+        CollaborationModel collaborationModel = communityService.getPlan();
         if ( !messageables.isEmpty() ) {
-            String subject = makeReportSubject( plan.getUri(), messageables, topic, communityService );
+            String subject = makeReportSubject( collaborationModel.getUri(), messageables, topic, communityService );
             String content = makeReportContent( Messageable.Format.TEXT, messageables, topic, communityService );  // always as text for now
             for ( UserRecord recipient : recipients ) {
                 boolean success = sendEmail(
                         recipient.getEmail(),
-                        plan.getPlannerSupportCommunity( getDefaultSupportCommunity() ),
+                        collaborationModel.getPlannerSupportCommunity( getDefaultSupportCommunity() ),
                         subject,
                         content,
                         false );
@@ -130,10 +130,10 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
         return done;
     }
 
-    private String getDefaultFromAddress( Plan plan ) {
-        return plan == null
+    private String getDefaultFromAddress( CollaborationModel collaborationModel ) {
+        return collaborationModel == null
                 ? ""
-                : plan.getPlannerSupportCommunity( getPlanManager().getDefaultSupportCommunity() );
+                : collaborationModel.getPlannerSupportCommunity( getModelManager().getDefaultSupportCommunity() );
     }
 
 
@@ -142,7 +142,7 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
         return sendEmail(
                 emailAddress,
                 fromUser.getEmail(),
-                "Invitation to participate in a collaboration plan",
+                "Invitation to participate in collaboration planning",
                 message,
                 true );
     }

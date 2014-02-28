@@ -3,7 +3,6 @@ package com.mindalliance.channels.db.data;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.db.services.DataService;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -43,7 +42,7 @@ public class AbstractChannelsDocument implements ChannelsDocument {
     @Indexed
     private String communityUri;
     @Indexed
-    private String planUri;
+    private String planUri; // by which we mean collaboration model
     private int planVersion;
     private String classLabel;
     private DataLock dataLock;
@@ -61,15 +60,15 @@ public class AbstractChannelsDocument implements ChannelsDocument {
 
     public AbstractChannelsDocument( PlanCommunity planCommunity, ChannelsUser user ) {
         this( planCommunity.getUri(),
-                planCommunity.getPlanUri(),
-                planCommunity.getPlanVersion(),
+                planCommunity.getModelUri(),
+                planCommunity.getModelVersion(),
                 user.getUsername() );
     }
 
     public AbstractChannelsDocument( PlanCommunity planCommunity, String username ) {
         this( planCommunity.getUri(),
-                planCommunity.getPlanUri(),
-                planCommunity.getPlanVersion(),
+                planCommunity.getModelUri(),
+                planCommunity.getModelVersion(),
                 username );
     }
 

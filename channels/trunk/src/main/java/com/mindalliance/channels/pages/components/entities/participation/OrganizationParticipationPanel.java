@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.entities.participation;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
@@ -150,7 +150,7 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
 
     public void setPlaceHolder( boolean val ) {
         doCommand(
-                new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                new UpdateModelObject( getUser().getUsername(), getOrganization(),
                         "placeHolder",
                         val,
                         UpdateObject.Action.Set ) );
@@ -163,7 +163,7 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
 
     public void setSingleParticipation( boolean val ) {
         doCommand(
-                new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                new UpdateModelObject( getUser().getUsername(), getOrganization(),
                         "singleParticipation",
                         val,
                         UpdateObject.Action.Set ) );
@@ -185,7 +185,7 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
             if ( oldCustodian == null || !isSame( name, oldName ) )
                 newCustodian = doSafeFindOrCreateActual( Actor.class, name );
         }
-        doCommand( new UpdatePlanObject( getUser().getUsername(), org, "custodian", newCustodian ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), org, "custodian", newCustodian ) );
         getCommander().cleanup( Actor.class, oldName );
     }
 

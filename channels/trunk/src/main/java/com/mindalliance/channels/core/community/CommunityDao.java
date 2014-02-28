@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.Importer;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Requirement;
 import org.slf4j.Logger;
@@ -97,10 +97,10 @@ public class CommunityDao extends AbstractModelObjectDao {
     }
 
     public synchronized void saveWithVersion( Exporter exporter, int version ) throws IOException {
-        int oldVersion = planCommunity.getPlanVersion();
-        planCommunity.setPlanVersion( version );
+        int oldVersion = planCommunity.getModelVersion();
+        planCommunity.setModelVersion( version );
         doSave( exporter );
-        planCommunity.setPlanVersion( oldVersion );
+        planCommunity.setModelVersion( oldVersion );
     }
 
     @Override
@@ -179,8 +179,8 @@ public class CommunityDao extends AbstractModelObjectDao {
         planCommunity.setId( getIdGenerator().assignId( startId, planCommunity.getUri() ) );
     }
 
-    private PlanDao getPlanDao() {
-        return (PlanDao) getSubDao();
+    private ModelDao getPlanDao() {
+        return (ModelDao) getSubDao();
     }
 
     public Requirement createRequirement() {

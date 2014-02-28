@@ -11,8 +11,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.dao.ModelManager;
+import com.mindalliance.channels.core.model.CollaborationModel;
 
 /**
  * Adds a producer to a plan (a planner voting for it to go into production).
@@ -36,11 +36,11 @@ public class AddProducer extends AbstractCommand {
     @Override
     public Change execute( Commander commander ) throws CommandException {
         String producer = (String) get( "producer" );
-        Plan plan = commander.getPlan();
-        PlanManager planManager = commander.getCommunityService().getPlanService().getPlanManager();
-        boolean allInFavor = planManager.addProducer( producer, plan );
+        CollaborationModel collaborationModel = commander.getPlan();
+        ModelManager modelManager = commander.getCommunityService().getModelService().getModelManager();
+        boolean allInFavor = modelManager.addProducer( producer, collaborationModel );
         setTargetDescription( producer );
-        Change change = new Change( Change.Type.Updated, plan, "producers" );
+        Change change = new Change( Change.Type.Updated, collaborationModel, "producers" );
         if ( allInFavor ) {
             change.setMessage( "All developers are in favor of putting this version into production" );
         }

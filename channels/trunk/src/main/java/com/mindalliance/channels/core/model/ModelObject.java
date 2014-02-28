@@ -463,7 +463,7 @@ public abstract class ModelObject
      */
     public static List<Class> referencingClasses() {
         Class[] classes = {
-                Plan.class, PlanCommunity.class,  // added
+                CollaborationModel.class, PlanCommunity.class,  // added
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
                 Requirement.class, InfoFormat.class, InfoProduct.class, Function.class
@@ -564,7 +564,7 @@ public abstract class ModelObject
         typeLabels.addAll( ModelEntity.classLabels() );
         Collections.sort( typeLabels );
         List<String> results = new ArrayList<String>();
-        results.add( Plan.classLabel() );
+        results.add( CollaborationModel.classLabel() );
         results.addAll( typeLabels );
         return results;
     }

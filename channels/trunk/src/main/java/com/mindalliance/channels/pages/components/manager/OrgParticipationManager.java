@@ -175,7 +175,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
 
     public List<Organization> getPlaceholders() {
         List<Organization> placeholders = new ArrayList<Organization>();
-        for ( Organization placeholder : getCommunityService().getPlanService().listPlaceholderOrganizations() ) {
+        for ( Organization placeholder : getCommunityService().getModelService().listPlaceholderOrganizations() ) {
             if ( getPlaceholderFilter().equals( ALL ) ) {
                 placeholders.add( placeholder );
             } else {

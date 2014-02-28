@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -73,7 +73,7 @@ public class TypesPanel extends AbstractCommandablePanel {
     private void addTypologiesLink( WebMarkupContainer typesDiv ) {
         AjaxLink classificationsLink = new AjaxLink( "typologies" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAXONOMIES) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAXONOMIES) );
             }
         };
         classificationsLink.add( new AttributeModifier( "class", new Model<String>( "window" ) ) );
@@ -271,7 +271,7 @@ public class TypesPanel extends AbstractCommandablePanel {
             if ( name != null && !name.isEmpty()) {
                 type = doSafeFindOrCreateType( getEntity().getClass(), name );
                 if ( type != null  && !type.isUniversal() && !getEntity().hasType( type ) ) {
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(),
+                    doCommand( new UpdateModelObject( getUser().getUsername(), getEntity(),
                             "types",
                             type,
                             UpdateObject.Action.AddUnique ) );
@@ -281,7 +281,7 @@ public class TypesPanel extends AbstractCommandablePanel {
 
         public void removeType() {
             assert !isMarkedForCreation();
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(),
+            doCommand( new UpdateModelObject( getUser().getUsername(), getEntity(),
                     "types",
                     type,
                     UpdateObject.Action.Remove ) );

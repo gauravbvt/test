@@ -39,8 +39,8 @@ public class ExecutedCommand extends AbstractChannelsDocument {
 
     public ExecutedCommand( Type type, Command command, Change change, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(),
-                planCommunity.getPlanUri(),
-                planCommunity.getPlanVersion(),
+                planCommunity.getModelUri(),
+                planCommunity.getModelVersion(),
                 command.getUserName() );
         this.type = type;
         commandName = command.getName();

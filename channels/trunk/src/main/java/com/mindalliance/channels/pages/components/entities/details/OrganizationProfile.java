@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -388,7 +388,7 @@ private void adjustFields() {
                 }
             }
         }
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(), "parent", newOrg ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getOrganization(), "parent", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -418,7 +418,7 @@ private void adjustFields() {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = doSafeFindOrCreateActual( Place.class, name );
         }
-        doCommand( new UpdatePlanObject( getUser().getUsername(), org, "location", newPlace ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -458,7 +458,7 @@ private void adjustFields() {
     public void setMission( String val ) {
         if ( val != null )
             doCommand(
-                    new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                    new UpdateModelObject( getUser().getUsername(), getOrganization(),
                             "mission",
                             val,
                             UpdateObject.Action.Set ) );

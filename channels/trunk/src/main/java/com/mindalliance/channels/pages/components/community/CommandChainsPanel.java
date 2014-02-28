@@ -103,7 +103,7 @@ public class CommandChainsPanel extends AbstractResizableDiagramPanel implements
 
     @Override
     public String getHelpSectionId() {
-        return "plan_participation";
+        return "community_participation";
     }
 
     @Override

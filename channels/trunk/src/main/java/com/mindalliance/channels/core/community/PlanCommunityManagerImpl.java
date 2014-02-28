@@ -8,13 +8,13 @@ import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.JournalCommand;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
@@ -97,7 +97,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private String defaultCommunityCalendarPrivateTicket;
 
     private ApplicationContext applicationContext;
-    private Map<Plan, PlanCommunity> domainPlanCommunities = new HashMap<Plan, PlanCommunity>();
+    private Map<CollaborationModel, PlanCommunity> domainPlanCommunities = new HashMap<CollaborationModel, PlanCommunity>();
     private String serverUrl;
     private ImportExportFactory importExportFactory;
     /**
@@ -107,10 +107,10 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
 
     @Autowired
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Autowired
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     @Autowired
     private CommunityDefinitionManager communityDefinitionManager;
@@ -194,9 +194,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             CommunityDao dao = new CommunityDao( communityDefinition );
             dao.setIdGenerator( communityDefinitionManager.getIdGenerator() );
             // Get plan dao, loading it if needed
-            Plan plan = planManager.getPlan( communityDefinition.getPlanUri(), communityDefinition.getPlanVersion() );
-            PlanDao planDao = planManager.getDao( plan );
-            dao.setSubDao( planDao );
+            CollaborationModel collaborationModel = modelManager.getModel( communityDefinition.getPlanUri(), communityDefinition.getPlanVersion() );
+            ModelDao modelDao = modelManager.getDao( collaborationModel );
+            dao.setSubDao( modelDao );
             // then load community
             PlanCommunity planCommunity = dao.resetCommunity();
             dao.assignFirstIdTo( planCommunity );
@@ -224,8 +224,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 initialize( dao.getPlanCommunity() );
             }
         }
-        for ( Plan plan : planManager.getPlans() ) {
-            planCommunities.add( getDomainPlanCommunity( plan ) );
+        for ( CollaborationModel collaborationModel : modelManager.getModels() ) {
+            planCommunities.add( getDomainPlanCommunity( collaborationModel ) );
         }
         Collections.sort( planCommunities );
         planCommunities = Collections.unmodifiableList( planCommunities );
@@ -246,20 +246,20 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                     public boolean evaluate( Object object ) {
                         PlanCommunity planCommunity = (PlanCommunity) object;
                         return planCommunity.getUri().equals( planCommunityUri )
-                                && ( !planCommunity.isDomainCommunity() || planCommunity.isDevelopment() );
+                                && ( !planCommunity.isModelCommunity() || planCommunity.isDevelopment() );
                     }
                 } );
     }
 
     @Override
-    public PlanCommunity getDomainPlanCommunity( Plan plan ) {
-        PlanCommunity planCommunity = domainPlanCommunities.get( plan );
+    public PlanCommunity getDomainPlanCommunity( CollaborationModel collaborationModel ) {
+        PlanCommunity planCommunity = domainPlanCommunities.get( collaborationModel );
         if ( planCommunity == null ) {
             CommunityService communityService = (CommunityService) applicationContext.getBean( "communityService" ); // prototype bean
-            communityService.setPlanService( getPlanService( plan ) );
-            planCommunity = new PlanCommunity( plan );
+            communityService.setModelService( getPlanService( collaborationModel ) );
+            planCommunity = new PlanCommunity( collaborationModel );
             communityService.setPlanCommunity( planCommunity );
-            domainPlanCommunities.put( plan, planCommunity );
+            domainPlanCommunities.put( collaborationModel, planCommunity );
         }
         return planCommunity;
     }
@@ -273,13 +273,13 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                     public boolean evaluate( Object object ) {
                         PlanCommunity planCommunity = (PlanCommunity) object;
                         return planCommunity.getUri().equals( planCommunityUri )
-                                && ( planCommunity.getPlanVersion() == planVersion );
+                                && ( planCommunity.getModelVersion() == planVersion );
                     }
                 } );
     }
 
-    private PlanService getPlanService( Plan plan ) {
-        return planServiceFactory.getService( plan );
+    private ModelService getPlanService( CollaborationModel collaborationModel ) {
+        return modelServiceFactory.getService( collaborationModel );
     }
 
     ///// CommandListener
@@ -355,10 +355,10 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
 
     @Override
-    public PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder, CommunityService communityService ) {
+    public PlanCommunity createNewCommunityFor( CollaborationModel collaborationModel, ChannelsUser founder, CommunityService communityService ) {
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
-                plan.getUri(),
-                plan.getVersion() );
+                collaborationModel.getUri(),
+                collaborationModel.getVersion() );
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
         userRecordService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
@@ -368,7 +368,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     private void registerFixedOrganizations( ChannelsUser founder, CommunityService communityService ) {
-        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class ) ) {
+        for ( Organization org : communityService.getModelService().listActualEntities( Organization.class ) ) {
             if ( !org.isPlaceHolder() ) {
                 registeredOrganizationService.findOrAdd( founder, org.getName(), true, communityService );
             }
@@ -376,11 +376,11 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     @Override
-    public List<String> listAllAdopters( Plan plan ) {
+    public List<String> listAllAdopters( CollaborationModel collaborationModel ) {
         Set<String> adopters = new HashSet<String>();
-        String planUri = plan.getUri();
+        String planUri = collaborationModel.getUri();
         for ( PlanCommunity planCommunity : getPlanCommunities() ) {
-            if ( planCommunity.getPlanUri().equals( planUri ) ) {
+            if ( planCommunity.getModelUri().equals( planUri ) ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 for ( UserParticipation userParticipation :
                         participationManager.getAllParticipations( communityService ) ) {
@@ -395,12 +395,12 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     @Override
-    public PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user ) {
-        assert plan != null;
+    public PlanCommunity findPlanCommunity( CollaborationModel collaborationModel, ChannelsUser user ) {
+        assert collaborationModel != null;
         assert user != null;
         for ( PlanCommunity planCommunity : getPlanCommunities() ) {
-            if ( !planCommunity.isDomainCommunity()
-                    && planCommunity.getPlanUri().equals( plan.getUri() ) ) {
+            if ( !planCommunity.isModelCommunity()
+                    && planCommunity.getModelUri().equals( collaborationModel.getUri() ) ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 if ( !participationManager.getUserParticipations( user, communityService ).isEmpty() )
                     return planCommunity;
@@ -408,8 +408,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                     return planCommunity;
             }
         }
-        PlanCommunity planCommunity = getDomainPlanCommunity( plan );
-        if ( user.isPlannerOrAdmin( plan.getUri() ) ) {
+        PlanCommunity planCommunity = getDomainPlanCommunity( collaborationModel );
+        if ( user.isDeveloperOrAdmin( collaborationModel.getUri() ) ) {
             return planCommunity;
         }
         return null;
@@ -428,7 +428,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     @Override
     // The order of the statements is crucial - many side-effects.
     public synchronized void updateToPlanVersion( PlanCommunity planCommunity, int version ) throws IOException {
-        assert !planCommunity.isDomainCommunity();
+        assert !planCommunity.isModelCommunity();
         saveWithVersion( planCommunity, version ); // save updated to XML - id shifts will happen on reload. planCommunity not changed.
         CommunityDefinition oldDefinition = communityDefinitionManager.updateToPlanVersion( planCommunity, version );
         // continues here if community definition update successful

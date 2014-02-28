@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.AbstractChannelsDocument;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -79,11 +79,11 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     }
 
     public RFI( String username, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
     }
 
     public RFI( String username, String surveyedUsername, Employment employment, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.surveyedUsername = surveyedUsername;
         setTitle( employment.getTitle() );
         organizationId = employment.getOrganization().getId();
@@ -155,7 +155,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     }
 
     public RFISurvey getRfiSurvey( CommunityService communityService ) {
-        return communityService.getPlanService().getSurveysDAO().findRFISurvey( rfiSurveyUid );
+        return communityService.getModelService().getSurveysDAO().findRFISurvey( rfiSurveyUid );
     }
 
     public void setRfiSurvey( RFISurvey rfiSurvey ) {
@@ -411,7 +411,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
             String topic,
             Format format,
             CommunityService communityService ) {
-        SurveysDAO surveysDAO = communityService.getPlanService().getSurveysDAO();
+        SurveysDAO surveysDAO = communityService.getModelService().getSurveysDAO();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagContent( format, communityService, surveysDAO );
         else if ( topic.equals( TODO ) )
@@ -427,11 +427,11 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
             String topic,
             Format format,
             CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, communityService );
         else if ( topic.equals( NEW ) )
-            return getNewRFISubject( format, planService, planService.getSurveysDAO() );
+            return getNewRFISubject( format, modelService, modelService.getSurveysDAO() );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
@@ -471,7 +471,9 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
                 .append( surveysDAO.getPercentRequiredQuestionsAnswered( this ) )
                 .append( "% of all required questions. Completing this survey would be greatly appreciated!\n\n" )
                 .append( "Regards,\n\n" )
-                .append( "The planners of " )
+                .append( "The " )
+                .append( communityService.getPlanCommunity().isModelCommunity() ? "developers" : "planners")
+                .append( " of " )
                 .append( communityService.getPlanCommunity().getName() );
         return sb.toString();
     }
@@ -517,24 +519,24 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
         return sb.toString();
     }
 
-    private String getNewRFISubject( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+    private String getNewRFISubject( Format format, ModelService modelService, SurveysDAO surveysDAO ) {
         // ignore format
         return "New survey: " + getName();
     }
 
     private String getNewRFIContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // ignore format
-        Plan plan = communityService.getPlan();
+        CollaborationModel collaborationModel = communityService.getPlan();
         StringBuilder sb = new StringBuilder();
         ChannelsUser surveyedUser = communityService.getUserRecordService().getUserWithIdentity( getSurveyedUsername() );
         if ( surveyedUser != null ) {
-            sb.append( plan.getClient() );
+            sb.append( collaborationModel.getClient() );
             sb.append( " invites you to participate in a survey about the \"" )
-                    .append( plan.getName() )
-                    .append( "\" collaboration plan.\n\n" );
-            if ( !plan.getDescription().isEmpty() ) {
-                sb.append( "About the plan: " )
-                        .append( plan.getDescription() )
+                    .append( collaborationModel.getName() )
+                    .append( "\" collaboration model.\n\n" );
+            if ( !collaborationModel.getDescription().isEmpty() ) {
+                sb.append( "About the model: " )
+                        .append( collaborationModel.getDescription() )
                         .append( "\n" );
             }
             if ( communityService.getPlanCommunity().getLocale( communityService ) != null ) {
@@ -578,7 +580,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
                 }
             }
             sb.append( "\nThank you!\n" );
-            sb.append( plan.getClient() );
+            sb.append( collaborationModel.getClient() );
         }
         return sb.toString();
     }

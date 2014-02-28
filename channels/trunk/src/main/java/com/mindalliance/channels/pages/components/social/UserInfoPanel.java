@@ -338,7 +338,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         List<PlanCommunity> planCommunities = planCommunityManager.getPlanCommunities();
         ChannelsUser user = getUser();
         for ( PlanCommunity planCommunity : planCommunities ) {
-            if ( !planCommunity.isDomainCommunity() ) {
+            if ( !planCommunity.isModelCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 missingMedia.addAll( communityService.findMissingContactInfoMedia( user ) );
             }
@@ -413,7 +413,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         try {
             adjustFields( target );
             if ( save() ) {
-                Change change = new Change( Change.Type.Updated, getPlan() );
+                Change change = new Change( Change.Type.Updated, getCollaborationModel() );
                 change.setProperty( "user" );
                 change.setMessage( "Changes were applied." );
                 resetAll();

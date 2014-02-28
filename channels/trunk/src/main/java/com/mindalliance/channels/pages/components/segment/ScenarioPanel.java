@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Level;
@@ -111,7 +111,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
 
     public void setEventLevel( String val ) {
         Level level = val.equals( ANY ) ? null : Level.valueOf( val );
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "eventLevel", level ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(), "eventLevel", level ) );
     }
 
     private List<String> getEventLevelChoices() {
@@ -134,7 +134,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
     private void addPhaseChoice() {
         phaseChoices = new DropDownChoice<Phase>( "phase-choices",
                 new PropertyModel<Phase>( this, "phase" ),
-                new PropertyModel<List<Phase>>( getPlan(), "phases" ) );
+                new PropertyModel<List<Phase>>( getCollaborationModel(), "phases" ) );
         phaseChoices.setOutputMarkupId( true );
         phaseChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -191,7 +191,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
     private void addEventTimingsPanel() {
         contextContainer = new WebMarkupContainer( "contextContainer" );
         add( contextContainer );
-        contextContainer.setVisible( getPlan().isDevelopment() || !getSegment().getContext().isEmpty() );
+        contextContainer.setVisible( getCollaborationModel().isDevelopment() || !getSegment().getContext().isEmpty() );
         EventTimingsPanel eventTimingsPanel = new EventTimingsPanel( "context", new PropertyModel<Segment>( this, "segment" ) );
         contextContainer.add( eventTimingsPanel );
     }
@@ -221,7 +221,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().safeFindOrCreateType( Event.class, name );
         }
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "event", newEvent ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(), "event", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 
@@ -240,7 +240,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
      * @param phase a phase
      */
     public void setPhase( Phase phase ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "phase", phase ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(), "phase", phase ) );
     }
 
     private Event getEvent() {

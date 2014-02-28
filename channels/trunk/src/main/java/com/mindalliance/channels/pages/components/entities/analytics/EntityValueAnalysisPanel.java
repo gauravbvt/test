@@ -68,7 +68,7 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
     public List<ValueAnalysis> getAllValueAnalysis() {
         List<ValueAnalysis> list = new ArrayList<ValueAnalysis>();
         QueryService queryService = getQueryService();
-        for ( Segment segment : getPlan().getSegments() ) {
+        for ( Segment segment : getCollaborationModel().getSegments() ) {
             for ( Part part : segment.listParts() ) {
                 if ( part.dependsOnEntity( getEntity( ), queryService ) ) {
                     boolean redundant = part. hasAlternativesForEntity( getEntity(), getQueryService() );

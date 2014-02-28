@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -63,7 +62,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
      */
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced receives of a part

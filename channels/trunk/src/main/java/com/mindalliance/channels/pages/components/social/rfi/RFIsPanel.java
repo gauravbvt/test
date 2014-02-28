@@ -59,7 +59,7 @@ import java.util.Map;
 public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private static final String ALL = "everyone";
-    private static final String ADOPTERS = "template adopters only"; // in communities having adopted the plan
+    private static final String ADOPTERS = "model adopters only"; // in communities having adopted the plan
     private static final int MAX_ROWS = 10;
     private String deadline = null;
 
@@ -298,7 +298,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllAdopterUsernames() {
         if ( allAdopterUsernames == null ) {
-            allAdopterUsernames = planCommunityManager.listAllAdopters( getPlan() );
+            allAdopterUsernames = planCommunityManager.listAllAdopters( getCollaborationModel() );
         }
         return allAdopterUsernames;
     }
@@ -325,7 +325,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
     private int getUserCount() {
-        return userInfoService.getUsernames( getPlan().getUri() ).size();
+        return userInfoService.getUsernames( getCollaborationModel().getUri() ).size();
     }
 
     @SuppressWarnings( "unchecked" )

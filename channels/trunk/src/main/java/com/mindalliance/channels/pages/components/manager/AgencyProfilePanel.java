@@ -285,7 +285,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
 
     private List<String> findAllOrganizationNames( CommunityService communityService ) {
         Set<String> allOrgNames = new HashSet<String>();
-        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class, true ) ) {
+        for ( Organization org : communityService.getModelService().listActualEntities( Organization.class, true ) ) {
             if ( !org.isPlaceHolder() ) {
                 allOrgNames.add( org.getName() );
             }

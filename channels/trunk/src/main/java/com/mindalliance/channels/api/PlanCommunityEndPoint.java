@@ -4,12 +4,12 @@ import com.mindalliance.channels.api.community.CommunitySummariesData;
 import com.mindalliance.channels.api.community.CommunitySummaryData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
-import com.mindalliance.channels.api.plan.PlanReleaseData;
-import com.mindalliance.channels.api.plan.PlanScopeData;
-import com.mindalliance.channels.api.plan.PlanSummariesData;
-import com.mindalliance.channels.api.plan.PlanSummaryData;
-import com.mindalliance.channels.api.procedures.AllProtocolsData;
-import com.mindalliance.channels.api.procedures.ProtocolsData;
+import com.mindalliance.channels.api.plan.ModelReleaseData;
+import com.mindalliance.channels.api.plan.ModelScopeData;
+import com.mindalliance.channels.api.plan.ModelSummariesData;
+import com.mindalliance.channels.api.plan.ModelSummaryData;
+import com.mindalliance.channels.api.procedures.AllChecklistsData;
+import com.mindalliance.channels.api.procedures.ChecklistsData;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -38,17 +38,17 @@ public interface PlanCommunityEndPoint {
     /// PLANS
 
     @GET
-    @Path( "templates" )
+    @Path( "models" )
     @Produces( MediaType.APPLICATION_XML )
     // @Produces( MediaType.APPLICATION_JSON )
     /**
      * Get summaries of all template versions visible to the authenticated user.
      * @return template summaries
      */
-    PlanSummariesData getTemplates();
+    ModelSummariesData getModels();
 
     @GET
-    @Path( "template/{uri}/version/{version}" )
+    @Path( "model/{uri}/version/{version}" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get a template's summary.
@@ -56,29 +56,29 @@ public interface PlanCommunityEndPoint {
      * @param version a template version
      * @return template summary data
      */
-    PlanSummaryData getTemplate( @PathParam("uri") String uri, @PathParam("version") String version );
+    ModelSummaryData getModel( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
     @GET
-    @Path( "template/{uri}/release" )
+    @Path( "model/{uri}/release" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get a template's production release data.
      * @param uri a template uri
      * @return template release data
      */
-    PlanReleaseData getTemplateRelease( @PathParam("uri") String uri );
+    ModelReleaseData getModelRelease( @PathParam( "uri" ) String uri );
 
     @GET
-    @Path( "mytemplates" )
+    @Path( "mymodel" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get summaries of all production template versions the authenticated user participates or can participate in.
      * @return template summaries
      */
-    PlanSummariesData getProductionTemplates();
+    ModelSummariesData getProductionModels();
 
     @GET
-    @Path( "template/{uri}/version/{version}/scope" )
+    @Path( "model/{uri}/version/{version}/scope" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the scope of a version of a template (for authorized planners only).
@@ -86,23 +86,23 @@ public interface PlanCommunityEndPoint {
      * @param version the plan's version
      * @return a template's scope
      */
-    PlanScopeData getTemplateScope( @PathParam("uri") String uri, @PathParam("version") String version );
+    ModelScopeData getModelScope( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
     @GET
-    @Path( "template/{uri}/version/{version}/issues" )
+    @Path( "model/{uri}/version/{version}/issues" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the issues reported and detected in a template (for authorized planners).
      * @param uri a plan's URI
      * @return plan issues
      */
-    IssuesData getIssues( @PathParam( "uri" ) String uri,
-                          @PathParam( "version" ) String version );
+    IssuesData getModelIssues( @PathParam( "uri" ) String uri,
+                               @PathParam( "version" ) String version );
 
     @POST
     @Consumes( MediaType.APPLICATION_FORM_URLENCODED )
-    @Path( "template/{uri}/feedback" )
-    void addFeedback(
+    @Path( "model/{uri}/feedback" )
+    void addModelFeedback(
             @PathParam( "uri" ) String uri,
             @FormParam( "type" ) String type, // one of "QUESTION", "PROBLEM", "SUGGESTION"
             @FormParam( "feedback" ) String feedback,
@@ -110,33 +110,26 @@ public interface PlanCommunityEndPoint {
 
     @POST
     @Consumes( MediaType.APPLICATION_FORM_URLENCODED )
-    @Path( "template/{uri}/invite" )
-    void invite( @PathParam( "uri" ) String uri,
-                 @FormParam( "email" ) String email,
-                 @FormParam( "message" ) String message );
+    @Path( "model/{uri}/invite" )
+    void inviteToModel( @PathParam( "uri" ) String uri,
+                        @FormParam( "email" ) String email,
+                        @FormParam( "message" ) String message );
 
 
     /// PLANS
 
     @GET
-    @Path( "plans" )
+    @Path( "communities" )
     @Produces( MediaType.APPLICATION_XML )
-    CommunitySummariesData getAllPlans();
+    CommunitySummariesData getAllCommunities();
 
     @GET
-    @Path( "plan/{uri}" )
+    @Path( "community/{uri}" )
     @Produces( MediaType.APPLICATION_XML )
-    CommunitySummaryData getPlan( @PathParam("uri") String communityUri );
-
-/*
-    @GET
-    @Path( "plan/{uri}/participation" )
-    @Produces( MediaType.APPLICATION_XML )
-    UserParticipationData getMyParticipation( String communityUri );
-*/
+    CommunitySummaryData getCommunity( @PathParam( "uri" ) String communityUri );
 
     @GET
-    @Path( "plan/{uri}/allChecklists" )
+    @Path( "community/{uri}/allChecklists" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the checklists of every participating users.
@@ -144,38 +137,38 @@ public interface PlanCommunityEndPoint {
      * @param version a plan's version
      * @return the checklists of all users participating in the plan
      */
-    AllProtocolsData getAllChecklists( @PathParam( "uri" ) String communityUri );
+    AllChecklistsData getAllChecklists( @PathParam( "uri" ) String communityUri );
 
     @GET
-    @Path( "plan/{uri}/checklists" )
+    @Path( "community/{uri}/checklists" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the checklists of the user if he/she participates in the identified community as one or more agents.
      * @param uri a community's URI
      * @return the checklists of the agents representing the user in the plan
      */
-    ProtocolsData getMyChecklists( @PathParam( "uri" ) String communityUri );
+    ChecklistsData getMyChecklists( @PathParam( "uri" ) String communityUri );
 
     @GET
-    @Path( "plan/{uri}/user/{user}/checklists" )
+    @Path( "community/{uri}/user/{user}/checklists" )
     @Produces( MediaType.APPLICATION_XML )
-    ProtocolsData getUserChecklists(
+    ChecklistsData getUserChecklists(
             @PathParam("uri") String communityUri,
             @PathParam("user") String username );
 
 
     @GET
-    @Path( "plan/{uri}/agent/{agentId}/org/{orgParticipationId}/checklists" ) // todo - BROKEN
+    @Path( "community/{uri}/agent/{agentId}/org/{orgParticipationId}/checklists" ) // todo - BROKEN
     @Produces( MediaType.APPLICATION_XML )
 /**
  *     Get the checklists of an agent in an organization.
  */
-    ProtocolsData getAgentChecklists( @PathParam("uri") String uri,
+    ChecklistsData getAgentChecklists( @PathParam("uri") String uri,
                                       @PathParam("agentId") String agentId,
                                       @PathParam("orgParticipationId") String orgParticipationId );  // agent in dynamically participating organization
 
     @GET
-    @Path( "plan/{uri}/user/{user}/directory" )
+    @Path( "community/{uri}/user/{user}/directory" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the contacts directory of a user in a plan.
@@ -188,30 +181,30 @@ public interface PlanCommunityEndPoint {
                                     @PathParam( "user" ) String username );
 
     @GET
-    @Path( "plan/{uri}/directory" )
+    @Path( "community/{uri}/directory" )
     @Produces( MediaType.APPLICATION_XML )
     DirectoryData getMyDirectory( @PathParam( "uri" ) String communityUri );
 
     @PUT
-    @Path( "plan/{uri}/contact/medium/{mediumId}/address/{address}" )
+    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}" )
     void addContactInfo( @PathParam( "uri" ) String communityUri,
                          @PathParam( "mediumId" ) String mediumId,
                          @PathParam( "address" ) String address );
 
     @DELETE
-    @Path( "plan/{uri}/contact/medium/{mediumId}/address/{address}" )
+    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}" )
     void removeContactInfo( @PathParam( "uri" ) String communityUri,
                             @PathParam( "mediumId" ) String mediumId,
                             @PathParam( "address" ) String address );
 
     @PUT
-    @Path( "plan/{uri}/agent/{agentId}/agency/{orgId}/participation" )
+    @Path( "community/{uri}/agent/{agentId}/agency/{orgId}/participation" )
     void acceptParticipation( @PathParam( "uri" ) String communityUri,
                               @PathParam( "agentId" ) String agentId,
                               @PathParam( "orgId") String orgId );
 
     @DELETE
-    @Path( "plan/{uri}/agent/{agentId}/agency/{orgId}/participation" )
+    @Path( "community/{uri}/agent/{agentId}/agency/{orgId}/participation" )
     void refuseParticipation( @PathParam( "uri" ) String communityUri,
                               @PathParam( "agentId" ) String agentId,
                               @PathParam( "orgId") String orgId );
@@ -227,10 +220,10 @@ public interface PlanCommunityEndPoint {
      *
      * @param uri               a plan's URI
      * @param version           the plan's version
-     * @param plannerOnly       whether only planners are authorized
+     * @param developerOnly       whether only planners are authorized
      * @return a plan's scope
      */
-    PlanScopeData templateScope( String uri, String version, boolean plannerOnly );
+    ModelScopeData modelScope( String uri, String version, boolean developerOnly );
 
 
 }

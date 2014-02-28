@@ -11,12 +11,11 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
@@ -122,21 +121,21 @@ public interface Analyst extends CommandListener {
     /**
      * Whether a commitment can be realized.
      * @param commitment a commitment
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @param communityService a query service
      * @return a Boolean
      */
-    Boolean canBeRealized( Commitment commitment, Plan plan, CommunityService communityService );
+    Boolean canBeRealized( Commitment commitment, CollaborationModel collaborationModel, CommunityService communityService );
 
     /**
      * Find problem impeding realization of a commitment.
      *
-     * @param plan       a plan
+     * @param collaborationModel       a plan
      * @param commitment a communication commitment
      * @param communityService a query service
      * @return a boolean
      */
-    List<String> findRealizabilityProblems( Plan plan, Commitment commitment, CommunityService communityService );
+    List<String> findRealizabilityProblems( CollaborationModel collaborationModel, Commitment commitment, CommunityService communityService );
 
 
     /**

@@ -65,7 +65,7 @@ public class Questionnaire extends AbstractChannelsDocument {
     }
 
     public Questionnaire( PlanCommunity planCommunity, String username ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
     }
 
     public Questionnaire( long id ) {

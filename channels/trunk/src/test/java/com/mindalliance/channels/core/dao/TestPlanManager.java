@@ -5,12 +5,12 @@ package com.mindalliance.channels.dao;
 
 import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanDefinitionManager;
-import com.mindalliance.channels.core.dao.PlanListener;
-import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.PlanManagerImpl;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelDefinitionManager;
+import com.mindalliance.channels.core.dao.ModelListener;
+import com.mindalliance.channels.core.dao.ModelManager;
+import com.mindalliance.channels.core.dao.ModelManagerImpl;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,10 +23,10 @@ import static org.junit.Assert.assertNull;
  */
 public class TestPlanManager {
 
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Mock
-    private PlanDefinitionManager planDefinitionManager;
+    private ModelDefinitionManager modelDefinitionManager;
 
     public TestPlanManager() {
     }
@@ -34,39 +34,39 @@ public class TestPlanManager {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks( this );        
-        planManager = new PlanManagerImpl( planDefinitionManager );
+        modelManager = new ModelManagerImpl( modelDefinitionManager );
     }
 
     @Test
     public void testListeners() {
-        PlanListener listener = new DummyPlanListener();
+        ModelListener listener = new com.mindalliance.channels.dao.TestPlanManager.DummyModelListener();
 
-        planManager.addListener( listener );
-        planManager.removeListener( listener );
+        modelManager.addListener( listener );
+        modelManager.removeListener( listener );
     }
 
     @Test
     public void testBadUris() {
-        assertNull( planManager.findDevelopmentPlan( "bla" ) );
-        assertNull( planManager.findProductionPlan( "bla" ) );
+        assertNull( modelManager.findDevelopmentModel( "bla" ) );
+        assertNull( modelManager.findProductionModel( "bla" ) );
     }
 
     //================================
-    private static class DummyPlanListener implements PlanListener {
+    private static class DummyModelListener implements ModelListener {
 
-        public void aboutToProductize( Plan devPlan ) {
+        public void aboutToProductize( CollaborationModel devCollaborationModel ) {
         }
 
-        public void productized( Plan plan ) {
+        public void productized( CollaborationModel collaborationModel ) {
         }
 
-        public void created( Plan devPlan ) {
+        public void created( CollaborationModel devCollaborationModel ) {
         }
 
-        public void loaded( PlanDao planDao ) {
+        public void loaded( ModelDao modelDao ) {
         }
 
-        public void aboutToUnload( PlanDao planDao ) {
+        public void aboutToUnload( ModelDao modelDao ) {
         }
 
         @Override

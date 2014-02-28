@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Phase.Timing;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
@@ -79,7 +79,7 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
             if ( part.isAutoStarted() )
                 put( autoStarters, part.getSegment().getEventPhase(), assignment );
             if ( part.getInitiatedEvent() != null )
-                for ( EventPhase eventPhase : findEventPhases( communityService.getPlanService(),
+                for ( EventPhase eventPhase : findEventPhases( communityService.getModelService(),
                                                                part.getInitiatedEvent(),
                                                                Timing.Concurrent ) )
                     put( initiators, eventPhase, assignment );
@@ -134,7 +134,7 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
     @Override
     protected void exportVertices( CommunityService communityService, PrintWriter out, Graph<Assignment, Commitment> g ) {
         ChecklistsMapMetaProvider metaProvider = (ChecklistsMapMetaProvider) getMetaProvider();
-        if ( !getEventPhaseStarts( communityService.getPlanService() ).isEmpty() )
+        if ( !getEventPhaseStarts( communityService.getModelService() ).isEmpty() )
             exportStarts( communityService, out, metaProvider );
         Map<Segment, Set<Assignment>> segmentAssignments = new HashMap<Segment, Set<Assignment>>();
         for ( Assignment assignment : g.vertexSet() ) {
@@ -175,7 +175,7 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
 
     private void exportStarts( CommunityService communityService, PrintWriter out,
                                AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
-        for ( EventPhase eventPhase : getEventPhaseStarts( communityService.getPlanService() ) ) {
+        for ( EventPhase eventPhase : getEventPhaseStarts( communityService.getModelService() ) ) {
             out.print( getIndent() );
             out.print( getStartId( eventPhase ) );
             out.print( "[" );
@@ -313,7 +313,7 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
     private void exportStopToStartEdges( CommunityService communityService, PrintWriter out, Graph<Assignment, Commitment> g ) {
         for ( EventPhase stopped : terminators.keySet() ) {
             if ( stopped.getPhase().isConcurrent() ) {
-                for ( EventPhase started : findEventPhases( communityService.getPlanService(), stopped.getEvent(), Timing.PostEvent ) ) {
+                for ( EventPhase started : findEventPhases( communityService.getModelService(), stopped.getEvent(), Timing.PostEvent ) ) {
                     String label = sanitize( "starts " + started.toString() );
                     List<DOTAttribute> attributes = getTimingEdgeAttributes();
                     attributes.add( new DOTAttribute( "label", label ) );
@@ -359,11 +359,11 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
         return part != null && !isVisible( part ) ? AbstractMetaProvider.INVISIBLE_COLOR : color;
     }
 
-    private List<Segment> getSegments( Plan plan ) {
+    private List<Segment> getSegments( CollaborationModel collaborationModel ) {
         List<Segment> segments = new ArrayList<Segment>();
         Segment segment = getSegment();
         if ( segment == null )
-            segments.addAll( plan.getSegments() );
+            segments.addAll( collaborationModel.getSegments() );
         else
             segments.add( segment );
         return segments;

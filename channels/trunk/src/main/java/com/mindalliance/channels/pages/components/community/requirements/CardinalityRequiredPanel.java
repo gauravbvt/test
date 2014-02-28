@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -105,7 +105,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
     public void setMinCount( String val ) {
         try {
             int minCount = ( val == null || val.trim().isEmpty() ) ? 0 : Integer.parseInt( val );
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUsername(),
                     getRequirement(),
                     cardinalityProperty + ".minCount", minCount ) );
@@ -122,7 +122,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
     public void setSafeCount( String val ) {
         try {
             Integer safeCount = ( val == null || val.trim().isEmpty() ) ? 0 : Integer.parseInt( val );
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUsername(),
                     getRequirement(),
                     cardinalityProperty + ".safeCount", safeCount ) );
@@ -139,7 +139,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
     public void setMaxCount( String val ) {
         try {
             Integer maxCount = ( val == null || val.trim().isEmpty() ) ? null : Integer.parseInt( val );
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUsername(),
                     getRequirement(),
                     cardinalityProperty + ".maxCount", maxCount ) );

@@ -165,7 +165,7 @@ public class FeedbackServiceImpl extends AbstractDataService<Feedback> implement
             bb.and( qFeedback.username.eq( username ) );
         }
         if ( communityService.isForDomain() ) { // get feedback from collaboration template and plans based on it
-            bb.and(  qFeedback.planUri.eq( communityService.getPlanCommunity().getPlanUri() ) );
+            bb.and(  qFeedback.planUri.eq( communityService.getPlanCommunity().getModelUri() ) );
         } else { // get feedback from collaboration plan
             bb.and( qFeedback.communityUri.eq( communityService.getPlanCommunity().getUri() ) );
         }

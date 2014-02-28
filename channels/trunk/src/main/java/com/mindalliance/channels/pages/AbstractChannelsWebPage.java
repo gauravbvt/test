@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -26,14 +26,14 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
@@ -88,10 +88,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     // TEMPLATE_PARM and COMMUNITY_PARM page parameters can not be both set.
 
     // Implied domain plan community (for the plan planners)
-    public static final String TEMPLATE_PARM = "template";
+    public static final String MODEL_PARM = "model";
 
     // Explicit plan community (for a community of adopters of a plan)
-    public static final String COLLAB_PLAN_PARM = "collab_plan";
+    public static final String COMMUNITY_PARM = "community";
 
     public static final String AGENT = "agent";
 
@@ -107,7 +107,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String VERSION_PARM = "v";
 
-    public static final String FROM_COLLAB_PLAN = "from_collab_plan";
+    public static final String FROM_COMMUNITY = "from_community";
 
     public static final int GALLERY_WIDTH = 775;
 
@@ -134,11 +134,11 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @SpringBean
     private AttachmentManager attachmentManager;
 
-    private Plan plan;
+    private CollaborationModel collaborationModel;
     private PlanCommunity planCommunity;
 
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     private transient QueryService queryService;
 
@@ -170,7 +170,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     private ModalWindow dialogWindow;
     private ModalWindow galleryWindow;
 
-    protected static String[] CONTEXT_PARAMS = {COLLAB_PLAN_PARM, TEMPLATE_PARM, VERSION_PARM};
+    protected static String[] CONTEXT_PARAMS = {COMMUNITY_PARM, MODEL_PARM, VERSION_PARM};
 
 
     //-------------------------------
@@ -181,7 +181,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         super( parameters );
         setPlanCommunityFromParameters( parameters ); // either community is specified or a plan or none (default plan then selected)
         if ( getPlanCommunityUri() == null ) {
-            setPlanFromParameters( parameters ); // sets at least a default plan
+            setModelFromParameters( parameters ); // sets at least a default plan
 /*
             if ( planCommunity == null && plan != null ) {
                 planCommunity = planCommunityManager.getDomainPlanCommunity( plan );
@@ -263,9 +263,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     protected void tryAcquiringLock( Change change ) {
         if ( change.isByIdOnly() ) {
-            if ( ( getPlan().isDevelopment() && getUser().isPlannerOrAdmin( getPlan().getUri() ) )
+            if ( ( getCollaborationModel().isDevelopment() && getUser().isDeveloperOrAdmin( getCollaborationModel().getUri() ) )
                     ||
-                    ( isInCommunityContext() && getUser().isPlannerOrAdmin( getPlanCommunityUri() ) ) )
+                    ( isInCommunityContext() && getUser().isDeveloperOrAdmin( getPlanCommunityUri() ) ) )
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
         } else if ( change.isForInstanceOf( Identifiable.class ) ) {
             Identifiable identifiable = change.getSubject( getCommunityService() );
@@ -275,14 +275,14 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     && (
                     ( isInCommunityContext()
                             && identifiable.isModifiableInProduction()
-                            && getUser().isPlannerOrAdmin( getPlanCommunityUri() )
+                            && getUser().isDeveloperOrAdmin( getPlanCommunityUri() )
                             ||
                             ( isPlanContext()
-                                    && getPlan().isProduction()
+                                    && getCollaborationModel().isProduction()
                                     && identifiable.isModifiableInProduction() // todo obsolete?
-                                    && getUser().isPlannerOrAdmin( getPlan().getUri() ) )
+                                    && getUser().isDeveloperOrAdmin( getCollaborationModel().getUri() ) )
                             ||
-                            ( getPlan().isDevelopment()
+                            ( getCollaborationModel().isDevelopment()
                                     && canLock( identifiable ) ) ) )
                     ) {
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
@@ -298,7 +298,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             Segment segment = (Segment) identifiable;
             return segment.isModifiabledBy( getUser().getUsername(), getCommunityService() );
         } else {
-            return getUser().isPlannerOrAdmin( getPlan().getUri() );
+            return getUser().isDeveloperOrAdmin( getCollaborationModel().getUri() );
         }
     }
 
@@ -312,19 +312,19 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     //-------------------------------
-    public static void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
+    public static void addPlanParameters( BookmarkablePageLink link, CollaborationModel collaborationModel ) {
         try {
-            link.getPageParameters().set( TEMPLATE_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( MODEL_PARM, URLEncoder.encode( collaborationModel.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        link.getPageParameters().set( VERSION_PARM, plan.getVersion() );
+        link.getPageParameters().set( VERSION_PARM, collaborationModel.getVersion() );
     }
 
     public static void addPlanCommunityParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
         try {
-            link.getPageParameters().set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -333,7 +333,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static void addInCommunityContextParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
         try {
-            link.getPageParameters().set( FROM_COLLAB_PLAN, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -347,22 +347,22 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @Override
     public boolean isCommunityContext() {
-        return getPageParameters().getNamedKeys().contains( COLLAB_PLAN_PARM );
+        return getPageParameters().getNamedKeys().contains( COMMUNITY_PARM );
     }
 
     @Override
     public boolean isPlanContext() {
-        return getPageParameters().getNamedKeys().contains( TEMPLATE_PARM );
+        return getPageParameters().getNamedKeys().contains( MODEL_PARM );
     }
 
     @Override
     public boolean isInCommunityContext() {
-        return getPageParameters().getNamedKeys().contains( FROM_COLLAB_PLAN );
+        return getPageParameters().getNamedKeys().contains( FROM_COMMUNITY );
     }
 
     @Override
     public PlanCommunity getCommunityInContext() {
-        return getPlanCommunityFromParameter( getPageParameters(), FROM_COLLAB_PLAN );
+        return getPlanCommunityFromParameter( getPageParameters(), FROM_COMMUNITY );
     }
 
     @Override
@@ -392,7 +392,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 */
     public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity ) {
         PageParameters result = new PageParameters();
-        result.set( AbstractChannelsWebPage.COLLAB_PLAN_PARM, planCommunity.getUri() );
+        result.set( AbstractChannelsWebPage.COMMUNITY_PARM, planCommunity.getUri() );
         if ( profile != null ) {
             if ( profile.getActor() != null )
                 result.set( "agent", profile.getActor().getId() );
@@ -436,15 +436,15 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PlanCommunity getPlanCommunity() {
         ChannelsUser user = getUser();
         if ( planCommunity == null ) {
-            planCommunity = user.getPlan() != null  // domain context else community context
-                    ? planCommunityManager.getDomainPlanCommunity( user.getPlan() )
+            planCommunity = user.getCollaborationModel() != null  // domain context else community context
+                    ? planCommunityManager.getDomainPlanCommunity( user.getCollaborationModel() )
                     : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
         }
         return planCommunity;
     }
 
-    private PlanService getPlanService() {
-        return getCommunityService().getPlanService();
+    private ModelService getPlanService() {
+        return getCommunityService().getModelService();
     }
 
     protected BookmarkablePageLink<? extends WebPage> getChecklistsLink(
@@ -453,9 +453,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             ChannelsUser user,
             boolean samePage ) {
         List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
-        boolean planner = user.isPlannerOrAdmin( planCommunity.getPlanUri() );
+        boolean developerOrAdmin = user.isDeveloperOrAdmin( planCommunity.getModelUri() );
         BookmarkablePageLink<? extends WebPage> guidelinesLink;
-        if ( planner || userParticipations.size() != 1 ) {
+        if ( developerOrAdmin || userParticipations.size() != 1 ) {
             guidelinesLink = newTargetedLink(
                     id,
                     "",
@@ -498,7 +498,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public BookmarkablePageLink<? extends WebPage> getRFIsLink(
             String id,
-            Plan plan,
+            CollaborationModel collaborationModel,
             boolean samePage ) {
         BookmarkablePageLink<? extends WebPage> rfisLink = newTargetedLink(
                 id,
@@ -506,7 +506,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                 RFIsPage.class,
                 new PageParameters(),
                 null,
-                plan );
+                collaborationModel );
         if ( !samePage )
             rfisLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return rfisLink;
@@ -531,7 +531,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public BookmarkablePageLink<? extends WebPage> getFeedbackLink(
             String id,
-            Plan plan,
+            CollaborationModel collaborationModel,
             boolean samePage ) {
         BookmarkablePageLink<? extends WebPage> feedbackLink = newTargetedLink(
                 id,
@@ -539,7 +539,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                 FeedbackPage.class,
                 new PageParameters(),
                 null,
-                plan );
+                collaborationModel );
         if ( !samePage )
             feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return feedbackLink;
@@ -571,13 +571,13 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters getParameters() {
         PageParameters result = new PageParameters();
         try {
-            if ( getPlan() != null ) {
-                result.set( TEMPLATE_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
-                result.set( VERSION_PARM, Integer.toString( getPlan().getVersion() ) );
+            if ( getCollaborationModel() != null ) {
+                result.set( MODEL_PARM, URLEncoder.encode( getCollaborationModel().getUri(), "UTF-8" ) );
+                result.set( VERSION_PARM, Integer.toString( getCollaborationModel().getVersion() ) );
             }
             PlanCommunity planCommunity = getPlanCommunity();
             if ( planCommunity != null ) {
-                result.set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+                result.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
             }
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to url-encode", e );
@@ -602,10 +602,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      *
      * @return a list of plans
      */
-    public final List<Plan> getPlans() {
+    public final List<CollaborationModel> getPlans() {
         ChannelsUser user = getUser();
-        List<Plan> result = new ArrayList<Plan>();
-        result.addAll( planManager.getReadablePlans( user ) );
+        List<CollaborationModel> result = new ArrayList<CollaborationModel>();
+        result.addAll( modelManager.getModelsReadableBy( user ) );
        /* for ( Plan p : planManager.getReadablePlans( user ) ) {
             String uri = p.getUri();
             if ( user.isPlannerOrAdmin( uri ) )
@@ -616,9 +616,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             }
         }
 */
-        Collections.sort( result, new Comparator<Plan>() {
+        Collections.sort( result, new Comparator<CollaborationModel>() {
             @Override
-            public int compare( Plan p1, Plan p2 ) {
+            public int compare( CollaborationModel p1, CollaborationModel p2 ) {
                 return p1.getName().compareTo( p2.getName() );
             }
         } );
@@ -634,7 +634,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         ChannelsUser user = getUser();
         List<PlanCommunity> result = new ArrayList<PlanCommunity>();
         for ( PlanCommunity p : planCommunityManager.getPlanCommunities() ) {
-            if ( !p.isDomainCommunity() ) {
+            if ( !p.isModelCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( p );
                 if ( !p.isClosed() || communityService.isCommunityPlanner( user ) )
                     result.add( p );
@@ -672,34 +672,34 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     protected String getSupportCommunity() {
         ChannelsUser user = getUser();
-        Plan plan = user.getPlan();
-        if ( plan != null ) {
-            return plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
+        CollaborationModel collaborationModel = user.getCollaborationModel();
+        if ( collaborationModel != null ) {
+            return collaborationModel.getPlannerSupportCommunity( modelManager.getDefaultSupportCommunity() );
         } else {
-            return planManager.getDefaultSupportCommunity();
+            return modelManager.getDefaultSupportCommunity();
         }
     }
 
     public boolean isPlanner() {
         ChannelsUser user = getUser();
-        return user.isPlannerOrAdmin( getPlan().getUri() );
+        return user.isDeveloperOrAdmin( getCollaborationModel().getUri() );
     }
 
     @Override
     public PageParameters makePlanParameters() {
-        return makePlanParameters( getPlan() );
+        return makePlanParameters( getCollaborationModel() );
     }
 
     @Override
-    public PageParameters makePlanParameters( Plan plan ) {
+    public PageParameters makePlanParameters( CollaborationModel collaborationModel ) {
         PageParameters params = new PageParameters();
         try {
-            params.set( TEMPLATE_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            params.set( MODEL_PARM, URLEncoder.encode( collaborationModel.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        params.set( VERSION_PARM, plan.getVersion() );
+        params.set( VERSION_PARM, collaborationModel.getVersion() );
         return params;
     }
 
@@ -708,7 +708,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters makeCommunityParameters() {
         PageParameters params = new PageParameters();
         try {
-            params.set( COLLAB_PLAN_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
+            params.set( COMMUNITY_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -720,7 +720,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters makeCommunityParameters( PlanCommunity planCommunity ) {
         PageParameters params = new PageParameters();
         try {
-            params.set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            params.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -730,7 +730,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     protected PageParameters makeAgentParameters( String username, Agent agent ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
+        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
         parameters.set( USER, username );
         parameters.set( AGENT, agent.getId() );
         parameters.set( ORG, agent.getAgency().getRegisteredOrganizationUid() );
@@ -741,7 +741,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @Override
     public PageParameters addFromCommunityParameters( PageParameters params, PlanCommunity planCommunity ) {
         try {
-            params.set( FROM_COLLAB_PLAN, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            params.set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -772,9 +772,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @Override
     public PagePathItem getCurrentContextPagePathItem() {
         String currentContextName = isPlanContext()
-                ? getPlan().toString() + " template"
+                ? getCollaborationModel().toString() + " model"
                 : isCommunityContext()
-                ? getPlanCommunity().toString() + " plan"
+                ? getPlanCommunity().toString() + " community"
                 : "";
         PageParameters params = null;
         if ( isPlanContext() ) {
@@ -786,9 +786,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             params = makeCommunityParameters();
         }
         Class<? extends Page> pageClass = isPlanContext()
-                ? PlansPage.class
+                ? ModelsPage.class
                 : isCommunityContext()
-                ? CollaborationPlanPage.class
+                ? CollaborationCommunityPage.class
                 : HomePage.class;
         return new PagePathItem( pageClass, params, currentContextName );
     }
@@ -807,19 +807,19 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             Class<? extends Page> pageClass;
             String pageName;
             if ( isPlanContext() ) {
-                Plan plan = (Plan) modelObjectContext;
-                params = makePlanParameters( plan );
+                CollaborationModel collaborationModel = (CollaborationModel) modelObjectContext;
+                params = makePlanParameters( collaborationModel );
                 if ( isInCommunityContext() ) {
                     addFromCommunityParameters( params, getCommunityInContext() );
                 }
-                pageClass = PlansPage.class;
-                pageName = plan.getVersionedName() + " template";
+                pageClass = ModelsPage.class;
+                pageName = collaborationModel.getVersionedName() + " model";
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
             } else if ( isCommunityContext() ) {
                 PlanCommunity planCommunity = (PlanCommunity) modelObjectContext;
                 params = makeCommunityParameters( planCommunity );
-                pageClass = CollaborationPlanPage.class;
-                pageName = planCommunity.getName() + " plan";
+                pageClass = CollaborationCommunityPage.class;
+                pageName = planCommunity.getName() + " community";
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
             }
         }
@@ -827,22 +827,22 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     @Override
-    public List<Plan> getOtherPlans() {
-        List<Plan> otherPlans;
+    public List<CollaborationModel> getOtherPlans() {
+        List<CollaborationModel> otherCollaborationModels;
         if ( isInCommunityContext() ) {
-            String planUri = getPlanCommunity().getPlanUri();
-            otherPlans = planManager.getPlansWithUri( planUri );
+            String planUri = getPlanCommunity().getModelUri();
+            otherCollaborationModels = modelManager.getModelsWithUri( planUri );
         } else {
-            otherPlans = getPlans();
+            otherCollaborationModels = getPlans();
         }
-        otherPlans.remove( getPlan() );
-        Collections.sort( otherPlans, new Comparator<Plan>() {
+        otherCollaborationModels.remove( getCollaborationModel() );
+        Collections.sort( otherCollaborationModels, new Comparator<CollaborationModel>() {
             @Override
-            public int compare( Plan p1, Plan p2 ) {
+            public int compare( CollaborationModel p1, CollaborationModel p2 ) {
                 return p1.getName().compareTo( p2.getName() );
             }
         } );
-        return otherPlans;
+        return otherCollaborationModels;
     }
 
     @Override
@@ -863,19 +863,19 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         if ( isCommunityContext() ) {
             intermediates.add( new PagePathItem(
-                    CollaborationPlansPage.class,
+                    CollaborationCommunitiesPage.class,
                     new PageParameters(),
-                    "All collaboration plans" ) );
+                    "All communities" ) );
         } else if ( isInCommunityContext() ) {
             intermediates.add( new PagePathItem(
-                    CollaborationPlansPage.class,
+                    CollaborationCommunitiesPage.class,
                     new PageParameters(),
-                    "All collaboration plans" ) );
+                    "All communities" ) );
             PlanCommunity planCommunity = getCommunityInContext();
             intermediates.add( new PagePathItem(
-                    CollaborationPlanPage.class,
+                    CollaborationCommunityPage.class,
                     makeCommunityParameters( planCommunity ),
-                    planCommunity.getName() + " plan"
+                    planCommunity.getName() + " community"
             ) ); // from community
         }
         return intermediates;
@@ -901,10 +901,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
-            String id, String target, Class<T> pageClass, PopupSettings popupSettings, Plan plan ) {
+            String id, String target, Class<T> pageClass, PopupSettings popupSettings, CollaborationModel collaborationModel ) {
 
         BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( id, pageClass );
-        addPlanParameters( link, plan );
+        addPlanParameters( link, collaborationModel );
         link.add( new AttributeModifier( "target", new Model<String>( target ) ) );
         if ( popupSettings != null )
             link.setPopupSettings( popupSettings );
@@ -914,9 +914,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
             String id, String target, Class<T> pageClass, PageParameters parameters, PopupSettings popupSettings,
-            Plan plan ) {
+            CollaborationModel collaborationModel ) {
 
-        BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, plan );
+        BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, collaborationModel );
         for ( String name : parameters.getNamedKeys() ) {
             link.getPageParameters().set( name, "" + parameters.get( name ) );
         }
@@ -952,12 +952,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         query.append( "&" );
         try {
             if ( user.getPlanCommunityUri() != null ) {
-                query.append( COLLAB_PLAN_PARM )
+                query.append( COMMUNITY_PARM )
                         .append( "=" )
                         .append( user.getPlanCommunityUri() );
             } else {
-                Plan p = user.getPlan();
-                query.append( TEMPLATE_PARM )
+                CollaborationModel p = user.getCollaborationModel();
+                query.append( MODEL_PARM )
                         .append( "=" )
                         .append( URLEncoder.encode( p.getUri(), "UTF-8" ) )
                         .append( "&" )
@@ -971,13 +971,13 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         return query.toString();
     }
 
-    public static PageParameters planParameters( Plan p ) {
+    public static PageParameters planParameters( CollaborationModel p ) {
         PageParameters parameters = new PageParameters();
         try {
-            parameters.set( TEMPLATE_PARM, URLEncoder.encode( p.getUri(), "UTF-8" ) );
+            parameters.set( MODEL_PARM, URLEncoder.encode( p.getUri(), "UTF-8" ) );
             parameters.set( VERSION_PARM, p.getVersion() );
         } catch ( UnsupportedEncodingException e ) {
-            LOG.error( "Failed to encode plan uri", e );
+            LOG.error( "Failed to encode model uri", e );
         }
         return parameters;
     }
@@ -997,10 +997,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         // do nothing
     }
 
-    public void setPlan( Plan plan ) {
+    public void setCollaborationModel( CollaborationModel collaborationModel ) {
         ChannelsUser user = getUser();
-        this.plan = plan;
-        user.setPlan( plan );
+        this.collaborationModel = collaborationModel;
+        user.setCollaborationModel( collaborationModel );
         queryService = null;
     }
 
@@ -1020,7 +1020,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public PlanCommunity getPlanCommunityFromParameters( PageParameters pageParameters ) {
-        return getPlanCommunityFromParameter( pageParameters, COLLAB_PLAN_PARM );
+        return getPlanCommunityFromParameter( pageParameters, COMMUNITY_PARM );
     }
 
     private PlanCommunity getPlanCommunityFromParameter( PageParameters pageParameters, String parameterName ) {
@@ -1047,111 +1047,111 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      *
      * @param parameters the parameters
      */
-    protected void setPlanFromParameters( PageParameters parameters ) {
+    protected void setModelFromParameters( PageParameters parameters ) {
         ChannelsUser user = getUser();
-        Plan plan = getPlanFromParameters( planManager, user, parameters );
-        setPlan( plan );
+        CollaborationModel collaborationModel = getModelFromParameters( modelManager, user, parameters );
+        setCollaborationModel( collaborationModel );
     }
 
-    private Plan getPlanFromParameters(
-            PlanManager planManager,
+    private CollaborationModel getModelFromParameters(
+            ModelManager modelManager,
             final ChannelsUser user,
             PageParameters parameters ) {
-        Plan plan = null;
-        String encodedPlanUri = parameters.get( TEMPLATE_PARM ).toString( null );
-        if ( encodedPlanUri == null ) {
+        CollaborationModel collaborationModel = null;
+        String encodedModelUri = parameters.get( MODEL_PARM ).toString( null );
+        if ( encodedModelUri == null ) {
             // assert parameters.get( COMMUNITY_PARM ) == null;
             String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();
             if ( isDomainPage() && !user.hasAccessTo( userPlanUri ) )
                 userPlanUri = "";
             try {
-                encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
+                encodedModelUri = URLEncoder.encode( userPlanUri, "UTF-8" );
             } catch ( UnsupportedEncodingException e ) {
-                LOG.error( "Failed to encode plan uri", e );
-                encodedPlanUri = "";
+                LOG.error( "Failed to encode model uri", e );
+                encodedModelUri = "";
             }
         }
-        String planUri = "";
+        String modelUri = "";
         try {
-            planUri = URLDecoder.decode( encodedPlanUri, "UTF-8" );
+            modelUri = URLDecoder.decode( encodedModelUri, "UTF-8" );
         } catch ( UnsupportedEncodingException e ) {
-            LOG.error( "Failed to decode plan uri", e );
+            LOG.error( "Failed to decode model uri", e );
         }
-        int planVersion = 0; // = unspecified plan version  - development for planners, if any, otherwise production
+        int modelVersion = 0; // = unspecified plan version  - development for planners, if any, otherwise production
         try {
             if ( parameters.getNamedKeys().contains( VERSION_PARM ) )
-                planVersion = parameters.get( VERSION_PARM ).toInt( 0 );
+                modelVersion = parameters.get( VERSION_PARM ).toInt( 0 );
         } catch ( StringValueConversionException ignored ) {
-            LOG.warn( "Bad plan version in url (not an integer)" );
+            LOG.warn( "Bad model version in url (not an integer)" );
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
         }
 
-        List<Plan> candidatePlans = planManager.getPlansWithUri( planUri );
+        List<CollaborationModel> candidateCollaborationModels = modelManager.getModelsWithUri( modelUri );
 /*
         if ( plans.isEmpty() )
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
 */
 
-        for ( Iterator<Plan> it = candidatePlans.iterator(); it.hasNext() && plan == null; ) {
-            Plan p = it.next();
-            if ( user.hasAccessTo( planUri ) ) {
-                if ( planVersion == 0 ) {  // unspecified version - use development version
+        for ( Iterator<CollaborationModel> it = candidateCollaborationModels.iterator(); it.hasNext() && collaborationModel == null; ) {
+            CollaborationModel p = it.next();
+            if ( user.hasAccessTo( modelUri ) ) {
+                if ( modelVersion == 0 ) {  // unspecified version - use development version
                     if ( p.isDevelopment() ) {
-                        plan = p;
+                        collaborationModel = p;
                     }
                 } else {
-                    if ( planVersion == p.getVersion() ) {
-                        plan = p;
+                    if ( modelVersion == p.getVersion() ) {
+                        collaborationModel = p;
                     }
                 }
             }
         }
         // If version mismatch, grab the production plan, if any
-        if ( planUri != null
-                && !planUri.isEmpty()
-                && plan == null
-                && ( user.hasAccessTo( planUri ) ) ) {
-            plan = planManager.findProductionPlan( planUri );
+        if ( modelUri != null
+                && !modelUri.isEmpty()
+                && collaborationModel == null
+                && ( user.hasAccessTo( modelUri ) ) ) {
+            collaborationModel = modelManager.findProductionModel( modelUri );
         }
         // if still no plan, panic and grab first authorized one.
-        if ( plan == null ) {
-            LOG.warn( "PANIC: selecting a plan" );
-            if ( candidatePlans.isEmpty() ) {
-                candidatePlans = planManager.getPlans(); // forget the plan uri, look at plans with any uris
+        if ( collaborationModel == null ) {
+            LOG.warn( "PANIC: selecting a model" );
+            if ( candidateCollaborationModels.isEmpty() ) {
+                candidateCollaborationModels = modelManager.getModels(); // forget the plan uri, look at plans with any uris
             }
             if ( isDomainPage() ) { // must be a plan where user has planner privileges
-                plan = (Plan) CollectionUtils.find(
-                        candidatePlans,
+                collaborationModel = (CollaborationModel) CollectionUtils.find(
+                        candidateCollaborationModels,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                Plan p = (Plan) object;
+                                CollaborationModel p = (CollaborationModel) object;
                                 return user.hasAccessTo( p.getUri() );
                             }
                         }
                 );
             } else { // any plan, production if possible
-                plan = (Plan) CollectionUtils.find(
-                        candidatePlans,
+                collaborationModel = (CollaborationModel) CollectionUtils.find(
+                        candidateCollaborationModels,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                Plan p = (Plan) object;
+                                CollaborationModel p = (CollaborationModel) object;
                                 return p.isProduction();
                             }
                         }
                 );
-                if ( plan == null && !candidatePlans.isEmpty() ) {
-                    plan = candidatePlans.get( 0 );
+                if ( collaborationModel == null && !candidateCollaborationModels.isEmpty() ) {
+                    collaborationModel = candidateCollaborationModels.get( 0 );
                 }
 
             }
         }
-        if ( plan == null ) { // give up - should not happen
-            LOG.error( "No plan exists" );
+        if ( collaborationModel == null ) { // give up - should not happen
+            LOG.error( "No model exists" );
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         }
-        return plan;
+        return collaborationModel;
     }
 
     protected boolean isDomainPage() {
@@ -1189,23 +1189,23 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         this.imagingService = imagingService;
     }
 
-    public Plan getPlan() {
+    public CollaborationModel getCollaborationModel() {
         if ( isCommunityContext() ) {
-            return planManager.getPlan( planCommunity.getPlanUri(), planCommunity.getPlanVersion() );
+            return modelManager.getModel( planCommunity.getModelUri(), planCommunity.getModelVersion() );
         } else {
-            if ( plan == null ) {
-                setPlanFromParameters( getPageParameters() );
+            if ( collaborationModel == null ) {
+                setModelFromParameters( getPageParameters() );
             }
-            return plan;
+            return collaborationModel;
         }
     }
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
-    public void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    public void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
     @Override

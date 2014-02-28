@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
@@ -294,18 +294,18 @@ public class AbstractDoctor implements Doctor {
     }
 
     private boolean test( CommunityService communityService, Identifiable identifiable, String test ) {
-        return identifiable instanceof Plan ?
-                passes( communityService, (Plan) identifiable, test ) :
+        return identifiable instanceof CollaborationModel ?
+                passes( communityService, (CollaborationModel) identifiable, test ) :
                 identifiable instanceof Segment ?
                         passes( communityService, (Segment) identifiable, test ) :
                         hasNoTestedIssue( communityService, identifiable, test );
     }
 
-    private boolean passes( CommunityService communityService, Plan plan, String test ) {
-        if ( !hasNoTestedIssue( communityService, plan, test ) )
+    private boolean passes( CommunityService communityService, CollaborationModel collaborationModel, String test ) {
+        if ( !hasNoTestedIssue( communityService, collaborationModel, test ) )
             return false;
 
-        for ( Segment segment : plan.getSegments() )
+        for ( Segment segment : collaborationModel.getSegments() )
             if ( !passes( communityService, segment, test ) )
                 return false;
 
@@ -343,16 +343,16 @@ public class AbstractDoctor implements Doctor {
 
     @Override
     public Integer countTestFailures( CommunityService communityService, Identifiable identifiable, String test ) {
-        return identifiable instanceof Plan ?
-                countFailures( communityService, (Plan) identifiable, test ) :
+        return identifiable instanceof CollaborationModel ?
+                countFailures( communityService, (CollaborationModel) identifiable, test ) :
                 identifiable instanceof Segment ?
                         countFailures( communityService, (Segment) identifiable, test ) :
                         countTestIssues( communityService, identifiable, test );
     }
 
-    private int countFailures( CommunityService communityService, Plan plan, String test ) {
-        int count = countTestIssues( communityService, plan, test );
-        for ( Segment segment : plan.getSegments() )
+    private int countFailures( CommunityService communityService, CollaborationModel collaborationModel, String test ) {
+        int count = countTestIssues( communityService, collaborationModel, test );
+        for ( Segment segment : collaborationModel.getSegments() )
             count += countFailures( communityService, segment, test );
         for ( ModelEntity entity : communityService.list( ModelEntity.class ) )
             count += countTestIssues( communityService, entity, test );
@@ -390,8 +390,8 @@ public class AbstractDoctor implements Doctor {
     private List<Issue> findAllIssuesInPlays( CommunityService communityService, ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
         Set<Part> parts = new HashSet<Part>();
-        for ( Play play : communityService.getPlanService().findAllPlays( resourceSpec, specific ) ) {
-            parts.add( play.getPartFor( resourceSpec, communityService.getPlanService() ) );
+        for ( Play play : communityService.getModelService().findAllPlays( resourceSpec, specific ) ) {
+            parts.add( play.getPartFor( resourceSpec, communityService.getModelService() ) );
             issues.addAll( listIssues( communityService, play.getFlow(), true ) );
         }
         for ( Part part : parts )

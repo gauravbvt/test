@@ -1,11 +1,9 @@
 package com.mindalliance.channels.api.issues;
 
-import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.api.plan.ModelSummaryData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -24,12 +22,12 @@ import java.util.List;
  * Time: 2:34 PM
  */
 @XmlRootElement( name = "issues", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"planSummary", "planMetrics", "issueMetricsData", "issues"} )
+@XmlType( propOrder = {"modelSummary", "modelMetrics", "issueMetricsData", "issues"} )
 public class IssuesData  implements Serializable {
 
 
-    private PlanSummaryData planSummaryData;
-    private PlanMetricsData planMetricsData;
+    private ModelSummaryData modelSummaryData;
+    private ModelMetricsData modelMetricsData;
     private IssueMetricsData issueMetricsData;
     private List<IssueData> issues;
 
@@ -43,8 +41,8 @@ public class IssuesData  implements Serializable {
     private void init(
             String serverUrl,
             CommunityService communityService ) {
-        planSummaryData = new PlanSummaryData( serverUrl, communityService );
-        planMetricsData = new PlanMetricsData( communityService );
+        modelSummaryData = new ModelSummaryData( serverUrl, communityService );
+        modelMetricsData = new ModelMetricsData( communityService );
         issueMetricsData = new IssueMetricsData( communityService );
         initIssues( communityService );
     }
@@ -60,14 +58,14 @@ public class IssuesData  implements Serializable {
     }
 
 
-    @XmlElement( name = "plan" )
-    public PlanSummaryData getPlanSummary( ) {
-        return planSummaryData;
+    @XmlElement( name = "model" )
+    public ModelSummaryData getModelSummary() {
+        return modelSummaryData;
     }
 
     @XmlElement
-    public PlanMetricsData getPlanMetrics() {
-        return planMetricsData;
+    public ModelMetricsData getModelMetrics() {
+        return modelMetricsData;
     }
 
     @XmlElement

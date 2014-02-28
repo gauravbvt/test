@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -46,8 +46,8 @@ public class AboutData  implements Serializable {
     // Categories = { plan, segment, task , flow, entity, other }
     @XmlElement
     public String getCategory() {
-        return modelObject instanceof Plan
-                ? "plan"
+        return modelObject instanceof CollaborationModel
+                ? "model"
                 : modelObject instanceof Segment
                 ? "segment"
                 : modelObject instanceof Part

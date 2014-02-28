@@ -32,7 +32,7 @@ import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
-import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
+import com.mindalliance.channels.graph.diagrams.ModelMapDiagram;
 import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,11 +140,11 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     @Override
     @SuppressWarnings( "unchecked" )
     // TODO - why can't I say:  List<Segment> segments ?   -- ? extends...
-    public Diagram newPlanMapDiagram( List segments, boolean groupByPhase, boolean groupByEvent, ModelEntity group,
-                                      Segment segment, SegmentRelationship scRel, double[] diagramSize,
-                                      String orientation ) {
-        LOG.debug( "Making plan diagram" );
-        return new PlanMapDiagram( segments,
+    public Diagram newModelMapDiagram( List segments, boolean groupByPhase, boolean groupByEvent, ModelEntity group,
+                                       Segment segment, SegmentRelationship scRel, double[] diagramSize,
+                                       String orientation ) {
+        LOG.debug( "Making model map diagram" );
+        return new ModelMapDiagram( segments,
                                    groupByPhase,
                                    groupByEvent,
                                    group,

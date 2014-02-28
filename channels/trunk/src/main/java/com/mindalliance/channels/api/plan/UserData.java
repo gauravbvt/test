@@ -40,7 +40,7 @@ public class UserData  implements Serializable {
         UserRecord userInfo = user.getUserRecord();
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( Channel channel : communityService.getPlanService().getUserInfoService().findChannels( userInfo, communityService ) ) {
+            for ( Channel channel : communityService.getModelService().getUserInfoService().findChannels( userInfo, communityService ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),
                         channel.getAddress(),

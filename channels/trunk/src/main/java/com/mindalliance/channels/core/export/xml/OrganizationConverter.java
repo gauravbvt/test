@@ -6,7 +6,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -142,7 +142,7 @@ public class OrganizationConverter extends EntityConverter {
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
         Organization org = (Organization) entity;
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getPlan();
         if ( nodeName.equals( "placeHolder" ) ) {
             org.setPlaceHolder( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "singleParticipation" ) ) {
@@ -179,10 +179,10 @@ public class OrganizationConverter extends EntityConverter {
             String id = reader.getAttribute( "id");
             org.setLocation( findOrCreate( Place.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "channel" ) ) {
-            Channel channel = (Channel) context.convertAnother( plan, Channel.class );
+            Channel channel = (Channel) context.convertAnother( collaborationModel, Channel.class );
             org.addChannel( channel );
         } else if ( nodeName.equals( "job" ) ) {
-            Job job = (Job) context.convertAnother( plan, Job.class );
+            Job job = (Job) context.convertAnother( collaborationModel, Job.class );
             org.addJob( job );
 /*
         } else if ( nodeName.equals( "agreement" ) ) {   // todo - obsolete

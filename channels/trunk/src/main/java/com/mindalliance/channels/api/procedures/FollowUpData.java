@@ -43,7 +43,7 @@ public class FollowUpData  extends AbstractProcedureElementData {
 
     private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         initFollowUpTask( serverUrl, communityService, user );
-        failureImpact = communityService.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+        failureImpact = communityService.getModelService().computeSharingPriority( getSharing() ).getNegativeLabel();
         documentation =  new DocumentationData( serverUrl, notificationToSelf );
     }
 

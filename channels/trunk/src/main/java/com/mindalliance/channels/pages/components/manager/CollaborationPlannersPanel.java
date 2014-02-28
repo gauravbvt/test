@@ -81,7 +81,7 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
 
     private void addPlannerAuthorization() {
         authorizationContainer = new WebMarkupContainer( "authorizingContainer" );
-        authorizationContainer.setVisible( getUser().isPlannerOrAdmin( getPlanCommunityUri() ) );
+        authorizationContainer.setVisible( getUser().isDeveloperOrAdmin( getPlanCommunityUri() ) );
         authorizationContainer.setOutputMarkupId( true );
         addOrReplace( authorizationContainer );
         addUserField();

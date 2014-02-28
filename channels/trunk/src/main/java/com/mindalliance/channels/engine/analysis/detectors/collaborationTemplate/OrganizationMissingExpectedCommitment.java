@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.model.Flow.Intent;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Organization.FamilyRelationship;
 import com.mindalliance.channels.core.model.Part.Category;
@@ -113,7 +112,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         if ( queryService.isInvolvementExpected( org ) ) {
@@ -146,7 +145,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
         // Verify that there is at least one commitment with an org
         // with a required family relationship
         // and assigned a task of a required category
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         boolean isExpected = false;
         for ( Commitment commitment : commitments ) {
             Assignment committer = commitment.getCommitter();

@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -406,7 +406,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             TransmissionMedium medium = wrapper.getMedium();
             item.add( createCheckbox( wrapper ) );
             // int maxLabelSize = maxMediumLabelSize();
-            Component mediumLinkOrLabel = findPage() instanceof PlanPage
+            Component mediumLinkOrLabel = findPage() instanceof ModelPage
                     ? new ModelObjectLink( "mediumLink", new Model<TransmissionMedium>( medium ), new Model<String>( medium.getName() ) )
                     : new Label( "mediumLink", medium.getName() );
             mediumLinkOrLabel.setVisible( !wrapper.isMarkedForCreation() );
@@ -508,7 +508,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             Component formatLinkOrLabel =
                     format == null
                             ? new Label( "formatLink", "format" )
-                            : findPage() instanceof PlanPage
+                            : findPage() instanceof ModelPage
                             ? new ModelObjectLink(
                             "formatLink",
                             new Model<InfoFormat>( format ),

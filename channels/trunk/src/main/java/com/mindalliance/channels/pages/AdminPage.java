@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.community.CommunityDefinitionManager;
-import com.mindalliance.channels.core.dao.PlanDefinitionManager;
+import com.mindalliance.channels.core.dao.ModelDefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
@@ -74,7 +74,7 @@ public class AdminPage extends AbstractChannelsWebPage {
      * The plan definition manager.
      */
     @SpringBean
-    private PlanDefinitionManager planDefinitionManager;
+    private ModelDefinitionManager modelDefinitionManager;
 
     @SpringBean
     private CommunityDefinitionManager communityDefinitionManager;
@@ -150,13 +150,13 @@ public class AdminPage extends AbstractChannelsWebPage {
                         : "Productize the current version?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                getPlanManager().productize( getPlan() );
-               // setResponsePageWithPlan();
+                getModelManager().productize( getCollaborationModel() );
+                // setResponsePageWithPlan();
             }
 
 
         };
-        productizeLink.setVisible( getPlan().isDevelopment() );
+        productizeLink.setVisible( getCollaborationModel().isDevelopment() );
         // productizeLink.setEnabled( !invalid );
         if ( invalid ) {
             addTipTitle( productizeLink, "This version has unresolved validity issues. It should not be put into production." );
@@ -166,17 +166,17 @@ public class AdminPage extends AbstractChannelsWebPage {
                 "Delete the selected plan?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                List<Plan> plans = getPlanManager().getPlans();
-                if ( plans.size() > 1 ) {
-                    getPlanManager().delete( getPlan() );
-                    setPlan( plans.get( 0 ) );
+                List<CollaborationModel> collaborationModels = getModelManager().getModels();
+                if ( collaborationModels.size() > 1 ) {
+                    getModelManager().delete( getCollaborationModel() );
+                    setCollaborationModel( collaborationModels.get( 0 ) );
                     //setResponsePageWithPlan();
                 }
             }
         };
-        deleteLink.setVisible( canBeDeletedPlan( getPlan() ) );
+        deleteLink.setVisible( canBeDeletedPlan( getCollaborationModel() ) );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
-        managePlanSubmit.setVisible( getPlan().isDevelopment() );
+        managePlanSubmit.setVisible( getCollaborationModel().isDevelopment() );
         Label homeLink = new Label( "homeLink", "Home" );
         homeLink.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -197,7 +197,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                 .add( new AbstractValidator<String>() {
                     @Override
                     protected void onValidate( IValidatable<String> validatable ) {
-                        if ( !planDefinitionManager.isNewPlanUriValid( validatable.getValue() ) )
+                        if ( !modelDefinitionManager.isNewModelUriValid( validatable.getValue() ) )
                             error( validatable, "NonUniqueUri" );
                     }
                 } );
@@ -216,13 +216,13 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                         managePlanSubmit,
 
-                        new Label( "planUri", getPlan().getUri() ),
+                        new Label( "planUri", getCollaborationModel().getUri() ),
                         new TextField<String>( "planClient",
                                 new PropertyModel<String>( this, "planClient" ) )
-                                .setEnabled( getPlan().isDevelopment() ),
+                                .setEnabled( getCollaborationModel().isDevelopment() ),
                         new Label(
                                 "communitiesCount",
-                                Integer.toString( communityDefinitionManager.countCommunitiesFor( getPlan().getUri() ) ) ),
+                                Integer.toString( communityDefinitionManager.countCommunitiesFor( getCollaborationModel().getUri() ) ) ),
                         new TextField<String>( "plannerSupportCommunity",
                                 new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
                         new TextField<String>( "userSupportCommunity",
@@ -249,9 +249,9 @@ public class AdminPage extends AbstractChannelsWebPage {
                         new TextField<String>( "surveyDefaultEmailAddress",
                                 new PropertyModel<String>( this, "surveyDefaultEmailAddress" ) ),
 */
-                        new DropDownChoice<Plan>( "plan-sel",
-                                new PropertyModel<Plan>( this, "plan" ),
-                                new PropertyModel<List<? extends Plan>>( this, "activePlans" ) )
+                        new DropDownChoice<CollaborationModel>( "plan-sel",
+                                new PropertyModel<CollaborationModel>( this, "plan" ),
+                                new PropertyModel<List<? extends CollaborationModel>>( this, "activePlans" ) )
                                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                                     private static final long serialVersionUID = -5466916152047216396L;
 
@@ -289,68 +289,68 @@ public class AdminPage extends AbstractChannelsWebPage {
                                     }
                                 } )
                                 .add( new ValidationStyler() ),
-                        new Label( "thisPlan", getPlan().getUri() )
+                        new Label( "thisPlan", getCollaborationModel().getUri() )
                 ) );
     }
 
-    private boolean canBeDeletedPlan( Plan plan ) {
-        return planDefinitionManager.getSize() >= 1
-                && communityDefinitionManager.countCommunitiesFor( plan.getUri() ) == 0;
+    private boolean canBeDeletedPlan( CollaborationModel collaborationModel ) {
+        return modelDefinitionManager.getSize() >= 1
+                && communityDefinitionManager.countCommunitiesFor( collaborationModel.getUri() ) == 0;
     }
 
     public String getPlannerSupportCommunity() {
-        String s = getPlan().getPlannerSupportCommunity();
-        return s.isEmpty() ? getPlanManager().getDefaultSupportCommunity() : s;
+        String s = getCollaborationModel().getPlannerSupportCommunity();
+        return s.isEmpty() ? getModelManager().getDefaultSupportCommunity() : s;
     }
 
     public void setPlannerSupportCommunity( String val ) {
-        String defaultCommunity = getPlanManager().getDefaultSupportCommunity();
+        String defaultCommunity = getModelManager().getDefaultSupportCommunity();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
-            getPlan().setPlannerSupportCommunity( val );
+            getCollaborationModel().setPlannerSupportCommunity( val );
     }
 
     public String getUserSupportCommunity() {
-        String s = getPlan().getUserSupportCommunity();
-        return s.isEmpty() ? getPlanManager().getDefaultSupportCommunity() : s;
+        String s = getCollaborationModel().getUserSupportCommunity();
+        return s.isEmpty() ? getModelManager().getDefaultSupportCommunity() : s;
     }
 
     public void setUserSupportCommunity( String val ) {
-        String defaultCommunity = getPlanManager().getDefaultSupportCommunity();
+        String defaultCommunity = getModelManager().getDefaultSupportCommunity();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCommunity ) )
-            getPlan().setUserSupportCommunity( val );
+            getCollaborationModel().setUserSupportCommunity( val );
     }
 
     public String getCommunityCalendarHost() {
-        String s = getPlan().getCommunityCalendarHost();
-        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendarHost() : s;
+        String s = getCollaborationModel().getCommunityCalendarHost();
+        return s.isEmpty() ? getModelManager().getDefaultCommunityCalendarHost() : s;
     }
 
     public void setCommunityCalendarHost( String val ) {
-        String defaultCalendarHost = getPlanManager().getDefaultCommunityCalendarHost();
+        String defaultCalendarHost = getModelManager().getDefaultCommunityCalendarHost();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCalendarHost ) )
-            getPlan().setCommunityCalendarHost( val );
+            getCollaborationModel().setCommunityCalendarHost( val );
     }
 
     public String getCommunityCalendar() {
-        String s = getPlan().getCommunityCalendar();
-        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendar() : s;
+        String s = getCollaborationModel().getCommunityCalendar();
+        return s.isEmpty() ? getModelManager().getDefaultCommunityCalendar() : s;
     }
 
     public void setCommunityCalendar( String val ) {
-        String defaultCalendar = getPlanManager().getDefaultCommunityCalendar();
+        String defaultCalendar = getModelManager().getDefaultCommunityCalendar();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCalendar ) )
-            getPlan().setCommunityCalendar( val );
+            getCollaborationModel().setCommunityCalendar( val );
     }
 
     public String getCommunityCalendarPrivateTicket() {
-        String s = getPlan().getCommunityCalendarPrivateTicket();
-        return s.isEmpty() ? getPlanManager().getDefaultCommunityCalendarPrivateTicket() : s;
+        String s = getCollaborationModel().getCommunityCalendarPrivateTicket();
+        return s.isEmpty() ? getModelManager().getDefaultCommunityCalendarPrivateTicket() : s;
     }
 
     public void setCommunityCalendarPrivateTicket( String val ) {
-        String defaultCalendarPrivateTicket = getPlanManager().getDefaultCommunityCalendarPrivateTicket();
+        String defaultCalendarPrivateTicket = getModelManager().getDefaultCommunityCalendarPrivateTicket();
         if ( val != null && !val.isEmpty() && !val.equals( defaultCalendarPrivateTicket ) )
-            getPlan().setCommunityCalendarPrivateTicket( val );
+            getCollaborationModel().setCommunityCalendarPrivateTicket( val );
     }
 
 
@@ -371,16 +371,16 @@ public class AdminPage extends AbstractChannelsWebPage {
                         !newPlanClient.isEmpty()
                                 ? ( newPlanClient + ( newPlanClient.endsWith( "s" ) ? "'" : "'s" ) + " New Plan" )
                                 : "New Plan";
-                planDefinitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
-                getPlanManager().assignPlans();
+                modelDefinitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
+                getModelManager().assignModels();
             } catch ( IOException e ) {
                 LOG.error( "Unable to create plan", e );
                 throw new RuntimeException( "Unable to create plan", e );
             }
         }
 
-        getPlanManager().allDevelopersInFavorToPutInProduction( getPlan() );
-        getPlanManager().save( getPlan() );
+        getModelManager().allDevelopersInFavorToPutInProduction( getCollaborationModel() );
+        getModelManager().save( getCollaborationModel() );
 /*
         try {
             userDao.save();
@@ -392,22 +392,22 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
 
-    public List<Plan> getActivePlans() {
-        List<Plan> answer = new ArrayList<Plan>();
-        for ( Plan plan : getPlanManager().getPlans() )
-            if ( plan.isDevelopment() || plan.isProduction() )
-                answer.add( plan );
+    public List<CollaborationModel> getActivePlans() {
+        List<CollaborationModel> answer = new ArrayList<CollaborationModel>();
+        for ( CollaborationModel collaborationModel : getModelManager().getModels() )
+            if ( collaborationModel.isDevelopment() || collaborationModel.isProduction() )
+                answer.add( collaborationModel );
 
         return answer;
     }
 
 
     public String getPlanClient() {
-        return getPlan().getClient();
+        return getCollaborationModel().getClient();
     }
 
     public void setPlanClient( String val ) {
-        getPlan().setClient( val );
+        getCollaborationModel().setClient( val );
     }
 
     public String getNewPlanClient() {

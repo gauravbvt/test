@@ -97,8 +97,8 @@ public class Classification implements Identifiable, Comparable<Classification> 
         return system + '/' + name;
     }
 
-    private int getEffectiveLevel( Plan plan ) {
-        Classification referenceClassification = plan.getClassification( system, name );
+    private int getEffectiveLevel( CollaborationModel collaborationModel ) {
+        Classification referenceClassification = collaborationModel.getClassification( system, name );
         if ( referenceClassification == null ) {
             LOG.warn( "Can't reference classification {}", this );
             return Integer.MIN_VALUE;
@@ -131,24 +131,24 @@ public class Classification implements Identifiable, Comparable<Classification> 
      * Whether a classification is higher than or equal to another.
      *
      * @param other a classification
-     * @param plan the containing plan
+     * @param collaborationModel the containing plan
      * @return a boolean
      */
-    public boolean encompasses( Classification other, Plan plan ) {
+    public boolean encompasses( Classification other, CollaborationModel collaborationModel ) {
         return system.equals( other.getSystem() )
-            && getEffectiveLevel( plan ) <= other.getEffectiveLevel( plan );
+            && getEffectiveLevel( collaborationModel ) <= other.getEffectiveLevel( collaborationModel );
     }
 
     /**
      * Whether a classifcation is higher than another.
      *
      * @param other a classification
-     * @param plan the context
+     * @param collaborationModel the context
      * @return a boolean
      */
-    public boolean isHigherThan( Classification other, Plan plan ) {
+    public boolean isHigherThan( Classification other, CollaborationModel collaborationModel ) {
         return system.equals( other.getSystem() )
-            && getEffectiveLevel( plan ) < other.getEffectiveLevel( plan );
+            && getEffectiveLevel( collaborationModel ) < other.getEffectiveLevel( collaborationModel );
     }
 
     @Override
@@ -183,13 +183,13 @@ public class Classification implements Identifiable, Comparable<Classification> 
      *
      * @param classifications a list of classifications
      * @param classification  a classification
-     * @param plan the containing plan
+     * @param collaborationModel the containing plan
      * @return a boolean
      */
-    public static boolean encompass( List<Classification> classifications, Classification classification, Plan plan ) {
+    public static boolean encompass( List<Classification> classifications, Classification classification, CollaborationModel collaborationModel ) {
         List<Classification> others = new ArrayList<Classification>();
         others.add( classification );
-        return encompass( classifications, others, plan );
+        return encompass( classifications, others, collaborationModel );
     }
 
     /**
@@ -197,11 +197,11 @@ public class Classification implements Identifiable, Comparable<Classification> 
      *
      * @param classifications a list of classifications
      * @param others          a list of classifications
-     * @param plan the context
+     * @param collaborationModel the context
      * @return a boolean                                                                                       1
      */
     public static boolean hasHigherClassification(
-            List<Classification> classifications, List<Classification> others, Plan plan ) {
+            List<Classification> classifications, List<Classification> others, CollaborationModel collaborationModel ) {
         if ( classifications.isEmpty() && others.isEmpty() )
             // equal
             return false;
@@ -213,7 +213,7 @@ public class Classification implements Identifiable, Comparable<Classification> 
         // At least one of the classifications is higher than one of the others.
         for ( Classification other : others ) {
             for ( Classification classification : classifications ) {
-                if ( classification.isHigherThan( other, plan ) )
+                if ( classification.isHigherThan( other, collaborationModel ) )
                     return true;
             }
         }
@@ -226,11 +226,11 @@ public class Classification implements Identifiable, Comparable<Classification> 
      *
      * @param classifications a list of classifications
      * @param others          a list of classifications
-     * @param plan the containing plan
+     * @param collaborationModel the containing plan
      * @return a boolean
      */
     public static boolean encompass(
-            List<Classification> classifications, List<Classification> others, final Plan plan ) {
+            List<Classification> classifications, List<Classification> others, final CollaborationModel collaborationModel ) {
 
         if ( classifications.isEmpty() && others.isEmpty() )
             // equal
@@ -242,13 +242,13 @@ public class Classification implements Identifiable, Comparable<Classification> 
             if ( !CollectionUtils.exists( classifications, new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ((Classification) object).encompasses( other, plan );
+                                return ((Classification) object).encompasses( other, collaborationModel );
                             }
                         } )
                  || CollectionUtils.exists( classifications, new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return other.isHigherThan( (Classification) object, plan );
+                                return other.isHigherThan( (Classification) object, collaborationModel );
                             }
                         } ) )
                 return false;

@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.PlanCommunityEndPoint;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.plan.PlanScopeData;
+import com.mindalliance.channels.api.plan.ModelScopeData;
+import com.mindalliance.channels.api.procedures.ChecklistsData;
 import com.mindalliance.channels.api.procedures.ObservationData;
-import com.mindalliance.channels.api.procedures.ProtocolsData;
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
@@ -13,7 +13,7 @@ import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -39,7 +39,7 @@ import java.util.Set;
 public class ProtocolsFinder implements Serializable {
 
     private String serverUrl;
-    private ProtocolsData protocolsData;
+    private ChecklistsData checklistsData;
     private final ChannelsUser user;
     private final String username;
     private final Agent agent;
@@ -56,20 +56,20 @@ public class ProtocolsFinder implements Serializable {
     private Map<TriggerData, List<ChecklistData>> onResearches;
     private List<RequestData> expectedQueries;
     private Set<ContactData> rolodex;
-    private PlanScopeData planScopeData;
+    private ModelScopeData modelScopeData;
     private List<String> sortedTabs;
     private Map<String, List<ContactData>> alphabetizedTriggerRolodex;
 
     public ProtocolsFinder(
             String serverUrl,
-            ProtocolsData protocolsData,
+            ChecklistsData checklistsData,
             CommunityService communityService,
             ChannelsUser user,
             PlanCommunityEndPoint channelsService,
             String username,
             Agent agent ) {
         this.serverUrl = serverUrl;
-        this.protocolsData = protocolsData;
+        this.checklistsData = checklistsData;
         this.user = user;
         this.username = username;
         this.agent = agent;
@@ -79,9 +79,9 @@ public class ProtocolsFinder implements Serializable {
     private void initFinder(
             CommunityService communityService,
             PlanCommunityEndPoint channelsService ) {
-        Plan plan = communityService.getPlan();
+        CollaborationModel collaborationModel = communityService.getPlan();
         communicationContexts = new HashSet<String>();
-        planScopeData = channelsService.templateScope( plan.getUri(), Integer.toString( plan.getVersion() ), false );
+        modelScopeData = channelsService.modelScope( collaborationModel.getUri(), Integer.toString( collaborationModel.getVersion() ), false );
         ongoingProcedures = new ArrayList<ChecklistData>();
         onObservations = new HashMap<ObservationData, List<ChecklistData>>();
         onNotificationsInContextWithInfoByContact = new HashMap<String, Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>>();
@@ -92,10 +92,10 @@ public class ProtocolsFinder implements Serializable {
         onResearches = new HashMap<TriggerData, List<ChecklistData>>();
         expectedQueries = new ArrayList<RequestData>();
         rolodex = new HashSet<ContactData>();
-        for ( ChecklistData checklistData : protocolsData.getChecklists() ) {
+        for ( ChecklistData checklistData : checklistsData.getChecklists() ) {
             processChecklistData( checklistData, communityService, user );
         }
-        expectedQueries = protocolsData.getExpectedQueries();
+        expectedQueries = checklistsData.getExpectedQueries();
     }
 
     private void processChecklistData(
@@ -386,7 +386,7 @@ public class ProtocolsFinder implements Serializable {
 
 
     public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
-        return planScopeData.findInScope( moDataClass, moId );
+        return modelScopeData.findInScope( moDataClass, moId );
     }
 
     public void sortObservations( List<ObservationData> sortedObservations ) {
@@ -399,7 +399,7 @@ public class ProtocolsFinder implements Serializable {
     }
 
     public List<Agent> getParticipatingAgents() {
-        List<Agent> participations = protocolsData.getParticipatingAgents();
+        List<Agent> participations = checklistsData.getParticipatingAgents();
         return participations == null ? new ArrayList<Agent>() : participations;
     }
 

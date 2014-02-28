@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -64,7 +64,7 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
     private String getNote() {
         ChannelsUser user = getUser();
         boolean canModify = getSegment().isModifiabledBy( getUsername(), getCommunityService() );
-        boolean isPlanner = user.isPlanner( getPlan().getUri() );
+        boolean isPlanner = user.isDeveloper( getCollaborationModel().getUri() );
         boolean isAdmin = user.isAdmin();
         boolean isExplicitOwner = getSegment().isOwnedBy( getUsername() );
         StringBuilder sb = new StringBuilder();
@@ -111,9 +111,9 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
 
     public List<SegmentOwnership> getSegmentOwnerships() {
         List<SegmentOwnership> segmentOwnerships = new ArrayList<SegmentOwnership>();
-        String uri = getPlan().getUri();
+        String uri = getCollaborationModel().getUri();
         for ( ChannelsUser user : getCommunityService().getUserRecordService().getAllEnabledUsers() ) {
-            if ( user.isPlannerOrAdmin( uri ) ) {
+            if ( user.isDeveloperOrAdmin( uri ) ) {
                 segmentOwnerships.add( new SegmentOwnership( user ) );
             }
         }
@@ -145,7 +145,7 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
 
         public void setUser( boolean val ) {
             doCommand(
-                    new UpdatePlanObject(
+                    new UpdateModelObject(
                             getUsername(),
                             getSegment(),
                             "owners",
@@ -167,7 +167,7 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
             if ( user.isAdmin() ) {
                 sb.append("Administrator");
             }
-            if ( user.isPlanner( getPlan().getUri() ) ) {
+            if ( user.isDeveloper( getCollaborationModel().getUri() ) ) {
                 if ( sb.length() > 0 ) sb.append(", ");
                 sb.append( "Developer");
             }
@@ -180,7 +180,7 @@ public class SegmentOwnersPanel extends AbstractCommandablePanel implements Guid
 
         public boolean isCanBeChanged() {
             return isLockedByUser( getSegment() )
-                    && user.isPlanner( getPlan().getUri() );
+                    && user.isDeveloper( getCollaborationModel().getUri() );
         }
 
         public String getCanModifyYesNo() {

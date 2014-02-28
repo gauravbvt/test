@@ -555,7 +555,7 @@ public class Organization extends AbstractUnicastChannelable
         sb.append( "<p>" ).append( isAgreementsRequired() ? "Yes" : "No" ).append( "</p><br/>" );
         sb.append( "<p><b>" ).append( "Custodian: " ).append( "</p><br/>" );
         sb.append( "<p>" ).append( getCustodian() == null
-                ? "Any planner"
+                ? "Any developer"
                 : getCustodian().getName() ).append( "</p><br/>" );
         return sb.toString();
     }

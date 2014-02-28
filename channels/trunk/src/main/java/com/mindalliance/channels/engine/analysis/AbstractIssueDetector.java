@@ -8,7 +8,7 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.engine.geo.GeoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     private AttachmentManager attachmentManager;
 
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Override
     public abstract List<? extends Issue> detectIssues( CommunityService communityService, Identifiable identifiable );
@@ -96,12 +95,12 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         this.attachmentManager = attachmentManager;
     }
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
-    public void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    public void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
     public GeoService getGeoService() {
@@ -156,8 +155,8 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         issue.setKind( getKind() );
         issue.setDetectorLabel( getKindLabel() );
         issue.setCanBeWaived( canBeWaived() );
-        if ( communityService.getPlanCommunity().isDomainCommunity() )
-            issue.setDefaultRemediators( communityService.getPlanService().findAllPlanners() );
+        if ( communityService.getPlanCommunity().isModelCommunity() )
+            issue.setDefaultRemediators( communityService.getModelService().findAllPlanners() );
         else
             issue.setDefaultRemediators( communityService.getCommunityPlannerUsernames() );
         issue.setDetectorTags( getTags() );

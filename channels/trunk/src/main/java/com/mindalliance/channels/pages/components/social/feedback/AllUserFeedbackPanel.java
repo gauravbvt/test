@@ -2,11 +2,10 @@ package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
@@ -69,7 +68,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             Feedback.CHECKLISTS,
             Feedback.ISSUES,
             Feedback.PARTICIPATION,
-            Feedback.TEMPLATES,
+            Feedback.MODELS,
             Feedback.SURVEYS,
             Feedback.REQUIREMENTS
     };
@@ -98,13 +97,13 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     private boolean canResolve;
     private Label resolvedLabel;
 
-    public AllUserFeedbackPanel( String id, Model<Plan> planModel, boolean showProfile ) {
+    public AllUserFeedbackPanel( String id, Model<CollaborationModel> planModel, boolean showProfile ) {
         this( id, planModel, showProfile, false, false );
     }
 
     public AllUserFeedbackPanel(
             String id,
-            IModel<Plan> planModel,
+            IModel<CollaborationModel> planModel,
             boolean showProfile,
             boolean personalOnly,
             boolean canResolve ) {

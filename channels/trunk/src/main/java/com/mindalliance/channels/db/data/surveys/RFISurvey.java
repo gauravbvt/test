@@ -3,8 +3,8 @@ package com.mindalliance.channels.db.data.surveys;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.data.AbstractModelObjectReferencingDocument;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
@@ -45,7 +45,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
     }
 
     public RFISurvey( PlanCommunity planCommunity, String username ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
     }
 
     public RFISurvey( Long id ) {
@@ -133,8 +133,8 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
         if ( !isIssueRemediation() ) {
             sb.append( ", about " )
                     .append( getMoLabel() );
-            if ( !( getModelObject( communityService ) instanceof Plan ) )
-                sb.append( " in plan " )
+            if ( !( getModelObject( communityService ) instanceof CollaborationModel ) )
+                sb.append( " in collaboration model " )
                         .append( communityService.getPlan().getName() );
         }
         return sb.toString();
@@ -148,7 +148,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
     }
 
     public boolean isObsolete( CommunityService communityService ) {
-        Questionnaire questionnaire = communityService.getPlanService()
+        Questionnaire questionnaire = communityService.getModelService()
                 .getSurveysDAO().findQuestionnaire( questionnaireUid );
         return !questionnaire.isActive()
                 || ( getAboutRef() != null && getModelObject( communityService ) == null )
@@ -186,9 +186,9 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
             String topic,
             Messageable.Format format,
             CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         if ( topic.equals( STATUS ) ) {
-            return getStatusContent( communityService, planService.getSurveysDAO() );
+            return getStatusContent( communityService, modelService.getSurveysDAO() );
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }

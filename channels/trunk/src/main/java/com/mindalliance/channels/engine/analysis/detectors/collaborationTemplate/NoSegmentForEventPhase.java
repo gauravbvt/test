@@ -5,9 +5,8 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -34,11 +33,11 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
-        Plan plan = (Plan) modelObject;
+        CollaborationModel collaborationModel = (CollaborationModel) modelObject;
         List<Segment> segments = queryService.list( Segment.class );
-        for ( final Phase phase : plan.getPhases() ) {
+        for ( final Phase phase : collaborationModel.getPhases() ) {
             for ( final Event event : queryService.list( Event.class ) ) {
                 if ( !event.isUnknown() ) {
                     boolean exists = CollectionUtils.exists(
@@ -52,7 +51,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                             }
                     );
                     if ( !exists ) {
-                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, plan );
+                        Issue issue = makeIssue( communityService, Issue.COMPLETENESS, collaborationModel );
                         issue.setDescription( "No segment for phase "
                                 + phase.getName()
                                 + " of event "
@@ -63,10 +62,10 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                                 + event.getName()
                                 + "\nor remove "
                                 + event.getName()
-                                + " from the template scope"
+                                + " from the model scope"
                                 + "\nor remove "
                                 + phase.getName()
-                                + " from the template scope."
+                                + " from the model scope."
                         );
                         issue.setSeverity( Level.Low );
                         issues.add( issue );
@@ -81,7 +80,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( Identifiable modelObject ) {
-        return modelObject instanceof Plan;
+        return modelObject instanceof CollaborationModel;
     }
 
     /**

@@ -58,10 +58,10 @@ CONFIGURATION NOTES:
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
         <property name="serverUrl" value="${server.url}"/>
     </bean>
-    <bean id="idGenerator" class="com.mindalliance.channels.core.dao.PerPlanIdGenerator"/>
+    <bean id="idGenerator" class="com.mindalliance.channels.core.dao.DefaultIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.engine.analysis.IssueScanner"/>
 
-    <bean id="planDefinitionManager" class="com.mindalliance.channels.core.dao.PlanDefinitionManager">
+    <bean id="modelDefinitionManager" class="com.mindalliance.channels.core.dao.ModelDefinitionManager">
         <constructor-arg value="${channels.home}${file.separator}data"/>
         <constructor-arg value="${channels.home}${file.separator}plans.properties"/>
         <property name="defaultProperties" value="/WEB-INF/plans.properties"/>
@@ -81,7 +81,7 @@ CONFIGURATION NOTES:
         <property name="userPhotoURL" value="photo"/>
     </bean>
 
-    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager" depends-on="planManager"> <!-- depends-on prevents random timing issue during initialization -->
+    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager" depends-on="modelManager"> <!-- depends-on prevents random timing issue during initialization -->
         <property name="uploadPath" value="uploads/"/>
         <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
         <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
@@ -110,8 +110,8 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
-    <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManagerImpl" lazy-init="true">
-        <constructor-arg ref="planDefinitionManager"/>
+    <bean id="modelManager" class="com.mindalliance.channels.core.dao.ModelManagerImpl" lazy-init="true">
+        <constructor-arg ref="modelDefinitionManager"/>
         <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
         <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
@@ -193,7 +193,7 @@ CONFIGURATION NOTES:
         <!-- 300 secs -->
     </bean>
 
-    <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
+    <bean id="modelServiceFactory" class="com.mindalliance.channels.core.query.ModelServiceFactoryImpl"
           destroy-method="destroy">
     </bean>
 
@@ -201,9 +201,9 @@ CONFIGURATION NOTES:
           destroy-method="destroy">
     </bean>
 
-    <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
-    <bean id="planService" class="com.mindalliance.channels.core.query.PlanService" scope="prototype" autowire="no">
-        <constructor-arg ref="planManager"/>
+    <!-- Note: don't use modelService directly... Use through the factory... Here for proper aspect initialization. -->
+    <bean id="modelService" class="com.mindalliance.channels.core.query.ModelService" scope="prototype" autowire="no">
+        <constructor-arg ref="modelManager"/>
         <constructor-arg ref="semanticMatcher"/>
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="attachmentManager"/>
@@ -304,7 +304,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowOverUndersecuredMedium"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.BroadcastOnlyChannels"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.IncorrectMediumDelegation"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PlanLocaleIsRelative"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.ModelLocaleIsRelative"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AlarmNotANotification"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationWithoutAssignments"/>
                 <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->

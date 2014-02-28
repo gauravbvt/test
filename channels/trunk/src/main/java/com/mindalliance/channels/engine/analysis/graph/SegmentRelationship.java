@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * A link from a plan segment to another composed of aggregated external flows. The external flows are defined in the
- * "from" plan segment and reference connectors in the "to" segment.
+ * "from" model segment and reference connectors in the "to" segment.
  */
 public class SegmentRelationship implements Identifiable {
 

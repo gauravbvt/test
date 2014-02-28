@@ -6,9 +6,8 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,8 +40,8 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     private String name;
     private String description;
-    private String planUri;
-    private int planVersion;
+    private String modelUri;
+    private int modelVersion;
     private boolean closed;
     private List<LocationBinding> locationBindings = new ArrayList<LocationBinding>();
     private String plannerSupportCommunity = "";
@@ -59,19 +58,19 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     }
 
     public PlanCommunity( // Plan community for domain planners
-                          Plan plan ) {
-        uri = plan.getUri();
-        planUri = plan.getUri();
-        planVersion = plan.getVersion();
-        id = plan.getId();
-        name = plan.getName();
-        development = plan.isDevelopment();
+                          CollaborationModel collaborationModel ) {
+        uri = collaborationModel.getUri();
+        modelUri = collaborationModel.getUri();
+        modelVersion = collaborationModel.getVersion();
+        id = collaborationModel.getId();
+        name = collaborationModel.getName();
+        development = collaborationModel.isDevelopment();
     }
 
     public PlanCommunity( PlanCommunity planCommunity ) {
         uri = planCommunity.getUri();
-        planUri = planCommunity.getPlanUri();
-        planVersion = planCommunity.getPlanVersion();
+        modelUri = planCommunity.getModelUri();
+        modelVersion = planCommunity.getModelVersion();
         id = planCommunity.getId();
         name = planCommunity.getName();
         development = planCommunity.isDevelopment();
@@ -226,12 +225,12 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return uri;
     }
 
-    public int getPlanVersion() {
-        return planVersion;
+    public int getModelVersion() {
+        return modelVersion;
     }
 
-    public String getPlanUri() {
-        return planUri;
+    public String getModelUri() {
+        return modelUri;
     }
 
     public String getCommunityCalendar() {
@@ -321,10 +320,10 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     }
 
     public boolean isEditableBy( ChannelsUser user ) {
-        if ( isDomainCommunity() ) {
-            return isDevelopment() && user.isPlannerOrAdmin( getPlanUri() );
+        if ( isModelCommunity() ) {
+            return isDevelopment() && user.isDeveloperOrAdmin( getModelUri() );
         } else {
-            return user.isPlannerOrAdmin( getUri() );
+            return user.isDeveloperOrAdmin( getUri() );
         }
     }
 
@@ -334,16 +333,16 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return communityService.isCommunityPlanner( user ); // todo - change when organization leaders implemented
     }
 
-    public void setPlanUri( String planUri ) {
-        this.planUri = planUri;
+    public void setModelUri( String modelUri ) {
+        this.modelUri = modelUri;
     }
 
-    public void setPlanVersion( int planVersion ) {
-        this.planVersion = planVersion;
+    public void setModelVersion( int modelVersion ) {
+        this.modelVersion = modelVersion;
     }
 
-    public boolean isDomainCommunity() {
-        return getUri().equals( getPlanUri() );
+    public boolean isModelCommunity() {
+        return getUri().equals( getModelUri() );
     }
 
     @Override
@@ -380,16 +379,16 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return this == obj
                 || obj != null && obj instanceof PlanCommunity
                 && getUri().equals( ( (PlanCommunity) obj ).getUri() )
-                && getPlanUri().equals( ( (PlanCommunity) obj ).getPlanUri() )
-                && getPlanVersion() == ( ( (PlanCommunity) obj ).getPlanVersion() );
+                && getModelUri().equals( ( (PlanCommunity) obj ).getModelUri() )
+                && getModelVersion() == ( ( (PlanCommunity) obj ).getModelVersion() );
     }
 
     @Override
     public int hashCode() {
         int hash = 1;
         hash = hash + 31 * getUri().hashCode();
-        hash = hash + 31 * getPlanUri().hashCode();
-        hash = hash + 31 * Long.valueOf( getPlanVersion() ).hashCode();
+        hash = hash + 31 * getModelUri().hashCode();
+        hash = hash + 31 * Long.valueOf( getModelVersion() ).hashCode();
         return hash;
     }
 

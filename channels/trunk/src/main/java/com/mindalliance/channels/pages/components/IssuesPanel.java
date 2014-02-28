@@ -69,7 +69,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
-        newIssueLink.setVisible( !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment() );
+        newIssueLink.setVisible( !getPlanCommunity().isModelCommunity() || getCollaborationModel().isDevelopment() );
         addTipTitle( newIssueLink, "Click to report a new issue" );
         add( newIssueLink );
         add( makeHelpIcon( "help", "planner", "user-issues", "adding-issue", "images/help_guide_issues.png" ) );
@@ -109,7 +109,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
      */
     public List<Issue> getModelObjectIssues() {
         List<Issue> issues;
-        if ( getPlanCommunity().isDomainCommunity() ) {
+        if ( getPlanCommunity().isModelCommunity() ) {
                 issues = new ArrayList<Issue>( getCommunityService().getDoctor().listIssues( getCommunityService(), model.getObject(), false ) );
         } else {  // no analyst-detected issues in non-domain plan community
             issues = getCommunityService().listUserIssues( model.getObject() );

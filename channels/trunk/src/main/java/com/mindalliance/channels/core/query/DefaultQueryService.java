@@ -8,8 +8,8 @@ package com.mindalliance.channels.core.query;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
@@ -39,7 +39,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -49,7 +49,6 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -96,7 +95,7 @@ public abstract class DefaultQueryService implements QueryService {
     /**
      * The plan manager.
      */
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     /**
      * Semantic matcher.
@@ -122,13 +121,13 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     protected DefaultQueryService(
-            PlanManager planManager,
+            ModelManager modelManager,
             AttachmentManager attachmentManager,
             SemanticMatcher semanticMatcher,
             UserRecordService userDao,
             SurveysDAO surveysDao
     ) {
-        this.planManager = planManager;
+        this.modelManager = modelManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
         this.userDao = userDao;
@@ -257,7 +256,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     private void beforeRemove( Segment segment ) {
-        getPlan().removeSegment( segment );
+        getCollaborationModel().removeSegment( segment );
     }
 
     private void beforeRemove( Role role ) {
@@ -544,7 +543,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
-        if ( getPlan().references( mo ) )
+        if ( getCollaborationModel().references( mo ) )
             return true;
         else
             return getDao().isReferenced( mo );
@@ -1842,9 +1841,9 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Part> findAllParts( Segment segment, Specable specable, Boolean exactMatch ) {
         Set<Part> list = new HashSet<Part>();
         Set<Segment> segments;
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getCollaborationModel();
         if ( segment == null ) {
-            segments = plan.getSegments();
+            segments = collaborationModel.getSegments();
         } else {
             segments = new HashSet<Segment>();
             segments.add( segment );
@@ -1895,7 +1894,7 @@ public abstract class DefaultQueryService implements QueryService {
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
-                userDao.getPlanners( getPlan().getUri() ),
+                userDao.getDevelopers( getCollaborationModel().getUri() ),
                 TransformerUtils.invokerTransformer( "getUsername" )
         );
     }
@@ -1941,10 +1940,10 @@ public abstract class DefaultQueryService implements QueryService {
     @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> findAllReferencing( final ModelObject referenced, final Class<T> clazz ) {
         List<T> referencers = new ArrayList<T>();
-        if ( Plan.class.isAssignableFrom( clazz ) ) {
-            Plan plan = getPlan();
-            if ( plan.references( referenced ) ) {
-                referencers.add( (T) plan );
+        if ( CollaborationModel.class.isAssignableFrom( clazz ) ) {
+            CollaborationModel collaborationModel = getCollaborationModel();
+            if ( collaborationModel.references( referenced ) ) {
+                referencers.add( (T) collaborationModel );
             }
         } else {
             for ( ModelObject referencer : findAllModelObjects( clazz ) ) {   // does not include plan
@@ -2127,7 +2126,7 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Flow> findAllSharingFlows( Segment segment ) {
         List<Segment> segments = new ArrayList<Segment>();
         if ( segment == null ) {
-            segments.addAll( getPlan().getSegments() );
+            segments.addAll( getCollaborationModel().getSegments() );
         } else {
             segments.add( segment );
         }
@@ -2480,7 +2479,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {
-        if ( getPlan().isIncident( segment.getEvent() ) ) return true;
+        if ( getCollaborationModel().isIncident( segment.getEvent() ) ) return true;
         if ( visited.contains( segment ) ) return false;
         visited.add( segment );
         boolean started = false;
@@ -2624,10 +2623,10 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Event> findPlannedEvents() {
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getCollaborationModel();
         List<Event> plannedEvents = new ArrayList<Event>();
         for ( Event event : listReferencedEntities( Event.class ) ) {
-            if ( !plan.isIncident( event ) ) plannedEvents.add( event );
+            if ( !collaborationModel.isIncident( event ) ) plannedEvents.add( event );
         }
         return plannedEvents;
     }
@@ -2672,7 +2671,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Part> findSynonymousParts( Part part ) {
         List<Part> matchingParts = new ArrayList<Part>();
-        for ( Segment segment : getPlan().getSegments() ) {
+        for ( Segment segment : getCollaborationModel().getSegments() ) {
             for ( Part other : segment.listParts() ) {
                 if ( Matcher.same( part.getTask(), other.getTask() ) ) {
                     matchingParts.add( other );
@@ -2970,8 +2969,8 @@ public abstract class DefaultQueryService implements QueryService {
      * @return the dao
      */
     @Override
-    public PlanDao getDao() {
-        return planManager.getDao( getPlan() );
+    public ModelDao getDao() {
+        return modelManager.getDao( getCollaborationModel() );
     }
 
     // QUERIES (no change to model)
@@ -3109,7 +3108,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public Plan getPlan() {
+    public CollaborationModel getCollaborationModel() {
         return ChannelsUser.plan();
     }
 
@@ -3254,7 +3253,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Boolean isInvolvementExpected( ModelEntity modelEntity ) {
-        return getPlan().getInvolvements().contains( modelEntity );
+        return getCollaborationModel().getInvolvements().contains( modelEntity );
     }
 
     @Override
@@ -3512,13 +3511,13 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
     @Override
     public Place getPlanLocale() {
-        return getPlan().getLocale();
+        return getCollaborationModel().getLocale();
     }
 
     public SemanticMatcher getSemanticMatcher() {

@@ -19,7 +19,7 @@ import com.mindalliance.channels.core.dao.IdGenerator;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.Journal;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.AssignedLocation;
@@ -42,7 +42,7 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
@@ -174,8 +174,8 @@ public class XmlStreamer implements ImportExportFactory {
             registerConverters( xstream );
         }
 
-        protected PlanDao getPlanDao() {
-            return (PlanDao) getModelObjectDao();
+        protected ModelDao getPlanDao() {
+            return (ModelDao) getModelObjectDao();
         }
 
         protected CommunityDao getCommunityDao() {
@@ -186,8 +186,8 @@ public class XmlStreamer implements ImportExportFactory {
             return getCommunityDao().getPlanCommunity();
         }
 
-        public Plan getPlan() {
-            return getPlanDao().getPlan();
+        public CollaborationModel getPlan() {
+            return getPlanDao().getCollaborationModel();
         }
 
         public AbstractModelObjectDao getModelObjectDao() {
@@ -210,7 +210,7 @@ public class XmlStreamer implements ImportExportFactory {
         @SuppressWarnings({"OverlyLongMethod", "OverlyCoupledMethod"})
         private void registerConverters( XStream stream ) {
             stream.registerConverter( new PlanCommunityConverter( this ) );
-            stream.registerConverter( new PlanConverter( this ) );
+            stream.registerConverter( new ModelConverter( this ) );
             stream.registerConverter( new EventConverter( this ) );
             stream.registerConverter( new JournalConverter( this ) );
             stream.registerConverter( new CommandConverter( this ) );
@@ -250,7 +250,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "command", AbstractCommand.class );
             stream.alias( "journal", Journal.class );
             stream.alias( "plancommunity", PlanCommunity.class );
-            stream.alias( "plan", Plan.class );
+            stream.alias( "plan", CollaborationModel.class );
             stream.alias( "classification", Classification.class );
             stream.alias( "availability", Availability.class );
             stream.alias( "medium", TransmissionMedium.class );
@@ -297,7 +297,7 @@ public class XmlStreamer implements ImportExportFactory {
 
             DataHolder dataHolder = xstream.newDataHolder();
             // MUST set to importingPlan
-            dataHolder.put( "importing-plan", true );
+            dataHolder.put( "importing-model", true );
 
             Map<String, Object> results = (Map<String, Object>) xstream.unmarshal(
                     new XppReader( new StringReader( xml ) ), null, dataHolder );
@@ -336,7 +336,7 @@ public class XmlStreamer implements ImportExportFactory {
                 reconnectExternalFlows( proxyConnectors, true );
                 // Do nothing with idMap also in results.
             } catch ( ClassNotFoundException e ) {
-                throw new IOException( "Failed to import plan.", e );
+                throw new IOException( "Failed to import model.", e );
             }
         }
 

@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.AbstractChannelsDocument;
 import com.mindalliance.channels.db.data.ContactInfo;
 import org.slf4j.Logger;
@@ -60,12 +60,12 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
      * @param name     the unique name of the organization
      */
     public RegisteredOrganization( String username, String name ) {
-        super( PlanCommunity.ANY_URI, Plan.ANY_URI, 0, username );
+        super( PlanCommunity.ANY_URI, CollaborationModel.ANY_URI, 0, username );
         this.name = name;
     }
 
     public RegisteredOrganization( String username, String name, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.name = name;
     }
 
@@ -76,12 +76,12 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
      * @param fixedOrganizationId the unique id of the fixed organization
      */
     public RegisteredOrganization( String username, long fixedOrganizationId ) {
-        super( PlanCommunity.ANY_URI, Plan.ANY_URI, 0, username );
+        super( PlanCommunity.ANY_URI, CollaborationModel.ANY_URI, 0, username );
         this.fixedOrganizationId = fixedOrganizationId;
     }
 
     public RegisteredOrganization( String username, long fixedOrganizationId, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.fixedOrganizationId = fixedOrganizationId;
     }
 

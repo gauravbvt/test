@@ -5,8 +5,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Goal;
@@ -189,7 +189,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
     }
 
     private void excludeObjective( Objective objective ) {
-        Command command = new UpdatePlanObject(
+        Command command = new UpdateModelObject(
                 getUsername(),
                 getFunction(),
                 "objectives",
@@ -234,7 +234,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
     public void setAddingGoalCategory( Goal.Category goalCategory ) {
         Objective objective = new Objective( goalCategory, addingRiskOrGain.equals( GAIN ) );
         if ( !getFunction().getObjectives().contains( objective ) ) {
-            Command command = new UpdatePlanObject(
+            Command command = new UpdateModelObject(
                     getUsername(),
                     getFunction(),
                     "objectives",
@@ -424,7 +424,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                                 InfoProduct.class,
                                 info.getName(),
                                 ModelEntity.Kind.Type ) );
-                        multi.addCommand( new UpdatePlanObject(
+                        multi.addCommand( new UpdateModelObject(
                                 getUsername(),
                                 getFunction(),
                                 property + "[" + index + "].infoProduct",
@@ -435,7 +435,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     }
                 } else {
                     doCommand(
-                            new UpdatePlanObject(
+                            new UpdateModelObject(
                                     getUsername(),
                                     getFunction(),
                                     property + "[" + index + "].infoProduct",
@@ -453,7 +453,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     && info.getInfoProduct() == null ) {
                 int index = getInformationList().indexOf( info );
                 if ( index >= 0 ) {
-                    Command command = new UpdatePlanObject(
+                    Command command = new UpdateModelObject(
                             getUsername(),
                             getFunction(),
                             property + "[" + index + "].name",
@@ -470,7 +470,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         }
 
         private void excludeInfo( Information info ) {
-            Command command = new UpdatePlanObject(
+            Command command = new UpdateModelObject(
                     getUsername(),
                     getFunction(),
                     property,
@@ -505,7 +505,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         public void setNewInfo( String value ) {
             if ( value != null && !value.trim().isEmpty() && !isRedundantInfo( value ) ) {
                 Information newInfo = new Information( value );
-                Command command = new UpdatePlanObject(
+                Command command = new UpdateModelObject(
                         getUsername(),
                         getFunction(),
                         property,
@@ -638,7 +638,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                 int infoIndex = getInformationList().indexOf( info );
                 int eoiIndex = info.getEois().indexOf( eoi );
                 if ( infoIndex >= 0 && eoiIndex >= 0 ) {
-                    Command command = new UpdatePlanObject(
+                    Command command = new UpdateModelObject(
                             getUsername(),
                             getFunction(),
                             property + "[" + infoIndex + "].eois[" + eoiIndex + "].content",
@@ -655,7 +655,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                 int infoIndex = getInformationList().indexOf( info );
                 int eoiIndex = info.getEois().indexOf( eoi );
                 if ( infoIndex >= 0 && eoiIndex >= 0 ) {
-                    Command command = new UpdatePlanObject(
+                    Command command = new UpdateModelObject(
                             getUsername(),
                             getFunction(),
                             property + "[" + infoIndex + "].eois[" + eoiIndex + "].description",
@@ -682,7 +682,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         private void excludeEoi( ElementOfInformation eoi ) {
             int index = getInformationList().indexOf( info );
             if ( index >= 0 ) {
-                Command command = new UpdatePlanObject(
+                Command command = new UpdateModelObject(
                         getUsername(),
                         getFunction(),
                         property + "[" + index + "].eois",
@@ -730,7 +730,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                 ElementOfInformation newEoi = new ElementOfInformation( value );
                 int index = getInformationList().indexOf( info );
                 if ( index >= 0 ) {
-                    Command command = new UpdatePlanObject( getUsername(),
+                    Command command = new UpdateModelObject( getUsername(),
                             getFunction(),
                             property + "[" + index + "].eois",
                             newEoi,

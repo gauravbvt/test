@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
@@ -71,7 +71,7 @@ public class AddPart extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        PlanDao planDao = commander.getPlanDao();
+        ModelDao modelDao = commander.getPlanDao();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         // Identify any undefined part likely created to be the lone default part.
         Long defaultPartId = (Long) get( "defaultPart" );
@@ -83,14 +83,14 @@ public class AddPart extends AbstractCommand {
             }
         }
         Long priorId = (Long) get( "part" );
-        Part part = planDao.createPart( segment, priorId );
+        Part part = modelDao.createPart( segment, priorId );
         String task = (String) get( "task" );
         if ( task != null ) {
             part.setTask( task );
         }
         set( "part", part.getId() );
         if ( defaultPart != null )
-            planDao.removeNode( defaultPart, segment );
+            modelDao.removeNode( defaultPart, segment );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         CommunityService communityService = commander.getCommunityService();
         if ( partState != null )

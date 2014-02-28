@@ -7,8 +7,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
@@ -21,7 +21,7 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -46,7 +46,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
      * Plan manager.
      */
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     /**
      * An issues panel for segment issues.
@@ -80,7 +80,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
+                update( target, new Change( Change.Type.Expanded, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAGS) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
@@ -152,7 +152,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
      */
     public void setName( String name ) {
         if ( name != null && !name.isEmpty() )
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "name", name ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(), "name", name ) );
     }
 
     /**
@@ -170,7 +170,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "description", desc ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(), "description", desc ) );
     }
 
 

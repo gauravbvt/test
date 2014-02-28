@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.query;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -28,7 +28,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -37,7 +37,6 @@ import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 
 import java.util.Date;
@@ -63,14 +62,14 @@ public interface QueryService {
      *
      * @return the dao
      */
-    PlanDao getDao();
+    ModelDao getDao();
 
     /**
      * Get the plan manager.
      *
      * @return the plan manager.
      */
-    PlanManager getPlanManager();
+    ModelManager getModelManager();
 
     /**
      * Get default locale.
@@ -1438,7 +1437,7 @@ public interface QueryService {
      *
      * @return a plan
      */
-    Plan getPlan();
+    CollaborationModel getCollaborationModel();
 
     /**
      * Find all employments for a part given a plan's locale.

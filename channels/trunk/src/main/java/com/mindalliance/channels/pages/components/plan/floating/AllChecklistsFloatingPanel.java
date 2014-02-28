@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
-import com.mindalliance.channels.pages.components.plan.PlanChecklistsPanel;
+import com.mindalliance.channels.pages.components.plan.ModelChecklistsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -19,9 +19,9 @@ import org.apache.wicket.model.IModel;
  */
 public class AllChecklistsFloatingPanel extends AbstractFloatingCommandablePanel {
 
-    private PlanChecklistsPanel planChecklistsPanel;
+    private ModelChecklistsPanel modelChecklistsPanel;
 
-    public AllChecklistsFloatingPanel( String id, IModel<Plan> planModel ) {
+    public AllChecklistsFloatingPanel( String id, IModel<CollaborationModel> planModel ) {
         super( id, planModel );
         init();
     }
@@ -48,8 +48,8 @@ public class AllChecklistsFloatingPanel extends AbstractFloatingCommandablePanel
     }
 
     private void addPlanChecklistsPanel() {
-        planChecklistsPanel = new PlanChecklistsPanel( "checklists" );
-        getContentContainer().add( planChecklistsPanel );
+        modelChecklistsPanel = new ModelChecklistsPanel( "checklists" );
+        getContentContainer().add( modelChecklistsPanel );
     }
 
     @Override

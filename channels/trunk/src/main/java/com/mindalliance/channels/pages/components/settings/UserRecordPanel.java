@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.settings;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.dao.ModelManager;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -40,19 +40,19 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     private final static String[] YES_NO = {YES, NO};
 
     private static final String NOT_AUTHORIZED = "Not authorized";
-    private static final String GUEST = "Guest"; // == plan participant
+    private static final String GUEST = "Guest";
     private UserRecord userRecord;
     private UserRecord userRecordUpdate;
     private WebMarkupContainer userIdentityContainer;
     private WebMarkupContainer privilegesContainer;
-    private Plan selectedPlan;
+    private CollaborationModel selectedCollaborationModel;
 
     @SpringBean
     private UserRecordService userRecordService;
 
     @SpringBean
-    private PlanManager planManager;
-    private WebMarkupContainer planPrivilegesContainer;
+    private ModelManager modelManager;
+    private WebMarkupContainer modelPrivilegesContainer;
     private WebMarkupContainer userRecordContainer;
 
     public UserRecordPanel( String id, UserRecord userRecord ) {
@@ -130,15 +130,15 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     private void addPrivileges() {
         privilegesContainer = new WebMarkupContainer( "privilegesContainer" );
         privilegesContainer.setOutputMarkupId( true );
-        addPlanPrivileges();
-        addPlanPrivilegesResetAndApply();
+        addModelPrivileges();
+        addModelPrivilegesResetAndApply();
         makeVisible( privilegesContainer, !isDisabled()
                 // && !isAdmin()
                 && ( isAdmin() || !userRecord.getUsername().equals( getUsername() ) ) );
         userRecordContainer.addOrReplace( privilegesContainer );
     }
 
-    private void addPlanPrivilegesResetAndApply() {
+    private void addModelPrivilegesResetAndApply() {
         // reset
         AjaxLink<String> resetLink = new AjaxLink<String>( "reset2" ) {
             @Override
@@ -210,43 +210,43 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
 
     }
 
-    private void addPlanPrivileges() {
-        planPrivilegesContainer = new WebMarkupContainer( "planPrivilegesContainer" );
-        planPrivilegesContainer.setOutputMarkupId( true );
-        privilegesContainer.addOrReplace( planPrivilegesContainer );
-        addPlanPrivilegesList();
+    private void addModelPrivileges() {
+        modelPrivilegesContainer = new WebMarkupContainer( "modelPrivilegesContainer" );
+        modelPrivilegesContainer.setOutputMarkupId( true );
+        privilegesContainer.addOrReplace( modelPrivilegesContainer );
+        addModelPrivilegesList();
     }
 
-    private void addPlanPrivilegesList() {
-        ListView<PlanAccessWrapper> planPrivilegesListView = new ListView<PlanAccessWrapper>(
-                "planPrivileges",
-                getPlanAccessWrappers()
+    private void addModelPrivilegesList() {
+        ListView<ModelAccessWrapper> modelPrivilegesListView = new ListView<ModelAccessWrapper>(
+                "modelPrivileges",
+                getModelAccessWrappers()
         ) {
             @Override
-            protected void populateItem( ListItem<PlanAccessWrapper> item ) {
-                PlanAccessWrapper planAccessWrapper = item.getModelObject();
+            protected void populateItem( ListItem<ModelAccessWrapper> item ) {
+                ModelAccessWrapper modelAccessWrapper = item.getModelObject();
                 item.add( new AttributeModifier( "class", item.getIndex() % 2 == 0 ? "even" : "odd" ) );
-                item.add( new Label( "planName", planAccessWrapper.getPlanName() ) );
+                item.add( new Label( "modelName", modelAccessWrapper.getModelName() ) );
                 addUserRoleChoice( item );
             }
         };
-        planPrivilegesContainer.add( planPrivilegesListView );
+        modelPrivilegesContainer.add( modelPrivilegesListView );
     }
 
     @SuppressWarnings("unchecked")
-    private List<PlanAccessWrapper> getPlanAccessWrappers() {
-        final List<String> planUris = planManager.getPlanUris();
-        List<PlanAccessWrapper> wrappers = new ArrayList<PlanAccessWrapper>();
-        for ( String planUri : planUris ) {
-            Plan plan = planManager.getDevelopmentPlan( planUri );
-            PlanAccessWrapper wrapper = new PlanAccessWrapper( plan );
+    private List<ModelAccessWrapper> getModelAccessWrappers() {
+        final List<String> modelUris = modelManager.getModelUris();
+        List<ModelAccessWrapper> wrappers = new ArrayList<ModelAccessWrapper>();
+        for ( String modelUri : modelUris ) {
+            CollaborationModel collaborationModel = modelManager.getDevelopmentModel( modelUri );
+            ModelAccessWrapper wrapper = new ModelAccessWrapper( collaborationModel );
             wrappers.add( wrapper );
         }
         return wrappers;
     }
 
-    private void addUserRoleChoice( ListItem<PlanAccessWrapper> item ) {
-        PlanAccessWrapper wrapper = item.getModelObject();
+    private void addUserRoleChoice( ListItem<ModelAccessWrapper> item ) {
+        ModelAccessWrapper wrapper = item.getModelObject();
         DropDownChoice<String> userRoleDropDownChoice = new DropDownChoice<String>(
                 "userRole",
                 new PropertyModel<String>( wrapper, "userRoleName" ),
@@ -271,8 +271,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     }
 
     public String getUserRoleName() {
-        if ( selectedPlan == null ) return null;
-        UserAccess userAccess = userRecordUpdate.getUserAccessForContext( selectedPlan.getUri() );
+        if ( selectedCollaborationModel == null ) return null;
+        UserAccess userAccess = userRecordUpdate.getUserAccessForContext( selectedCollaborationModel.getUri() );
         return userAccess == null
                 ? NOT_AUTHORIZED
                 : userAccess.getUserRole() == UserAccess.UserRole.Participant
@@ -289,8 +289,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 userRole = UserAccess.UserRole.Participant;
             else
                 userRole = UserAccess.UserRole.fromLabel( val );
-            if ( selectedPlan != null ) {
-                userRecordUpdate.setUserAccessForContext( selectedPlan.getUri(), userRole );
+            if ( selectedCollaborationModel != null ) {
+                userRecordUpdate.setUserAccessForContext( selectedCollaborationModel.getUri(), userRole );
             } else if ( userRole == UserAccess.UserRole.Disabled || userRole == UserAccess.UserRole.Admin ) {
                 userRecordUpdate.setUserRole( userRole );
             }
@@ -378,12 +378,12 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         userRecordUpdate.makeDisabled( val );
     }
 
-    public Plan getSelectedPlan() {
-        return selectedPlan;
+    public CollaborationModel getSelectedCollaborationModel() {
+        return selectedCollaborationModel;
     }
 
-    public void setSelectedPlan( Plan selectedPlan ) {
-        this.selectedPlan = selectedPlan;
+    public void setSelectedCollaborationModel( CollaborationModel selectedCollaborationModel ) {
+        this.selectedCollaborationModel = selectedCollaborationModel;
     }
 
     public String getAdminYesNo() {
@@ -403,20 +403,20 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     }
 
 
-    public class PlanAccessWrapper implements Serializable {
+    public class ModelAccessWrapper implements Serializable {
 
-        private Plan plan;
+        private CollaborationModel collaborationModel;
 
-        public PlanAccessWrapper( Plan plan ) {
-            this.plan = plan;
+        public ModelAccessWrapper( CollaborationModel collaborationModel ) {
+            this.collaborationModel = collaborationModel;
         }
 
-        public String getPlanName() {
-            return plan.getName();
+        public String getModelName() {
+            return collaborationModel.getName();
         }
 
         public String getUserRoleName() {
-            UserAccess userAccess = userRecordUpdate.getUserAccessForContext( plan.getUri() );
+            UserAccess userAccess = userRecordUpdate.getUserAccessForContext( collaborationModel.getUri() );
             return userAccess == null
                     ? NOT_AUTHORIZED
                     : userAccess.getUserRole().getLabel();
@@ -425,12 +425,12 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         public void setUserRoleName( String val ) {
             if ( val != null ) {
                 if ( val.equals( NOT_AUTHORIZED ) )
-                    userRecordUpdate.clearAccess( plan.getUri() );
+                    userRecordUpdate.clearAccess( collaborationModel.getUri() );
                 else if ( val.equals( GUEST ) ) {
-                    UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.Participant );
+                    UserAccess userAccess = new UserAccess( collaborationModel.getUri(), UserAccess.UserRole.Participant );
                     userRecordUpdate.addUserAccess( userAccess );
                 } else {
-                    UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.fromLabel( val ) );
+                    UserAccess userAccess = new UserAccess( collaborationModel.getUri(), UserAccess.UserRole.fromLabel( val ) );
                     userRecordUpdate.addUserAccess( userAccess );
                 }
             }

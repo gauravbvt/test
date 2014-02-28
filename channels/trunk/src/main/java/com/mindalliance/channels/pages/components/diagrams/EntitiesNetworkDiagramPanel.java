@@ -104,7 +104,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
      * {@inheritDoc}
      */
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, getPlan() ) );
+        update( target, new Change( Change.Type.Selected, getCollaborationModel() ) );
     }
 
     /**

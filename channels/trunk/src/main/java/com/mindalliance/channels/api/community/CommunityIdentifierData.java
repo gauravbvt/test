@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.community;
 
 import com.mindalliance.channels.api.entities.PlaceData;
-import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.api.plan.ModelIdentifierData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Place;
@@ -17,14 +17,14 @@ import java.io.Serializable;
  * Date: 4/5/13
  * Time: 9:15 AM
  */
-@XmlType( propOrder = {"uri", "name", "locale", "planIdentifier"} )
+@XmlType( propOrder = {"uri", "name", "locale", "modelIdentifier"} )
 
 public class CommunityIdentifierData implements Serializable {
 
     private String uri;
     private String name;
     private PlaceData locale;
-    private PlanIdentifierData planIdentifier;
+    private ModelIdentifierData modelIdentifier;
 
     public CommunityIdentifierData() {
         // required
@@ -41,7 +41,7 @@ public class CommunityIdentifierData implements Serializable {
         Place place = planCommunity.getLocale( communityService );
         if ( locale != null )
             locale = new PlaceData( serverUrl, place , communityService );
-        planIdentifier = new PlanIdentifierData( communityService );
+        modelIdentifier = new ModelIdentifierData( communityService );
     }
 
     @XmlElement
@@ -55,8 +55,8 @@ public class CommunityIdentifierData implements Serializable {
     }
 
     @XmlElement
-    public PlanIdentifierData getPlanIdentifier() {
-        return planIdentifier;
+    public ModelIdentifierData getModelIdentifier() {
+        return modelIdentifier;
     }
 
     @XmlElement

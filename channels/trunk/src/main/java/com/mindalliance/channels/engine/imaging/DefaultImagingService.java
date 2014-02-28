@@ -13,7 +13,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -588,7 +588,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         : modelObject instanceof Role ? "role"
                         : modelObject instanceof Organization ? "organization"
                         : modelObject instanceof Agency ? "organization"
-                        : modelObject instanceof Plan ? "plan"
+                        : modelObject instanceof CollaborationModel ? "plan"
                         : modelObject instanceof com.mindalliance.channels.core.model.Event ? "event"
                         : modelObject instanceof Place ? "place"
                         : modelObject instanceof TransmissionMedium ? "medium"

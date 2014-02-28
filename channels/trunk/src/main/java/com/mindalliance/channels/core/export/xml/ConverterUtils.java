@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.export.PartSpecification;
 import com.mindalliance.channels.core.export.SegmentSpecification;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -49,16 +49,16 @@ public class ConverterUtils {
     }
 
     public static List<Segment> findMatchingSegments(
-            PlanDao planDao, SegmentSpecification scSpec ) {
-        return findMatchingSegments( scSpec.getName(), scSpec.getDescription(), planDao );
+            ModelDao modelDao, SegmentSpecification scSpec ) {
+        return findMatchingSegments( scSpec.getName(), scSpec.getDescription(), modelDao );
     }
 
     // TODO do semantic match on segment name and description
     public static List<Segment> findMatchingSegments(
-            String segmentName, String segmentDescription, PlanDao planDao ) {
+            String segmentName, String segmentDescription, ModelDao modelDao ) {
         List<Segment> segments = new ArrayList<Segment>();
         try {
-            segments.add( planDao.findSegment( segmentName ) );
+            segments.add( modelDao.findSegment( segmentName ) );
         } catch ( NotFoundException e ) {
             LoggerFactory.getLogger( ConverterUtils.class ).info(
                 "No segment found matching name [" + segmentName

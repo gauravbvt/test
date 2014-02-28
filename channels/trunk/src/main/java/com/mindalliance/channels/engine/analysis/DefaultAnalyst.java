@@ -20,11 +20,11 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.Commitments;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
@@ -154,10 +154,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     externalFlows.add( externalFlow );
             }
         }
-        for ( Part part : communityService.getPlanService().findInitiators( toSegment ) )
+        for ( Part part : communityService.getModelService().findInitiators( toSegment ) )
             if ( part.getSegment().equals( fromSegment ) )
                 initiators.add( part );
-        for ( Part part : communityService.getPlanService().findExternalTerminators( toSegment ) )
+        for ( Part part : communityService.getModelService().findExternalTerminators( toSegment ) )
             if ( part.getSegment().equals( fromSegment ) )
                 terminators.add( part );
         if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() )
@@ -173,8 +173,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
 
     @Override
-    public Boolean canBeRealized( Commitment commitment, Plan plan, CommunityService communityService ) {
-        return findRealizabilityProblems( plan, commitment, communityService ).isEmpty();
+    public Boolean canBeRealized( Commitment commitment, CollaborationModel collaborationModel, CommunityService communityService ) {
+        return findRealizabilityProblems( collaborationModel, commitment, communityService ).isEmpty();
     }
 
 
@@ -188,8 +188,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationshipInPlan( CommunityService communityService,
                                                                                        T fromEntity, T toEntity,
                                                                                        Segment segment ) {
-        Place planLocale = communityService.getPlanService().getPlanLocale();
-        Commitments commitments = Commitments.all( communityService.getPlanService() )
+        Place planLocale = communityService.getModelService().getPlanLocale();
+        Commitments commitments = Commitments.all( communityService.getModelService() )
                 .inSegment( segment )
                 .withEntityCommitting( fromEntity, planLocale )
                 .withEntityBenefiting( toEntity, planLocale );
@@ -209,12 +209,12 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     @Override
     public List<EntityRelationship> findEntityRelationshipsInPlan( CommunityService communityService, Segment segment,
                                                                    Class<? extends ModelEntity> entityClass, Kind kind ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         List<? extends ModelEntity> entities =
                 kind == Kind.Actual
-                        ? planService.listActualEntities( entityClass )
-                        : planService.listTypeEntities( entityClass );
+                        ? modelService.listActualEntities( entityClass )
+                        : modelService.listTypeEntities( entityClass );
         for ( ModelEntity entity : entities ) {
             if ( !entity.isUnknown() )
                 rels.addAll( findEntityRelationshipsInPlan( segment, entity, communityService ) );
@@ -225,17 +225,17 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     @Override
     public List<EntityRelationship> findEntityRelationshipsInPlan( Segment segment, ModelEntity entity,
                                                                    CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        Place planLocale = planService.getPlanLocale();
+        Place planLocale = modelService.getPlanLocale();
         // Committing relationships
-        Commitments entityCommittingCommitments = Commitments.all( planService )
+        Commitments entityCommittingCommitments = Commitments.all( modelService )
                 .inSegment( segment )
                 .withEntityCommitting( entity, planLocale );
         List<? extends ModelEntity> otherEntities =
                 entity.isActual()
-                        ? planService.listActualEntities( entity.getClass() )
-                        : planService.listTypeEntities( entity.getClass() );
+                        ? modelService.listActualEntities( entity.getClass() )
+                        : modelService.listTypeEntities( entity.getClass() );
 
         for ( ModelEntity otherEntity : otherEntities ) {
             if ( !otherEntity.isUnknown() && !entity.equals( otherEntity ) ) {
@@ -251,7 +251,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         }
         // Benefiting relationships
-        Commitments entityBenefitingCommitments = Commitments.all( planService )
+        Commitments entityBenefitingCommitments = Commitments.all( modelService )
                 .inSegment( segment )
                 .withEntityBenefiting( entity, planLocale );
         for ( ModelEntity otherEntity : otherEntities ) {
@@ -280,7 +280,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<String> causes = new ArrayList<String>();
         if ( part.isProhibited() )
             causes.add( "prohibited" );
-        List<Assignment> assignments = communityService.getPlanService().findAllAssignments( part, false );
+        List<Assignment> assignments = communityService.getModelService().findAllAssignments( part, false );
         if ( assignments.isEmpty() )
             causes.add( "no agent is assigned to the task" );
         else if ( noAvailability( assignments ) )
@@ -293,7 +293,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<String> remediations = new ArrayList<String>();
         if ( part.isProhibited() )
             remediations.add( "remove the prohibition" );
-        List<Assignment> assignments = communityService.getPlanService().findAllAssignments( part, false );
+        List<Assignment> assignments = communityService.getModelService().findAllAssignments( part, false );
         if ( assignments.isEmpty() ) {
             remediations.add( "explicitly assign an agent to the task" );
             remediations.add( "profile an agent to match the task specifications" );
@@ -311,7 +311,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<String> findConceptualCausesInPlan( CommunityService communityService, Flow flow ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         List<String> causes = new ArrayList<String>();
         if ( flow.isProhibited() )
             causes.add( "prohibited" );
@@ -328,14 +328,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 causes.add( "no channels is identified" );
             else {
                 List<Commitment> commitments =
-                        planService.findAllCommitments( flow, false, planService.getAssignments( false ) );
+                        modelService.findAllCommitments( flow, false, modelService.getAssignments( false ) );
                 if ( commitments.isEmpty() ) {
                     causes.add( "there are no communication commitments between any pair of agents" );
                 } else {
                     StringBuilder sb = new StringBuilder();
-                    Plan plan = communityService.getPlan();
-                    Place locale = planService.getPlanLocale();
-                    List<Commitment> agreedTo = agreedToFilter( commitments, communityService.getPlanService() );
+                    CollaborationModel collaborationModel = communityService.getPlan();
+                    Place locale = modelService.getPlanLocale();
+                    List<Commitment> agreedTo = agreedToFilter( commitments, communityService.getModelService() );
                     if ( agreedTo.isEmpty() ) {
                         sb.append( "none of the communication commitments are agreed to as required " );
                     } else {
@@ -373,7 +373,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                         sb.append( ", or " );
                                     sb.append( "both agents are not qualified to use a transmission medium" );
                                 } else {
-                                    List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
+                                    List<Commitment> languageOverlap = commonLanguageFilter( collaborationModel, agentsQualified );
                                     if ( languageOverlap.isEmpty() ) {
                                         if ( sb.length() == 0 )
                                             sb.append( "in all communication commitments, " );
@@ -397,7 +397,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<String> findConceptualRemediationsInPlan( CommunityService communityService, Flow flow ) {
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         List<String> remediations = new ArrayList<String>();
         if ( flow.isProhibited() )
             remediations.add( "remove the prohibition" );
@@ -413,16 +413,16 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             if ( flow.getEffectiveChannels().isEmpty() )
                 remediations.add( "add at least one channel to the flow" );
             else {
-                List<Commitment> commitments = planService.findAllCommitments( flow );
+                List<Commitment> commitments = modelService.findAllCommitments( flow );
                 if ( commitments.isEmpty() ) {
                     remediations.add(
                             "change the definitions of the source and/or target tasks so that agents are assigned to both" );
                     remediations.add(
                             "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
                 } else {
-                    Plan plan = communityService.getPlan();
-                    Place locale = planService.getPlanLocale();
-                    List<Commitment> agreedTo = agreedToFilter( commitments, planService );
+                    CollaborationModel collaborationModel = communityService.getPlan();
+                    Place locale = modelService.getPlanLocale();
+                    List<Commitment> agreedTo = agreedToFilter( commitments, modelService );
                     if ( agreedTo.isEmpty() ) {
                         remediations.add( "change the profile of the committing organizations and " +
                                 "add the required agreements or remove the requirement for agreements" );
@@ -452,7 +452,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     remediations.add( "make sure that agents that are available to each other"
                                             + " and reachable are also qualified to use the transmission media" );
                                     remediations.add( "add channels with transmission media requiring no qualification" );
-                                } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
+                                } else if ( commonLanguageFilter( collaborationModel, commitments ).isEmpty() ) {
                                     remediations.add( "make sure that agents that are available to each other, "
                                             + "reachable and qualified to use the transmission media "
                                             + "can also speak a common language" );
@@ -469,11 +469,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     // Filter commitments where agreements are in place if required.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> agreedToFilter( List<Commitment> commitments, final PlanService planService ) {
+    private List<Commitment> agreedToFilter( List<Commitment> commitments, final ModelService modelService ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
-                return planService.isAgreedToIfRequired( (Commitment) object );
+                return modelService.isAgreedToIfRequired( (Commitment) object );
             }
         } );
     }
@@ -593,36 +593,36 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     // Filter commitments where agents can understand one another.
     @SuppressWarnings( "unchecked" )
-    private static List<Commitment> commonLanguageFilter( final Plan plan, List<Commitment> commitments ) {
+    private static List<Commitment> commonLanguageFilter( final CollaborationModel collaborationModel, List<Commitment> commitments ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
-                return ( (Commitment) object ).isCommonLanguage( plan );
+                return ( (Commitment) object ).isCommonLanguage( collaborationModel );
             }
         } );
     }
 
     @Override
     public String realizability( Commitment commitment, CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
-        List<String> problems = findRealizabilityProblems( planService.getPlan(), commitment, communityService );
+        ModelService modelService = communityService.getModelService();
+        List<String> problems = findRealizabilityProblems( modelService.getCollaborationModel(), commitment, communityService );
         return problems.isEmpty() ?
                 "Yes" :
                 "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
     }
 
     @Override
-    public List<String> findRealizabilityProblems( Plan plan, Commitment commitment, CommunityService communityService ) {
+    public List<String> findRealizabilityProblems( CollaborationModel collaborationModel, Commitment commitment, CommunityService communityService ) {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
-        Place planLocale = communityService.getPlanService().getPlanLocale();
+        Place planLocale = communityService.getModelService().getPlanLocale();
 /*
         if ( !communityService.isAgreedToIfRequired( commitment ) )
             problems.add( "sharing not agreed to as required" );
 */
         if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
             problems.add( "availabilities do not coincide as they must" );
-        if ( !commitment.isCommonLanguage( plan ) )
+        if ( !commitment.isCommonLanguage( collaborationModel ) )
             problems.add( "no common language" );
         if ( commitment.getSharing().getEffectiveChannels().isEmpty() )
             problems.add( "no channel is identified" );

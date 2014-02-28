@@ -6,7 +6,7 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.data.communities.QRegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
@@ -90,7 +90,7 @@ public class RegisteredOrganizationServiceImpl
         synchronized ( communityService.getPlanCommunity() ) {
             RegisteredOrganization registered = find( orgName, communityService );
             if ( registered == null ) {
-                Organization fixedOrg = communityService.getPlanService().findActualEntity( Organization.class, orgName );
+                Organization fixedOrg = communityService.getModelService().findActualEntity( Organization.class, orgName );
                 if ( fixedOrg != null ) {
                     if ( !fixedOrg.isUnknown() ) {
                         registered = new RegisteredOrganization(
@@ -276,7 +276,7 @@ public class RegisteredOrganizationServiceImpl
     public void makeLocal( RegisteredOrganization registeredOrganization, CommunityService communityService ) {
         if ( registeredOrganization != null ) {
             registeredOrganization.setCommunityUri( communityService.getPlanCommunity().getUri() );
-            registeredOrganization.setPlanUri( Plan.ANY_URI );
+            registeredOrganization.setPlanUri( CollaborationModel.ANY_URI );
             registeredOrganization.setPlanVersion( 0 );
             save( registeredOrganization );
             communityService.clearCache();

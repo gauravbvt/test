@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
@@ -87,12 +87,12 @@ public class PhaseListPanel extends AbstractCommandablePanel {
             }
         };
         nameField.setOutputMarkupId( true );
-        makeVisible( nameField, isPlanner() && getPlan().isDevelopment() && wrapper.isMarkedForCreation() );
+        makeVisible( nameField, isPlanner() && getCollaborationModel().isDevelopment() && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();
                 target.add( phasesDiv );
-                update( target, new Change( Change.Type.Updated, getPlan(), "phases" ) );
+                update( target, new Change( Change.Type.Updated, getCollaborationModel(), "phases" ) );
             }
         } );
         addInputHint( nameField, "Enter the name of a new phase (then press enter)" );
@@ -103,7 +103,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
     }
 
     private void addDeleteCell( ListItem<PhaseWrapper> item ) {
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getCollaborationModel();
         final PhaseWrapper wrapper = item.getModelObject();
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "delete",
@@ -124,8 +124,8 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         makeVisible(
                 deleteLink,
                 !wrapper.isMarkedForCreation()
-                        && isLockedByUser( getPlan() )
-                        && plan.getPhases().size() > 1
+                        && isLockedByUser( getCollaborationModel() )
+                        && collaborationModel.getPhases().size() > 1
                         && getQueryService().countReferences( wrapper.getPhase() ) <= 1 );
         item.addOrReplace( deleteLink );
     }
@@ -139,7 +139,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
     public List<PhaseWrapper> getWrappedPhases() {
         // Existing phases
         List<PhaseWrapper> wrappers = new ArrayList<PhaseWrapper>();
-        for ( Phase phase : getPlan().getPhases() ) {
+        for ( Phase phase : getCollaborationModel().getPhases() ) {
             wrappers.add( new PhaseWrapper( phase ) );
         }
         // Sort
@@ -148,7 +148,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 return wrapper.getPhase().compareTo( otherWrapper.getPhase() );
             }
         } );
-        if ( isLockedByUser( getPlan() ) ) {
+        if ( isLockedByUser( getCollaborationModel() ) ) {
             // New phase
             PhaseWrapper creationPhaseWrapper = new PhaseWrapper( new Phase() );
             creationPhaseWrapper.setMarkedForCreation( true );
@@ -192,11 +192,11 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         }
 
         public void setName( String name ) {
-            Plan plan = getPlan();
+            CollaborationModel collaborationModel = getCollaborationModel();
             if ( name != null && !name.trim().isEmpty() ) {
                 Phase phase = getQueryService().safeFindOrCreate( Phase.class, name.trim() );
-                if ( phase != null && !plan.getPhases().contains( phase ) ) {
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
+                if ( phase != null && !collaborationModel.getPhases().contains( phase ) ) {
+                    doCommand( new UpdateModelObject( getUser().getUsername(), collaborationModel,
                             "phases",
                             phase,
                             UpdateObject.Action.AddUnique ) );
@@ -205,11 +205,11 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         }
 
         public void deletePhase() {
-            if ( getPlan().getPhases().contains( phase )
+            if ( getCollaborationModel().getPhases().contains( phase )
                     && getQueryService().countReferences( phase ) <= 1 ) {
                 // Possible but unlikely race condition if another command executed here
                 // that alters the results of the above test.
-                doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
+                doCommand( new UpdateModelObject( getUser().getUsername(), getCollaborationModel(),
                         "phases",
                         phase,
                         UpdateObject.Action.RemoveExceptLast ) );

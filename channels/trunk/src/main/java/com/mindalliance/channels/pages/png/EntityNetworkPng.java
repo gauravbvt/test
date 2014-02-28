@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.png;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;

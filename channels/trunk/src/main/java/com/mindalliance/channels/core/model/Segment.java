@@ -191,7 +191,7 @@ public class Segment extends ModelObject {
 
     public boolean isModifiableBy( ChannelsUser user, CommunityService communityService ) {
         return user != null
-                && user.isPlannerOrAdmin( communityService.getPlan().getUri() )
+                && user.isDeveloperOrAdmin( communityService.getPlan().getUri() )
                 && ( owners.isEmpty()
                 || owners.contains( user.getUsername() )
                 || user.isAdmin() );
@@ -814,7 +814,7 @@ public class Segment extends ModelObject {
 
 
     public static String classLabel() {
-        return "template segments";
+        return "model segments";
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.participation;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
@@ -188,7 +188,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
     }
 
     public void setOpenParticipation( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "openParticipation", val ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "openParticipation", val ) );
     }
 
     /**
@@ -212,7 +212,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
                 ? 1
                 : 0;
         if ( maxParticipation != 0 ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "maxParticipation", maxParticipation ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "maxParticipation", maxParticipation ) );
         }
     }
 
@@ -223,7 +223,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
 
     public void setMaxParticipation( int val ) {
         if ( val > 0 )
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "maxParticipation", val ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "maxParticipation", val ) );
     }
 
 
@@ -237,7 +237,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
     }
 
     public void setParticipationRestrictedToEmployed( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "participationRestrictedToEmployed", val ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "participationRestrictedToEmployed", val ) );
     }
 
     /**
@@ -250,7 +250,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
     }
 
     public void setSupervisedParticipation( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "supervisedParticipation", val ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "supervisedParticipation", val ) );
     }
 
 
@@ -264,7 +264,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
     }
 
     public void setAnonymousParticipation( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "anonymousParticipation", val ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getActor(), "anonymousParticipation", val ) );
     }
 
 

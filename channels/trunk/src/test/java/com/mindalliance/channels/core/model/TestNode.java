@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanDefinitionManager;
-import com.mindalliance.channels.core.dao.PlanManagerImpl;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelDefinitionManager;
+import com.mindalliance.channels.core.dao.ModelManagerImpl;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
@@ -23,7 +23,7 @@ public class TestNode extends TestCase {
     private Part p2;
     private Segment segment;
 
-    private PlanDao planDao;
+    private ModelDao modelDao;
 
     public TestNode() {
     }
@@ -31,28 +31,28 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        PlanDefinitionManager planDefinitionManager = new PlanDefinitionManager(
+        ModelDefinitionManager modelDefinitionManager = new ModelDefinitionManager(
             new FileSystemResource( new File("target/channel-test-data" ) ), null );
-        planDefinitionManager.afterPropertiesSet();
-        PlanManagerImpl planManager = new PlanManagerImpl( planDefinitionManager );
-        planManager.assignPlans();
+        modelDefinitionManager.afterPropertiesSet();
+        ModelManagerImpl planManager = new ModelManagerImpl( modelDefinitionManager );
+        planManager.assignModels();
 
-        Plan plan = planManager.getPlans().get( 0 );
-        planDao = planManager.getDao( plan );
+        CollaborationModel collaborationModel = planManager.getModels().get( 0 );
+        modelDao = planManager.getDao( collaborationModel );
         ChannelsUser user = new ChannelsUser();
-        user.setPlan( plan );
+        user.setCollaborationModel( collaborationModel );
 
-        segment = plan.getDefaultSegment();
-        p1 = planDao.createPart( segment, null );
-            p1.setActor( planDao.findOrCreate( Actor.class, "p1", null ) );
-        p2 = planDao.createPart( segment, null );
-            p2.setActor( planDao.findOrCreate( Actor.class, "p2", null ) );
+        segment = collaborationModel.getDefaultSegment();
+        p1 = modelDao.createPart( segment, null );
+            p1.setActor( modelDao.findOrCreate( Actor.class, "p1", null ) );
+        p2 = modelDao.createPart( segment, null );
+            p2.setActor( modelDao.findOrCreate( Actor.class, "p2", null ) );
 
-        f1 = planDao.createSend( p1 );
+        f1 = modelDao.createSend( p1 );
                 f1.setName( "A" );
-        f2 = planDao.createReceive( p2 );
+        f2 = modelDao.createReceive( p2 );
                 f2.setName( "B" );
-        f3 = planDao.connect( p1, p2, "message", null );
+        f3 = modelDao.connect( p1, p2, "message", null );
     }
 
     public void testSends() {
@@ -76,10 +76,10 @@ public class TestNode extends TestCase {
     }
 
     public void testIsness() {
-        Part part = planDao.createPart( segment, null );
+        Part part = modelDao.createPart( segment, null );
         assertTrue( part.isPart() );
         assertFalse( part.isConnector() );
-        Connector c = planDao.createConnector( segment, null );
+        Connector c = modelDao.createConnector( segment, null );
         assertFalse( c.isPart() );
         assertTrue( c.isConnector() );
     }

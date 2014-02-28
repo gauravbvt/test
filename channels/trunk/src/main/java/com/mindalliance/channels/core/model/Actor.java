@@ -242,12 +242,12 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Actor can speak a given language.
      *
      * @param language the name of a language
-     * @param plan     a plan
+     * @param collaborationModel     a plan
      * @return a boolean
      */
-    public boolean speaksLanguage( String language, Plan plan ) {
+    public boolean speaksLanguage( String language, CollaborationModel collaborationModel ) {
         final String lang = language.trim().toLowerCase();
-        return languages.isEmpty() && Matcher.same( plan.getDefaultLanguage().toLowerCase(), lang )
+        return languages.isEmpty() && Matcher.same( collaborationModel.getDefaultLanguage().toLowerCase(), lang )
                 || CollectionUtils.exists(
                 languages,
                 new Predicate() {
@@ -263,17 +263,17 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Languages spoken by actor.
      * Plan's default language is assumed if none set.
      *
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @return a list of strings
      */
-    public List<String> getEffectiveLanguages( Plan plan ) {
+    public List<String> getEffectiveLanguages( CollaborationModel collaborationModel ) {
         HashSet<String> effective = new HashSet<String>();
         effective.addAll( languages );
         for ( ModelEntity type : getAllTypes() ) {
             effective.addAll( ( (Actor) type ).getLanguages() );
         }
         if ( effective.isEmpty() ) {
-            effective.add( plan.getDefaultLanguage() );
+            effective.add( collaborationModel.getDefaultLanguage() );
         }
         return new ArrayList<String>( effective );
     }
@@ -282,12 +282,12 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Whether an actor can converse with another, language-wise.
      *
      * @param other an actor
-     * @param plan  a plan
+     * @param collaborationModel  a plan
      * @return a boolean
      */
-    public boolean canSpeakWith( Actor other, Plan plan ) {
-        for ( String lang : getEffectiveLanguages( plan ) ) {
-            for ( String otherLang : other.getEffectiveLanguages( plan ) ) {
+    public boolean canSpeakWith( Actor other, CollaborationModel collaborationModel ) {
+        for ( String lang : getEffectiveLanguages( collaborationModel ) ) {
+            for ( String otherLang : other.getEffectiveLanguages( collaborationModel ) ) {
                 if ( Matcher.same( lang, otherLang ) ) return true;
             }
         }
@@ -358,10 +358,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Whether the actor is cleared for the information in a flow.
      *
      * @param flow a flow
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @return a boolean
      */
-    public boolean isClearedFor( Flow flow, final Plan plan ) {
+    public boolean isClearedFor( Flow flow, final CollaborationModel collaborationModel ) {
         // No eoi in the flow has classification that is not encompassed by the actor's clearance.
         return !CollectionUtils.exists(
                 flow.getEffectiveEois(),
@@ -371,7 +371,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                         ElementOfInformation eoi = (ElementOfInformation) obj;
                         return !Classification.encompass(
                                 getClearances(),
-                                eoi.getClassifications(), plan );
+                                eoi.getClassifications(), collaborationModel );
                     }
                 }
         );
@@ -425,7 +425,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                 && !isSupervisedParticipation();
     }
 
-    public String getRequirementsDescription( Plan plan ) {
+    public String getRequirementsDescription( CollaborationModel collaborationModel ) {
         StringBuilder sb = new StringBuilder();
 /*
         sb.append( "<p><b>" ).append( isSystem() ? "A system" : "A person" ).append( "</p><br/>" );
@@ -451,7 +451,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         sb.append( "Availability: " );
         sb.append( getAvailability() ).append( "\n\n" );
         sb.append( "Languages: " );
-        sb.append( ChannelsUtils.listToString( getEffectiveLanguages( plan ), ", ", " and " ) )
+        sb.append( ChannelsUtils.listToString( getEffectiveLanguages( collaborationModel ), ", ", " and " ) )
                 .append( "\n\n" );
         sb.append( "Clearances: " );
         sb.append( getClearances().isEmpty()

@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -230,22 +230,22 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public List<ChannelsUser> getPlanners( String uri ) {
+    public List<ChannelsUser> getDevelopers( String uri ) {
         Collection<ChannelsUser> userList = getAllEnabledUsers();
         List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
         for ( ChannelsUser user : userList )
-            if ( user.isPlannerOrAdmin( uri ) )
+            if ( user.isDeveloperOrAdmin( uri ) )
                 result.add( user );
 
         return result;
     }
 
     @Override
-    public List<ChannelsUser> getStrictlyPlanners( String uri ) {
+    public List<ChannelsUser> getStrictlyDevelopers( String uri ) {
         Collection<ChannelsUser> userList = getAllEnabledUsers();
         List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
         for ( ChannelsUser user : userList )
-            if ( user.isPlanner( uri ) )
+            if ( user.isDeveloper( uri ) )
                 result.add( user );
 
         return result;
@@ -269,7 +269,7 @@ public class UserRecordServiceImpl
     @Override
     public Boolean isPlanner( final String username, String planUri ) {
         return CollectionUtils.exists(
-                getPlanners( planUri ),
+                getDevelopers( planUri ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -376,13 +376,13 @@ public class UserRecordServiceImpl
 
     @Override
     public boolean changePassword( ChannelsUser user,
-                                   PlanManager planManager,
+                                   ModelManager modelManager,
                                    MailSender mailSender ) {
         boolean success = false;
         String newPassword = makeNewPassword();
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo( user.getEmail() );
-        String fromAddress = planManager.getDefaultSupportCommunity();
+        String fromAddress = modelManager.getDefaultSupportCommunity();
         email.setFrom( fromAddress );
         email.setReplyTo( fromAddress );
         String subject = "New password";
@@ -445,11 +445,11 @@ public class UserRecordServiceImpl
             ChannelsUser authorizingUser = getUserWithIdentity( username );
             String uri = communityService.getPlanCommunity().getUri();
             if ( authorizingUser != null && authorizedUser != null
-                    && authorizingUser.isPlannerOrAdmin( uri ) //allows admins to authorize community planners
+                    && authorizingUser.isDeveloperOrAdmin( uri ) //allows admins to authorize community planners
                     && !authorizedUser.isCommunityPlanner( uri ) ) {
                 UserRecord userRecord = authorizedUser.getUserRecord();
                 userRecord.makePlannerOf( communityService.getPlanCommunity().getUri() );
-                userRecord.makeParticipantOf( communityService.getPlanCommunity().getPlanUri() );
+                userRecord.makeParticipantOf( communityService.getPlanCommunity().getModelUri() );
                 save( userRecord );
                 communityService.clearCache();
                 return userRecord;
@@ -468,7 +468,7 @@ public class UserRecordServiceImpl
             ChannelsUser user = getUserWithIdentity( username );
             String uri = communityService.getPlanCommunity().getUri();
             if ( ( user != null
-                    && ( user.isPlannerOrAdmin( uri ) )
+                    && ( user.isDeveloperOrAdmin( uri ) )
                     && getCommunityPlanners( uri ).size() > 1 )
                     && planner.isCommunityPlanner( uri ) ) {
                 UserRecord userRecord = planner.getUserRecord();
@@ -487,8 +487,8 @@ public class UserRecordServiceImpl
             // List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
-            userRecord.joinCommunity( planCommunity.getPlanUri() );
-            userRecord.makeParticipantOf( planCommunity.getPlanUri() );
+            userRecord.joinCommunity( planCommunity.getModelUri() );
+            userRecord.makeParticipantOf( planCommunity.getModelUri() );
             save( userRecord );
             CommunityService communityService = communityServiceFactory.getService( planCommunity );
             communityService.clearCache();

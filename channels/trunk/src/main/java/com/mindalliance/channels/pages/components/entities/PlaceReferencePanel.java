@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -36,7 +36,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
      * Name of property set to a PlaceReference.
      */
     private String property;
-    private boolean planReferenced = false;
+    private boolean modelReferenced = false;
     private boolean placeReferenced = false;
     private boolean eventReferenced = false;
     private CheckBox planCheckBox;
@@ -53,12 +53,12 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        planReferenced = getPlaceReference().isPlanReferenced();
+        modelReferenced = getPlaceReference().isModelReferenced();
         placeReferenced = getPlaceReference().isPlaceReferenced();
         eventReferenced = getPlaceReference().isEventReferenced();
         assert !( placeReferenced && eventReferenced );
         this.setOutputMarkupId( true );
-        addPlanCheckBox();
+        addModelCheckBox();
         addEventCheckBox();
         addPlaceCheckBox();
         addEventLink();
@@ -68,8 +68,8 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
-    private void addPlanCheckBox() {
-        planCheckBox = new CheckBox( "plan-locale", new PropertyModel<Boolean>( this, "planReferenced" ) );
+    private void addModelCheckBox() {
+        planCheckBox = new CheckBox( "model-locale", new PropertyModel<Boolean>( this, "modelReferenced" ) );
         planCheckBox.setOutputMarkupId( true );
         planCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -185,7 +185,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     private void adjustFields() {
         boolean editable =
-                getPlan().isDevelopment()
+                getCollaborationModel().isDevelopment()
                         && getLockManager().isLockedByUser( getUser().getUsername(), getEntity().getId() )
                         && !ModelObject.areIdentical( getPlanService().getPlanLocale(), getEntity() );
         if ( !editable ) {
@@ -202,17 +202,17 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         target.add( this );
     }
 
-    public boolean isPlanReferenced() {
-        return planReferenced;
+    public boolean isModelReferenced() {
+        return modelReferenced;
     }
 
-    public void setPlanReferenced( boolean val ) {
-        planReferenced = val;
+    public void setModelReferenced( boolean val ) {
+        modelReferenced = val;
         if ( val ) {
             placeReferenced = false;
             eventReferenced = false;
-            getPlaceReference().setPlanReferenced( val );
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
+            getPlaceReference().setModelReferenced( val );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
         } else {
             resetPlaceReference();
         }
@@ -225,7 +225,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     public void setEventReferenced( boolean val ) {
         eventReferenced = val;
         if ( val ) {
-            planReferenced = false;
+            modelReferenced = false;
             placeReferenced = false;
         } else {
             resetPlaceReference();
@@ -239,7 +239,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     public void setPlaceReferenced( boolean val ) {
         placeReferenced = val;
         if ( val ) {
-            planReferenced = false;
+            modelReferenced = false;
             eventReferenced = false;
         } else {
             resetPlaceReference();
@@ -247,7 +247,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void resetPlaceReference() {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, new PlaceReference() ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getEntity(), property, new PlaceReference() ) );
         reset = true;
     }
 
@@ -257,7 +257,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     public void setRefEvent( Event event ) {
         getPlaceReference().setEvent( event );
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
     }
 
     public Place getRefPlace() {

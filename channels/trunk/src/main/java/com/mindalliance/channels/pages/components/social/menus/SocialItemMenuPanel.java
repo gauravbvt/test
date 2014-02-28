@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.command.CommandException;
-import com.mindalliance.channels.db.data.PersistentPlanObject;
+import com.mindalliance.channels.db.data.PersistentChannelsObject;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.pages.Updatable;
@@ -28,7 +28,7 @@ import java.util.List;
 public class SocialItemMenuPanel extends MenuPanel {
 
     private String username;
-    private IModel<? extends PersistentPlanObject> poModel;
+    private IModel<? extends PersistentChannelsObject> poModel;
     private boolean showProfile;
     private boolean allowMessageDelete = true;
     private Updatable updatable;
@@ -38,7 +38,7 @@ public class SocialItemMenuPanel extends MenuPanel {
             String id,
             IModel<UserRecord> userInfoIModel,
             String username,
-            IModel<? extends PersistentPlanObject> poModel,
+            IModel<? extends PersistentChannelsObject> poModel,
             boolean showProfile,
             Updatable updatable ) {
         this(id, userInfoIModel, username, poModel, showProfile, true, updatable );
@@ -48,7 +48,7 @@ public class SocialItemMenuPanel extends MenuPanel {
             String id,
             IModel<UserRecord> userInfoIModel,
             String username,
-            IModel<? extends PersistentPlanObject> poModel,
+            IModel<? extends PersistentChannelsObject> poModel,
             boolean showProfile,
             boolean allowMessageDelete,
             Updatable updatable ) {
@@ -105,7 +105,7 @@ public class SocialItemMenuPanel extends MenuPanel {
                         link ) );
             }
         }
-        final PersistentPlanObject po = getPersistentObject();
+        final PersistentChannelsObject po = getPersistentObject();
         if ( po != null && po instanceof UserMessage ) {
             UserMessage message = (UserMessage) po;
             if ( allowMessageDelete && message.getFromUsername().equals( currentUsername ) ) {
@@ -136,7 +136,7 @@ public class SocialItemMenuPanel extends MenuPanel {
     }
 
 
-    private PersistentPlanObject getPersistentObject() {
+    private PersistentChannelsObject getPersistentObject() {
         return poModel == null ? null : poModel.getObject();
     }
 

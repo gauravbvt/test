@@ -16,11 +16,11 @@ import com.mindalliance.channels.core.community.CommunityListener;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanListener;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelListener;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.AttachmentImpl;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Tag;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -78,7 +78,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     /**
      * Plan manager.
      */
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     /**
      * Plan community manager.
@@ -132,14 +132,14 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     /**
      * Specify what plan manager to hook up to.
      *
-     * @param planManager the plan manager
+     * @param modelManager the plan manager
      */
-    public void setPlanManager( PlanManager planManager ) {
-        if ( planManager == null )
+    public void setModelManager( ModelManager modelManager ) {
+        if ( modelManager == null )
             throw new IllegalArgumentException();
 
-        this.planManager = planManager;
-        planManager.addListener( new APlanListener() );
+        this.modelManager = modelManager;
+        modelManager.addListener( new AModelListener() );
     }
 
     public void setPlanCommunityManager( PlanCommunityManager planCommunityManager ) {
@@ -149,12 +149,12 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         planCommunityManager.addListener( new ACommunityListener() );
     }
 
-    private void reloadTags( Plan plan ) {
-        plan.setTags( new ArrayList<Tag>() );
-        for ( Attachment attachment : plan.getAttachments() ) {
+    private void reloadTags( CollaborationModel collaborationModel ) {
+        collaborationModel.setTags( new ArrayList<Tag>() );
+        for ( Attachment attachment : collaborationModel.getAttachments() ) {
             String url = attachment.getUrl();
             if ( attachment.isTags() )
-                reloadTagsFromUrl( plan, url, new TagLoader( plan ) );
+                reloadTagsFromUrl( collaborationModel, url, new TagLoader( collaborationModel ) );
         }
     }
 
@@ -169,7 +169,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         remove( url );
     }
 
-    private void remove( Plan plan, String url ) {
+    private void remove( CollaborationModel collaborationModel, String url ) {
         remove(  url  );
     }
 
@@ -282,8 +282,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         saveFor( new File( getUploadDirectory( planCommunity ), digestsMapFile ) );
     }
 
-    private void save( Plan plan ) throws IOException {
-        saveFor( new File( getUploadDirectory( plan ), digestsMapFile ) );
+    private void save( CollaborationModel collaborationModel ) throws IOException {
+        saveFor( new File( getUploadDirectory( collaborationModel ), digestsMapFile ) );
     }
 
     private void saveFor( File file ) throws IOException {
@@ -316,8 +316,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
 
 
     @Override
-    public boolean exists( Plan plan, String url ) {
-        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( plan, url ) );
+    public boolean exists( CollaborationModel collaborationModel, String url ) {
+        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( collaborationModel, url ) );
     }
 
 
@@ -336,8 +336,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         return isUploaded( getUploadDirectory( planCommunity ), url );
     }
 
-    private boolean isUploaded( Plan plan, final String url ) {
-        return isUploaded( getUploadDirectory( plan ), url );
+    private boolean isUploaded( CollaborationModel collaborationModel, final String url ) {
+        return isUploaded( getUploadDirectory( collaborationModel ), url );
     }
 
     private boolean isUploaded( File directory, final String url ) {
@@ -431,8 +431,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     }
 
     @Override
-    public File getUploadDirectory( Plan plan ) {
-        return getUploadDirectory( planManager.getVersionDirectory( plan ) );
+    public File getUploadDirectory( CollaborationModel collaborationModel ) {
+        return getUploadDirectory( modelManager.getVersionDirectory( collaborationModel ) );
     }
 
     @Override
@@ -496,16 +496,16 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     }
 
     @Override
-    public File getUploadedFile( Plan plan, String planRelativePath ) {
-        return new File( getUploadDirectory( plan ), planRelativePath.replaceFirst( uploadPath, "" ) );
+    public File getUploadedFile( CollaborationModel collaborationModel, String planRelativePath ) {
+        return new File( getUploadDirectory( collaborationModel ), planRelativePath.replaceFirst( uploadPath, "" ) );
     }
 
-    private void reloadTagsFromUrl( Plan plan, String url, Loader loader ) {
+    private void reloadTagsFromUrl( CollaborationModel collaborationModel, String url, Loader loader ) {
         BufferedReader in = null;
         try {
 
             in = new BufferedReader( new InputStreamReader(
-                    isUploadedFileDocument( url ) ? new FileInputStream( getUploadedFile( plan, url ) )
+                    isUploadedFileDocument( url ) ? new FileInputStream( getUploadedFile( collaborationModel, url ) )
                             : new URL( url ).openStream() ) );
 
             loader.load( in );
@@ -525,32 +525,32 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     public void removeAttachment( Attachment attachment, Attachable attachable ) {
         attachable.removeAttachment( attachment );
 
-        if ( attachable instanceof Plan && ( attachment.isTags() ) )
-            reloadTags( (Plan) attachable );
+        if ( attachable instanceof CollaborationModel && ( attachment.isTags() ) )
+            reloadTags( (CollaborationModel) attachable );
         LOG.debug( "Removed " + attachment + " from " + attachable );
     }
 
     @Override
     public void addAttachment( Attachment attachment, Attachable attachable ) {
         attachable.addAttachment( attachment );
-        if ( attachable instanceof Plan && ( attachment.isTags() ) )
-            reloadTags( (Plan) attachable );
+        if ( attachable instanceof CollaborationModel && ( attachment.isTags() ) )
+            reloadTags( (CollaborationModel) attachable );
         LOG.debug( "Added " + attachment + " from " + attachable );
     }
 
     @Override
     public void afterPropertiesSet() {
-        if ( planManager == null )
-            throw new IllegalArgumentException( "planManager must be set" );
+        if ( modelManager == null )
+            throw new IllegalArgumentException( "modelManager must be set" );
     }
 
     /**
      * Plan manager hook to react on plan changes.
      */
-    private class APlanListener implements PlanListener {
+    private class AModelListener implements ModelListener {
 
-        private File[] getAttachedFiles( Plan plan ) {
-            return getUploadDirectory( plan ).listFiles();
+        private File[] getAttachedFiles( CollaborationModel collaborationModel ) {
+            return getUploadDirectory( collaborationModel ).listFiles();
         }
 
         /**
@@ -563,8 +563,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             return !"readme.txt".equals( fileName ) && !fileName.equals( digestsMapFile );
         }
 
-        private void removeUnattached( Plan plan, List<String> validUrls ) throws IOException {
-            File[] files = getAttachedFiles( plan );
+        private void removeUnattached( CollaborationModel collaborationModel, List<String> validUrls ) throws IOException {
+            File[] files = getAttachedFiles( collaborationModel );
             if ( files != null ) {
                 for ( File file : files ) {
                     String fileName = file.getName();
@@ -573,17 +573,17 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
                         if ( !validUrls.contains( url ) ) {
                             if ( file.delete() )
                                 LOG.warn( "Removing unattached {}", url );
-                            remove( plan, url );
+                            remove( collaborationModel, url );
                         }
                     }
                 }
-                save( plan );
+                save( collaborationModel );
             }
         }
 
-        private void load( Plan plan ) throws FileNotFoundException {
+        private void load( CollaborationModel collaborationModel ) throws FileNotFoundException {
             Properties digests = new Properties();
-            Reader in = new FileReader( new File( getUploadDirectory( plan ), digestsMapFile ) );
+            Reader in = new FileReader( new File( getUploadDirectory( collaborationModel ), digestsMapFile ) );
             try {
                 digests.load( in );
             } catch ( IOException e ) {
@@ -598,53 +598,53 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
 
             synchronized ( documentMap ) {
                 for ( String url : digests.stringPropertyNames() )
-                    if ( exists( plan, url ) )
+                    if ( exists( collaborationModel, url ) )
                         documentMap.put( url,
-                                new FileDocument( new File( getUploadDirectory( plan ), url ),
+                                new FileDocument( new File( getUploadDirectory( collaborationModel ), url ),
                                         url,
                                         digests.getProperty( url ) ) );
             }
         }
 
         @Override
-        public void aboutToProductize( Plan devPlan ) {
+        public void aboutToProductize( CollaborationModel devCollaborationModel ) {
             try {
-                PlanDao planDao = planManager.getDao( devPlan );
-                removeUnattached( devPlan, planDao.findAllAttached() );
+                ModelDao modelDao = modelManager.getDao( devCollaborationModel );
+                removeUnattached( devCollaborationModel, modelDao.findAllAttached() );
             } catch ( IOException e ) {
-                LOG.error( "Unable to clean up attachments for plan " + devPlan.getUri(), e );
+                LOG.error( "Unable to clean up attachments for model " + devCollaborationModel.getUri(), e );
             }
         }
 
         @Override
-        public void productized( Plan plan ) {
+        public void productized( CollaborationModel collaborationModel ) {
         }
 
         @Override
-        public void created( Plan devPlan ) {
+        public void created( CollaborationModel devCollaborationModel ) {
         }
 
         @Override
-        public void loaded( PlanDao planDao ) {
-            Plan plan = planDao.getPlan();
+        public void loaded( ModelDao modelDao ) {
+            CollaborationModel collaborationModel = modelDao.getCollaborationModel();
             try {
-                load( plan );
-                removeUnattached( plan, planDao.findAllAttached() );
-                reloadTags( plan );
+                load( collaborationModel );
+                removeUnattached( collaborationModel, modelDao.findAllAttached() );
+                reloadTags( collaborationModel );
 
             } catch ( FileNotFoundException ignored ) {
-                LOG.debug( "No file digests found for plan " + plan.getUri() );
+                LOG.debug( "No file digests found for model " + collaborationModel.getUri() );
             } catch ( IOException e ) {
-                LOG.warn( "Unable to load attachments for plan " + plan.getUri(), e );
+                LOG.warn( "Unable to load attachments for model " + collaborationModel.getUri(), e );
             }
         }
 
         @Override
-        public void aboutToUnload( PlanDao planDao ) {
+        public void aboutToUnload( ModelDao modelDao ) {
             try {
-                save( planDao.getPlan() );
+                save( modelDao.getCollaborationModel() );
             } catch ( IOException e ) {
-                LOG.error( "Unable to save attachments for plan " + planDao.getPlan().getUri(), e );
+                LOG.error( "Unable to save attachments for model " + modelDao.getCollaborationModel().getUri(), e );
             }
         }
 
@@ -669,7 +669,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             try {
                 save( communityDao.getPlanCommunity() );
             } catch ( IOException e ) {
-                LOG.error( "Unable to save attachments for plan " + communityDao.getPlanCommunity().getUri(), e );
+                LOG.error( "Unable to save attachments for model " + communityDao.getPlanCommunity().getUri(), e );
             }
         }
 

@@ -338,7 +338,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
 
     private String getAbbreviatedSelectedPlanDescription() {
-        String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );
+        String oneLiner = getCollaborationModel().getDescription().replaceAll( "\\s+", " " );
         return StringUtils.abbreviate( oneLiner, MAX_PLAN_DESCRIPTION_LENGTH );
     }
 
@@ -385,7 +385,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     protected PlanCommunity getDomainPlanCommunity() {
-        return planCommunityManager.getPlanCommunity( getPlanCommunity().getPlanUri() );
+        return planCommunityManager.getPlanCommunity( getPlanCommunity().getModelUri() );
     }
 
     protected CommunityService getDomainCommunityService() {

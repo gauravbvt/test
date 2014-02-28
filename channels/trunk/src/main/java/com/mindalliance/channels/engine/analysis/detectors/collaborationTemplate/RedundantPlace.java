@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -31,7 +30,7 @@ public class RedundantPlace extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         List<Place> equivalentPlaces = findPlacesEquivalentTo( queryService, place );

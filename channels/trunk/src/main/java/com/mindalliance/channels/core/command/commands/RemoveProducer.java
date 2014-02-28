@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 
 public class RemoveProducer extends AbstractCommand {
 
@@ -20,9 +20,9 @@ public class RemoveProducer extends AbstractCommand {
         super( "daemon" );
     }
 
-    public RemoveProducer( String userName, Plan plan, String producer ) {
+    public RemoveProducer( String userName, CollaborationModel collaborationModel, String producer ) {
         super( userName );
-        needLockOn( plan );
+        needLockOn( collaborationModel );
         set( "producer", producer );
     }
 
@@ -34,10 +34,10 @@ public class RemoveProducer extends AbstractCommand {
     @Override
     public Change execute( Commander commander ) throws CommandException {
         String producer = (String) get( "producer" );
-        Plan plan = commander.getPlan();
-        plan.removeProducer( producer );
+        CollaborationModel collaborationModel = commander.getPlan();
+        collaborationModel.removeProducer( producer );
         setTargetDescription( producer );
-        return new Change( Type.Updated, plan, "producers" );
+        return new Change( Type.Updated, collaborationModel, "producers" );
     }
 
     @Override

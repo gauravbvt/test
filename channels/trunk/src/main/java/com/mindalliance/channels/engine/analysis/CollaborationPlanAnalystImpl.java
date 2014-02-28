@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -43,7 +43,7 @@ public class CollaborationPlanAnalystImpl implements CollaborationPlanAnalyst { 
     @SuppressWarnings( "unchecked" )
     private List<Organization> findAllOrganizationPlaceholders( CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
-                communityService.getPlanService().listActualEntities( Organization.class, true ),
+                communityService.getModelService().listActualEntities( Organization.class, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -160,11 +160,11 @@ public class CollaborationPlanAnalystImpl implements CollaborationPlanAnalyst { 
     public int requiredCommitmentsCount( Requirement requirement, Object[] extras, CommunityService communityService ) {
         Phase.Timing timing = (Phase.Timing) extras[0];
         Event event = (Event) extras[1];
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         return communityService.getAllCommitments( false ).inSituation(
                 timing,
                 event,
-                planService.getPlanLocale() )
+                modelService.getPlanLocale() )
                 .satisfying( requirement, communityService ).size();
     }
 

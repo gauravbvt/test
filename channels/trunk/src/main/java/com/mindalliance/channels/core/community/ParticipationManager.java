@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
@@ -265,7 +265,7 @@ public interface ParticipationManager {
             UserRecord participantInfo,
             Agent participationAgent );
 
-    Plan getPlan( String communityUri, int planVersion );
+    CollaborationModel getPlan( String communityUri, int planVersion );
 
     /**
      * Find all agents no user participates as.

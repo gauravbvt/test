@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ResponseOutputStream;
 import org.apache.wicket.markup.MarkupType;
@@ -32,13 +32,13 @@ public class ExportPage extends WebPage {
 
     /** The plan manager. */
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @SpringBean
-    private Plan plan;
+    private CollaborationModel collaborationModel;
 
     @SpringBean
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     @SpringBean
     private ImportExportFactory importExportFactory;
@@ -47,10 +47,10 @@ public class ExportPage extends WebPage {
         super( parameters );
 
         QueryService queryService = getQueryService();
-        if ( parameters.getNamedKeys().contains( PlanPage.SEGMENT_PARM ) )
+        if ( parameters.getNamedKeys().contains( ModelPage.SEGMENT_PARM ) )
             try {
                 segment = queryService.find( Segment.class,
-                        parameters.get( PlanPage.SEGMENT_PARM ).toLong() );
+                        parameters.get( ModelPage.SEGMENT_PARM ).toLong() );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad segment specified. Exporting default segment.", ignored );
@@ -66,11 +66,11 @@ public class ExportPage extends WebPage {
     }
 
     private QueryService getQueryService() {
-        return planServiceFactory.getService( plan );
+        return modelServiceFactory.getService( collaborationModel );
     }
 
     private Exporter getExporter() {
-        return importExportFactory.createExporter( "daemon", planManager.getDao( plan ) );
+        return importExportFactory.createExporter( "daemon", modelManager.getDao( collaborationModel ) );
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -20,7 +20,7 @@ public class CommunityServiceFactoryImpl implements CommunityServiceFactory, App
     private final Map<PlanCommunity, CommunityService> services = new HashMap<PlanCommunity, CommunityService>();
 
     private ApplicationContext applicationContext;
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     /**
      * Notify all services of impending doom...
@@ -43,9 +43,9 @@ public class CommunityServiceFactoryImpl implements CommunityServiceFactory, App
             return communityService;
         CommunityService result = (CommunityService) applicationContext.getBean( "communityService" );  // a prototype, not a singleton
         result.setPlanCommunity( planCommunity );
-        result.setPlanService( planServiceFactory.getService(
-                planCommunity.getPlanUri(),
-                planCommunity.getPlanVersion() ) );
+        result.setModelService( modelServiceFactory.getService(
+                planCommunity.getModelUri(),
+                planCommunity.getModelVersion() ) );
         result.cleanUp( );
         services.put( planCommunity, result );
         return result;
@@ -56,7 +56,7 @@ public class CommunityServiceFactoryImpl implements CommunityServiceFactory, App
         services.remove( planCommunity );
     }
 
-    public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {
-        this.planServiceFactory = planServiceFactory;
+    public void setModelServiceFactory( ModelServiceFactory modelServiceFactory ) {
+        this.modelServiceFactory = modelServiceFactory;
     }
 }

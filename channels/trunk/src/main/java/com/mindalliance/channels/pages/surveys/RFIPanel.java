@@ -122,7 +122,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     private String getSentBy() {
         String sentBy = getRFI().getRfiSurvey( getCommunityService() ).getUsername();
-        return "A survey by planner "
+        return "A survey by "
+                + (getCommunityService().getPlanCommunity().isModelCommunity() ? "collaboration model developer " : "community planner ")
                 + getUserFullName( sentBy );
     }
 

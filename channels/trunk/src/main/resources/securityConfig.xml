@@ -27,7 +27,7 @@
     </bean>
 
 
-    <bean name="plan" class="com.mindalliance.channels.core.model.Plan" factory-bean="user" factory-method="getPlan"
+    <bean name="model" class="com.mindalliance.channels.core.model.CollaborationModel" factory-bean="user" factory-method="getCollaborationModel"
           scope="request"/>
 
     <bean id="userDao" class="com.mindalliance.channels.db.services.users.UserRecordServiceImpl"/>

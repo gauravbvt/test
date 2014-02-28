@@ -8,7 +8,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -97,7 +97,7 @@ public interface Updatable {
      *
      * @return a plan
      */
-    Plan getPlan();
+    CollaborationModel getCollaborationModel();
 
     /**
      * Get current user.

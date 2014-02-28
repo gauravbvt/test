@@ -3,9 +3,9 @@
 
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanDefinitionManager;
-import com.mindalliance.channels.core.dao.PlanManagerImpl;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelDefinitionManager;
+import com.mindalliance.channels.core.dao.ModelManagerImpl;
 import com.mindalliance.channels.core.dao.SimpleIdGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class TestResourceSpec {
 
     private ResourceSpec spec;
 
-    private PlanDao planDao;
+    private ModelDao modelDao;
 
     private Actor bob;
 
@@ -67,19 +67,19 @@ public class TestResourceSpec {
      * Quick test data.
      */
     public void setUp() throws IOException {
-        PlanDefinitionManager planDefinitionManager = new PlanDefinitionManager(
+        ModelDefinitionManager modelDefinitionManager = new ModelDefinitionManager(
                 new FileSystemResource( new File( "target/channel-test-data" ) ), null );
-        planDefinitionManager.delete( "test" );
-        planDefinitionManager.setIdGenerator( new SimpleIdGenerator() );
-        planDefinitionManager.getOrCreate( "test", "test", "MAS" );
+        modelDefinitionManager.delete( "test" );
+        modelDefinitionManager.setIdGenerator( new SimpleIdGenerator() );
+        modelDefinitionManager.getOrCreate( "test", "test", "MAS" );
 
-        PlanManagerImpl planManager = new PlanManagerImpl( planDefinitionManager );
-        planDao = planManager.getDao( "test", true );
+        ModelManagerImpl planManager = new ModelManagerImpl( modelDefinitionManager );
+        modelDao = planManager.getDao( "test", true );
 
         // Assume others are null too
         if ( Actor.UNKNOWN == null ) {
-            planDao.defineImmutableEntities();
-            planDao.defineImmutableMedia( new ArrayList<TransmissionMedium>() );
+            modelDao.defineImmutableEntities();
+            modelDao.defineImmutableMedia( new ArrayList<TransmissionMedium>() );
         }
 
         setUpObjects();
@@ -88,61 +88,61 @@ public class TestResourceSpec {
     private void setUpObjects() {
         spec = new ResourceSpec();
         peon = new Role( "Peon" );
-        planDao.add( peon );
+        modelDao.add( peon );
         janitor = new Role( "janitor" );
-        planDao.add( janitor );
+        modelDao.add( janitor );
 
         company = new Organization( "company" );
         company.setType();
-        planDao.add( company );
+        modelDao.add( company );
         walmart = new Organization( "Walmart" );
         walmart.setActual();
         walmart.addType( company );
-        planDao.add( walmart );
+        modelDao.add( walmart );
 
         building = new Place( "building" );
         building.setType();
-        planDao.add( building );
+        modelDao.add( building );
         cafeteria = new Place( "cafeteria" );
         cafeteria.setWithin( building );
         cafeteria.setType();
-        planDao.add( cafeteria );
+        modelDao.add( cafeteria );
 
         person = new Actor( "person" );
         person.setType();
-        planDao.add( person );
+        modelDao.add( person );
         guy = new Actor( "guy" );
         guy.setType();
         guy.addType( person );
-        planDao.add( guy );
+        modelDao.add( guy );
         gal = new Actor( "gal" );
         gal.setType();
         gal.addType( person );
-        planDao.add( gal );
+        modelDao.add( gal );
 
 
 
         bob = new Actor( "Bob" );
         bob.addType( guy );
-        planDao.add( bob );
+        modelDao.add( bob );
 
         nj = new Place( "New Jersey" );
         nj.setActual();
-        planDao.add( nj );
+        modelDao.add( nj );
 
         ny = new Place( "New York" );
         ny.setActual();
-        planDao.add( ny );
+        modelDao.add( ny );
 
         njCo = new Organization( "NJ company" );
         njCo.setType();
-        planDao.add( njCo );
+        modelDao.add( njCo );
         njCo.addType( company );
         njCo.setLocation( nj );
 
         nyCo = new Organization( "NY company" );
         nyCo.setType();
-        planDao.add( nyCo );
+        modelDao.add( nyCo );
         nyCo.addType( company );
         nyCo.setLocation( ny );
 
@@ -150,11 +150,11 @@ public class TestResourceSpec {
         mas.setActual();
         mas.addType( njCo );
         mas.setLocation( nj );
-        planDao.add( mas );
+        modelDao.add( mas );
         hr = new Organization( "Human Resources" );
         hr.setActual();
         hr.setParent( mas );
-        planDao.add( hr );
+        modelDao.add( hr );
     }
 
     @Test
@@ -372,9 +372,9 @@ public class TestResourceSpec {
         assertFalse( mas.narrowsOrEquals( bob, null ) );
 
         Place loop1 = new Place( "loop1" );
-        planDao.add( loop1 );
+        modelDao.add( loop1 );
         Place loop2 = new Place( "loop2" );
-        planDao.add( loop2 );
+        modelDao.add( loop2 );
         loop1.setWithin( loop2 );
         loop2.setWithin( loop1 );
         assertTrue( loop1.isInvalid( null ) );
@@ -417,7 +417,7 @@ public class TestResourceSpec {
         cafeteria.getMustBeContainedIn().setPlace( building );
         Place office = new Place( "Office" );
         office.setActual();
-        planDao.add( office );
+        modelDao.add( office );
         office.addType( building );
 
         assertTrue( building.validates( office, null ) );
@@ -425,7 +425,7 @@ public class TestResourceSpec {
         assertTrue( cafeteria.narrowsOrEquals( building, null ) );
 
         Place resto = new Place( "Restaurant" );
-        planDao.add( resto );
+        modelDao.add( resto );
         resto.setActual();
         resto.addType( cafeteria );
 

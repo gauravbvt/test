@@ -36,13 +36,13 @@ public class Commitment implements Serializable {
     /**
      * Whether a commitment could be met based on common language.
      *
-     * @param plan the plan of concern
+     * @param collaborationModel the plan of concern
      * @return a boolean
      */
-    public boolean isCommonLanguage( Plan plan ) {
+    public boolean isCommonLanguage( CollaborationModel collaborationModel ) {
         Actor committer = this.committer.getActor();
         Actor beneficiary = this.beneficiary.getActor();
-        return committer.canSpeakWith( beneficiary, plan );
+        return committer.canSpeakWith( beneficiary, collaborationModel );
     }
 
     public Assignment getCommitter() {

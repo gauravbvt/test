@@ -104,8 +104,8 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param orientation  a string
      * @return a plan map diagram
      */
-    Diagram newPlanMapDiagram( List<Segment> segments, boolean groupByPhase, boolean groupByEvent, ModelEntity group,
-                               Segment segment, SegmentRelationship sgRel, double[] diagramSize, String orientation );
+    Diagram newModelMapDiagram( List<Segment> segments, boolean groupByPhase, boolean groupByEvent, ModelEntity group,
+                                Segment segment, SegmentRelationship sgRel, double[] diagramSize, String orientation );
 
     /**
      * Instantiates an entity network diagram.

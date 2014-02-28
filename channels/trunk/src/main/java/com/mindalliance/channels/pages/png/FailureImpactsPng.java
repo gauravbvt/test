@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class FailureImpactsPng extends DiagramPng {
                                    DiagramFactory diagramFactory ) throws DiagramException {
         SegmentObject segmentObject = null;
         boolean assumeFails;
-        Segment segment = PlanPage.findSegment( communityService.getPlanService(), parameters );
+        Segment segment = ModelPage.findSegment( communityService.getModelService(), parameters );
         if ( segment != null && parameters.getNamedKeys().contains( FAILURE ) ) {
             try {
                 long id = parameters.get( FAILURE ).toLong();

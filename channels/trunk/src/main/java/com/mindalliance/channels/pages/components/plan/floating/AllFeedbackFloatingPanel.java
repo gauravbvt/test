@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.social.feedback.AllUserFeedbackPanel;
@@ -33,7 +33,7 @@ public class AllFeedbackFloatingPanel extends AbstractFloatingCommandablePanel {
     private boolean showProfile;
     private AllUserFeedbackPanel userFeedbackPanel;
 
-    public AllFeedbackFloatingPanel( String id, Model<Plan> planModel, boolean showProfile ) {
+    public AllFeedbackFloatingPanel( String id, Model<CollaborationModel> planModel, boolean showProfile ) {
         super( id, planModel, null );
         this.showProfile = showProfile;
         init( planModel );
@@ -49,12 +49,12 @@ public class AllFeedbackFloatingPanel extends AbstractFloatingCommandablePanel {
         return "feedback";
     }
 
-    private void init( IModel<Plan> planModel ) {
+    private void init( IModel<CollaborationModel> planModel ) {
         addHeading();
         addUserFeedback( planModel );
     }
 
-    private void addUserFeedback( IModel<Plan> planModel ) {
+    private void addUserFeedback( IModel<CollaborationModel> planModel ) {
         userFeedbackPanel = new AllUserFeedbackPanel(
                 "allUserFeedback",
                 planModel,

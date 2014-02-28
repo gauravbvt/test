@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
@@ -120,7 +120,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
-        newLink.setVisible( getPlan().isDevelopment()
+        newLink.setVisible( getCollaborationModel().isDevelopment()
                 && getSegment().isModifiabledBy( getUsername(), getCommunityService() ) );
         addTipTitle( newLink, "Click to add a new " + ( isSends() ? "info capability" : "info need" ) );
         titleContainer.add( newLink );
@@ -182,13 +182,13 @@ public class FlowListPanel extends AbstractCommandablePanel {
                                     new Model<Flow>( flow ),
                                     getExpansions(),
                                     item.getIndex(),
-                                    planPage() )
+                                    modelPage() )
                             : new ExpandedReceivePanel(
                             "flow",
                             new Model<Flow>( flow ),
                             getExpansions(),
                             item.getIndex(),
-                            planPage() );
+                            modelPage() );
                 } else {
                     flowPanel = new CollapsedFlowPanel(
                             "flow",
@@ -271,7 +271,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
             selectedFlowUpdated = false;
         }
         refreshMenus( target );
-        target.appendJavaScript( PlanPage.IE7CompatibilityScript );
+        target.appendJavaScript( ModelPage.IE7CompatibilityScript );
         target.add( flowsDiv );
     }
 
@@ -334,7 +334,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         change.addQualifier( "updated", isSelectedFlowUpdated() );
-        target.appendJavaScript( PlanPage.IE7CompatibilityScript );
+        target.appendJavaScript( ModelPage.IE7CompatibilityScript );
         if ( change.isSelected() || change.isDisplay() || change.isAdded() || change.isUpdated() ) {
             refreshMenus( target );
             if ( !change.isUpdated() ) target.add( flowsDiv );

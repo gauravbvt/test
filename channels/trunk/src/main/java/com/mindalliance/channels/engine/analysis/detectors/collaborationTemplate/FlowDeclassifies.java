@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
@@ -34,7 +33,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
@@ -73,7 +72,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
         boolean isSame = xform.isNone() ? subjectSent.equals( subjectReceived ) : xform.renames( subjectReceived );
         return isSame && Classification.hasHigherClassification( inEOI.getClassifications(),
                                                                  outEOI.getClassifications(),
-                                                                 queryService.getPlan() );
+                                                                 queryService.getCollaborationModel() );
     }
 
     @Override

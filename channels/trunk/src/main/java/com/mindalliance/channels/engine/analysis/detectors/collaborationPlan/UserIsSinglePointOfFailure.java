@@ -57,7 +57,7 @@ public class UserIsSinglePointOfFailure extends AbstractIssueDetector {
                         + " does"
                         + "\n or, if also possible, have other organizations participate with the same position(s) that are filled by "
                         + user.getFullName()
-                        + "\n if none of the above are possible, ask that the collaboration template be upgraded allow users to second "
+                        + "\n if none of the above are possible, ask that the collaboration model be upgraded allow users to second "
                         + user.getFullName()
                         + "."
                 );

@@ -49,7 +49,7 @@ public class RequirementNotSatisfied extends AbstractIssueDetector {
                     Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, requirement );
                     issue.setDescription( "The requirement \""
                             + appliedReq.getLabel()
-                            + "\" could not possibly be satisfied based on the template by "
+                            + "\" could not possibly be satisfied based on the model by "
                             + appliedReq.getCommitterAgencyName()
                             + " toward "
                             +  appliedReq.getBeneficiaryAgencyName()

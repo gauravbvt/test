@@ -22,10 +22,10 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
@@ -37,7 +37,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.CollaborationPlanAnalyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.pages.CollaborationPlanPage;
+import com.mindalliance.channels.pages.CollaborationCommunityPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -88,7 +88,7 @@ public class CommunityServiceImpl implements CommunityService {
     private FeedbackService feedbackService;
 
     private PlanCommunity planCommunity;
-    private PlanService planService;
+    private ModelService modelService;
 
     public CommunityServiceImpl() {
     }
@@ -99,8 +99,8 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public Plan getPlan() {
-        return getPlanService().getPlan();
+    public CollaborationModel getPlan() {
+        return getModelService().getCollaborationModel();
     }
 
     @Override
@@ -110,8 +110,8 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public AbstractModelObjectDao getDao() {
-        if ( getPlanCommunity().isDomainCommunity() ) {
-            return getPlanService().getDao();
+        if ( getPlanCommunity().isModelCommunity() ) {
+            return getModelService().getDao();
         } else {
             return planCommunityManager.getDao( getPlanCommunity() );
         }
@@ -165,13 +165,13 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public PlanService getPlanService() {
-        return planService;
+    public ModelService getModelService() {
+        return modelService;
     }
 
     @Override
-    public void setPlanService( PlanService planService ) {
-        this.planService = planService;
+    public void setModelService( ModelService modelService ) {
+        this.modelService = modelService;
     }
 
     @Override
@@ -381,7 +381,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public boolean isForDomain() {
-        return getPlanCommunity().isDomainCommunity();
+        return getPlanCommunity().isModelCommunity();
     }
 
     @Override
@@ -468,24 +468,24 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public String makePlanCommunityUrl() {
-        String serverUrl = getPlanService().getServerUrl();
+        String serverUrl = getModelService().getServerUrl();
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
-                + CollaborationPlanPage.COLLAB_PLAN
+                + CollaborationCommunityPage.COMMUNITY
                 + "?"
-                + AbstractChannelsWebPage.COLLAB_PLAN_PARM
+                + AbstractChannelsWebPage.COMMUNITY_PARM
                 + "="
                 + planCommunity.getUri();
     }
 
     @Override
     public String makePlanCommunityParticipationUrl() {
-        String serverUrl = getPlanService().getServerUrl();
+        String serverUrl = getModelService().getServerUrl();
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
-                + CollaborationPlanPage.PARTICIPATION
+                + CollaborationCommunityPage.PARTICIPATION
                 + "?"
-                + AbstractChannelsWebPage.COLLAB_PLAN_PARM
+                + AbstractChannelsWebPage.COMMUNITY_PARM
                 + "="
                 + planCommunity.getUri();
     }
@@ -569,7 +569,7 @@ public class CommunityServiceImpl implements CommunityService {
     public CommunityCommitments getAllCommitments( Boolean includeToSelf ) {
         CommunityCommitments commitments = new CommunityCommitments( getCommunityLocale() );
         CommunityAssignments allAssignments = getAllAssignments();
-        for ( Flow flow : getPlanService().findAllFlows() ) {
+        for ( Flow flow : getModelService().findAllFlows() ) {
             if ( flow.isSharing() && !flow.isProhibited() ) {
                 CommunityAssignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
                 for ( CommunityAssignment committer : allAssignments.assignedTo( (Part) flow.getSource() ) ) {
@@ -611,7 +611,7 @@ public class CommunityServiceImpl implements CommunityService {
     public CommunityAssignments getAllAssignments() {
         CommunityAssignments assignments = new CommunityAssignments( getCommunityLocale() );
         List<Agent> allAgents = getParticipationManager().getAllKnownAgents( this );
-        for ( Assignment assignment : getPlanService().getAssignments( false, false ) ) {
+        for ( Assignment assignment : getModelService().getAssignments( false, false ) ) {
             Actor assignmentActor = assignment.getActor();
             Organization employerOrganization = assignment.getOrganization();
             for ( Agent agent : allAgents ) {
@@ -635,7 +635,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public boolean isCustodianOf( ChannelsUser user, Organization placeholder ) {
         if ( !placeholder.isPlaceHolder() ) return false;
-        if ( user.isPlannerOrAdmin( getPlan().getUri() ) ) return true;
+        if ( user.isDeveloperOrAdmin( getPlan().getUri() ) ) return true;
         final Actor custodian = placeholder.getCustodian();
         return custodian != null
                 && CollectionUtils.exists(

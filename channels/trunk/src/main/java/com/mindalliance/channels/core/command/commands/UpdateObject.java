@@ -210,7 +210,7 @@ public abstract class UpdateObject extends AbstractCommand {
         try {
         return identifiable instanceof SegmentObject ?
                 new UpdateSegmentObject( userName, identifiable, property, value, action ) :
-                new UpdatePlanObject( userName, identifiable, property, value, action );
+                new UpdateModelObject( userName, identifiable, property, value, action );
         } catch ( Exception e ) {
             LOG.error( "Failed to make command ", e );
             throw new CommandException( "Failed to make update object command on "

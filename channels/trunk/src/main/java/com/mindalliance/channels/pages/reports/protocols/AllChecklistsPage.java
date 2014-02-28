@@ -57,15 +57,15 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
 
     protected void initComponents( QueryService service, final CommunityService communityService ) {
-        boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
+        boolean isPlanner = getUser().isDeveloperOrAdmin( communityService.getPlan().getUri() );
         getContainer().add(
                 new WebMarkupContainer( "note" ).setVisible( isPlanner ),
                 new WebMarkupContainer( "activeDiv" ).add(
                         new Label( 
                                 "participationNote",
                                 isPlanner
-                                        ? "(Users who participate as agents in this plan and thus have their checklists)"
-                                        : "(Your participation in this plan)"
+                                        ? "(Users who participate as agents in this community and thus have their checklists)"
+                                        : "(Your participation in this community)"
                                 ),
                         new ListView<UserParticipation>( "participatingUsers", getVisibleParticipations() ) {
                             @Override
@@ -128,7 +128,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
     private PageParameters makeUserParameters( String username ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
+        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
         parameters.set( "user", username );
         return parameters;
     }

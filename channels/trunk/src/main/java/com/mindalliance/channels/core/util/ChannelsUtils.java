@@ -718,7 +718,7 @@ public final class ChannelsUtils {
             }
             Velocity.evaluate( new VelocityContext( context ), writer, "", template );
         } catch ( Exception e ) {
-            LOG.warn( "Invalid template: " + template, e );
+            LOG.warn( "Invalid model: " + template, e );
             return template;
         }
         return writer.toString();

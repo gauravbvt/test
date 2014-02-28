@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class AgreementEncompassedByOther extends AbstractIssueDetector {
                             CommunityService communityService ) {
         for ( Agreement otherAgreement : otherOrg.getAgreements() ) {
             if ( !organization.equals( otherOrg ) || !agreement.equals( otherAgreement ) ) {
-                if ( communityService.getPlanService().encompasses( otherAgreement, agreement ) ) {
+                if ( communityService.getModelService().encompasses( otherAgreement, agreement ) ) {
                     Issue issue = makeIssue( communityService, Issue.COMPLETENESS, organization );
                     issue.setDescription( "\"" + otherAgreement.getSummary( otherOrg )
                             + "\" encompasses \"" + agreement.getSummary( organization ) + "\"" );

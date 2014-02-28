@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.jws.WebMethod;
@@ -55,7 +55,7 @@ public class TaskData extends AbstractProcedureElementData {
             ChannelsUser user ) {
         super( communityService, assignment, user );
         initFunction( serverUrl, communityService );
-        initData( communityService.getPlanService() );
+        initData( communityService.getModelService() );
         initLocation( serverUrl, communityService );
         initDocumentation( serverUrl );
         initOtherAssignments( communityService );
@@ -66,11 +66,11 @@ public class TaskData extends AbstractProcedureElementData {
     public TaskData( String serverUrl, CommunityService communityService, Part part, ChannelsUser user ) {
         super( communityService, null, user );
         this.part = part;
-        initData( communityService.getPlanService() );
+        initData( communityService.getModelService() );
     }
 
-    private void initData( PlanService planService ) {
-        failureLevel = planService.computePartPriority( getPart() );
+    private void initData( ModelService modelService ) {
+        failureLevel = modelService.computePartPriority( getPart() );
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
 

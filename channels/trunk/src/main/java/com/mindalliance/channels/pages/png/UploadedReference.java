@@ -39,7 +39,7 @@ public class UploadedReference extends ResourceReference {
         AttachmentManager attachmentManager = ( (Channels) Channels.get() ).getAttachmentManager();
         File directory = ChannelsUser.current().getPlanCommunityUri() != null
                 ? attachmentManager.getUploadDirectory( ChannelsUser.current().getPlanCommunityUri() )
-                : attachmentManager.getUploadDirectory( ChannelsUser.current().getPlan() );
+                : attachmentManager.getUploadDirectory( ChannelsUser.current().getCollaborationModel() );
         return directory.getAbsolutePath();
     }
 

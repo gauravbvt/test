@@ -309,17 +309,17 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         );
     }
 
-    public boolean isPlannerOrAdmin( String uri ) {
-        return isAdmin() || hasPlannerAccess( uri );
+    public boolean isDeveloperOrAdmin( String uri ) {
+        return isAdmin() || hasDeveloperAccess( uri );
     }
 
     public boolean isCommunityPlanner( String communityUri ) {
-        return hasPlannerAccess( communityUri );
+        return hasDeveloperAccess( communityUri );
     }
 
 
     public boolean isParticipant( String uri ) {
-        return isAdmin() || isPlannerOrAdmin( uri ) || hasParticipantAccess( uri );
+        return isAdmin() || isDeveloperOrAdmin( uri ) || hasParticipantAccess( uri );
     }
 
     public void makeDisabled( boolean val ) {
@@ -342,7 +342,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
     }
 
     public void makePlannerOf( String contextUri ) {
-        if ( !isDisabled() && !hasPlannerAccess( contextUri ) ) {
+        if ( !isDisabled() && !hasDeveloperAccess( contextUri ) ) {
             UserAccess plannerAccess = new UserAccess( contextUri, UserAccess.UserRole.Planner );
             removeUserAccess( new UserAccess( contextUri, UserAccess.UserRole.Participant ) );
             addUserAccess( plannerAccess );
@@ -388,7 +388,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         );
     }
 
-    public boolean hasPlannerAccess( final String uri ) {
+    public boolean hasDeveloperAccess( final String uri ) {
         return !isDisabled()
                 && CollectionUtils.exists(
                 getAccessList(),
@@ -443,7 +443,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
             PlanCommunity planCommunity = communityService.getPlanCommunity();
             StringBuilder sb = new StringBuilder();
             sb.append( "Your access privileges have changed in " )
-                    .append( planCommunity.isDomainCommunity() ? "plan " : "community " )
+                    .append( planCommunity.isModelCommunity() ? "plan " : "community " )
                     .append( planCommunity.getName() )
                     .append( ":\n\n" );
             for ( UserAccess userAccessChange : getAccessChangesToNotify( planCommunity.getUri() ) ) {

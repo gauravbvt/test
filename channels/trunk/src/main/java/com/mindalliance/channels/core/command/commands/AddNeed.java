@@ -58,7 +58,7 @@ public class AddNeed extends AbstractCommand {
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         CommunityService communityService = commander.getCommunityService();
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Part part = (Part) segment.getNode( (Long) get( "part" ) );

@@ -13,12 +13,12 @@ import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
@@ -382,11 +382,11 @@ public interface Commander {
 
     void setCommunityService( CommunityService communityService );
 
-    PlanService getPlanService();
+    ModelService getPlanService();
 
-    Plan getPlan();
+    CollaborationModel getPlan();
 
-    PlanDao getPlanDao();
+    ModelDao getPlanDao();
 
     CommunityDao getCommunityDao();
 

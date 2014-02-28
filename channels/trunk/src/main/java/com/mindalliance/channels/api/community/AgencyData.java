@@ -25,14 +25,14 @@ import java.util.Set;
  * Date: 4/5/13
  * Time: 9:14 AM
  */
-@XmlType(propOrder = {"name", "local", "registeredGlobally", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
+@XmlType(propOrder = {"name", "local", "registeredGlobally", "description", "mission", "address", "channels", "parentName", "employments", "modelOrganizationIds", "documentation"})
 public class AgencyData implements Serializable {
 
     private Agency agency;
     private String parentName;
     private List<EmploymentData> employments;
     private List<ChannelData> channelDataList;
-    private List<Long> planOrganizationIds;
+    private List<Long> modelOrganizationIds;
     private AgencyData parentData;
     private boolean local;
     private boolean registeredGlobally;
@@ -64,9 +64,9 @@ public class AgencyData implements Serializable {
     }
 
     private void initPlanOrganization( String serverUrl, CommunityService communityService ) {
-        planOrganizationIds = new ArrayList<Long>(  );
+        modelOrganizationIds = new ArrayList<Long>(  );
         for ( Organization organization : agency.getPlanOrganizations() ) {
-            planOrganizationIds.add(organization.getId() );
+            modelOrganizationIds.add( organization.getId() );
         }
     }
 
@@ -130,12 +130,12 @@ public class AgencyData implements Serializable {
     }
 
     @XmlElement(name = "organizationId" )
-    public List<Long> getPlanOrganizationIds() {
-        return planOrganizationIds;
+    public List<Long> getModelOrganizationIds() {
+        return modelOrganizationIds;
     }
 
     public Set<Long> allOrganizationIds() {
-        return new HashSet<Long>( planOrganizationIds );
+        return new HashSet<Long>( modelOrganizationIds );
     }
 
     public Set<Long> allMediumIds() {

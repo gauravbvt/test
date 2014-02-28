@@ -3,7 +3,6 @@ package com.mindalliance.channels.engine.analysis.detectors.collaborationTemplat
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.query.QueryService;
@@ -33,7 +32,7 @@ public class ChecklistIsEmpty extends AbstractIssueDetector {
 
     @Override
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Part part = (Part) modelObject;
         Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();

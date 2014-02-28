@@ -231,11 +231,11 @@ public class ElementOfInformation implements Classifiable {
      * Add classifications not already encompassed.
      *
      * @param classificationList a list of classifications
-     * @param plan               the plan
+     * @param collaborationModel               the plan
      */
-    public void addClassifications( List<Classification> classificationList, Plan plan ) {
+    public void addClassifications( List<Classification> classificationList, CollaborationModel collaborationModel ) {
         for ( Classification classification : classificationList )
-            if ( !Classification.encompass( classifications, classification, plan ) )
+            if ( !Classification.encompass( classifications, classification, collaborationModel ) )
                 classifications.add( classification );
     }
 

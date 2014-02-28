@@ -205,7 +205,7 @@ public class ContactData implements Serializable {
     private void initPersonalChannels( CommunityService communityService ) {
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( Channel channel : communityService.getPlanService()
+            for ( Channel channel : communityService.getModelService()
                     .getUserInfoService().findChannels( userInfo, communityService ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),

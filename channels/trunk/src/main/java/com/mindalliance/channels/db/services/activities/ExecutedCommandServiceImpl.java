@@ -8,8 +8,6 @@ import com.mindalliance.channels.db.data.activities.ExecutedCommand;
 import com.mindalliance.channels.db.data.activities.QExecutedCommand;
 import com.mindalliance.channels.db.repositories.ExecutedCommandRepository;
 import com.mindalliance.channels.db.services.AbstractDataService;
-import com.mindalliance.channels.db.services.DataService;
-import com.mindalliance.channels.db.services.PageableDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +55,7 @@ public class ExecutedCommandServiceImpl extends AbstractDataService<ExecutedComm
         return repository.findAll(
                 qExecutedCommand.classLabel.eq( ExecutedCommand.class.getSimpleName() )
                         .and( qExecutedCommand.communityUri.eq( planCommunity.getUri() ) )
-                        .and( qExecutedCommand.planVersion.eq( planCommunity.getPlanVersion() ) ),
+                        .and( qExecutedCommand.planVersion.eq( planCommunity.getModelVersion() ) ),
                 pageable
         );
     }
@@ -69,7 +67,7 @@ public class ExecutedCommandServiceImpl extends AbstractDataService<ExecutedComm
                 repository.findAll(
                         qExecutedCommand.classLabel.eq( ExecutedCommand.class.getSimpleName() )
                                 .and( qExecutedCommand.communityUri.eq( planCommunity.getUri() ) )
-                                .and( qExecutedCommand.planVersion.eq( planCommunity.getPlanVersion() ) ),
+                                .and( qExecutedCommand.planVersion.eq( planCommunity.getModelVersion() ) ),
                         qExecutedCommand.created.desc()
                 )
         ).iterator();

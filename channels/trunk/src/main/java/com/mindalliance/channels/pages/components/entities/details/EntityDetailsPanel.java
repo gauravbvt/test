@@ -7,8 +7,8 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Channels;
@@ -19,7 +19,7 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencesAndMatchesPanel;
 import com.mindalliance.channels.pages.components.entities.TypesPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -169,7 +169,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAGS) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
@@ -259,7 +259,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     public void setDescription( String val ) {
         String desc = val == null ? "" : val;
-        doCommand( new UpdatePlanObject( getUser().getUsername(),
+        doCommand( new UpdateModelObject( getUser().getUsername(),
                                          getEntity(),
                                          "description",
                                          desc,
@@ -281,7 +281,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";
                 }
-                doCommand( new UpdatePlanObject( getUser().getUsername(),
+                doCommand( new UpdateModelObject( getUser().getUsername(),
                                                  getEntity(),
                                                  "name",
                                                  uniqueName,

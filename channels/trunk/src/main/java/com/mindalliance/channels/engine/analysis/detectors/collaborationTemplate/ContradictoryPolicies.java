@@ -29,7 +29,7 @@ public class ContradictoryPolicies extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( CommunityService communityService, Identifiable identifiable ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         ModelObject modelObject = (ModelObject)identifiable;
         List<Issue> issues = new ArrayList<Issue>();
         if ( ((Prohibitable)modelObject).isProhibited() && modelObject.hasMandatingPolicy() ) {

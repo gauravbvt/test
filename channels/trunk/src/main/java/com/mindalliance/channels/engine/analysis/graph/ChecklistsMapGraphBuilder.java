@@ -17,7 +17,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -81,7 +80,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() )
-            commitments.addAll( communityService.getPlanService().findAllCommitments( flow, true ) );
+            commitments.addAll( communityService.getModelService().findAllCommitments( flow, true ) );
 
         List<Commitment> results = new ArrayList<Commitment>();
         for ( Commitment commitment : commitments )
@@ -105,7 +104,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     }
 
     private boolean isFocusedOnOrganization( Assignment assignment ) {
-        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, communityService.getPlanService().getPlanLocale() );
+        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, communityService.getModelService().getPlanLocale() );
     }
 
     private Commitment summarize( Commitment commitment ) {
@@ -174,7 +173,7 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
     }
 
     private List<Flow> findAllFlows() {
-        return communityService.getPlanService().findAllSharingFlows( segment );
+        return communityService.getModelService().findAllSharingFlows( segment );
     }
 
     public void setCommunityService( CommunityService communityService ) {

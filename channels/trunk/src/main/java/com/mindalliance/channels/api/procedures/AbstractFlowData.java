@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -60,8 +60,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     protected void initOtherData( CommunityService communityService ) {
-         PlanService planService = communityService.getPlanService();
-        initFailureSeverity( planService );
+         ModelService modelService = communityService.getModelService();
+        initFailureSeverity( modelService );
         initMediumDataList( serverUrl, communityService );
         initChannelDataList( communityService );
         documentation = new DocumentationData( serverUrl, getSharing() );
@@ -98,8 +98,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         }
     }
 
-    private void initFailureSeverity( PlanService planService ) {
-        failureSeverity = planService.computeSharingPriority( getSharing() );
+    private void initFailureSeverity( ModelService modelService ) {
+        failureSeverity = modelService.computeSharingPriority( getSharing() );
     }
 
     public boolean isInitiating() {

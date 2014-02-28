@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.community.requirements;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.MultiCommand;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -205,7 +205,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
 
     private List<String> getAllJurisdictionNames() {
         List<String> names = new ArrayList<String>();
-        for ( Place place : getCommunityService().getPlanService().listActualEntities( Place.class, true ) ) {
+        for ( Place place : getCommunityService().getModelService().listActualEntities( Place.class, true ) ) {
             if ( !place.isUnknown() )
                 names.add( place.getName() );
         }
@@ -230,7 +230,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     @SuppressWarnings( "unchecked" )
     private List<String> getAllPlaceholderNames() {
         List<String> names = new ArrayList<String>();
-        for ( Organization organization : getCommunityService().getPlanService().listActualEntities( Organization.class ) ) {
+        for ( Organization organization : getCommunityService().getModelService().listActualEntities( Organization.class ) ) {
             if ( organization.isPlaceHolder() ) {
                 names.add( organization.getName() );
             }
@@ -264,12 +264,12 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 MultiCommand multiCommand = new MultiCommand( getUsername(), "Set required agent" );
                 multiCommand.makeUndoable( false );
                 multiCommand.setChange( new Change( Change.Type.Updated, requirement ) ); // set the summary change else produces none and no journaling
-                multiCommand.addCommand( new UpdatePlanObject(
+                multiCommand.addCommand( new UpdateModelObject(
                         getUsername(),
                         requirement,
                         getAgentSpecPath( "actor" ),
                         agent.getActor() ) );
-               multiCommand.addCommand( new UpdatePlanObject(
+               multiCommand.addCommand( new UpdateModelObject(
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "registeredOrgId" ),
@@ -277,7 +277,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 doCommand( multiCommand );
             }
         } else {
-            doCommand( new UpdatePlanObject(
+            doCommand( new UpdateModelObject(
                     getUsername(),
                     requirement,
                     getAgentSpecPath( "actor" ),
@@ -298,14 +298,14 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
             Agency agency = communityService.getParticipationManager().findAgencyNamed( name, communityService );
             if ( agency != null ) {
                 if ( agency.getRegisteredOrganization().isFixedOrganization() ) {
-                    doCommand( new UpdatePlanObject(
+                    doCommand( new UpdateModelObject(
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "fixedOrgId" ),
                             agency.getRegisteredOrganization().getFixedOrganizationId()
                     ) );
                 } else {
-                    doCommand( new UpdatePlanObject(
+                    doCommand( new UpdateModelObject(
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "registeredOrgId" ),
@@ -317,14 +317,14 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
             MultiCommand multiCommand = new MultiCommand( getUsername(), "Unset required agency"  );
             multiCommand.setChange( new Change( Change.Type.Updated, requirement ) ); // set the summary change else produces none and no journaling
             multiCommand.makeUndoable( false );
-            multiCommand.addCommand( new UpdatePlanObject(
+            multiCommand.addCommand( new UpdateModelObject(
                     getUsername(),
                     requirement,
                     getAgentSpecPath( "fixedOrgId" ),
                     null
             ) );
             if ( getAgentName() == null ) {
-                multiCommand.addCommand( new UpdatePlanObject(
+                multiCommand.addCommand( new UpdateModelObject(
                         getUsername(),
                         requirement,
                         getAgentSpecPath( "registeredOrgId" ),
@@ -346,11 +346,11 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         Requirement requirement = getRequirement();
         Organization placeholder = null;
         if ( name != null && !name.isEmpty() ) {
-            placeholder = communityService.getPlanService().findActualEntity( Organization.class, name );
+            placeholder = communityService.getModelService().findActualEntity( Organization.class, name );
             if ( placeholder != null )
                 placeholder = placeholder.isPlaceHolder() ? placeholder : null;
         }
-        doCommand( new UpdatePlanObject(
+        doCommand( new UpdateModelObject(
                 getUsername(),
                 requirement,
                 getAgentSpecPath( "placeholder" ),

@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
@@ -1045,7 +1045,7 @@ public class Requirement extends ModelObject implements Countable {
                 // verify actor still valid
                 if ( actor != null ) {
                     try {
-                        actor = communityService.getPlanService().find( Actor.class, actor.getId() );
+                        actor = communityService.getModelService().find( Actor.class, actor.getId() );
                         assert actor.isActual();
                     } catch ( Exception e ) {
                         LOG.warn( "Failed to find actor " + actor.getId() );
@@ -1069,7 +1069,7 @@ public class Requirement extends ModelObject implements Countable {
                 if ( fixedOrgId != null ) {
                     assert registeredOrgId == null;
                     try {
-                        Organization org = communityService.getPlanService().find( Organization.class, fixedOrgId );
+                        Organization org = communityService.getModelService().find( Organization.class, fixedOrgId );
                         if ( org != null && !org.isUnknown() ) {
                             RegisteredOrganization registeredOrganization = communityService
                                     .getRegisteredOrganizationService().find( org.getName(), communityService );
@@ -1223,11 +1223,11 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
-            PlanService planService = communityService.getPlanService();
+            ModelService modelService = communityService.getModelService();
             if ( state.containsKey( "actor" ) ) {
                 Long id = (Long) state.get( "actor" );
                 try {
-                    actor = planService.find( Actor.class, id );
+                    actor = modelService.find( Actor.class, id );
                 } catch ( NotFoundException e ) {
                     LOG.warn( "Actor not found at " + id );
                 }
@@ -1235,7 +1235,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( state.containsKey( "jurisdiction" ) ) {
                 Long id = (Long) state.get( "jurisdiction" );
                 try {
-                    jurisdiction = planService.find( Place.class, id );
+                    jurisdiction = modelService.find( Place.class, id );
                 } catch ( NotFoundException e ) {
                     LOG.warn( "Place not found at " + id );
                 }
@@ -1249,7 +1249,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( state.containsKey( "placeholder" ) ) {
                 Long id = (Long) state.get( "placeholder" );
                 try {
-                    placeholder = planService.find( Organization.class, id );
+                    placeholder = modelService.find( Organization.class, id );
                 } catch ( NotFoundException e ) {
                     LOG.warn( "Organization not found at " + id );
                 }

@@ -173,11 +173,11 @@
 
 
         <!-- Temporary cache clearing triggers -->
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandDone(..))" advice-ref="cacheClear" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandUndone(..))" advice-ref="cacheClear" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandRedone(..))" advice-ref="cacheClear" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.started(..))" advice-ref="cacheClear" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.clearCache(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.ModelManager.commandDone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.ModelManager.commandUndone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.ModelManager.commandRedone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.ModelManager.started(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.ModelManager.clearCache(..))" advice-ref="cacheClear" order="1"/>
 
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandDone(..))" advice-ref="communityClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandUndone(..))" advice-ref="communityClear" order="1"/>

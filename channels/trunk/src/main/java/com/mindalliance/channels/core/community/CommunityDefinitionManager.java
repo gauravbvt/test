@@ -196,7 +196,7 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
         } catch ( IOException e ) {
             LOG.warn( "Failed to update plans.properties", e );
         }
-        LOG.debug( "Deleted plan definition {}", uri );
+        LOG.debug( "Deleted definition {}", uri );
     }
 
     private void memorize( CommunityDefinition definition ) throws IOException {
@@ -376,7 +376,7 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
         CommunityDefinition oldDefinition = definitions.remove( planCommunity.getUri() );
         getOrCreate(
                 planCommunity.getUri(),
-                planCommunity.getPlanUri(),
+                planCommunity.getModelUri(),
                 version
         );
         return oldDefinition;

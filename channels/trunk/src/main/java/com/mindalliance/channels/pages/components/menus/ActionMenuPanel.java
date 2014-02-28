@@ -30,7 +30,7 @@ public abstract class ActionMenuPanel extends MenuPanel {
         synchronized ( getCommander() ) {
             addLockedOutMenuItem( menuItems, "menuItem" );
             menuItems.add(  getSendMessageMenuItem( "menuItem" ) );
-            if ( getPlan().isDevelopment() ) {
+            if ( getCollaborationModel().isDevelopment() ) {
                 menuItems.add( getUndoMenuItem( "menuItem" ) );
                 menuItems.add( getRedoMenuItem( "menuItem" ) );
             }

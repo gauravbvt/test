@@ -50,7 +50,7 @@ public class EventData extends ModelEntityData {
 
     @XmlElement
     public Boolean getIncident() {
-        return getPlan().isIncident( getEvent() );
+        return getCollaborationModel().isIncident( getEvent() );
     }
 
     @XmlElement
@@ -73,7 +73,7 @@ public class EventData extends ModelEntityData {
     @XmlElement(name = "plannedPhaseId")
     public List<Long> getPlannedPhases() {
         Set<Long> phaseIds = new HashSet<Long>(  );
-        for ( Segment segment : getPlan().getSegments() ) {
+        for ( Segment segment : getCollaborationModel().getSegments() ) {
             if (segment.getEvent().equals( getEvent() ) ) {
                 phaseIds.add( segment.getPhase().getId() );
             }

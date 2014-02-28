@@ -7,8 +7,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -36,20 +35,20 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         List<Classification> eoiClassifications = flow.getClassifications();
         if ( !eoiClassifications.isEmpty() ) {
             for ( Channel channel : flow.getEffectiveChannels() ) {
                 TransmissionMedium medium = channel.getMedium();
-                Plan plan = queryService.getPlan();
+                CollaborationModel collaborationModel = queryService.getCollaborationModel();
                 if ( !medium.isDirect() ) {
                     // under-secured immediate medium
-                    List<Classification> mediumClassifications = medium.getEffectiveSecurity( plan );
+                    List<Classification> mediumClassifications = medium.getEffectiveSecurity( collaborationModel );
                     if ( !Classification.encompass(
                             mediumClassifications,
-                            eoiClassifications, plan ) ) {
+                            eoiClassifications, collaborationModel ) ) {
                         Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                         issue.setDescription( "Classified information would be communicated "
                                 + "over unsecured or insufficiently secured channel \""
@@ -66,10 +65,10 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                 List<TransmissionMedium> delegates = medium.getEffectiveDelegates( queryService.getPlanLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
                     if ( !medium.isDirect() ) {
-                        List<Classification> delegateClassifications = medium.getEffectiveSecurity( plan );
+                        List<Classification> delegateClassifications = medium.getEffectiveSecurity( collaborationModel );
                         if ( !Classification.encompass(
                                 delegateClassifications,
-                                eoiClassifications, plan ) ) {
+                                eoiClassifications, collaborationModel ) ) {
                             Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "Classified information could be communicated "
                                     + "over unsecured or insufficiently secured delegated channel \""

@@ -423,12 +423,12 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     private Updatable getUpdatable( ScriptChange scriptChange ) {
         String updatableTargetPath = scriptChange.getUpdateTargetPath();
         if ( updatableTargetPath == null ) {
-            return planPage();
+            return modelPage();
         } else {
-            if ( updatableTargetPath.equals( "planPage" ) ) {
-                return planPage();
+            if ( updatableTargetPath.equals( "modelPage" ) ) {
+                return modelPage();
             } else {
-                return (Updatable) ChannelsUtils.getProperty( planPage(), updatableTargetPath, null );
+                return (Updatable) ChannelsUtils.getProperty( modelPage(), updatableTargetPath, null );
             }
         }
     }

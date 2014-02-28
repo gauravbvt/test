@@ -3,8 +3,8 @@ package com.mindalliance.channels.pages.components.entities.structure;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.TransferJobs;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -202,7 +202,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     private void addTransferCheckbox() {
         transferCheckBoxContainer = new WebMarkupContainer( "transferCheckBoxContainer" );
         transferCheckBoxContainer.setOutputMarkupId( true );
-        transferCheckBoxContainer.setVisible( getPlan().isDevelopment() );
+        transferCheckBoxContainer.setVisible( getCollaborationModel().isDevelopment() );
         addOrReplace( transferCheckBoxContainer );
         CheckBox transferCheckBox = new CheckBox(
                 "transfer",
@@ -576,7 +576,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 return collator.compare( jw1.getNormalizedActorName(), jw2.getNormalizedActorName() );
             }
         } );
-        if ( getPlan().isDevelopment() ) {
+        if ( getCollaborationModel().isDevelopment() ) {
             // New job
             JobWrapper creationJobWrapper;
             // Use previously unconfirmed job if not null and not already implied
@@ -679,14 +679,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                doCommand( new UpdateModelObject( getUser().getUsername(), getOrganization(),
                         "jobs",
                         job,
                         UpdateObject.Action.AddUnique ) );
                 selectedJob = job;
             } else if ( !markedForCreation ) {
                 unconfirmedJob = job;
-                doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                doCommand( new UpdateModelObject( getUser().getUsername(), getOrganization(),
                         "jobs",
                         job,
                         UpdateObject.Action.Remove ) );
@@ -713,7 +713,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             } else {
                 int index = getOrganization().getJobs().indexOf( job );
                 if ( index >= 0 ) {
-                    doCommand( new UpdatePlanObject(
+                    doCommand( new UpdateModelObject(
                             getUser().getUsername(),
                             getOrganization(),
                             "jobs[" + index + "].linked",
@@ -735,7 +735,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 if ( !isSame( title, oldTitle ) ) {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getOrganization(),
                                 "jobs[" + index + "].title",
                                 title,
                                 UpdateObject.Action.Set ) );

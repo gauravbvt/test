@@ -18,7 +18,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
@@ -237,7 +237,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         };
         addTipTitle( addPartLink, "Click to add a new task" );
         addPartLink.setOutputMarkupId( true );
-        makeVisible( addPartLink, getPlan().isDevelopment()
+        makeVisible( addPartLink, getCollaborationModel().isDevelopment()
                 && getSegment().isModifiabledBy( getUsername(), getCommunityService() ) );
         partAndFlowsContainer.addOrReplace( addPartLink );
     }
@@ -245,7 +245,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addPartActionsMenu() {
         if ( isCollapsed( getPart() ) ) {
             partActionsMenu = new Label( "partActionsMenu", new Model<String>( "" ) );
-        } else if ( isLockedByUser( getPart() ) || getUser().isParticipant( getPlan().getUri() ) ) {
+        } else if ( isLockedByUser( getPart() ) || getUser().isParticipant( getCollaborationModel().getUri() ) ) {
             partActionsMenu = new PartActionsMenuPanel( "partActionsMenu", partModel, getExpansions() );
         } else if ( getCommander().isTimedOut( getUser().getUsername() ) || getLockOwner( getPart() ) == null ) {
             partActionsMenu = timeOutLabel( "partActionsMenu" );
@@ -254,7 +254,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             partActionsMenu = editedByLabel( "partActionsMenu", getPart(), otherUser );
         }
         partActionsMenu.setOutputMarkupId( true );
-        makeVisible( partActionsMenu, getPlan().isDevelopment() && isExpanded( getPart() ) );
+        makeVisible( partActionsMenu, getCollaborationModel().isDevelopment() && isExpanded( getPart() ) );
         partAndFlowsContainer.addOrReplace( partActionsMenu );
     }
 
@@ -345,7 +345,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 new ExpandedPartPanel( "part",
                         new PropertyModel<Part>( this, "part" ),
                         getExpansions(),
-                        planPage() ) :
+                        modelPage() ) :
                 new CollapsedPartPanel( "part", new PropertyModel<Part>( this, "part" ), getExpansions() );
         partAndFlowsContainer.addOrReplace( partPanel );
     }
@@ -588,7 +588,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 addFlowDiagram();
                 addFlowMapIssues();
                 setPartOrFlowUpdated( false );
-                target.appendJavaScript( PlanPage.IE7CompatibilityScript );
+                target.appendJavaScript( ModelPage.IE7CompatibilityScript );
                 resizePartPanels( target );
                 target.add( getControlsContainer() );
                 target.add( flowMapDiagramPanel );

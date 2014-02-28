@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="manage-plan admin" wicket:id="settingsContainer">
+		<div class="plan-left-col">
+			<div class="select-plan">
+				<h3>Models</h3>
+				<div>
+		            <select wicket:id="model-sel" name="plan">
+		                <option>Some model</option>
+		            </select>
+				</div>
+			</div>
+	    	<div class="new-plan">
+				<h3>New collaboration model</h3>
+				<div>
+		    		<input wicket:id="newModelUri" type="text"/>
+		    		<a wicket:id="addModel" class="button">Add</a>
+				</div>
+			</div>
+		</div>
+
+	    <div class="plan">
+	    	<div class="plan-details">
+		    	<h3>Details</h3>
+        		<table wicket:id="modelProperties" width="100%" border="0" cellspacing="0" cellpadding="0">
+            		 <tr class="even">
+                		<td class="label">Model ID:</td>
+                		<td style="text-align: right;">
+                		    <span wicket:id="modelUri">uri</span>
+               			</td>
+            		</tr>
+                    <tr class="odd">
+                        <td class="label">Model Name:</td>
+                        <td>
+                            <input type="text" wicket:id="modelName"/>
+                        </td>
+                    </tr>
+                    <tr class="even">
+                		<td class="label">Development Version:</td>
+                		<td style="text-align: right;">
+                    		<span wicket:id="devVersion">3</span> (<span wicket:id="validity">valid</span>)
+                		</td>
+            		</tr>
+            		<tr class="odd">
+                		<td class="label">Communities Based on Model:</td>
+                		<td style="text-align: right;">
+                    		<span wicket:id="communitiesCount">0</span>
+                		</td>
+            		</tr>
+            		<tr class="even">
+               			<td class="label">Model Owner:</td>
+                		<td>
+                    		<input type="text" wicket:id="modelOwner"/>
+                		</td>
+            		</tr>
+            		<tr class="odd">
+                		<td class="label">Planner Feedback Emailed To:</td>
+                		<td>
+                    		<input type="text" wicket:id="plannerSupportEmail"/>
+                		</td>
+            		</tr>
+            		<tr class="even">
+                		<td class="label">Participant Feedback Emailed To:</td>
+                		<td>
+                    		<input type="text" wicket:id="participantSupportEmail"/>
+                		</td>
+            		</tr>
+        		</table>
+        		<div class="button-bar">
+	           		<a wicket:id="productize" class="button">Put in production</a>
+	       		    <a wicket:id="deleteModel" class="button">Delete Model</a>
+	        		<a class="button" wicket:id="reset">Reset</a>
+	        		<a class="button" wicket:id="apply">Apply</a>
+        		</div>
+        	</div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

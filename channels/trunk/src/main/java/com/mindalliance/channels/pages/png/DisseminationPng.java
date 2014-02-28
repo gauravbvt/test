@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class DisseminationPng extends DiagramPng {
             PageParameters parameters,
             CommunityService communityService,
             DiagramFactory diagramFactory ) throws DiagramException {
-        Segment segment = PlanPage.findSegment( communityService.getPlanService(), parameters );
+        Segment segment = ModelPage.findSegment( communityService.getModelService(), parameters );
         SegmentObject segmentObject = null;
         if ( segment != null && parameters.getNamedKeys().contains( OBJECT ) ) {
             try {

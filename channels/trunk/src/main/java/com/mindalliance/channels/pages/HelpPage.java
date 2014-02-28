@@ -21,7 +21,7 @@ public class HelpPage extends WebPage {
     }
 
     private void init() {
-        add( new UserFeedbackPanel( "feedback", Feedback.TEMPLATES ) );
+        add( new UserFeedbackPanel( "feedback", Feedback.MODELS ) );
     }
 
 }

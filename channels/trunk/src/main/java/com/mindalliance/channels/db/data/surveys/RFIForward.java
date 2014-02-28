@@ -36,7 +36,7 @@ public class RFIForward extends AbstractChannelsDocument {
                        RFI rfi,
                        String forwardToEmail,
                        String message ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), user.getUsername()  );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), user.getUsername()  );
         setForwardToEmail( forwardToEmail );
         setMessage( message );
         rfiUid = rfi.getUid();

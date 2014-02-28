@@ -44,7 +44,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         registeredOrganizationUid = registeredOrganization.getUid();
         this.placeholderOrgId = placeholder.getId();
     }

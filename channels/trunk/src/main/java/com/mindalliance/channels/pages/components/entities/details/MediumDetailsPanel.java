@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -291,7 +291,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     public void setCast( TransmissionMedium.Cast value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.getCast() != value ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "cast", value ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), medium, "cast", value ) );
         }
     }
 
@@ -321,7 +321,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     public void setAddressPattern( String value ) {
         TransmissionMedium medium = getMedium();
         if ( !medium.getAddressPattern().equals( value ) ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), getMedium(), "addressPattern", value ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), getMedium(), "addressPattern", value ) );
         }
     }
 
@@ -342,7 +342,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     public void setSynchronous( boolean value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.isSynchronous() != value ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "synchronous", value ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), medium, "synchronous", value ) );
         }
     }
 
@@ -363,7 +363,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     public void setForContactInfo( boolean value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.isForContactInfo() != value ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "forContactInfo", value ) );
+            doCommand( new UpdateModelObject( getUser().getUsername(), medium, "forContactInfo", value ) );
         }
     }
 
@@ -389,7 +389,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         if ( !isSame( oldName, newName ) ) {
             Actor newQualification = newName.isEmpty() ? null : doSafeFindOrCreateType( Actor.class, name );
             doCommand(
-                    new UpdatePlanObject( getUser().getUsername(), getEntity(),
+                    new UpdateModelObject( getUser().getUsername(), getEntity(),
                             "qualification",
                             newQualification,
                             UpdateObject.Action.Set ) );

@@ -3,7 +3,7 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.Serializable;
@@ -20,7 +20,7 @@ abstract public class AbstractProcedureElementData  implements Serializable {
 
     private CommunityAssignment assignment;
     private ChannelsUser user;
-    private Plan plan;
+    private CollaborationModel collaborationModel;
 
     public AbstractProcedureElementData() {
     }
@@ -42,15 +42,15 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     }
 
     private void initData( CommunityService communityService ) {
-        plan = communityService.getPlan();
+        collaborationModel = communityService.getPlan();
     }
 
     public CommunityAssignment getAssignment() {
         return assignment;
     }
 
-    protected Plan getPlan() {
-        return plan;
+    protected CollaborationModel getCollaborationModel() {
+        return collaborationModel;
     }
 
     protected ChannelsUser getUser() {

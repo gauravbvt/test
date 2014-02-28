@@ -69,7 +69,7 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
                     @Override
                     public boolean evaluate( Object object ) {
                         return !placed.contains( object )
-                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) object ).getSuperiors( communityService.getPlanService() ) ).isEmpty();
+                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) object ).getSuperiors( communityService.getModelService() ) ).isEmpty();
                     }
                 } );
     }

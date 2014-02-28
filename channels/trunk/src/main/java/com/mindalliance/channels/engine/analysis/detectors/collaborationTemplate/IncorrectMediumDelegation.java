@@ -11,9 +11,8 @@ import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -31,12 +30,12 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         TransmissionMedium medium = (TransmissionMedium) modelObject;
-        Plan plan = queryService.getPlan();
+        CollaborationModel collaborationModel = queryService.getCollaborationModel();
         for ( TransmissionMedium delegate : medium.getEffectiveDelegatedToMedia() ) {
-            if ( securityReduction( plan, medium, delegate ) ) {
+            if ( securityReduction( collaborationModel, medium, delegate ) ) {
                 Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, medium );
                 issue.setDescription( '\"' + medium.getName() + "\" delegates to \"" + delegate.getName() + '\"'
                                       + " which is less secure." );
@@ -76,11 +75,11 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
         return issues;
     }
 
-    private static boolean securityReduction( Plan plan, TransmissionMedium medium, TransmissionMedium delegate ) {
-        List<Classification> mediumSec = medium.getEffectiveSecurity( plan );
+    private static boolean securityReduction( CollaborationModel collaborationModel, TransmissionMedium medium, TransmissionMedium delegate ) {
+        List<Classification> mediumSec = medium.getEffectiveSecurity( collaborationModel );
         return !mediumSec.isEmpty() && Classification.hasHigherClassification( mediumSec,
-                                                                               delegate.getEffectiveSecurity( plan ),
-                                                                               plan );
+                                                                               delegate.getEffectiveSecurity( collaborationModel ),
+                collaborationModel );
     }
 
     private static boolean improperMode( TransmissionMedium medium, TransmissionMedium delegate ) {

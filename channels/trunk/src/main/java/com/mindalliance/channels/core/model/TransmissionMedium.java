@@ -494,15 +494,15 @@ public class TransmissionMedium extends ModelEntity {
     /**
      * Return aggregated local and inherited security classifications.
      *
-     * @param plan the plan
+     * @param collaborationModel the plan
      * @return a list of secrecy classifications
      */
-    public List<Classification> getEffectiveSecurity( Plan plan ) {
+    public List<Classification> getEffectiveSecurity( CollaborationModel collaborationModel ) {
         List<Classification> effective = new ArrayList<Classification>( security );
         for ( ModelEntity ancestor : getAllTypes() ) {
             List<Classification> classifications = ( (TransmissionMedium) ancestor ).getSecurity();
             for ( Classification classification : classifications ) {
-                if ( !Classification.encompass( effective, classification, plan ) ) {
+                if ( !Classification.encompass( effective, classification, collaborationModel ) ) {
                     effective.add( classification );
                 }
             }

@@ -94,7 +94,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             }
         }
         for ( EventTiming eventTiming : segment.getContext() ) {
-            for ( Part part : communityService.getPlanService().findAllInitiators( eventTiming ) ) {
+            for ( Part part : communityService.getModelService().findAllInitiators( eventTiming ) ) {
                 Set<Part> parts = contextInitiators.get( eventTiming );
                 if ( parts == null ) {
                     parts = new HashSet<Part>();

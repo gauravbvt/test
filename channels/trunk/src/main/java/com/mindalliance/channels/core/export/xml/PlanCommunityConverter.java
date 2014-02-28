@@ -51,8 +51,8 @@ public class PlanCommunityConverter extends AbstractChannelsConverter {
         CommunityDao communityDao = getCommunityDao();
         writer.addAttribute( "id", Long.toString( planCommunity.getId() ) );
         writer.addAttribute( "uri", planCommunity.getUri() );
-        writer.addAttribute( "planUri", planCommunity.getPlanUri() );
-        writer.addAttribute( "planVersion", Integer.toString( planCommunity.getPlanVersion() ) );
+        writer.addAttribute( "planUri", planCommunity.getModelUri() );
+        writer.addAttribute( "planVersion", Integer.toString( planCommunity.getModelVersion() ) );
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf( communityDao.getIdGenerator().getIdCounter( planCommunity.getUri() ) ) );
         writer.endNode();
@@ -146,9 +146,9 @@ public class PlanCommunityConverter extends AbstractChannelsConverter {
         String uri = reader.getAttribute( "uri" );
         planCommunity.setUri( uri );
         String planUri = reader.getAttribute( "planUri" );
-        planCommunity.setPlanUri( planUri );
+        planCommunity.setModelUri( planUri );
         int planVersion = Integer.parseInt( reader.getAttribute( "planVersion" ) );
-        planCommunity.setPlanVersion( planVersion );
+        planCommunity.setModelVersion( planVersion );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         planCommunity.setId( id );
         getCommunityDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos

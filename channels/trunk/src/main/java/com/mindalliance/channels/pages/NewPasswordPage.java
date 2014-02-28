@@ -161,7 +161,7 @@ public class NewPasswordPage extends WebPage {
             if ( !unrecognizedUsername && !unrecognizedEmailAddress ) {
                 boolean passwordChanged = userDao.changePassword(
                         user,
-                        queryService.getPlanManager(),
+                        queryService.getModelManager(),
                         mailSender );
                 if ( passwordChanged ) {
                     setOutcome( NEW_PASSWORD_SENT );

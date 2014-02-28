@@ -6,7 +6,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -36,8 +36,8 @@ public class OrganizationData extends ModelEntityData {
     }
 
     private void init( CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
-        participating = planService.getPlan().isInScope( getOrganization() );
+        ModelService modelService = communityService.getModelService();
+        participating = modelService.getCollaborationModel().isInScope( getOrganization() );
         channelsDataList = new ArrayList<ChannelData>(  );
         for ( Channel channel : getOrganization().getEffectiveChannels() ) {
             channelsDataList.add( new ChannelData( channel, communityService ) );

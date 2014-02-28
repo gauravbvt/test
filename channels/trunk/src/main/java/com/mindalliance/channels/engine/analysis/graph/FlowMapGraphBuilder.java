@@ -62,7 +62,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     private void populateSegmentGraph( DirectedMultiGraphWithProperties<Node, Flow> graph ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         // add nodes as vertices
         Iterator<Node> nodes = segment.nodes();
         while ( nodes.hasNext() ) {
@@ -108,7 +108,7 @@ public class FlowMapGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     private void findOverridden( List<Flow> overriddenFlows, List<Part> overriddenParts ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         for ( Part part : segment.listParts() ) {
             if ( queryService.isOverridden( part ) ) {
                 overriddenParts.add( part );

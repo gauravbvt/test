@@ -8,7 +8,6 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyGraphBuilder;

@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -30,7 +29,7 @@ public class UselessActor extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         Assignments assignments = queryService.getAssignments().with( actor );

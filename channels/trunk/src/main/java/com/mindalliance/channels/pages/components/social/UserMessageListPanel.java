@@ -287,7 +287,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
 
     private List<ChannelsUser> getCandidateRecipients() {
         List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userInfoService.getUsers( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userInfoService.getUsers( getCollaborationModel().getUri() ) ) {
             if ( !user.getUsername().equals( getUser().getUsername() ) ) {
                 recipients.add( user );
             }
@@ -466,7 +466,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                         "Message will be emailed to "
                                 + ( message.isBroadcast( getUser(), getPlanCommunity() )
                                 ? message.isToAllPlanners()
-                                ? "all planners"
+                                ? ( getPlanCommunity().isModelCommunity() ? "all developers" : "all planners" )
                                 : "all users"
                                 : getUserFullName( message.getToUsername( UserStatement.STATEMENT ) ) ) ) );
     }

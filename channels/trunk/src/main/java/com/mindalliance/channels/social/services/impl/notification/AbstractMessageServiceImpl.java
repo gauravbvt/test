@@ -1,9 +1,9 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -24,7 +24,7 @@ import java.util.List;
 abstract public class AbstractMessageServiceImpl implements MessagingService {
 
     @Autowired
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Autowired
     private UserRecordService userInfoService;
@@ -38,7 +38,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         for ( String toUsername : toUsernames ) {
             String urn = messageable.getPlanUri();
             if ( toUsername.equals( UserRecord.PLANNERS ) )
-                toUsers = userInfoService.getPlanners( urn );
+                toUsers = userInfoService.getDevelopers( urn );
             else if ( toUsername.equals( UserRecord.USERS ) )
                 toUsers = userInfoService.getUsers( urn );
             else {
@@ -64,16 +64,16 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         }
     }
 
-    protected Plan getPlan( Messageable messageable ) {
-        return planManager.getPlan( messageable.getPlanUri(), messageable.getPlanVersion() );
+    protected CollaborationModel getPlan( Messageable messageable ) {
+        return modelManager.getModel( messageable.getPlanUri(), messageable.getPlanVersion() );
     }
 
-    protected PlanManager getPlanManager() {
-        return planManager;
+    protected ModelManager getModelManager() {
+        return modelManager;
     }
 
     protected String getDefaultSupportCommunity() {
-        return planManager.getDefaultSupportCommunity();
+        return modelManager.getDefaultSupportCommunity();
     }
 
     protected String makeReportSubject(
@@ -88,7 +88,8 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
                 .append( " report" )
                 .append( " (" )
                 .append( n )
-                .append( ") for plan " )
+                .append( ") for collaboration " )
+                .append( communityService.getPlanCommunity().isModelCommunity() ? "model " : "community " )
                 .append( planUri );
         return sb.toString();
     }

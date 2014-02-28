@@ -53,7 +53,7 @@ public class ChannelData  implements Serializable {
 
     private void init( CommunityService communityService ) {
         try {
-             medium = communityService.getPlanService().find( TransmissionMedium.class, transmissionMediumId );
+             medium = communityService.getModelService().find( TransmissionMedium.class, transmissionMediumId );
         } catch ( NotFoundException e ) {
             LOG.warn( "Medium not found " + transmissionMediumId );
         }

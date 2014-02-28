@@ -96,12 +96,12 @@ public class PlaceConverter extends EntityConverter {
     private void writePlaceReference( HierarchicalStreamWriter writer, PlaceReference placeRef ) {
         writer.addAttribute(
                 "ref",
-                placeRef.isPlanReferenced()
+                placeRef.isModelReferenced()
                         ? "plan"
                         : placeRef.isEventReferenced()
                         ? "event"
                         : "place" );
-        if ( !placeRef.isPlanReferenced() ) {
+        if ( !placeRef.isModelReferenced() ) {
             writer.addAttribute( "kind", placeRef.getReference().getKind().name() );
             writer.addAttribute( "id", Long.toString( placeRef.getReference().getId() ) );
             writer.setValue( placeRef.getReference().getName() );
@@ -142,7 +142,7 @@ public class PlaceConverter extends EntityConverter {
         String ref = reader.getAttribute( "ref" );
         if ( ref == null ) ref = reader.getAttribute( "eventOrPlace" );   // todo - remove when conversion completed
         if ( ref.equals( "plan" ) ) {
-            placeRef.setPlanReferenced( true );
+            placeRef.setModelReferenced( true );
         } else {
             ModelEntity.Kind kind = ModelEntity.Kind.valueOf( reader.getAttribute( "kind" ) );
             String id = reader.getAttribute( "id" );

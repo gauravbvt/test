@@ -266,7 +266,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     protected String makeSeed() {
         // LOG.info("***Seed = " + getCommander().getLastModified() );
-        return getPlan().isDevelopment() ? "&_modified=" + getCommander().getLastModified() : "";
+        return getCollaborationModel().isDevelopment() ? "&_modified=" + getCommander().getLastModified() : "";
     }
 
     /**

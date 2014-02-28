@@ -3,7 +3,6 @@ package com.mindalliance.channels.engine.analysis;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 

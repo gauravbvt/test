@@ -13,10 +13,10 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
@@ -48,9 +48,9 @@ public interface CommunityService {
 
     FeedbackService getFeedbackService();
 
-    PlanService getPlanService();
+    ModelService getModelService();
 
-    void setPlanService( PlanService planService );
+    void setModelService( ModelService modelService );
 
     Analyst getAnalyst();
 
@@ -82,7 +82,7 @@ public interface CommunityService {
 
     PlanCommunity getPlanCommunity();
 
-    Plan getPlan();
+    CollaborationModel getPlan();
 
     ParticipationManager getParticipationManager();
 

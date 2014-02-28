@@ -9,7 +9,7 @@ package com.mindalliance.channels.graph;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.lang.StringUtils;
@@ -97,7 +97,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     }
 
     public QueryService getQueryService() {
-        return communityService.getPlanService();
+        return communityService.getModelService();
     }
 
     public CommunityService getCommunityService() {
@@ -141,7 +141,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      * Get current plan.
      * @return a plan
      */
-    protected Plan getPlan() {
+    protected CollaborationModel getPlan() {
         // TODO -- get from a parameter instead
         return ChannelsUser.plan();
     }

@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 

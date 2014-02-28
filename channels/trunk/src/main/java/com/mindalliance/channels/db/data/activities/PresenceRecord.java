@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PresenceRecord extends AbstractChannelsDocument {
 
     public PresenceRecord( Type type, String username, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.type = type;
     }
 

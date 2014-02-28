@@ -99,7 +99,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
                                 : "Create survey"
                 ) );
         surveyLink.add( surveyActionLabel );
-        surveyLink.setVisible( getPlan().isDevelopment() );
+        surveyLink.setVisible( getCollaborationModel().isDevelopment() );
     }
 
 

@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -41,7 +40,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
 
     @Override
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         Checklist checklist = part.getEffectiveChecklist();

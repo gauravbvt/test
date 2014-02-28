@@ -5,11 +5,11 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.query.ModelService;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.messages.UserMessage;
@@ -72,7 +72,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     @Autowired
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     @Autowired
     private FeedbackService feedbackService;
@@ -81,7 +81,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private UserRecordService userDao;
 
     @Autowired
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Autowired
     private Analyst analyst;
@@ -166,7 +166,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             return;
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            if ( planCommunity.isDomainCommunity() ) {
+            if ( planCommunity.isModelCommunity() ) {
                 CommunityService communityService = getCommunityService( planCommunity );
                 List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( communityService );
                 for ( Feedback urgentFeedback : urgentFeedbacks ) {
@@ -192,7 +192,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
-            if ( planCommunity.isDomainCommunity() ) {
+            if ( planCommunity.isModelCommunity() ) {
                 List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( communityService );
                 if ( !normalFeedbacks.isEmpty() ) {
                     Collections.sort( normalFeedbacks,
@@ -226,7 +226,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         if ( isInitializing() )
             return;
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            if ( planCommunity.isDomainCommunity() ) {
+            if ( planCommunity.isModelCommunity() ) {
                 // to survey participants
                 CommunityService communityService = getCommunityService( planCommunity );
                 sendNags( communityService );
@@ -239,7 +239,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendNags( CommunityService communityService ) {
         LOG.debug( "Sending out nags about overdue RFIs" );
         List<RFI> nagRFIs = rfiService.listRequestedNags( communityService );
-        SurveysDAO surveysDAO = communityService.getPlanService().getSurveysDAO();
+        SurveysDAO surveysDAO = communityService.getModelService().getSurveysDAO();
         for ( RFI nagRfi : nagRFIs ) {
             if ( !surveysDAO.isCompleted( nagRfi ) ) {
                 List<String> successes = sendMessages( nagRfi, RFI.NAG, communityService );
@@ -255,7 +255,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendDeadlineApproachingNotifications( CommunityService communityService ) {
         LOG.debug( "Sending RFI deadline warnings" );
         List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( communityService, WARNING_DELAY );
-        SurveysDAO surveysDAO = communityService.getPlanService().getSurveysDAO();
+        SurveysDAO surveysDAO = communityService.getModelService().getSurveysDAO();
         for ( RFI deadlineRFI : deadlineRFIs ) {
             if ( !surveysDAO.isCompleted( deadlineRFI ) ) {
                 List<String> successes = sendMessages( deadlineRFI, RFI.DEADLINE, communityService );
@@ -288,7 +288,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             return;
         LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            if ( planCommunity.isDomainCommunity() ) {
+            if ( planCommunity.isModelCommunity() ) {
                 CommunityService communityService = getCommunityService( planCommunity );
                 if ( communityService.getPlan().isDevelopment() ) { // send once per plan - there's exactly one dev version per plan
                     // to survey participants
@@ -401,7 +401,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendSurveyStatusReports( CommunityService communityService ) {
         // to planners
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         List<RFISurvey> activeSurveys = rfiSurveyService.listActive( communityService );
         Collections.sort(
                 activeSurveys,
@@ -413,7 +413,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                 } );
         if ( !activeSurveys.isEmpty() ) {
             sendReport(
-                    getPlanners( planService.getPlan() ),
+                    getPlanners( modelService.getCollaborationModel() ),
                     activeSurveys,
                     RFISurvey.STATUS,
                     communityService );
@@ -422,8 +422,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendIncompleteRFIReports( CommunityService communityService ) {
         // to survey participants
-        PlanService planService = communityService.getPlanService();
-        final SurveysDAO surveysDAO = planService.getSurveysDAO();
+        ModelService modelService = communityService.getModelService();
+        final SurveysDAO surveysDAO = modelService.getSurveysDAO();
         List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( communityService );
         Map<String, List<RFI>> userRFIs = new HashMap<String, List<RFI>>();
         for ( RFI incompleteRFI : incompleteRFIs ) {
@@ -510,12 +510,12 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         return reported;
     }
 
-    private List<UserRecord> getPlanners( Plan plan ) {
-        List<UserRecord> planners = new ArrayList<UserRecord>();
-        for ( ChannelsUser user : userDao.getPlanners( plan.getUri() ) ) {
-            planners.add( user.getUserRecord() );
+    private List<UserRecord> getPlanners( CollaborationModel collaborationModel ) {
+        List<UserRecord> developers = new ArrayList<UserRecord>();
+        for ( ChannelsUser user : userDao.getDevelopers( collaborationModel.getUri() ) ) {
+            developers.add( user.getUserRecord() );
         }
-        return planners;
+        return developers;
     }
 
     private CommunityService getCommunityService( PlanCommunity planCommunity ) {

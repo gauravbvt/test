@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
-import com.mindalliance.channels.api.plan.PlanIdentifierData;
-import com.mindalliance.channels.api.procedures.ProtocolsData;
+import com.mindalliance.channels.api.plan.ModelIdentifierData;
+import com.mindalliance.channels.api.procedures.ChecklistsData;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,10 +22,10 @@ import java.util.List;
  * Time: 5:10 PM
  */
 @XmlRootElement( name = "directory", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "employments", "dateVersioned", "contacts"} )
+@XmlType( propOrder = {"date", "communityIdentifier", "employments", "dateVersioned", "contacts"} )
 public class DirectoryData implements Serializable {
 
-    private ProtocolsData protocolsData;
+    private ChecklistsData checklistsData;
 
     private List<ContactData> directoryContacts;
 
@@ -33,8 +33,8 @@ public class DirectoryData implements Serializable {
         // required
     }
 
-    public DirectoryData( ProtocolsData protocolsData ) {
-        this.protocolsData = protocolsData;
+    public DirectoryData( ChecklistsData checklistsData ) {
+        this.checklistsData = checklistsData;
         initData( );
     }
 
@@ -43,7 +43,7 @@ public class DirectoryData implements Serializable {
     }
 
     private void initDirectoryContacts(  ) {
-        directoryContacts = new ArrayList<ContactData>( protocolsData.allContacts() );
+        directoryContacts = new ArrayList<ContactData>( checklistsData.allContacts() );
     }
 
     @XmlElement
@@ -51,20 +51,20 @@ public class DirectoryData implements Serializable {
         return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() );
     }
 
-    @XmlElement( name = "plan" )
-    public PlanIdentifierData getPlanIdentifier() {
-        return protocolsData.getPlanIdentifier();
+    @XmlElement( name = "community" )
+    public ModelIdentifierData getCommunityIdentifier() {
+        return checklistsData.getModelIdentifier();
     }
 
     @XmlElement
     public String getDateVersioned() {
-        return protocolsData.getDateVersioned();
+        return checklistsData.getDateVersioned();
     }
 
     @XmlElement( name = "employment" )
     // Get given actor's or user's employments
     public List<EmploymentData> getEmployments() {
-        return protocolsData.getEmployments();
+        return checklistsData.getEmployments();
     }
 
     @XmlElement( name = "contact" )

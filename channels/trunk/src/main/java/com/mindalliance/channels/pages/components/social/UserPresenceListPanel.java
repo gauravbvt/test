@@ -98,10 +98,10 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
                 "presences",
                 getUsersPresent() ) {
             protected void populateItem( ListItem<ChannelsUser> item ) {
-                ChannelsUser planner = item.getModelObject();
+                ChannelsUser developer = item.getModelObject();
                 UserPresencePanel presencePanel = new UserPresencePanel(
                         "presence",
-                        new Model<UserRecord>( planner.getUserRecord() ),
+                        new Model<UserRecord>( developer.getUserRecord() ),
                         item.getIndex(),
                         showProfile,
                         updatable );
@@ -113,7 +113,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public List<ChannelsUser> getUsersPresent() {
         List<ChannelsUser> usersPresent = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userRecordService.getUsers( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userRecordService.getUsers( getCollaborationModel().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }

@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.geo.GeoService;
 import org.apache.commons.lang.StringUtils;
@@ -194,16 +194,16 @@ public class GeoMapPage extends AbstractChannelsWebPage {
 
         PageParameters params = makeGeoMapParameters( titleModel, geos, queryService );
         BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
-        addPlanParameters( link, queryService.getPlan() );
+        addPlanParameters( link, queryService.getCollaborationModel() );
         return link;
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-            String id, IModel<String> titleModel, GeoLocation geoLocation, Plan plan ) {
+            String id, IModel<String> titleModel, GeoLocation geoLocation, CollaborationModel collaborationModel ) {
 
         PageParameters params = makeGeoMapParameters( titleModel, geoLocation );
         BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
-        addPlanParameters( link, plan );
+        addPlanParameters( link, collaborationModel );
         return link;
     }
 

@@ -29,8 +29,7 @@ public class Feedback extends UserStatement {
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
     public static final String CHECKLISTS = "Checklist";
     public static final String SURVEYS = "Survey";
-    public static final String TEMPLATES = "Template";
-    public static final String PLANS = "Plan";
+    public static final String MODELS = "Model";
     public static final String PARTICIPATION = "Participation";
     public static final String ISSUES = "Issue";
     public static final String FEEDBACK = "Feedback";

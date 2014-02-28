@@ -23,7 +23,6 @@ import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistElementRelationship;

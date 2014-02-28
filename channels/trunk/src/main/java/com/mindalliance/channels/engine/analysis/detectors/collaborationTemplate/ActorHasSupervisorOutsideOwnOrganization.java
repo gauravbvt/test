@@ -40,7 +40,7 @@ public class ActorHasSupervisorOutsideOwnOrganization extends AbstractIssueDetec
     @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Actor actor = (Actor) modelObject;
         List<Actor> supervisors = queryService.findAllSupervisorsOf( actor );

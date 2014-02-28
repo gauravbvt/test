@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports.issues;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
@@ -38,29 +38,29 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     public static PageParameters createParameters( CommunityService communityService ) {
         PageParameters result = new PageParameters();
         if ( communityService.isForDomain() ) {
-            Plan plan = communityService.getPlan();
-            result.set( TEMPLATE_PARM, plan.getUri() );
-            result.set( VERSION_PARM, plan.getVersion() );
+            CollaborationModel collaborationModel = communityService.getPlan();
+            result.set( MODEL_PARM, collaborationModel.getUri() );
+            result.set( VERSION_PARM, collaborationModel.getVersion() );
         } else {
             PlanCommunity planCommunity = communityService.getPlanCommunity();
-            result.set( COLLAB_PLAN_PARM, planCommunity.getUri() );
+            result.set( COMMUNITY_PARM, planCommunity.getUri() );
         }
         return result;
     }
 
     @Override
     protected String getDefaultUserRoleId() {
-        return getPlanCommunity().isDomainCommunity() ? "developer" : "participant";
+        return getPlanCommunity().isModelCommunity() ? "developer" : "participant";
     }
 
     @Override
     protected String getHelpSectionId() {
-        return getPlanCommunity().isDomainCommunity() ? "template-issues-page" : "plan-issues-page";
+        return getPlanCommunity().isModelCommunity() ? "model-issues-page" : "community-issues-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return getPlanCommunity().isDomainCommunity() ?  "about-template-issues-page" : "about-plan-issues-page";
+        return getPlanCommunity().isModelCommunity() ?  "about-model-issues-page" : "about-community-issues-page";
     }
 
     protected void addContent() {
@@ -105,8 +105,8 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     private void addTitle() {
         CommunityService communityService = getCommunityService();
         String context = communityService.isForDomain()
-                ? "template " + communityService.getPlan().getVersionedName()
-                : "plan " + communityService.getPlanCommunity().getName();
+                ? "collaboration model " + communityService.getPlan().getVersionedName()
+                : "collaboration community " + communityService.getPlanCommunity().getName();
         Label title = new Label("context", context );
         title.setOutputMarkupId( true );
         getContainer().addOrReplace( title );

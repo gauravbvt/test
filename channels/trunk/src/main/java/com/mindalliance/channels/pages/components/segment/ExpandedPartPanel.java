@@ -23,7 +23,7 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -31,7 +31,7 @@ import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -265,14 +265,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * The containing plan page.
      */
-    private PlanPage planPage;
+    private ModelPage modelPage;
 
-    public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions, PlanPage planPage ) {
+    public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions, ModelPage modelPage ) {
         super( id, model, expansions );
         super.setOutputMarkupPlaceholderTag( false );
         setOutputMarkupId( true );
         this.model = model;
-        this.planPage = planPage;
+        this.modelPage = modelPage;
         addSummaryPanel();
         addSimpleAdvanced();
         addTagsPanel();
@@ -291,16 +291,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         adjustFields();
     }
 
-    private PlanPage getPlanPage() {
-        return planPage;
+    private ModelPage getModelPage() {
+        return modelPage;
     }
 
     private boolean isShowSimpleForm() {
-        return getPlanPage().isShowSimpleForm( getPart() );
+        return getModelPage().isShowSimpleForm( getPart() );
     }
 
     private void setShowSimpleForm( boolean val ) {
-        getPlanPage().setShowSimpleForm( getPart(), val );
+        getModelPage().setShowSimpleForm( getPart(), val );
     }
 
     private void addClassificationFields() {
@@ -322,7 +322,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );

@@ -15,7 +15,7 @@ public class PlaceReference implements Serializable {
     /**
      * Reference to the plan locale.
      */
-    private boolean planReferenced;
+    private boolean modelReferenced;
 
     /**
      * A place.
@@ -27,12 +27,12 @@ public class PlaceReference implements Serializable {
      */
     private Event event;
 
-    public boolean isPlanReferenced() {
-        return planReferenced;
+    public boolean isModelReferenced() {
+        return modelReferenced;
     }
 
-    public void setPlanReferenced( boolean planReferenced ) {
-        this.planReferenced = planReferenced;
+    public void setModelReferenced( boolean modelReferenced ) {
+        this.modelReferenced = modelReferenced;
     }
 
     public Place getPlace() {
@@ -40,7 +40,7 @@ public class PlaceReference implements Serializable {
     }
 
     public void setPlace( Place place ) {
-        planReferenced = false;
+        modelReferenced = false;
         event = null;
         this.place = place;
     }
@@ -50,13 +50,13 @@ public class PlaceReference implements Serializable {
     }
 
     public void setEvent( Event event ) {
-        planReferenced = false;
+        modelReferenced = false;
         place = null;
         this.event = event;
     }
 
     public Place getReferencedPlace( Place locale ) {
-        if ( isPlanReferenced() )
+        if ( isModelReferenced() )
             return locale;
         else if ( event == null ) {
             return place;
@@ -117,6 +117,6 @@ public class PlaceReference implements Serializable {
      * @return false if unspecified...
      */
     public boolean isSpecified( Place locale ) {
-        return planReferenced || getReferencedPlace( locale ) != null;
+        return modelReferenced || getReferencedPlace( locale ) != null;
     }
 }

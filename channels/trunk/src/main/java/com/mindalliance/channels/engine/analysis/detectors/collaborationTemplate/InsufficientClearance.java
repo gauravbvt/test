@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -32,14 +31,14 @@ public class InsufficientClearance extends AbstractIssueDetector {
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() && flow.isClassified() ) {
             List<Assignment> assignments = queryService.findAllAssignments( (Part) flow.getTarget(), false );
             for ( Assignment assignment : assignments ) {
                 Actor actor = assignment.getActor();
-                if ( actor.isActual() && !actor.isClearedFor( flow, queryService.getPlan() ) ) {
+                if ( actor.isActual() && !actor.isClearedFor( flow, queryService.getCollaborationModel() ) ) {
                     Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "Assigned recipient " + actor.getName()
                             + " of \"" + flow.getName()

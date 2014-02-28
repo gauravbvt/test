@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
@@ -37,7 +37,7 @@ public class RequiredNetworkingPng extends DiagramPng {
         Event event = null;
         Agency selectedAgency = null;
         RequirementRelationship selectedRequirementRelationship = null;
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         Phase.Timing timing = null;
         if ( parameters.getNamedKeys().contains( "timing" ) ) {
             String name = parameters.get( "timing" ).toString();
@@ -50,7 +50,7 @@ public class RequiredNetworkingPng extends DiagramPng {
         if ( parameters.getNamedKeys().contains( "event" ) ) {
             Long eventId = parameters.get( "event" ).toLong();
             try {
-                event = planService.find( Event.class, eventId );
+                event = modelService.find( Event.class, eventId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected event not found at :" + eventId, e );
             }

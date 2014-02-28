@@ -2,13 +2,10 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.commands.LinkClassifications;
 import com.mindalliance.channels.core.command.commands.ToggleTimeSensitivity;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
@@ -17,7 +14,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.pages.Channels;
@@ -119,7 +115,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
                 new WebMarkupContainer( "classificationsHeaderContainer" );
         classificationsHeaderContainer.setOutputMarkupId( true );
         classificationsHeaderContainer.setVisible( getEOIHolder().isClassificationsAccessible()
-                && !getPlan().classificationSystems().isEmpty() );
+                && !getCollaborationModel().classificationSystems().isEmpty() );
         eoisContainer.addOrReplace( classificationsHeaderContainer );
         WebMarkupContainer descriptionHeaderContainer =
                 new WebMarkupContainer( "descriptionHeaderContainer" );
@@ -291,7 +287,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         classificationsContainer.setOutputMarkupId( true );
         classificationsContainer.setVisible(
                 getEOIHolder().isClassificationsAccessible()
-                        && !getPlan().classificationSystems().isEmpty() );
+                        && !getCollaborationModel().classificationSystems().isEmpty() );
         item.addOrReplace( classificationsContainer );
         EOIWrapper wrapper = item.getModelObject();
         int index = item.getIndex();
@@ -731,7 +727,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
                                 }
                             }
                             // classifications
-                            newEoi.addClassifications( sourceEoi.getClassifications(), getPlan() );
+                            newEoi.addClassifications( sourceEoi.getClassifications(), getCollaborationModel() );
                             // description
                             String description = newEoi.getDescription();
                             String sourceDescription = sourceEoi.getDescription();

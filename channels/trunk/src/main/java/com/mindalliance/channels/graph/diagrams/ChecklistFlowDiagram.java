@@ -3,7 +3,6 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistElementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistFlowGraphBuilder;

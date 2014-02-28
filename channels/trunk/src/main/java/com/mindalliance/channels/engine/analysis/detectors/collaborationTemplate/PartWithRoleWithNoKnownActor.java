@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -58,7 +57,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getRole() != null && part.getOrganization() != null && part.getActor() == null ) {
@@ -67,7 +66,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
                 Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                 issue.setDescription( "There is no known agent playing this role." );
                 issue.setRemediation( "Name an agent assigned to the task" +
-                        "\nor add a participating agent to the collaboration template's scope with this role." );
+                        "\nor add an agent to an organization employed in this role." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }

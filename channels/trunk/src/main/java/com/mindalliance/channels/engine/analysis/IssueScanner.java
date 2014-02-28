@@ -11,14 +11,14 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanListener;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * Scans all plans for issues in low priority threads to warm up the cache.
  */
-public class IssueScanner implements Scanner, PlanListener {
+public class IssueScanner implements Scanner, ModelListener {
 
     /**
      * Logger.
@@ -115,18 +115,18 @@ public class IssueScanner implements Scanner, PlanListener {
     }
 
     @Override
-    public void aboutToProductize( Plan devPlan ) {
-        terminate( devPlan.getUri() );
+    public void aboutToProductize( CollaborationModel devCollaborationModel ) {
+        terminate( devCollaborationModel.getUri() );
     }
 
     @Override
-    public void aboutToUnload( PlanDao planDao ) {
-        aboutToProductize( planDao.getPlan() );
+    public void aboutToUnload( ModelDao modelDao ) {
+        aboutToProductize( modelDao.getCollaborationModel() );
     }
 
     @Override
-    public void created( Plan plan ) {
-        scan( planCommunityManager.getDomainPlanCommunity( plan ) );
+    public void created( CollaborationModel collaborationModel ) {
+        scan( planCommunityManager.getDomainPlanCommunity( collaborationModel ) );
     }
 
 
@@ -136,8 +136,8 @@ public class IssueScanner implements Scanner, PlanListener {
     }
 
     @Override
-    public void loaded( PlanDao planDao ) {
-        created( planDao.getPlan() );
+    public void loaded( ModelDao modelDao ) {
+        created( modelDao.getCollaborationModel() );
     }
 
     @Override
@@ -147,7 +147,7 @@ public class IssueScanner implements Scanner, PlanListener {
 
 
     @Override
-    public void productized( Plan plan ) {
+    public void productized( CollaborationModel collaborationModel ) {
     }
 
     public void setCommunityServiceFactory( CommunityServiceFactory communityServiceFactory ) {
@@ -169,7 +169,7 @@ public class IssueScanner implements Scanner, PlanListener {
          * The plan community being analyzed.
          */
         private final PlanCommunity planCommunity;
-        private final Plan plan;
+        private final CollaborationModel collaborationModel;
 
         private final CommunityService communityService;
 
@@ -181,7 +181,7 @@ public class IssueScanner implements Scanner, PlanListener {
         public Daemon( CommunityService communityService ) {
             this.communityService = communityService;
             this.planCommunity = communityService.getPlanCommunity();
-            this.plan = communityService.getPlan();
+            this.collaborationModel = communityService.getPlan();
             setDaemon( true );
             setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
         }
@@ -194,7 +194,7 @@ public class IssueScanner implements Scanner, PlanListener {
          * Activate scan.
          */
         public synchronized void activate() {
-            LOG.info( "Activating issue sweep on plan {}", planCommunity.getUri() );
+            LOG.info( "Activating issue sweep on {}", planCommunity.getUri() );
             active = true;
             super.start();
         }
@@ -203,7 +203,7 @@ public class IssueScanner implements Scanner, PlanListener {
          * Abort scan.
          */
         public synchronized void terminate() {
-            LOG.info( "Terminating issue sweep on plan {}", planCommunity.getUri() );
+            LOG.info( "Terminating issue sweep on {}", planCommunity.getUri() );
             active = false;
         }
 
@@ -214,7 +214,7 @@ public class IssueScanner implements Scanner, PlanListener {
         public void run() {
             ChannelsUser user = setupUser();
             try {
-                LOG.debug( "Current user = {}, plan = {}", user, planCommunity.getUri() );
+                LOG.debug( "Current user = {}, plan community = {}", user, planCommunity.getUri() );
                 long startTime = System.currentTimeMillis();
                 if ( !active ) return;
                 for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
@@ -223,7 +223,7 @@ public class IssueScanner implements Scanner, PlanListener {
                     communityService.getDao().cleanup( mo.getClass(), mo.getName() );
                 }
                 if ( !active ) return;
-                if ( planCommunity.isDomainCommunity() ) {
+                if ( planCommunity.isModelCommunity() ) {
                     for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
                         if ( !active ) return;
                         scanIssues( mo );
@@ -266,7 +266,7 @@ public class IssueScanner implements Scanner, PlanListener {
         private ChannelsUser setupUser() {
             ChannelsUser principal = new ChannelsUser(
                     new UserRecord( "_channels_", "daemon", "Issue Scanner", "", UserAccess.UserRole.Admin ) );
-            principal.setPlan( plan );
+            principal.setCollaborationModel( collaborationModel );
             principal.setPlanCommunityUri( planCommunity.getUri() );
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );

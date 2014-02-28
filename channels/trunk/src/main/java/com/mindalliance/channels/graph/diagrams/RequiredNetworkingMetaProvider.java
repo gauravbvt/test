@@ -61,7 +61,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
     @Override
     public Object getContext() {
-        return getQueryService().getPlan();
+        return getQueryService().getCollaborationModel();
     }
 
     @Override

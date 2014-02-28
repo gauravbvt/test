@@ -125,7 +125,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
      */
     protected String makeSeed() {
         // Force regeneration
-        return getPlan().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
+        return getCollaborationModel().isDevelopment() ? "&_modified=" + System.currentTimeMillis() : "";
     }
 
     @Override

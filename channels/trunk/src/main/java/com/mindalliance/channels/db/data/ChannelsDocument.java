@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
  * Date: 4/26/13
  * Time: 2:09 PM
  */
-public interface ChannelsDocument extends PersistentPlanObject {
+public interface ChannelsDocument extends PersistentChannelsObject {
 
     static final Sort SORT_CREATED_DESC = new Sort( Sort.Direction.DESC, "created" );
 

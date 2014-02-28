@@ -5,8 +5,7 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -33,10 +32,10 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
-        Plan plan = (Plan) modelObject;
-        for ( Event incident : plan.getIncidents() ) {
+        CollaborationModel collaborationModel = (CollaborationModel) modelObject;
+        for ( Event incident : collaborationModel.getIncidents() ) {
             boolean responded = false;
             Iterator<Segment> segments = queryService.list( Segment.class ).iterator();
             while ( !responded && segments.hasNext() ) {
@@ -45,7 +44,7 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
                 if ( event != null && event.equals(incident) ) responded = true;
             }
             if ( !responded ) {
-                DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, plan );
+                DetectedIssue issue = makeIssue( communityService, Issue.COMPLETENESS, collaborationModel );
                 issue.setDescription( "No segment responds to incident \"" + incident.getName() + "\"." );
                 issue.setRemediation( "Define a segment that responds to it\n"
                         + "remove the event's incident status." );
@@ -60,7 +59,7 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     public boolean appliesTo( Identifiable modelObject ) {
-        return modelObject instanceof Plan;
+        return modelObject instanceof CollaborationModel;
     }
 
     /**

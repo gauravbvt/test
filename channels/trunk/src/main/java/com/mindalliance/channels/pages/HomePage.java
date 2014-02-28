@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -30,7 +30,7 @@ public class HomePage extends AbstractChannelsBasicPage {
 
 
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     private SocialPanel socialPanel;
     private WebMarkupContainer gotoIconsContainer;
@@ -89,19 +89,19 @@ public class HomePage extends AbstractChannelsBasicPage {
 
         // Communities link
         BookmarkablePageLink<? extends WebPage> gotoCollaborationPlansLink =
-                newTargetedLink( "gotoCollaborationPlans", CollaborationPlansPage.class );
-        addTipTitle( gotoCollaborationPlansLink, new Model<String>( getGotoCollaborationPlansDescription() ) );
+                newTargetedLink( "gotoCommunities", CollaborationCommunitiesPage.class );
+        addTipTitle( gotoCollaborationPlansLink, new Model<String>( getGotoCollaborationCommunitiesDescription() ) );
         // Models link
-        BookmarkablePageLink gotoTemplatesLink = newTargetedLink( "gotoTemplates", PlansPage.class );
-        addTipTitle( gotoTemplatesLink,
-                new Model<String>( getGotoTemplatesDescription() )
+        BookmarkablePageLink gotoModelsLink = newTargetedLink( "gotoModels", ModelsPage.class );
+        addTipTitle( gotoModelsLink,
+                new Model<String>( getGotoModelsDescription() )
         );
 
         // Settings
         BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", SettingsPage.class );
         addTipTitle(
                 gotoAdminLink,
-                "Configure Channels, add users, change access privileges, and create, configure, release, or delete collaboration templates" );
+                "Configure Channels, add users, change access privileges, and create, configure, release, or delete collaboration models" );
 
         // gotos
         gotoIconsContainer.add(
@@ -111,14 +111,14 @@ public class HomePage extends AbstractChannelsBasicPage {
                         .setVisible( user.isAdmin() )
                         .setOutputMarkupId( true ),
 
-                // Goto templates
-                new WebMarkupContainer( "templates" )
-                        .add( gotoTemplatesLink )
+                // Goto models
+                new WebMarkupContainer( "models" )
+                        .add( gotoModelsLink )
                         .setVisible( hasAccessToPlans() )
                         .setOutputMarkupId( true ),
 
                 // Goto protocols
-                new WebMarkupContainer( "collaborationPlans" )
+                new WebMarkupContainer( "communities" )
                         .add( gotoCollaborationPlansLink )
                         .setOutputMarkupId( true ) );
 
@@ -130,21 +130,21 @@ public class HomePage extends AbstractChannelsBasicPage {
         getContainer().add( socialPanel );
     }
 
-    private String getGotoTemplatesDescription() {
-        return "The collaboration templates you are authorized to see or modify"; // todo show metrics
+    private String getGotoModelsDescription() {
+        return "The collaboration models you are authorized to see or modify"; // todo show metrics
     }
 
-    private String getGotoCollaborationPlansDescription() {
-        return "The collaboration plans you participate or could participate in"; // todo show metrics
+    private String getGotoCollaborationCommunitiesDescription() {
+        return "The collaboration communities you participate or could participate in"; // todo show metrics
     }
 
     private boolean hasAccessToPlans() {
         return CollectionUtils.exists(
-                planManager.getPlans(),
+                modelManager.getModels(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return getUser().hasAccessTo( ( (Plan) object ).getUri() );
+                        return getUser().hasAccessTo( ( (CollaborationModel) object ).getUri() );
                     }
                 }
         );
@@ -168,7 +168,7 @@ public class HomePage extends AbstractChannelsBasicPage {
 
     @Override
     public void refresh( AjaxRequestTarget target, Change change ) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //Do nothing
     }
 
 

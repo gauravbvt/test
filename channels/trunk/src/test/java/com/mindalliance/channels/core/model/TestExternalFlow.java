@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanDefinitionManager;
-import com.mindalliance.channels.core.dao.PlanManagerImpl;
+import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.dao.ModelDefinitionManager;
+import com.mindalliance.channels.core.dao.ModelManagerImpl;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
@@ -21,7 +21,7 @@ public class TestExternalFlow extends TestCase {
     private Part s1p1;
     private Part s1p2;
 
-    private PlanDao planDao;
+    private ModelDao modelDao;
 
     public TestExternalFlow() {
     }
@@ -29,35 +29,35 @@ public class TestExternalFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        PlanDefinitionManager planDefinitionManager = new PlanDefinitionManager(
+        ModelDefinitionManager modelDefinitionManager = new ModelDefinitionManager(
             new FileSystemResource( new File( "target/channel-test-data" ) ), null );
-        planDefinitionManager.afterPropertiesSet();
-        PlanManagerImpl planManager = new PlanManagerImpl( planDefinitionManager );
-        planManager.assignPlans();
+        modelDefinitionManager.afterPropertiesSet();
+        ModelManagerImpl planManager = new ModelManagerImpl( modelDefinitionManager );
+        planManager.assignModels();
 
-        assertEquals( 1, planManager.getPlanDefinitionManager().getPlanNames().size() );
-        Plan plan = planManager.getPlans().get( 0 );
+        assertEquals( 1, planManager.getModelDefinitionManager().getPlanNames().size() );
+        CollaborationModel collaborationModel = planManager.getModels().get( 0 );
 
-        planDao = planManager.getDao( plan );
+        modelDao = planManager.getDao( collaborationModel );
         ChannelsUser user = new ChannelsUser();
-        user.setPlan( planDao.getPlan() );
+        user.setCollaborationModel( modelDao.getCollaborationModel() );
 
-        s1 = planDao.createSegment( null, null );
+        s1 = modelDao.createSegment( null, null );
         s1p1 = s1.getDefaultPart();
         s1p1.setActor( new Actor( "p1" ) );
-        s1p2 = planDao.createPart( s1, null );
+        s1p2 = modelDao.createPart( s1, null );
         s1p2.setActor( new Actor( "p2" ) );
 
-        s2 = planDao.createSegment( null, null );
+        s2 = modelDao.createSegment( null, null );
 
         // S2 "included" in S1
         Part s2Part = s2.getDefaultPart();
         s2Part.setActor( new Actor( "p3" ) );
-        planDao.createSend( s2Part );
-        planDao.createReceive( s2Part );
+        modelDao.createSend( s2Part );
+        modelDao.createReceive( s2Part );
 
-        planDao.connect( s1p1, s2.inputs().next(), "", null );
-        planDao.connect( s2.outputs().next(), s1p2, "", null );
+        modelDao.connect( s1p1, s2.inputs().next(), "", null );
+        modelDao.connect( s2.outputs().next(), s1p2, "", null );
     }
 
     public void testConstructor() {
@@ -92,7 +92,7 @@ public class TestExternalFlow extends TestCase {
     public void testRemove1() {
         // output
         Flow f = s1p1.sends().next();
-        planDao.disconnect( f );
+        modelDao.disconnect( f );
 
         assertNull( f.getSource() );
         assertNull( f.getTarget() );
@@ -101,7 +101,7 @@ public class TestExternalFlow extends TestCase {
 
         // input
         Flow f2 = s1p2.receives().next();
-        planDao.disconnect( f2 );
+        modelDao.disconnect( f2 );
 
         assertNull( f2.getSource() );
         assertNull( f2.getTarget() );
@@ -117,7 +117,7 @@ public class TestExternalFlow extends TestCase {
         Flow f1 = p3.sends().next();
         Connector c1 = (Connector) f1.getTarget();
 
-        planDao.disconnect( f1 );
+        modelDao.disconnect( f1 );
 
         assertFalse( c1.receives().hasNext() );
         assertFalse( c1.externalFlows().hasNext() );
@@ -126,7 +126,7 @@ public class TestExternalFlow extends TestCase {
         Flow f2 = p3.receives().next();
         Connector c2 = (Connector) f2.getSource();
 
-        planDao.disconnect( f2 );
+        modelDao.disconnect( f2 );
 
         assertFalse( c2.sends().hasNext() );
         assertFalse( c2.externalFlows().hasNext() );

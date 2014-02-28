@@ -33,7 +33,7 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
 
     @Override
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.getIntent() != null && flow.getIntent() == Flow.Intent.Command ) {

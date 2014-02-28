@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistsMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
@@ -58,7 +58,7 @@ public class ChecklistsMapDiagram extends AbstractDiagram<Assignment, Commitment
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = communityService.getPlanService();
+        ModelService modelService = communityService.getModelService();
         ChecklistsMapGraphBuilder graphBuilder =
                 new ChecklistsMapGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
         graphBuilder.setCommunityService( communityService );

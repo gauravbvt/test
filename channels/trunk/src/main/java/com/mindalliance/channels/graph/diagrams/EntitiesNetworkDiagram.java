@@ -9,8 +9,6 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.EntitiesNetworkGraphBuilder;
@@ -83,7 +81,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
                                                                    return !( (ModelEntity) object ).isUnknown();
                                                                }
                                                            } ) :
-                communityService.getPlanService().listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
+                communityService.getModelService().listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
     }
 
     private List<EntityRelationship> getEntityRels( CommunityService communityService, Analyst analyst ) {

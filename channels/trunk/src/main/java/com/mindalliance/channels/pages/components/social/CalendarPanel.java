@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -23,7 +23,7 @@ import java.util.TimeZone;
 public class CalendarPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     private static final String BG_COLOR = "F6F6F6";
 
@@ -76,17 +76,17 @@ public class CalendarPanel extends AbstractSocialListPanel {
     }
 
     private String getCalendarPrivateTicket() {
-        return getPlan().getCommunityCalendarPrivateTicket(
-                planManager.getDefaultCommunityCalendarPrivateTicket() );
+        return getCollaborationModel().getCommunityCalendarPrivateTicket(
+                modelManager.getDefaultCommunityCalendarPrivateTicket() );
     }
 
     private String getCalenderHost() {
-        return getPlan().getCommunityCalendarHost(
-                planManager.getDefaultCommunityCalendarHost() );
+        return getCollaborationModel().getCommunityCalendarHost(
+                modelManager.getDefaultCommunityCalendarHost() );
     }
 
     private String getCalendar() {
-      return getPlan().getCommunityCalendar( planManager.getDefaultCommunityCalendar() );
+      return getCollaborationModel().getCommunityCalendar( modelManager.getDefaultCommunityCalendar() );
     }
 
     private String getEncodedCalendar() {

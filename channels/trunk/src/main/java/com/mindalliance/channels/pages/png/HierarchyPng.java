@@ -37,7 +37,7 @@ public class HierarchyPng extends DiagramPng {
                 && !parameters.get( "entity" ).toString().equals( "NONE" ) ) {
             Long entityId = parameters.get( "entity" ).toLong();
             try {
-                hierarchical = (Hierarchical) communityService.getPlanService().find( ModelObject.class, entityId );
+                hierarchical = (Hierarchical) communityService.getModelService().find( ModelObject.class, entityId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected entity not found at :" + entityId, e );
             }

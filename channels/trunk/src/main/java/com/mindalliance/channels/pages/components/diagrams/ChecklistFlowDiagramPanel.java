@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.PropertyModel;
 
@@ -47,11 +47,11 @@ public class ChecklistFlowDiagramPanel extends AbstractDiagramPanel {
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "checklist.png?" )
-                .append( PlanPage.SEGMENT_PARM )
+                .append( ModelPage.SEGMENT_PARM )
                 .append( "=" )
                 .append( getPart().getSegment().getId() )
                 .append( "&" )
-                .append( PlanPage.PART_PARM )
+                .append( ModelPage.PART_PARM )
                 .append( "=" )
                 .append( getPart().getId() );
         double[] diagramSize = getDiagramSize();

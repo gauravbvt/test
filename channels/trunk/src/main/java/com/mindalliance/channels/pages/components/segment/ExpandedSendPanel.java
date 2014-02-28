@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public class ExpandedSendPanel extends ExpandedFlowPanel {
 
-    public ExpandedSendPanel( String id, IModel<Flow> model, Set<Long> expansions, int index, PlanPage planPage ) {
-        super( id, model, true, expansions, index, planPage );
+    public ExpandedSendPanel( String id, IModel<Flow> model, Set<Long> expansions, int index, ModelPage modelPage ) {
+        super( id, model, true, expansions, index, modelPage );
     }
 
     /** {@inheritDoc} */

@@ -31,7 +31,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
     /** {@inheritDoc} */
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         List<Assignment> assignments = queryService.findAllAssignments( part, false );

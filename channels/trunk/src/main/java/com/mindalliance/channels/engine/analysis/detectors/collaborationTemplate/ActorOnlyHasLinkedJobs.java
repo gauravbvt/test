@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,7 +33,7 @@ public class ActorOnlyHasLinkedJobs extends AbstractIssueDetector {
 
     @Override
     public List<? extends Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Actor actor = (Actor)modelObject;
         List<Issue> issues = new ArrayList<Issue>(  );
         List<Employment> allEmployments = queryService.findAllEmploymentsForActor( actor );

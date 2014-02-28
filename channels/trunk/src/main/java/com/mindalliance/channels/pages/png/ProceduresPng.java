@@ -6,11 +6,11 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.PlanPage;
+import com.mindalliance.channels.pages.ModelPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +52,8 @@ public class ProceduresPng extends DiagramPng {
         boolean summarizeByOrg = false;
         boolean summarizeByRole = false;
         ModelEntity focusEntity = null;
-        PlanService planService = communityService.getPlanService();
-        segment = PlanPage.findSegment( planService, parameters );
+        ModelService modelService = communityService.getModelService();
+        segment = ModelPage.findSegment( modelService, parameters );
         if ( parameters.getNamedKeys().contains( SUMMARIZE ) ) {
             String summarizeBy = parameters.get( SUMMARIZE ).toString();
             if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE_AND_ROLE ) ) {
@@ -71,9 +71,9 @@ public class ProceduresPng extends DiagramPng {
                 String focusClass = parameters.get( FOCUS_CLASS ).toString();
                 try {
                     if ( focusClass.equals( Organization.class.getSimpleName() ) ) {
-                        focusEntity = planService.find( Organization.class, id );
+                        focusEntity = modelService.find( Organization.class, id );
                     } else if ( focusClass.equals( Actor.class.getSimpleName() ) ) {
-                        focusEntity = planService.find( Actor.class, id );
+                        focusEntity = modelService.find( Actor.class, id );
                     }
                 } catch ( NotFoundException e ) {
                     LOG.error( "Failed to find focus entity " + focusClass + ":" + id );

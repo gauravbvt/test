@@ -4,7 +4,7 @@
     <name>Channels Guide</name>
     <description>A guide for users of Channels</description>
     <role id="participant" glossarySection="plan-glossary" glossaryTopic="plan-glossary-items">
-        <name>For all participants in collaboration plans</name>
+        <name>For all participants in collaboration communities</name>
         <section id="about-channels">
             <name>User interface</name>
             <topic id="intro">
@@ -16,45 +16,45 @@
 
                         It enables...
 
-                        * '''Developers''' to build reusable best-practice templates for information-intensive collaboration,
-                        * '''Planners''' to setup and manage localized collaboration plans based on collaboration templates,
-                        * '''Participants''' to take part in collaboration plans and get collaboration checklists instructing their participation,
+                        * '''Developers''' to build reusable best-practice models for information-intensive collaboration,
+                        * '''Planners''' to setup and manage localized collaboration communities based on collaboration models,
+                        * '''Participants''' to take part in collaboration communities and get collaboration checklists instructing their participation,
                         * '''Administrators''' to configure and manage the Channels service.
 
                     </description>
                 </item>
                 <next section="about-channels" topic="collaboration-vs-process"/>
-                <next section="about-channels" topic="template-development"/>
+                <next section="about-channels" topic="model-development"/>
                 <next section="about-channels" topic="development-team"/>
                 <next section="about-channels" topic="attributions"/>
             </topic>
-            <topic id="template-development">
-                <name>Collaboration template development</name>
+            <topic id="model-development">
+                <name>Collaboration model development</name>
                 <item>
-                    <description>As a template developer, you use Channels to design and build collaboration templates
-                        that become the basis collaboration plans in which organizations and individuals participate
+                    <description>As a model developer, you use Channels to design and build collaboration models
+                        that become the basis collaboration communities in which organizations and individuals participate
                         to get checklists that implement robust collaborations.
 
-                        A collaboration templates forms the basis of collaboration plans where the identities of ''placeholder'
-                        organizations are given and where users are assigned to the positions defined in the templates in terms of
+                        A collaboration model forms the basis of collaboration communities where the identities of ''placeholder'
+                        organizations are given and where users are assigned to the positions defined in the model in terms of
                         jobs given to agents in organizations.
 
-                        A collaboration template specifies how various kinds of organizations ought to communicate and share
+                        A collaboration model specifies how various kinds of organizations ought to communicate and share
                         information to collaboratively prevent, respond to, or recover from a number of anticipated
                         events that test their missions.
 
-                        Channels continuously examines collaboration templates for gaps and brittleness, and suggests
+                        Channels continuously examines collaboration models for gaps and brittleness, and suggests
                         options for remediation.
 
                         Channels produces visualizations, analytics and reports that help planners and stakeholders
-                        understand and improve complex collaboration templates.
+                        understand and improve complex collaboration models.
 
                         Channels is a ''planning'' tool. It does not manage the ''actual'' sharing of information. It is
                         used to capture and improve the collaboration ''practices'' of organizations and to adaptively
                         produce collaboration checklists.
                     </description>
                 </item>
-                <next section="about-channels" topic="template-building-strategies"/>
+                <next section="about-channels" topic="model-building-strategies"/>
             </topic>
             <topic id="development-team">
                 <name>Development team</name>
@@ -102,7 +102,7 @@
                 <item>
                     <description>
                         Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
-                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration plans.
+                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration communities.
                         Furthermore, while business processes have "owners", no one by definition can be said to "own" a collaboration.
 
                         A ''business process'' is a close orchestration of people and systems within one (extended) organization,
@@ -121,11 +121,11 @@
                         Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
                         or inform them so they can succeed (information sharing).
 
-                        Unlike business processes, a collaboration plan does '''not''' tightly script the tasks; it only attempts to resolve their
+                        Unlike business processes, a collaboration community does '''not''' tightly script the tasks; it only attempts to resolve their
                         information and coordination inter-dependencies via information flows and to make explicit the
                         expected task assignments and communication commitments that are required to successfully collaborate.
 
-                        Whereas a business process will explicitly and formally script (program) tasks and communications, a collaboration plan
+                        Whereas a business process will explicitly and formally script (program) tasks and communications, a collaboration community
                         only ''implies'' the many possible sequences of tasks and communications that can resolve inter-dependencies
                         between organizations that are trying to achieve their missions in anticipated scenarios. This makes
                         a collaboration plan much less brittle than a business process when reality confounds expectations, as it often does.
@@ -147,11 +147,11 @@
                     </description>
                 </item>
             </topic>
-            <topic id="template-building-strategies">
-                <name>Template building strategies</name>
+            <topic id="model-building-strategies">
+                <name>Model building strategies</name>
                 <item>
                     <description>
-                        Template developers can use various strategies when building a collaboration template.
+                        Model developers can use various strategies when building a collaboration model.
 
                         They can use...
 
@@ -168,7 +168,7 @@
 
                         [[File:template_strategies_goal_driven.png|The goal-driven strategy]]
 
-                        When applying this strategy, template developers...
+                        When applying this strategy, model developers...
 
                         * select an organizational goal in a segment
                         * add tasks to the segment that directly achieve the goal
@@ -193,7 +193,7 @@
 
                         [[File:template_strategies_effects_driven.png|The effects-driven strategy]]
 
-                        When applying this strategy, template developers...
+                        When applying this strategy, model developers...
 
                         * select a segment covering a planning scenario
                         * and in that segment, they define tasks that are
@@ -220,7 +220,7 @@
 
                         [[File:template_strategies_issues_driven.png|The issues-driven strategy]]
 
-                        When applying this strategy, template developers...
+                        When applying this strategy, model developers...
 
                         * select an issue, prioritizing...
                         ** validity issues
@@ -236,7 +236,7 @@
                         This strategy has pros and cons.
 
                         Pros: Channels will find issues that people would easily miss.
-                        Cons: An issue-free collaboration template is not necessarily the right one.
+                        Cons: An issue-free collaboration model is not necessarily the right one.
 
                     </description>
                 </item>
@@ -305,8 +305,8 @@
             <topic id="about-surveys-page">
                 <name>Surveys</name>
                 <item>
-                    <description>As a participant or potential participant in a collaboration plan, you may be asked by collaboration template developers
-                        to answer surveys in order to help improve a collaboration template.
+                    <description>As a participant or potential participant in a collaboration community , you may be asked by collaboration model developers
+                        to answer surveys in order to help improve a collaboration model.
 
                         [[File:surveys_page.png|Surveys page]]
 
@@ -329,7 +329,7 @@
                 <item>
                     <description>You can...
 
-                        * browse and filter the list of all feedback messages you sent to the developers of the collaboration template your collaboration plan has adopted,
+                        * browse and filter the list of all feedback messages you sent to the developers of the collaboration model your collaboration community has adopted,
                         * expand the conversation with developers initiated by your feedback,
                         * and add a comment to the conversation.
 
@@ -349,8 +349,9 @@
                     <description>A glossary of collaboration planning terms</description>
                 </item>
                 <definition section="plan-concepts" topic="collaboration-planning"/>
+                <definition section="plan-concepts" topic="collaboration-community"/>
                 <definition section="plan-concepts" topic="collaboration-plan"/>
-                <definition section="plan-concepts" topic="plan-template"/>
+                <definition section="plan-concepts" topic="plan-model"/>
                 <definition section="plan-concepts" topic="plan-organization"/>
                 <definition section="plan-concepts" topic="plan-placeholder"/>
                 <definition section="plan-concepts" topic="plan-position"/>
@@ -390,9 +391,9 @@
                         It consists of...
 
                         * Scoping future collaborations
-                        * Building a collaboration template
-                        * Creating and localizing a collaboration plan
-                        * Managing participation in the collaboration plan
+                        * Building a collaboration model
+                        * Creating and localizing a collaboration community
+                        * Managing participation in the collaboration community
                         * Accessing collaboration checklists
 
                     </description>
@@ -401,14 +402,23 @@
             <topic id="collaboration-plan">
                 <name>Collaboration plan</name>
                 <item>
-                    <description>A collaboration plan defines how identified individuals in positions of responsibility within organizations
+                    <description>
+                        A collaboration plan can be defined as the sum of all collaboration checklists assigned to and
+                        accepted by the participants in a collaboration community.
+                    </description>
+                </item>
+            </topic>
+            <topic id="collaboration-community">
+                <name>Collaboration community</name>
+                <item>
+                    <description>A collaboration community defines how identified individuals in positions of responsibility within organizations
                         are expected to act and communicate in anticipated planning scenarios.
 
-                        [[File:collaboration_plan_illustration.png|Collaboration plan]]
+                        [[File:collaboration_plan_illustration.png|Collaboration community ]]
 
-                        A collaboration plan is based on a production version of a collaboration template. [[File:collaboration_plan_based_on_template.png|Collaboration plans are based on collaboration templates]]
+                        A collaboration community  is based on a production version of a collaboration model. [[File:collaboration_plan_based_on_template.png|Collaboration community s are based on collaboration models]]
 
-                        The template defines...
+                        The model defines...
 
                         * the planning scenarios,
                         * the collaborators and their organizations,
@@ -416,62 +426,62 @@
                         * the communications that coordinate and inform the tasks,
                         * and the checklists detailing when and how to execute the tasks and communicate.
 
-                        The collaboration template is defined using "placeholders" for...
+                        The collaboration model is defined using "placeholders" for...
 
                         * organizations (organization placeholders),
                         * people and systems (agents)
                         * and places (location placeholders).
 
-                        A collaboration plan adopting a template identifies...
+                        A collaboration community  adopting a model identifies...
 
                         * the locations of location placeholders,
                         * the organizations participating as organization placeholders,
                         * and users (and systems) participating as agents in positions of responsibility within participating organizations.
 
-                        More than one collaboration plan can adopt a given collaboration template.
+                        More than one collaboration community  can adopt a given collaboration model.
 
-                        As placeholders from the collaboration template are identified in  collaboration plan by users and organizations,
+                        As placeholders from the collaboration model are identified in  collaboration community  by users and organizations,
                         checklists are personalized with contact information and are assigned to users based on their responsibilities.
 
-                        Any authorized user of Channels can create a collaboration plan based on a published
-                        collaboration template. This user automatically becomes a planner for this plan
-                        and has ultimate authority over the registration of organizations into the plan, their participation
+                        Any authorized user of Channels can create a collaboration community  based on a published
+                        collaboration model. This user automatically becomes a planner for this community
+                        and has ultimate authority over the registration of organizations into the community , their participation
                         and the participation of users in positions of responsibility within these organizations.
 
                         A collaboration planner can define requirements on the plan that are to be fulfilled via adequate participation
-                        by organizations and users. A planner can also view (but not modify) the collaboration template
-                        upon which the plan is based and can see all issues detected in the plan.
+                        by organizations and users. A planner can also view (but not modify) the collaboration model
+                        upon which the community  is based and can see all issues detected in the community .
 
-                        Non-planners can elect to participate in a collaboration plan. Those who participate as agents that supervise
+                        Non-planners can elect to participate in a collaboration community . Those who participate as agents that supervise
                         other agents have authority over the participation of users as these agents.
 
                     </description>
                 </item>
             </topic>
-            <topic id="plan-template">
-                <name>Collaboration template</name>
+            <topic id="plan-model">
+                <name>Collaboration model</name>
                 <item>
-                    <description>A collaboration template captures how organizations would collaborate in anticipated scenarios.
+                    <description>A collaboration model captures how organizations would collaborate in anticipated scenarios.
                         It expresses collaboration rules and practices in terms of roles and it uses placeholders to
                         represent what might change during a collaboration or according to its context.
 
-                        [[File:collaboration_template_illustration.png|A collaboration template captures generally applicable collaboration rules and practices]]
+                        [[File:collaboration_template_illustration.png|A collaboration model captures generally applicable collaboration rules and practices]]
 
-                        A collaboration template is defined in terms of...
+                        A collaboration model is defined in terms of...
 
                         * tasks required to achieve objectives in identified planning scenarios,
                         * the communications that coordinate and inform these tasks,
                         * how to assign tasks to individuals assigned on the basis of their positions in organizations
                         * checklists detailing how to execute each task and how to coordinate and inform their execution via communication and information sharing
 
-                        A template identifies the organizations it involves either as ''known organizations'' - real-life
+                        A model identifies the organizations it involves either as ''known organizations'' - real-life
                         organizations - or as ''placeholder'' - organizations which real identities are to be given in
-                        the collaboration plans that adopt the template.
+                        the collaboration community s that adopt the model.
 
-                        A template also identifies the positions (aka organizational roles) that make up the collaborating
-                        organizations. Users participate in the collaboration plans based on a template by being assigned to one or more positions defined in the template.
+                        A model also identifies the positions (aka organizational roles) that make up the collaborating
+                        organizations. Users participate in the collaboration community s based on a model by being assigned to one or more positions defined in the model.
 
-                        A collaboration template has versions. [[File:collaboration_template_versions.png|Collaboration template versions]] The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
+                        A collaboration model has versions. [[File:collaboration_template_versions.png|Collaboration model versions]] The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Communities can only adopt the latest production version of a model.
                     </description>
                 </item>
             </topic>
@@ -485,11 +495,11 @@
 
                         An organization can contain sub-organizations.
 
-                        The organizations known to a plan consist of...
+                        The organizations known to a collaboration community consist of...
 
-                        * All the known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration template adopted by the plan
-                        * All (known) organizations registered in the plan only
-                        * All (known) organizations registered in all plans hosted by the Channels service
+                        * All the known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration model adopted by the community
+                        * All (known) organizations registered in the community  only
+                        * All (known) organizations registered in all communities hosted by the Channels service
 
                         An organization lists the positions that are relevant to the collaboration and to which it has given roles of responsibility.
                     </description>
@@ -499,30 +509,30 @@
                 <name>Placeholder</name>
                 <item>
                     <description>A placeholder is an organization, place or individual whose final identity is not known
-                        to a collaboration template but is known to collaboration plans based on it.
+                        to a collaboration model but is known to collaboration communities based on it.
 
-                        A placeholder for an individual is called a position in a collaboration plan.
+                        A placeholder for an individual is called a position in a collaboration community.
 
-                        A location placeholder that sets the overall locale for a collaboration plan must be instantiated
-                        with an actual location for the plan to be opened for participation.
+                        A location placeholder that sets the overall locale for a collaboration community must be instantiated
+                        with an actual location for the community to be opened for participation.
 
                         Most often, the term placeholder is used as a shorthand for organization placeholder.
 
-                        The collaboration template upon which a collaboration plan is based identifies all the
-                        organizations that are involved in the collaboration it defines. Because each collaboration plan
-                        may involve its own, local organizations, template developers will often keep the identity of
+                        The collaboration model upon which a collaboration community is based identifies all the
+                        organizations that are involved in the collaboration it defines. Because each collaboration community
+                        may involve its own, local organizations, model developers will often keep the identity of
                         organizations ''to be determined'' by making them ''placeholder'' organizations.
 
-                        A placeholder organization from a collaboration template, for example "The Municipal Police Department",
-                        can be associated to one or more organizations known to a collaboration plan, for example, "Gotham Police Department".
+                        A placeholder organization from a collaboration model, for example "The Municipal Police Department",
+                        can be associated to one or more organizations known to a collaboration community, for example, "Gotham Police Department".
 
-                        [[File:organizations_participate_as_placeholders.png|Organizations participate in a plan as placeholders defined in a template]]
+                        [[File:organizations_participate_as_placeholders.png|Organizations participate in a community as placeholders defined in a model]]
 
-                        A collaboration template may identify one of the positions in organizations it defines as
-                        a ''custodian'' for a placeholder organization. If so, any user participating in a plan in this
-                        position is authorized to associate an organization known to the plan with the template' placeholder
+                        A collaboration model may identify one of the positions in organizations it defines as
+                        a ''custodian'' for a placeholder organization. If so, any user participating in a community in this
+                        position is authorized to associate an organization known to the community with the model' placeholder
                         organization, in effect, involving the known organization in the collaboration defined for the placeholder
-                        organization by the template.
+                        organization by the model.
 
                         Note that a planner acts as the default custodian for all placeholder organizations.
                     </description>
@@ -536,7 +546,7 @@
                         A position in an organization can be filled by one individual and, sometimes, by or more functionally indistinguishable
                         individuals.
 
-                        [[File:participation_in_position.png|A user can participate in a plan by filling a position]]
+                        [[File:participation_in_position.png|A user can participate in a community by filling a position]]
 
                         A position in an organization usually translates to task assignments and communication commitments
                         documented as checklists.
@@ -547,37 +557,37 @@
                         be assigned to ''linked'' positions in other organizations.
 
                         For example, a "Chief of Police" at some municipal police department (primary position) could,
-                        according to a template, be automatically assigned to a position of "Member" of the county's
+                        according to a collaboration model, be automatically assigned to a position of "Member" of the county's
                         "Emergency Operations Center" (linked position). Thus a Chief of Police would have not only the jobs of a chief of police
                         but also all the jobs of a member of the county's emergency operations center.
 
                         [[File:linked_position.png|Linked position]]
 
-                        Users participate in a collaboration plan by being assigned to one or more positions.
+                        Users participate in a collaboration community by being assigned to one or more positions.
 
                         How many and which users can be assigned to a given position (and by who) depends on how
-                        the position was defined by the developers of the template.
+                        the position was defined by the developers of the model.
 
                         Some positions allow unrestricted self-assignment by users, others require confirmation by supervisors or planners,
                         yet others require some prior, confirmed employment. A position might allow only one user being assigned to it, another might allow any number.
 
                         The checklists collaboration checklists a user gets depends on the (accepted and confirmed) positions the user has.
                         The checklists are personalized with the contact names and information of other users participating
-                        in positions this user will collaborate with according to the plan.
+                        in positions this user will collaborate with.
                     </description>
                 </item>
             </topic>
             <topic id="plan-participant">
                 <name>Participant</name>
                 <item>
-                    <description>A plan participant is any user who has accepted to join a collaboration plan, with the
+                    <description>A plan participant is any user who has accepted to join a collaboration community, with the
                         intent of being assigned one or more positions in participating organizations</description>
                 </item>
             </topic>
             <topic id="plan-planner">
                 <name>Collaboration planner</name>
                 <item>
-                    <description>A planner in a collaboration plan is either the user who created the plan or an other
+                    <description>A planner in a collaboration community is either the user who created the community or an other
                         user who has been authorized as planner by another planner.
 
                         A user can resign as planner (or be resigned by a Channels administrator) but only if he or
@@ -591,7 +601,7 @@
                         to manage the association of any number of known organizations to that placeholder.
 
                         A user is the custodian of a placeholder organization if he or she is a planner or is assigned to
-                        a position that is identified as the custodian by the developers of the collaboration template
+                        a position that is identified as the custodian by the developers of the collaboration model
                         where the placeholder organization is defined.
                     </description>
                 </item>
@@ -599,27 +609,27 @@
             <topic id="plan-participation">
                 <name>Participation</name>
                 <item>
-                    <description>The participation in a collaboration plan is the sum of all organizations and users involved in it.
+                    <description>The participation in a collaboration community is the sum of all organizations and users involved in it.
 
-                        A known organization defined in the collaboration template upon which the collaboration plan is
-                        based automatically participates (as itself) in the plan.
+                        A known organization defined in the collaboration model upon which the collaboration community is
+                        based automatically participates (as itself) in the community.
 
-                        When an organization is registered in a plan, it does not yet participate in the collaboration
-                        defined by the template on which the plan is based. Participation by an organization registered
-                        in a plan happens when the organization is associated with a placeholder in the template.
+                        When an organization is registered in a community, it does not yet participate in the collaboration
+                        defined by the model on which the community is based. Participation by an organization registered
+                        in a community happens when the organization is associated with a placeholder in the model.
 
-                        [[File:organizations_participate_as_placeholders.png|Organizations can participate as placeholders defined in a template]]
+                        [[File:organizations_participate_as_placeholders.png|Organizations can participate as placeholders defined in a model]]
 
-                        When a registered organization is associated with a placeholder organization in the template,
+                        When a registered organization is associated with a placeholder organization in the model,
                         the registered organization gets a ''copy'' of all the positions in the placeholder organization.
 
-                        For example, when "Gotham Police Department" in the plan is associated with "Municipal Police department"
-                        in the template, the position of "Chief at Gotham Police Department" is created as a copy of the
-                        template-defined position of "Chief of Municipal Police Department".
+                        For example, when "Gotham Police Department" in the community is associated with "Municipal Police department"
+                        in the model, the position of "Chief at Gotham Police Department" is created as a copy of the
+                        model-defined position of "Chief of Municipal Police Department".
 
                         [[File:positions_copied_from_placeholders.png|Organizations get positions from placeholders they fill]]
 
-                        Users participate in a plan by assigning themselves or by being assigned to one or more positions
+                        Users participate in a community by assigning themselves or by being assigned to one or more positions
                         in participating organizations.
 
                         When assigned to a position in an organization by someone else, a user must accept the assignment
@@ -637,13 +647,13 @@
                         communicate information acquire while or from doing the task, what the relevant policies are and
                         what impacts a failing the task would have on the collaboration.
 
-                        Each task in the collaboration template a collaboration plan is based on has an associated checklist,
+                        Each task in the collaboration model a collaboration community is based on has an associated checklist,
                         minus contact information, that details how to execute the task.
 
                         When a user receives checklists from being assigned to positions assigned to tasks, the checklists
                         are personalized with contact names and information of other users who participate in positions the user collaborates with.
 
-                        [[File:checklists_in_templates_and_plans.png|Checklists defined in templates are personalized in plans]]
+                        [[File:checklists_in_templates_and_plans.png|Checklists defined in models are personalized in communities]]
 
                         A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
 
@@ -672,14 +682,14 @@
 
                         A planning scenario is defined as an event of significance (a change that matters somewhere in the world) that might happen, or is happening or has happened, possibly in the context of other event that are happening or have happened.
 
-                        A collaboration plan might address more than one, presumably related, planning scenarios.
+                        A collaboration community might address more than one, presumably related, planning scenarios.
                     </description>
                 </item>
             </topic>
             <topic id="plan-requirement">
                 <name>Requirement</name>
                 <item>
-                    <description>A collaboration requirement specifies expected communication between two organizations in a plan.
+                    <description>A collaboration requirement specifies expected communication between two organizations in a collaboration community.
 
                         The requirement specifies in more or less generic terms...
 
@@ -689,8 +699,8 @@
                         * the number of positions in each organization sending and receiving the information
                         * the number of alternate source-positions for each sink-positions
 
-                        A collaboration requirement may or may not apply to a pair of organizations in the plan.
-                        If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
+                        A collaboration requirement may or may not apply to a pair of organizations in the community.
+                        If it does then, whether or not it can be realized according to the model-defined collaboration is examined and reported.
                     </description>
                 </item>
             </topic>
@@ -698,96 +708,97 @@
                 <name>Chain of command</name>
                 <item>
                     <description>The chains of command of a user is the sum of all direct and indirect supervisor-supervised
-                        relationships involving that user from participation in a collaboration plan.</description>
+                        relationships involving that user from participation in a collaboration community.</description>
                 </item>
             </topic>
         </section>
-        <section id="collaboration-plans-page">
-            <name>All Collaboration Plans page</name>
-            <topic id="about-collaboration-plans-page">
-                <name>All Collaboration Plans page</name>
+        <section id="ccommunities-page">
+            <name>All Collaboration Communities page</name>
+            <topic id="about-communities-page">
+                <name>All Collaboration Communities page</name>
                 <item>
-                    <description>The ''All Collaboration Plans'' page list all the collaboration plans visible to you,
-                        namely, all plans you can participate in and all those for which you are a planner,
+                    <description>The ''All Collaboration Communities'' page list all the collaboration communities visible to you,
+                        namely, all communities you can participate in and all those for which you are a planner,
                         whether or not they are open for participation yet.
 
                         You can...
 
-                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is to be based, and then pressing the "Start it" button - you will be the founding planner for this plan,
-                        * access a collaboration plan visible to you (select the Go button next to its name in the list of plans).
+                        * create a new collaboration community by first selecting the production version of a collaboration model on which the community is to be based, and then pressing the "Start it" button - you will be the founding planner for this community,
+                        * access a collaboration community visible to you (select the Go button next to its name in the list of communities).
 
-                        [[File:collaboration_plans_page.png|Collaboration plans page]]
+                        [[File:collaboration_plans_page.png|Collaboration communities page]]
                     </description>
                 </item>
-                <next section="collaboration-plan-page" topic="about-collaboration-plan-page"/>
+                <next section="community-page" topic="about-community-page"/>
             </topic>
         </section>
-        <section id="collaboration-plan-page">
-            <name>Collaboration Plan page</name>
-            <topic id="about-collaboration-plan-page">
-                <name>Collaboration plan page</name>
+        <section id="community-page">
+            <name>Collaboration Community page</name>
+            <topic id="about-community-page">
+                <name>Collaboration community page</name>
                 <item>
-                    <description>The collaboration plan page is the home page of a collaboration plan.
+                    <description>The collaboration community page is the home page of a collaboration community.
 
                         As a user, you can decide to participate in positions (roughly, organizational roles) that are open to participation by all.
 
                         [[File:plan_user_managing_participation.png|User-managed participation]]
 
-                        If you created the collaboration plan, you are the initial collaboration planner for this plan.
+                        If you created the collaboration community, you are the initial collaboration planner for this community.
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
 
                         [[File:plan_planner_authorizing.png|Authorizing planners]]
 
-                        A newly created collaboration plan is initially closed for participation. As a planner, you
+                        A newly created collaboration community is initially closed for participation. As a planner, you
                         decide when to open it (or later close it) for participation. The collaboration plan can not be opened
-                        for participation [[File:plan_opening_participation.png|Opening a plan for participation]]
-                        until the template's locale has been given an actual location, if it is a placeholder.
+                        for participation [[File:plan_opening_participation.png|Opening a community for participation]]
+                        until the model's locale has been given an actual location, if it is a placeholder.
 
-                        As a planner, you can name the plan, describe it and localize it.
-                        You can also update it to a new version of the collaboration template if one is detected by Channels.
+                        As a planner, you can name the community, describe it and localize it.
+                        You can also update it to a new version of the collaboration model if one is detected by Channels.
 
-                        [[File:plan_setting_up.png|Setting up a collaboration plan]]
+                        [[File:plan_setting_up.png|Setting up a collaboration community]]
 
-                        As a planner you can set collaboration requirements for the collaboration plan.
+                        As a planner you can set collaboration requirements for the collaboration community.
                         An issue is raised by Channels for each requirement that is not met.
 
-                        [[File:plan_requirements_page.png|Plan requirements page]]
+                        [[File:plan_requirements_page.png|Community requirements page]]
 
-                        A plan is localized by resolving placeholder places from the template to known locations.
-                        At a minimum, the placeholder locale of the adopted template, if identified, needs
-                        to be resolved. Until it is, a planner can not open the plan for participation.
+                        A community is localized by resolving placeholder places from the model to known locations.
+                        At a minimum, the placeholder locale of the adopted model, if identified, needs
+                        to be resolved. Until it is, a planner can not open the community for participation.
 
-                        [[File:template_locale.png|Collaboration template locale]]
+                        [[File:template_locale.png|Collaboration model locale]]
 
-                        As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or
-                        a developer of the collaboration template upon which the plan is based, you can access it.
+                        As a planner, you are automatically a guest of the adopted collaboration model. If you are a guest or
+                        a developer of the collaboration model upon which the community is based, you can access it.
 
-                        As a planner, you can register organizations for potential participation into the plan (or in
-                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate).
+                        As a planner, you can register organizations for potential participation into the community (or in
+                        all communities), in addition to the known organizations defined by the community's collaboration model
+                        (they automatically participate).
 
-                        [[File:plan_registering_orgs.png|Registering organizations in a plan]]
+                        [[File:plan_registering_orgs.png|Registering organizations in a community]]
 
-                        You can then assign known organizations (registered and from the template) to organization placeholders defined in the template.
+                        You can then assign known organizations (registered and from the model) to organization placeholders defined in the model.
 
-                        [[File:plan_participation_organizations.png|Managing organization participation in a plan]]
+                        [[File:plan_participation_organizations.png|Managing organization participation in a community]]
 
                         You can also assign any and all users to positions that need to be filled.
 
-                        [[File:plan_participation_users.png|User filling into positions a plan]]
+                        [[File:plan_participation_users.png|User filling into positions a community]]
 
                         As a planner, you can define requirements on the collaboration and visualize the extent
                         to which they are fulfilled given the current participation.
 
-                        [[File:plan_requirements_page.png|Plan requirements]]
+                        [[File:plan_requirements_page.png|Community requirements]]
 
-                        As a planner, you can view all issues detected in and reported about the collaboration plan.
+                        As a planner, you can view all issues detected in and reported about the collaboration community.
                         You can waive issues that are "waivable".
 
-                        [[File:plan_issues_managing.png|Managing a plan's issues]]
+                        [[File:plan_issues_managing.png|Managing a community's issues]]
 
-                        You can also see all issues, with metrics, in the plan issues report
+                        You can also see all issues, with metrics, in the community issues report
 
-                        [[File:plan_issues_report.png||Plan issues report]]
+                        [[File:plan_issues_report.png||Community issues report]]
 
                         If, as a participant, you are assigned to a position where you supervise other positions, you can assign
                         users to these positions, subject to some constraints, and subject to they accepting the
@@ -797,7 +808,7 @@
 
                         As a participant, you can access your collaboration checklists.
 
-                        [[File:plan_checklists_accessing.png|Accessing the plan's checklists]]
+                        [[File:plan_checklists_accessing.png|Accessing the community's checklists]]
 
                         You can also access the surveys you take part in.
 
@@ -808,7 +819,7 @@
                         [[File:feedback_page|The feedback page]].
                     </description>
                 </item>
-                <next section="what-i-do" topic="participating-in-plan"/>
+                <next section="what-i-do" topic="participating-in-community"/>
                 <next section="what-i-do" topic="my-privileges"/>
                 <next section="what-i-do" topic="my-participation"/>
                 <next section="what-i-do" topic="adding-participation"/>
@@ -819,21 +830,21 @@
                 <next section="participation-page" topic="about-participation-page"/>
                 <next section="all-checklists-page" topic="about-all-checklists-page"/>
                 <next section="checklists-page" topic="about-checklists-page"/>
-                <next section="plan-issues-page" topic="about-plan-issues-page"/>
+                <next section="community-issues-page" topic="about-community-issues-page"/>
             </topic>
         </section>
         <section id="what-i-do">
             <name>What I do</name>
-            <topic id="participating-in-plan">
-                <name>I participate in this plan</name>
+            <topic id="participating-in-community">
+                <name>I participate in this community</name>
                 <item>
-                    <description>You decide whether or not you want to participate in this plan.
+                    <description>You decide whether or not you want to participate in this collaboration community.
 
-                    If you do, then you can assign yourself or be assigned to positions in organizations participating in the plan.
+                    If you do, then you can assign yourself or be assigned to positions in organizations participating in the community.
 
                     Assignments to positions will be subject to you accepting and, where appropriate, to being confirmed by supervisors.
 
-                    Once you participate in a plan, you can withdraw from participation, but only if you are not a planner
+                    Once you participate in a community, you can withdraw from participation, but only if you are not a planner
                     and if you have not accepted any position. </description>
                 </item>
                 <next section="what-i-do" topic="my-privileges"/>
@@ -864,7 +875,7 @@
                         this position. By un-checking an already checked box, you unilaterally resign the assignment.
 
                         By pressing the "command chains" icons next to the help icon, you can see your chains of command
-                        defined by your participation and that of other users in the plan.
+                        defined by your participation and that of other users in the community.
 
                         [[File:plan_chains_of_command.png|Chains of command in a plan]]
                     </description>
@@ -874,7 +885,7 @@
                 <name>I also participate in...</name>
                 <item>
                     <description>Based on your user privileges or current participation, other assignments in the
-                        collaboration plan's organization may be available to you.
+                        collaboration community's organization may be available to you.
 
                         [[File:plan_user_managing_participation.png|User-managed participation]]
 
@@ -904,12 +915,12 @@
                 <name>Collaboration Requirements page</name>
                 <item>
                     <description>As a collaboration planner, the ''Collaboration Requirements'' page enables you to define
-                        information sharing requirements between organizations participating in the plan.
+                        information sharing requirements between organizations participating in the community.
 
-                        [[File:plan_requirements_page.png|Plan requirements page]]
+                        [[File:plan_requirements_page.png|Community requirements page]]
 
                         You can then examine to what extent each requirement can be satisfied by the applicable pairs of
-                        organizations (information source-sink pairs), should they follow the adopted collaboration template.
+                        organizations (information source-sink pairs), should they follow the adopted collaboration model.
 
                         You can add a new requirement definition by pressing the New button in the Definitions tab.
 
@@ -924,25 +935,25 @@
                 <name>Defining requirements</name>
                 <item>
                     <description>
-                        Defining a collaboration requirement means specifying how organizations in a collaboration plan are expected to communicate.
+                        Defining a collaboration requirement means specifying how organizations in a collaboration community are expected to communicate.
 
                         What the requirements want to enforce is '''not''' that participants will follow the directives
-                        in their assigned collaboration checklists as defined in the collaboration template the collaboration plan is based on;
+                        in their assigned collaboration checklists as defined in the collaboration model the collaboration community is based on;
                         it is assumed (rightly or wrongly) that they will.
 
-                        What requirements want to enforce is that, given ''current participation'' in the plan, and given
+                        What requirements want to enforce is that, given ''current participation'' in the community, and given
                         the checklists they currently have, certain organizations commit to communicate certain information
                         with certain others and that there will be sufficient redundancy in sources and targets.
 
-                        A given requirement might apply to every possible pairing of known organizations in a collaboration plan or
+                        A given requirement might apply to every possible pairing of known organizations in a collaboration community or
                         only to some pairs of organizations. A pair of organizations to which a requirement applies consists
                         of a "source" organization (the one who commits to communicate some information) and of a
                         "receiver" organization (the other organization, who would be receiving the information as per the commitment).
 
-                        To be precise, a requirement defines a subset of all the communication commitments that currently exist between users participating in a plan and asserts
+                        To be precise, a requirement defines a subset of all the communication commitments that currently exist between users participating in a community and asserts
                         that there will be, in that subset, enough sources, enough receivers and enough sources for each receiver.
 
-                        One can think of the set of all communication commitments as the sum of all communication steps in all the checklists for all participants in a plan.
+                        One can think of the set of all communication commitments as the sum of all communication steps in all the checklists for all participants in a community.
 
                         A requirement specifies (or not) ...
 
@@ -954,7 +965,7 @@
                         Documents can be attached to a requirement and planners can report issues
                         about the definition of a requirement.
 
-                        [[File:plan_requirement_issues.png| Plan requirement issues]]
+                        [[File:plan_requirement_issues.png| Community requirement issues]]
 
                         If information to be communicated is not specified then any information will satisfy the requirement.
                         If the sources are not specified then any user in any position in any organization can be a source satisfying the requirements.
@@ -963,10 +974,10 @@
                         Information in required communication commitments can be specified by giving none, any, or all of...
 
                         * its name
-                        * tags applied to information flows in the collaboration template from which the communication commitments are derived (any information from a flow tagged by all the given tags will match)
+                        * tags applied to information flows in the collaboration model from which the communication commitments are derived (any information from a flow tagged by all the given tags will match)
                         * element names (any information with all the named elements will match)
 
-                        [[File:plan_requirement_info.png|Plan requirement - Specifying information]]
+                        [[File:plan_requirement_info.png|Community requirement - Specifying information]]
 
                         If the information is not specified, then all communication commitments would match the information requirement.
 
@@ -976,7 +987,7 @@
                         * the organization the agent works for
                         * the placeholder organization the above organization participates as
 
-                        [[File:plan_requirement_source.png|Plan requirement - Specifying source]]
+                        [[File:plan_requirement_source.png|Community requirement - Specifying source]]
 
                         The commitments can be further specified in terms of how the sources would acquire the information to be communicated.
                         This is done by naming none, any or all of...
@@ -1006,7 +1017,7 @@
                         The required redundancy of distinct sources per receiver is defined in terms of a minimum, preferred,
                         and an optional maximum number.
 
-                        [[File:plan_requirement_sources_per_receiver.png|Plan requirement - Sources per receiver]]
+                        [[File:plan_requirement_sources_per_receiver.png|Community requirement - Sources per receiver]]
 
                     </description>
                 </item>
@@ -1016,9 +1027,9 @@
                 <name>Analyzing requirements</name>
                 <item>
                     <description>
-                        Requirement analysis measures how well the requirements are satisfied by participation in the plan.
+                        Requirement analysis measures how well the requirements are satisfied by participation in the community.
 
-                        [[File:plan_requirement_analysis.png|Plan requirement analysis]]
+                        [[File:plan_requirement_analysis.png|Community requirement analysis]]
 
                         Analysis consists in doing the following for each requirement ...
 
@@ -1030,7 +1041,7 @@
 
                         The rating for a pair of organizations is:
 
-                        * '''Impossible''' if the template can not produce commitments that match the requirement
+                        * '''Impossible''' if the model can not produce commitments that match the requirement
                         * '''Negative''' if the minimum number of sources or receivers is not met or the maximum is exceeded (it set)
                         * '''Weak''' if the absolute minimum and maximum numbers of sources and receivers is verified but not the preferred minimum
                         * '''Strong''' if the absolute minimum and maximum numbers of sources and receivers is verified as well as the preferred minimum
@@ -1046,20 +1057,20 @@
             </topic>
         </section>
         <section id="participation-page">
-            <name>Plan participation page</name>
+            <name>Community participation page</name>
             <topic id="about-participation-page">
-                <name>Plan Participation page</name>
+                <name>Community Participation page</name>
                 <item>
-                    <description>The ''Plan Participation'' page enables you to...
+                    <description>The ''Community Participation'' page enables you to...
 
-                        * browse a registry of all organizations participating or eligible to participate in the plan,
-                        * register, as authorized, organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
-                        * assign, as authorized, users to template-defined positions in organizations,
+                        * browse a registry of all organizations participating or eligible to participate in the community,
+                        * register, as authorized, organizations for participation into the community (or all communities) as placeholder organizations defined in the collaboration model adopted by the community,
+                        * assign, as authorized, users to model-defined positions in organizations,
                         * confirm the participation of users in positions you supervise,
                         * review, as planner, the participation issues detected by Channels,
                         * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
 
-                        [[File:plan_participation_page.png|Plan participation page]]
+                        [[File:plan_participation_page.png|Community participation page]]
                     </description>
                 </item>
                 <next section="participation-page" topic="registering-organizations"/>
@@ -1074,23 +1085,23 @@
                <name>Registering organizations</name>
                <item>
                    <description>
-                       You can browse all organizations known to the collaboration plan
-                       (only organizations known to the collaboration plan can participate in it.)
+                       You can browse all organizations known to the collaboration community
+                       (only organizations known to the collaboration community can participate in it.)
 
-                       All non-placeholder organizations from the collaboration template the plan is based on are always
-                       known to the plan (and to all plans based on the template).
+                       All non-placeholder organizations from the collaboration model the community is based on are always
+                       known to the community (and to all communities based on the model).
 
-                       To enable other organizations to participate in a plan, planners must first register them locally
-                       into the plan (or globally into all plans) and then, optionally, profile them. Only planners
+                       To enable other organizations to participate in a community, planners must first register them locally
+                       into the community (or globally into all communities) and then, optionally, profile them. Only planners
                        can register new organizations and change the profiles of registered organizations.
 
-                       [[File:plan_registering_orgs.png|Organizations registered and known to the plan]]
+                       [[File:plan_registering_orgs.png|Organizations registered and known to the community]]
 
-                       An organization is registered into a plan by giving its name and by indicating whether it is to be
-                       known to the plan alone or to all plans hosted
+                       An organization is registered into a community by giving its name and by indicating whether it is to be
+                       known to the community alone or to all communities hosted
                        on the Channels server. The scope of registration of an organization can be modified later as long
                        as it does not conflict with its participation (a global registration for an organization can not
-                       be reversed to a local registration if the organization already participates in many plans).
+                       be reversed to a local registration if the organization already participates in many communities).
 
                        After the organization is registered, planners are expected to profile it.
 
@@ -1103,9 +1114,9 @@
                        * Identifying its parent organization (optional)
                        * Providing contact information for the organization as a whole
 
-                       [[File:plan_organization_profile.png|Editing the profile of an organization registered in the plan]]
+                       [[File:plan_organization_profile.png|Editing the profile of an organization registered in the community]]
 
-                       The profile of a known organization defined in the collaboration template can not be modified by planners.
+                       The profile of a known organization defined in the collaboration model can not be modified by planners.
                    </description>
                </item>
                <next section="participation-page" topic="about-participation-page"/>
@@ -1115,18 +1126,18 @@
                 <item>
                     <description>
                         For members of an organization to participate in a collaboration and get their checklists, their
-                        organization must first participate in the plan.
+                        organization must first participate in the community.
 
-                        A non-placeholder organization from the collaboration template the plan is based on already
-                        participate "as themselves" in the plan. Organization placeholders defined in the template
-                        however await authorized participants in the plan to identify which organizations known to the
-                        plan participate as these placeholders.
+                        A non-placeholder organization from the collaboration model the community is based on already
+                        participate "as themselves" in the community. Organization placeholders defined in the model
+                        however await authorized participants in the community to identify which organizations known to the
+                        community participate as these placeholders.
 
                         [[File:plan_participation_organizations.png|Managing organization participation]]
 
                         A participant is authorized to associate a known organization to a placeholder organization if
                         that user is a planner or participates in a position that makes him/her a custodian of that
-                        placeholder organization according to the template. The template can set a limit on the number of
+                        placeholder organization according to the model. The model can set a limit on the number of
                         organizations that can participate as a placeholder.
 
                         Once an organization is associated with a placeholder, that organization inherits copies of all
@@ -1136,7 +1147,7 @@
                         [[File:positions_copied_from_placeholders.png|Organizations inherit positions from placeholders]]
 
                         Users who expressed intent to participate in
-                        the collaboration plan can now be made given these hiring positions, subject to various constraints.
+                        the collaboration community can now be made given these hiring positions, subject to various constraints.
                     </description>
                 </item>
                 <next section="participation-page" topic="about-participation-page"/>
@@ -1149,21 +1160,21 @@
                         to do so by authorized users.
 
                         Depending on how a hiring position in an organization has been defined by the developers of the
-                        collaboration template, a user can volunteer his/her participation in that position or he/she must be
+                        collaboration model, a user can volunteer his/her participation in that position or he/she must be
                         assigned to the position by supervisors or by planners. A supervisor for a hiring position (if
                         the position has one) is any user who is participating in a position that supervises the hiring position.
 
                         [[File:plan_participation_users.png|Managing user participation]]
 
                         A position might accept only one user or some number of users participating in it. This is set
-                        by template developers in the template and can not be altered in a plan by planners.
+                        by model developers in the model and can not be altered in a community by planners.
 
                         A user can participate in any number of positions. A user must accept a participation for it to be
                         effective. If the position participated in is supervised, all supervisors must also confirm the participation.
 
                         When a user participates in a hiring position (accepted and confirmed if need be), the user automatically
                         participates in all positions linked to the hiring positions. The linking of positions is set by
-                        developers in the collaboration template of the plan and can not be changed by planners.
+                        developers in the collaboration model of the community and can not be changed by planners.
 
                         [[File:linked_position.png|Linked positions]]
 
@@ -1180,7 +1191,7 @@
                 <name>Confirming user participation</name>
                 <item>
                     <description>
-                        When a position is defined as supervised (in the collaboration template the plan is based on),
+                        When a position is defined as supervised (in the collaboration model the community is based on),
                         participation by a user in that position only becomes effective when all users participating as
                         the supervisors of that position (immediately above in the chain of command) have confirmed
                         the participation.
@@ -1212,39 +1223,39 @@
                 <name>Authorizing planners</name>
                 <item>
                     <description>
-                        As planner in a collaboration plan, you can authorize any other user to also become a planner.
+                        As planner in a collaboration community, you can authorize any other user to also become a planner.
 
                         You can resign as planner if you are not the last one. You can not "resign" someone else unless
                         you are a Channels administrator.
 
                         [[File:plan_planner_authorizing.png|Authorizing users as planners]]
 
-                        Note that when a user creates a new collaboration plan (any user can do this), that user becomes the first
+                        Note that when a user creates a new collaboration community (any user can do this), that user becomes the first
                         and founding planner.
                     </description>
                 </item>
                 <next section="participation-page" topic="about-participation-page"/>
             </topic>
             <topic id="participation-issues">
-                <name>Collaboration plan issues</name>
+                <name>Collaboration community issues</name>
                 <item>
                     <description>
-                        Collaboration plan issues are detected automatically by Channels and refreshed every time a change is
-                        made to the collaboration plan.
+                        Collaboration community issues are detected automatically by Channels and refreshed every time a change is
+                        made to the collaboration community.
 
                         Issues can have to do with...
 
                         * Missing or improper participation
                         * Incorrect organization profiles
-                        * Plan requirements not being satisfied
-                        * Problem with the definition of a plan requirement (entered by planners)
-                        * The current collaboration template being obsolete (a new production version is available)
+                        * Community requirements not being satisfied
+                        * Problem with the definition of a community requirement (entered by planners)
+                        * The current collaboration model being obsolete (a new production version is available)
                         * Missing user contact information
                         * Unresolved problem communicated via user feedback
 
                         Planners can waive an issue if it can be waived ("waivability" depends on the kind of issue).
 
-                        [[File:plan_issues_managing.png|Plan issues]]
+                        [[File:plan_issues_managing.png|Community issues]]
                     </description>
                 </item>
                 <next section="participation-page" topic="about-participation-page"/>
@@ -1267,7 +1278,7 @@
 
                         By clicking on a position, you access the checklists for those in that position. By clicking on a
                         participant's name, you access the combined checklists for all the positions assigned to the
-                        participant in the plan.
+                        participant in the community.
 
                         Note that for a user who participates in only one position, this page is skipped and the user will be taken directly to the Participant Checklist page.
                     </description>
@@ -1325,14 +1336,14 @@
                 </item>
             </topic>
         </section>
-        <section id="plan-issues-page">
+        <section id="community-issues-page">
             <name>Issues page</name>
-            <topic id="about-plan-issues-page">
+            <topic id="about-community-issues-page">
                 <name>Issues report</name>
                 <item>
-                    <description>The issues report provides metrics on all the issues found in a collaboration plan.
+                    <description>The issues report provides metrics on all the issues found in a collaboration community.
 
-                        [[File:plan_issues_report.png|Plan issues report]]
+                        [[File:plan_issues_report.png|Community issues report]]
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
@@ -1346,15 +1357,15 @@
 
     </role>
     <role id="developer" isa="participant" glossarySection="concepts" glossaryTopic="glossary">
-        <name>For developers of collaboration templates</name>
+        <name>For developers of collaboration models</name>
          <section id="concepts">
             <name>Key concepts</name>
             <topic id="glossary">
                 <name>Glossary</name>
                 <item>
-                    <description>A glossary of collaboration planning terms for template developers</description>
+                    <description>A glossary of collaboration planning terms for model developers</description>
                 </item>
-                <definition section="concepts" topic="template-element"/>
+                <definition section="concepts" topic="model-element"/>
                 <definition section="concepts" topic="event"/>
                 <definition section="concepts" topic="phase"/>
                 <definition section="concepts" topic="scenario"/>
@@ -1387,13 +1398,13 @@
                 <definition section="concepts" topic="function"/>
             </topic>
 
-            <topic id="template-element">
-                <name>Template element</name>
+            <topic id="model-element">
+                <name>Model element</name>
                 <item>
-                    <description>A template element is anything with a name that contributes to the definition of a collaboration template.
+                    <description>A model element is anything with a name that contributes to the definition of a collaboration model.
 
-                        A template element can be a segment, a task, a flow, a role, information etc. Template elements
-                        are themselves defined in terms of other template elements.
+                        A model element can be a segment, a task, a flow, a role, information etc. Model elements
+                        are themselves defined in terms of other model elements.
                     </description>
                 </item>
             </topic>
@@ -1406,7 +1417,7 @@
                         Risks and events should not be confused. An event can introduce risks to one organization while
                         creating opportunities for another.
 
-                        From the point of view of the template, an event is considered an ''incident'' if its occurrence
+                        From the point of view of the model, an event is considered an ''incident'' if its occurrence
                         is not planned (it is an 'outside' event).
                     </description>
                 </item>
@@ -1419,8 +1430,8 @@
 
                         [[File:phase_illustration.png|An event phase is time relative to the occurrence of events]]
 
-                        A collaboration template can address what happens before, during or after of events, or a
-                        combination thereof. Each segment in a collaboration template focuses on one planning scenario
+                        A collaboration model can address what happens before, during or after of events, or a
+                        combination thereof. Each segment in a collaboration model focuses on one planning scenario
                         which is defined in terms of one phase of one event.
                     </description>
                 </item>
@@ -1441,7 +1452,7 @@
                     <description>Goals are either risks to be mitigated or gains to be achieved by organizations.
 
                         In Channels, a goal is understood as a ''mission-level'' goal of one or more of the
-                        organizations represented in a collaboration template. A goal, either a risk to be mitigated or an
+                        organizations represented in a collaboration model. A goal, either a risk to be mitigated or an
                         opportunity to be seized, is the consequence of the onset or conclusion of an event.
 
                         Goals are achieved by successfully carrying out tasks, or they are automatically achieved when
@@ -1455,7 +1466,7 @@
             <topic id="segment">
                 <name>Segment</name>
                 <item>
-                    <description>Collaboration templates are composed of one or more or more segments. Each segment
+                    <description>Collaboration models are composed of one or more or more segments. Each segment
                         addresses a list of organizational goals to be achieved in one planning scenario.
 
                         No two segments should address identical goals in identical planning scenarios.
@@ -1464,7 +1475,7 @@
                         start or end an events, thus initiating the other segment.
 
                         A segment can be owned by one or more developers, or by none. If owned then only its owners
-                        (and administrators) are allowed to modify it (in the development version of the template),
+                        (and administrators) are allowed to modify it (in the development version of the model),
                         otherwise all developers can modify the segment.
                         A segment is initially owned by the developer who created it.
                         Ownership of a segment can be changed by its owners and by administrators.
@@ -1500,7 +1511,7 @@
                         * goals achieved
                         * information acquired that can then be shared
 
-                        A task specifies what agents known to the collaboration templates will be assigned to it and,
+                        A task specifies what agents known to the collaboration models will be assigned to it and,
                         whether they will be executing the task individually or as a team.
 
                         A task can also specify where the task is to be executed and how the location will become known to the agents
@@ -1568,7 +1579,7 @@
             <topic id="assignment">
                 <name>Task assignment</name>
                 <item>
-                    <description>A task's assignments is the list of agents known to the collaboration template that match
+                    <description>A task's assignments is the list of agents known to the collaboration model that match
                         the assignment profile of the task.
 
                         The assignment profile specifies agents by naming (or not)...
@@ -1613,23 +1624,23 @@
             <topic id="issue">
                 <name>Issue</name>
                 <item>
-                    <description>An issue problem with the collaboration template that is either detected automatically by Channels or, upon
-                        review, by template developers.
+                    <description>An issue problem with the collaboration model that is either detected automatically by Channels or, upon
+                        review, by model developers.
 
                         An issue is either one of
-                        * validity (something is inherently wrong in the template)
-                        * completeness (something is obviously missing from the template)
-                        * robustness (something is making a plan based on the template likely to fail)
+                        * validity (something is inherently wrong in the model)
+                        * completeness (something is obviously missing from the model)
+                        * robustness (something is making a community based on the model likely to fail)
                     </description>
                 </item>
             </topic>
             <topic id="attachment">
                 <name>Attachment</name>
                 <item>
-                    <description>An attachment is an uploaded or linked document, image etc. that describes a template element.
+                    <description>An attachment is an uploaded or linked document, image etc. that describes a model element.
 
-                        You can attach uploaded or linked resources to a collaboration template or collaboration plan as
-                        a whole, or to any element of a collaboration template or plan.
+                        You can attach uploaded or linked resources to a collaboration model or collaboration community as
+                        a whole, or to any element of a collaboration model or community.
 
                         Attachments can be documents, graphics, videos etc. They can be named and categorized, typically
                         as reference, picture or policy.
@@ -1672,18 +1683,18 @@
 
                         A role, such as Manager, is different from a job title, such as Senior VP Sales. Unlike job titles,
                         roles are not meant to be included in checklists or anything else shown to participants in collaboration
-                        plans based on the collaboration template.
+                        communities based on the collaboration model.
 
                         Roles are always entity types and they can form taxonomies whereby a role has a narrower meaning than another.
                         For example, a manager would be categorized as an employee, meaning that all managers are employees
                         but not all employees are managers. Manager being narrower than employee, we say that manager ''inherits'' from employee.
 
-                        Roles are used by template developers to define the jobs of agents in organizations and to specify
+                        Roles are used by model developers to define the jobs of agents in organizations and to specify
                         task assignment profiles that will match agents based on their direct or inherited roles.
 
                         Based on the example above, a task assigned to all employees would also implicitly be assigned
                         to all managers since a manager is also an employee. Clearly, great care must be taken in defining
-                        the taxonomy of roles in a collaboration template.
+                        the taxonomy of roles in a collaboration model.
                     </description>
                 </item>
                 <next section="profiling" topic="profiling-role"/>
@@ -1693,7 +1704,7 @@
                 <item>
                     <description>An agent is a domain entity representing one or more interchangeable persons or systems.
 
-                        An agent is a placeholder for participants in collaboration plans based on the collaboration template.
+                        An agent is a placeholder for participants in collaboration communities based on the collaboration model.
 
                         An agent can be employed by one or more organizations in titled positions, each specified by a
                         role.
@@ -1711,22 +1722,22 @@
                     <description>A place is a domain entity used to represent an area in space, usually an administrative are.
 
                         A place is used to delimit jurisdictions of agents employed by organizations,
-                        to locate where tasks are to be executed, where events are of significance, and where a collaboration template
-                        is meant to apply (its locale, which is to be identified by each collaboration plan based on the template).
+                        to locate where tasks are to be executed, where events are of significance, and where a collaboration model
+                        is meant to apply (its locale, which is to be identified by each collaboration community based on the model).
 
                         A place can represent either an actual place ("Grand Central Station") or a type (category) of places
                         ("Rail Station").
 
                         An actual place is either a known place ("New York City") or a placeholder for a known place
                         (The Flooded City). The identity of a placeholder place (or placeholder location) is to be
-                        resolved by each plan adopting the template.
+                        resolved by each community adopting the model.
 
                         The use of placeholder places is required when...
 
                         * stating the scope of an event
-                        * stating the default locale of the template as a whole
+                        * stating the default locale of the model as a whole
 
-                        Place placeholders enables developers to co-reference a (to-be-determined) place in a template.
+                        Place placeholders enables developers to co-reference a (to-be-determined) place in a model.
                         For example, a task could be defined as needing to be executed in the same location as the scope of the
                         event that triggered it. This would be done by using the same placeholder place as the scope of the
                         event and as the location of the task.
@@ -1804,7 +1815,8 @@
             <topic id="entity">
                 <name>Entity</name>
                 <item>
-                    <description>A domain entity, or entity for short, is a grab bag term for plan elements that are "timeless things or concepts"
+                    <description>A domain entity, or entity for short, is a grab bag term for collaboration model elements
+                        that are "timeless things or concepts"
                         (as opposed to tasks and communicated information)
 
                         Domain entities are...
@@ -1823,8 +1835,8 @@
                         Channels distinguishes between "actual" entities and "types" (or categories) of entities. For
                         example, IBM is an organization whereas "Corporation" is a type of organization.
 
-                        Domain entities are automatically created when they are first named in the definition of some template
-                        element. No two entities of the same kind can have the same name in a template.
+                        Domain entities are automatically created when they are first named in the definition of some model
+                        element. No two entities of the same kind can have the same name in a model.
 
                         Entities can be categorized by entity types of the same kind (IBM - an actual organization - is
                         a Corporation -a type of organization - but it can not be a Manager - a role).
@@ -1869,14 +1881,14 @@
             <topic id="survey">
                 <name>Survey</name>
                 <item>
-                    <description>A survey is a questionnaire about a template element or the template as a whole sent to one or more participants.
+                    <description>A survey is a questionnaire about a model element or the model as a whole sent to one or more participants.
 
                         Questions be optional and can have single or multiple answers. They can also allow free commentary.
 
-                        Template developers can define surveys for various kinds of template elements (surveys about
-                        tasks, about events, about the collaboration template as a whole etc.).
+                        Model developers can define surveys for various kinds of model elements (surveys about
+                        tasks, about events, about the collaboration model as a whole etc.).
 
-                        A survey is applied to one or more template elements of the appropriate kind (a task survey can
+                        A survey is applied to one or more model elements of the appropriate kind (a task survey can
                         be applied to many tasks) and is then sent to one or more users with an optional deadline.
 
                         Recipients of surveys can accept and answer the survey and revise their answers at any time.
@@ -1890,16 +1902,16 @@
             <topic id="tag">
                 <name>Tag</name>
                 <item>
-                    <description>A tag is a word or phrase used to tag template elements in order to informally classify
+                    <description>A tag is a word or phrase used to tag model elements in order to informally classify
                         them.
 
                         Tags can belong to tag domains. For example, ''esf:transportation'' is the tag
                         ''transportation'' in the tag domain ''esf''.
 
                         Tag domains can optionally be predefined by attaching specially formatted text ''tag'' text
-                        files to the template.
+                        files to the model.
 
-                        A given tag can be applied without constraints to template elements of different kinds.
+                        A given tag can be applied without constraints to model elements of different kinds.
 
                         One use of tags is to specify information in collaboration requirements.
                     </description>
@@ -1973,49 +1985,49 @@
 
             </topic>
         </section>
-        <section id="plans-page">
-            <name>Collaboration template page</name>
-            <topic id="about-plans-page">
-                <name>Collaboration template page</name>
+        <section id="models-page">
+            <name>Collaboration model page</name>
+            <topic id="about-models-page">
+                <name>Collaboration model page</name>
                 <item>
-                    <description>As a template developer, you can access collaboration template editor and a summary report
-                        on all issues found in the template.
+                    <description>As a model developer, you can access collaboration model editor and a summary report
+                        on all issues found in the model.
 
-                        [[File:template_page.png|A collaboration template home page]]
+                        [[File:template_page.png|A collaboration model home page]]
 
                         As a developer or authorized user you can access the planning surveys you participate in and the
                         feedback you provided.
 
-                        Documents that have been attached to the template are directly accessible. New ones can be
+                        Documents that have been attached to the model are directly accessible. New ones can be
                         added.
 
-                        You can switch to another template - or another version of this template - by mousing over the
-                        name of the template in the "breadcrumbs" at the top of the page. A drop-down menu of templates
-                        will appear. If this page was accessed from a collaboration plan, only the versions of the
-                        plan-adopted collaboration template are accessible.
+                        You can switch to another model - or another version of this model - by mousing over the
+                        name of the model in the "breadcrumbs" at the top of the page. A drop-down menu of models
+                        will appear. If this page was accessed from a collaboration community, only the versions of the
+                        community-adopted collaboration model are accessible.
                     </description>
                 </item>
-                <next section="template-editor" topic="about-template-editor"/>
-                <next section="about-channels" topic="template-building-strategies"/>
+                <next section="model-editor" topic="about-model-editor"/>
+                <next section="about-channels" topic="model-building-strategies"/>
             </topic>
         </section>
-        <section id="template-editor">
-            <name>Collaboration template editor page</name>
-            <topic id="about-template-editor">
-                <name>Collaboration template editor</name>
+        <section id="model-editor">
+            <name>Collaboration model editor page</name>
+            <topic id="about-model-editor">
+                <name>Collaboration model editor</name>
                 <item>
-                    <description>As a template developer, you use the template editor to...
+                    <description>As a model developer, you use the model editor to...
 
-                        * define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
-                        * compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
+                        * define the scope of the model in terms of risk/opportunity-causing events and of the organizations involved,
+                        * compose the model from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
                         * define for each segment the information sharing and tasks required to deal with these risks and opportunities
-                        * profile the entities (events, phases, organizations, roles etc.) referenced in the collaboration template
+                        * profile the entities (events, phases, organizations, roles etc.) referenced in the collaboration model
                         * report issues in addition to those automatically detected by Channels
-                        * view analytics to better understand the consequences, strengths and weaknesses of the template
+                        * view analytics to better understand the consequences, strengths and weaknesses of the model
 
-                        [[File:template_editor_page.png|The collaboration template editor]]
+                        [[File:template_editor_page.png|The collaboration model editor]]
 
-                        The collaboration template editor is composed of the panes...
+                        The collaboration model editor is composed of the panes...
 
                         * Presence/activity/messages pane
                         * Flow map pane
@@ -2024,39 +2036,39 @@
                         * "Sent" pane
                         * Flow map issues pane (hidden unless revealed)
 
-                        [[File:template_editor_panes.png|The template editor's panes and content]]
+                        [[File:template_editor_panes.png|The model editor's panes and content]]
                     </description>
                 </item>
-                <next section="about-channels" topic="template-building-strategies"/>
+                <next section="about-channels" topic="model-building-strategies"/>
             </topic>
         </section>
         <section id="menus">
             <name>Menus</name>
-            <topic id="show-plan">
-                <name>Template editor show menu</name>
+            <topic id="show-model">
+                <name>Model editor show menu</name>
                 <item>
                     <description>The options are...
 
                         * Presence/Hide Presence - Hide or show the developers presence, activities and messages panel
-                        * About Template - Open the template details panel
-                        * About Template Segment - Open the segment details panel
+                        * About Model - Open the model details panel
+                        * About Model Segment - Open the segment details panel
                     </description>
                 </item>
             </topic>
-            <topic id="actions-plan">
-                <name>Template editor actions menu</name>
+            <topic id="actions-model">
+                <name>Model editor actions menu</name>
                 <item>
                     <description>The options are...
 
-                        * Send message - Send a message about this template as a whole
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Send message - Send a message about this model as a whole
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Paste task - Insert the copied task, if any, into the current segment
-                        * Paste attachment - Add the copied attachment, if any, to this template as a whole
+                        * Paste attachment - Add the copied attachment, if any, to this model as a whole
                         * Add new task - Add a new task to the current segment
-                        * New issue - Report a new issue about this template as a whole
-                        * Add new segment - Add a new segment to this template
-                        * Remove this segment - Remove the current segment from this template
+                        * New issue - Report a new issue about this model as a whole
+                        * Add new segment - Add a new segment to this model
+                        * Remove this segment - Remove the current segment from this model
                     </description>
                 </item>
             </topic>
@@ -2064,11 +2076,11 @@
                 <name>Searching menu</name>
                 <item>
                     <description>The options are
-                        * Index - Open the index of all named elements in this template
-                        * Tags - Open the panel with all the tags used in this template
-                        * Taxonomies - Open the panel showing all entity taxonomies defined in this template
-                        * Who's who - Open the panel listing all agents (people and systems) represented in this template
-                        * All attachments - Open the panel listing all file and Web page attachments in this template
+                        * Index - Open the index of all named elements in this model
+                        * Tags - Open the panel with all the tags used in this model
+                        * Taxonomies - Open the panel showing all entity taxonomies defined in this model
+                        * Who's who - Open the panel listing all agents (people and systems) represented in this model
+                        * All attachments - Open the panel listing all file and Web page attachments in this model
                     </description>
                 </item>
             </topic>
@@ -2077,10 +2089,10 @@
                 <item>
                     <description>The options are...
 
-                        * All Events and Phases - Open the panel with the editable list of all events event phases in the scope of this template
-                        * All Goals - Open the panel showing all goals defined in this template
-                        * All involvements - Open the panel used to name the organizations (real or placeholders), the places (actual), information products, formats, roles and transmission media that are expected to be involved in tasks or communication commitments in this template
-                        * Classification Systems - Open the panel used to define the security classifications used in this template
+                        * All Events and Phases - Open the panel with the editable list of all events event phases in the scope of this model
+                        * All Goals - Open the panel showing all goals defined in this model
+                        * All involvements - Open the panel used to name the organizations (real or placeholders), the places (actual), information products, formats, roles and transmission media that are expected to be involved in tasks or communication commitments in this model
+                        * Classification Systems - Open the panel used to define the security classifications used in this model
                     </description>
                 </item>
             </topic>
@@ -2089,12 +2101,12 @@
                 <item>
                     <description>The options are...
 
-                        * All Checklists - open the panel where all checklists in the template can be browsed
+                        * All Checklists - open the panel where all checklists in the model can be browsed
                         * Task Mover - Open the panel used to easily move tasks from the current segment to another (only visible to developers)
                         * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and commit to share information - as reflected in their checklists
-                        * Template Evaluation - Open a panel containing metrics of all issues found in this template
-                        * All Issues - Open a panel listing all the issues found in this template
-                        * Template versions - Open a panel identifying the current version of this template and allowing developers to vote on moving it to production
+                        * Model Evaluation - Open a panel containing metrics of all issues found in this model
+                        * All Issues - Open a panel listing all the issues found in this model
+                        * Model versions - Open a panel identifying the current version of this model and allowing developers to vote on moving it to production
                     </description>
                 </item>
             </topic>
@@ -2103,7 +2115,7 @@
                 <item>
                     <description>The options are...
 
-                        * All feedback - Open a panel where all feedback sent about this template is listed and can be responded to
+                        * All feedback - Open a panel where all feedback sent about this model is listed and can be responded to
                         * All surveys - Open a panel from where surveys can be defined, launched and managed
                     </description>
                 </item>
@@ -2113,8 +2125,8 @@
                 <item>
                     <description>The options are...
 
-                        * Send message - Send a message about this template segment
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Send message - Send a message about this model segment
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Paste attachment - Add the copied attachment, if any, to this segment
                         * New issue - Report a new issue about this segment
@@ -2148,7 +2160,7 @@
                     <description>The options are...
 
                         * Send message - Send a message about this task
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Copy task - Copy this task
                         * Cut task - Copy and remove this task
@@ -2184,7 +2196,7 @@
                 <item>
                     <description>The options are...
 
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Copy need/capability/flow - Take a copy
                         * Duplicate need/capability/flow - Add a duplicate need/capability to the task
@@ -2201,24 +2213,24 @@
                 <item>
                     <description>The options are...
 
-                        * Show/Hide details - Show or hide the details of this issue reported by a template developer
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Show/Hide details - Show or hide the details of this issue reported by a model developer
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Remove issue - Remove this issue (hidden if details not shown)
                         * Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if details not shown)
                     </description>
                 </item>
             </topic>
-            <topic id="actions-plan-details">
-                <name>Template details actions menu</name>
+            <topic id="actions-model-details">
+                <name>Model details actions menu</name>
                 <item>
                     <description>The options are...
 
-                        * Send message - Send a message about this template as a whole
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Send message - Send a message about this model as a whole
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
-                        * Paste attachment - Add the copied attachment, if any, to this plan
-                        * New issue - Report a new issue about this template as a whole
+                        * Paste attachment - Add the copied attachment, if any, to this model
+                        * New issue - Report a new issue about this model as a whole
                     </description>
                 </item>
             </topic>
@@ -2228,7 +2240,7 @@
                     <description>The options are...
 
                         * Send message - Send a message about this domain entity
-                        * Undo ... - Undo the last change made anywhere in this template
+                        * Undo ... - Undo the last change made anywhere in this model
                         * Redo ... - Redo the last undone change
                         * Paste attachment - Add the copied attachment, if any, to this domain entity
                         * New issue - Report a new issue about this domain entity
@@ -2273,12 +2285,12 @@
             <topic id="presence">
                 <name>Presence</name>
                 <item>
-                    <description>This shows the list of all template developers currently working on this collaboration
-                        template.
+                    <description>This shows the list of all model developers currently working on this collaboration
+                        model.
 
-                        [[File:template_presence.png|Developers currently working on the template]]
+                        [[File:template_presence.png|Developers currently working on the model]]
 
-                        You can also see the list of all authorized developers for this template, whether they are online
+                        You can also see the list of all authorized developers for this model, whether they are online
                         or not.
                     </description>
                 </item>
@@ -2286,25 +2298,25 @@
             <topic id="activities">
                 <name>Activities</name>
                 <item>
-                    <description>This gives you the list of the most recent changes made to the template by yourself and
+                    <description>This gives you the list of the most recent changes made to the model by yourself and
                         other developers. You can hide your own activities.
 
-                        [[File:template_activities.png|Records of the latest changes made to the template]]
+                        [[File:template_activities.png|Records of the latest changes made to the model]]
 
-                        You can click on the name of the template element that was changed to quickly navigate to it.
+                        You can click on the name of the model element that was changed to quickly navigate to it.
                     </description>
                 </item>
             </topic>
         </section>
-        <section id="template-issues-page">
+        <section id="model-issues-page">
             <name>Issues page</name>
-            <topic id="about-template-issues-page">
+            <topic id="about-model-issues-page">
                 <name>Issues report</name>
                 <item>
                     <description>The issues report provides metrics on all the issues found in a collaboration
-                        template.
+                        model.
 
-                        [[File:template_issues_report.png|Template issues report]]
+                        [[File:model_issues_report.png|Model issues report]]
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
@@ -2314,31 +2326,31 @@
             </topic>
         </section>
         <section id="scoping">
-            <name>Scoping the template</name>
+            <name>Scoping the model</name>
             <topic id="eventsAndPhases">
                 <name>Name all events and phases in scope</name>
                 <item>
-                    <description>The scope of the collaboration template is determined in part by the planning scenarios
+                    <description>The scope of the collaboration model is determined in part by the planning scenarios
                         it addresses. A planning scenario is defined in terms of the phase (before, during or after) of
                         an event and by the event itself. For examples, planning scenarios could be responding during an
                         earthquake (the event), or recovering after an earthquake.
 
                         [[File:template_scoping_events_phases.png|Naming all events and event phases in scope]]
 
-                        The list of all events and phases within the scope of a template thus determines what planning
-                        scenarios are within the scope of the collaboration template.
+                        The list of all events and phases within the scope of a model thus determines what planning
+                        scenarios are within the scope of the collaboration model.
 
                         The ''All events and phases'' panel allows you to see all events and phases referenced the
-                        template and to directly add new ones, as well as delete any not yet referenced.
+                        model and to directly add new ones, as well as delete any not yet referenced.
 
                         The ''Events'' tab gives access to the list of all events in scope. A new event event can be
-                        added by naming it. Since the event is not referenced anywhere else (yet) in the template, it is
+                        added by naming it. Since the event is not referenced anywhere else (yet) in the model, it is
                         considered an ''incident'', that is, an external event not caused by a planned task. Its
                         ''incident'' status can only be changed once there is a task that causes it. Events referenced
-                        in the plan, other than in this panel,can not be removed from the list.
+                        in the model, other than in this panel, can not be removed from the list.
 
                         The ''Phases'' tab gives access to the list of all event phases in scope. A new phase can be
-                        added by naming it. A phase not yet referenced anywhere else in the template can be deleted.
+                        added by naming it. A phase not yet referenced anywhere else in the model can be deleted.
 
                         Note that Channels will expect to see at least one segment for each combination of phase and event in scope.
 
@@ -2360,7 +2372,7 @@
             <topic id="phases">
                 <name>Naming all phases</name>
                 <item>
-                    <description>Name the phases that are within the scope of the collaboration template.
+                    <description>Name the phases that are within the scope of the collaboration model.
 
                         [[File:template_scoping_phases.png|Naming the event phases in scope]]
 
@@ -2368,7 +2380,7 @@
                     <script>
                         <action>Edit list of phases in scope</action>
                         <change>
-                            <subjectPath>plan</subjectPath>
+                            <subjectPath>modelPage</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
@@ -2383,13 +2395,13 @@
             <topic id="events">
                 <name>Naming all events</name>
                 <item>
-                    <description>Name the events that are within the scope of the collaboration template.
+                    <description>Name the events that are within the scope of the collaboration model.
                         Channels will now expect to see at least one segment for each combination of phase and event in scope.
 
                         [[File:template_scoping_events.png|Naming the events in scope]]
 
-                        Note that events can also be named anywhere they are used to define another template
-                        element. When they are, they are automatically added to the scope of the template.
+                        Note that events can also be named anywhere they are used to define another model
+                        element. When they are, they are automatically added to the scope of the model.
                     </description>
                 </item>
                 <next section="scoping" topic="phases"/>
@@ -2401,10 +2413,10 @@
                 <item>
                     <description>
                         Name all the (actual) organizations, places, agents, transmission media, information products and formats that are
-                        within the scope of this template and indicate which ones are expected to be involved in tasks (via assignments)
+                        within the scope of this model and indicate which ones are expected to be involved in tasks (via assignments)
                         or in flows (via communication commitments), and thus be referenced in checklists.
 
-                    [[File:template_involvements.png|Stating expectations of involvement in the template]]
+                    [[File:template_involvements.png|Stating expectations of involvement in the model]]
                     </description>
                     <script>
                         <action>Edit the list of involved entities</action>
@@ -2419,10 +2431,10 @@
             <topic id="all-segments">
                 <name>All segments</name>
                 <item>
-                    <description>All segments in the template are grouped either by event or by phase. They are
+                    <description>All segments in the model are grouped either by event or by phase. They are
                         connected by cross-segment flows and by causation links.
 
-                        [[File:template_all_segments.png|All segments in a template, grouped and connected]]
+                        [[File:template_all_segments.png|All segments in a model, grouped and connected]]
 
                         A cross-segment flow is a flow from a task in one segment to a task in another. A causation link
                         is an event caused or terminated by a task in one segment that sets the conditions for another
@@ -2535,17 +2547,17 @@
                         * changing its goals
                         * adding or removing owners (an owner can resign his/her own ownership)
 
-                        A segment is initially owned by the developer who added it to the collaboration template.
+                        A segment is initially owned by the developer who added it to the collaboration model.
                     </description>
                 </item>
             </topic>
             <topic id="all-goals">
                 <name>All goals</name>
                 <item>
-                    <description>All goals defined in all segments of the template are presented in a table that can be
+                    <description>All goals defined in all segments of the model are presented in a table that can be
                         sorted, filtered and paged.
 
-                        [[File:scoping_all_goals.png|Viewing all goals in a template]]
+                        [[File:scoping_all_goals.png|Viewing all goals in a model]]
                     </description>
                 </item>
             </topic>
@@ -2647,7 +2659,7 @@
                         and advanced form (all fields are shown).
 
                         Tags set on a task can be used, among other things, to categorize the assignments that are derived from it. These tags
-                        can be used in defining collaboration requirements in a collaboration plan.
+                        can be used in defining collaboration requirements in a collaboration community.
 
                     </description>
                     <script>
@@ -2729,10 +2741,10 @@
                         * if allowed, the context in which the communication is made, namely, the current planning scenario
 
                         Tags set on a flow can be used, among other things, to categorize the commitments that are derived from it. These tags
-                        can be used in defining collaboration requirements in a collaboration plan.
+                        can be used in defining collaboration requirements in a collaboration community.
 
                         An information need or capability can be marked as ''private'', in which case it is not to be communicated
-                        to participants in a collaboration plan. This will come into play when Channels supports the execution
+                        to participants in a collaboration community. This will come into play when Channels supports the execution
                         of plans.
 
                         [[File:template_flow_private_need_capability.png|Privacy of info needs and capabilities]]
@@ -2948,7 +2960,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Events can be found by name in the template's index.</description>
+                    <description>Events can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -2983,18 +2995,18 @@
                     </script>
                 </item>
                 <item>
-                    <description>All phases are listed in the template's '''details'''.</description>
+                    <description>All phases are listed in the model's '''details'''.</description>
                     <script>
-                        <action>Open template details</action>
+                        <action>Open model details</action>
                         <change>
-                            <subjectPath>plan</subjectPath>
+                            <subjectPath>model</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
                     </script>
                 </item>
                 <item>
-                    <description>Phases can be found by name in the template's index.</description>
+                    <description>Phases can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3026,7 +3038,7 @@
                         if they are to be assigned to tasks.
 
                         An actual organization can be declared a placeholder, meaning its identity (or identities)
-                        will be decided in each collaboration plan that adopts the template whete the organziation is defined.
+                        will be decided in each collaboration community that adopts the model where the organization is defined.
                     </description>
                     <script>
                         <action>Open an organization profile</action>
@@ -3045,7 +3057,7 @@
                 <name>Positions in an organization</name>
                 <item>
                     <description>An actual organization employs agents in roles with jurisdiction. Each position has a title
-                        that will be used in collaboration plans to describe the positions in which individuals can participate.
+                        that will be used in collaboration communities to describe the positions in which individuals can participate.
 
                         Even though an organization might employ individuals in a great number of positions,
                         only the positions that will be involved in the collaboration should be listed
@@ -3056,14 +3068,14 @@
                 <name>Specify organization participation</name>
                 <item>
                     <description>An actual organization can be declared as a placeholder, meaning that its possibly many
-                        real-world identities will be set by communities adopting the template.
+                        real-world identities will be set by communities adopting the model.
 
-                        One or more known organizations in a collaboration plan can participate as the planned placeholder
+                        One or more known organizations in a collaboration community can participate as the planned placeholder
                         organization. The participating organization inherits (a copy of) the agents employed by the
                         placeholder.
 
                         The custodian of a placeholder organization is the agent authorized to register known
-                        organizations as participating as the placeholder. Whoever in a plan participates as this agent is an acting
+                        organizations as participating as the placeholder. Whoever in a community participates as this agent is an acting
                         custodian. Collaboration planners are by default acting custodians.
                     </description>
                     <script>
@@ -3118,7 +3130,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Roles can be found by name in the template's index.</description>
+                    <description>Roles can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3154,9 +3166,9 @@
                     </script>
                 </item>
                 <item>
-                    <description>Agents can be found in the template's ''who's who''.</description>
+                    <description>Agents can be found in the model's ''who's who''.</description>
                     <script>
-                        <action>Open plan's who's who</action>
+                        <action>Open models's who's who</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
@@ -3165,7 +3177,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Agents can also be found by name in the template's index.</description>
+                    <description>Agents can also be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3181,8 +3193,8 @@
             <topic id="agent-participation">
                 <name>Participation as an agent</name>
                 <item>
-                    <description>Users in a collaboration plan participate as (actual) agents that are defined in the
-                        collaboration template the plan has adopted.
+                    <description>Users in a collaboration community participate as (actual) agents that are defined in the
+                        collaboration model the community has adopted.
 
                         Depending on the participation constrains set for the agent...
 
@@ -3260,7 +3272,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Places can be found by name in the template's index.</description>
+                    <description>Places can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3298,7 +3310,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Transmission media can be found by name in the template's index.</description>
+                    <description>Transmission media can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3330,7 +3342,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Information products can be found by name in the template's index.</description>
+                    <description>Information products can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3361,7 +3373,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Information formats can be found by name in the template's index.</description>
+                    <description>Information formats can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3406,7 +3418,7 @@
                     </script>
                 </item>
                 <item>
-                    <description>Functions can be found by name in the template's index.</description>
+                    <description>Functions can be found by name in the model's index.</description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -3420,11 +3432,11 @@
             </topic>
         </section>
         <section id="analyzing">
-            <name>Analyzing the template</name>
+            <name>Analyzing the model</name>
             <topic id="entity-network">
                 <name>Communication commitment networks</name>
                 <item>
-                    <description>A collaboration template determines how actual agents must commit to communicate with
+                    <description>A collaboration model determines how actual agents must commit to communicate with
                         one another. The network can show the agents themselves or it can aggregate  the
                         commitment relationships by...
 
@@ -3451,7 +3463,7 @@
             <topic id="entity-analytics">
                 <name>Entity analytics</name>
                 <item>
-                    <description>You can see the different ways in which this domain entity is involved in the template, and
+                    <description>You can see the different ways in which this domain entity is involved in the model, and
                         then drill down.
 
                         [[File:template_analysis_entities.png|Miscellaneous domain entity analytics]]
@@ -3462,8 +3474,8 @@
                 <name>Entity issues</name>
                 <item>
                     <description>Issues may have been detected or reported about this domain entity's profile. You can include
-                        issues about other template elements that relate to the entity. You can also filter out issues
-                        that have been waived by template developers (the default).
+                        issues about other model elements that relate to the entity. You can also filter out issues
+                        that have been waived by model developers (the default).
 
                         You can browse a paginated table of these issues, filter them, sort them and drill down on them.
 
@@ -3475,7 +3487,7 @@
             <topic id="dissemination">
                 <name>Info dissemination</name>
                 <item>
-                    <description>You can visualize where, according to template, individual elements of information
+                    <description>You can visualize where, according to model, individual elements of information
                         consumed by a task would come from, and where elements of information produced by a task would
                         end up.
 
@@ -3499,20 +3511,20 @@
             </topic>
         </section>
         <section id="improving">
-            <name>Improving the template</name>
+            <name>Improving the model</name>
             <topic id="issues">
                 <name>Issues</name>
                 <item>
-                    <description>Channels automatically detected issues about this template element. You or other
+                    <description>Channels automatically detected issues about this model element. You or other
                         developers may also have reported issues about it.
 
                         [[File:template_analysis_issue_detected.png|Issue detected]]
 
                         Issues are reported in a number of places...
 
-                        * With the template element they are about [[File:template_analysis_issues_in_context.png|Issues in context]]
-                        * With all other issues in a table for browsing [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
-                        * In an issues report with metrics [[File:template_analysis_issues_report.png|Template issues report]] [[File:template_analysis_issues_report_expanded.png|Template issues report, expanded]]
+                        * With the model element they are about [[File:template_analysis_issues_in_context.png|Issues in context]]
+                        * With all other issues in a table for browsing [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
+                        * In an issues report with metrics [[File:template_analysis_issues_report.png|Model issues report]] [[File:template_analysis_issues_report_expanded.png|Model issues report, expanded]]
 
                         Some issues detected by Channels can be waived (marked as false positives).
 
@@ -3531,24 +3543,24 @@
                     </description>
                 </item>
                 <next section="learning" topic="launch-remediation-survey"/>
-                <next section="about-channels" topic="template-building-strategies"/>
+                <next section="about-channels" topic="model-building-strategies"/>
             </topic>
-            <topic id="plan-versions">
-                <name>Template versions</name>
+            <topic id="model-versions">
+                <name>Model versions</name>
                 <item>
-                    <description>The current production and development versions for this template are identified.
+                    <description>The current production and development versions for this model are identified.
 
                         You can vote to move the current development version of this in production if you believe it is
-                        ready. You can see the votes of other template developers and send them messages. Note that only an
+                        ready. You can see the votes of other model developers and send them messages. Note that only an
                         administrator can actually put the current development version into production.
 
                     </description>
                 </item>
             </topic>
-            <topic id="plan-evaluation">
-                <name>Template evaluation</name>
+            <topic id="model-evaluation">
+                <name>Model evaluation</name>
                 <item>
-                    <description>The template evaluation gives an accounting of the issues found in this template. The
+                    <description>The model evaluation gives an accounting of the issues found in this model. The
                         metrics are expressed in terms of...
 
                         * the three main types of issues (robustness, completeness, validity)
@@ -3558,15 +3570,15 @@
                     </description>
                 </item>
                 <next section="improving" topic="all-issues"/>
-                <next section="about-channels" topic="template-building-strategies"/>
+                <next section="about-channels" topic="model-building-strategies"/>
             </topic>
             <topic id="all-issues">
                 <name>All issues</name>
                 <item>
-                    <description>All issues found in the template are listed in a paged table. You can sort them, filter
+                    <description>All issues found in the model are listed in a paged table. You can sort them, filter
                         them, search on their names and drill down on them.
 
-                        [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
+                        [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
                     </description>
                 </item>
                 <next section="improving" topic="resolving-issues"/>
@@ -3574,11 +3586,11 @@
             <topic id="resolving-issues">
                 <name>Resolve issues</name>
                 <item>
-                    <description>An obvious way of improving a collaboration template is to resolve issues detected by
+                    <description>An obvious way of improving a collaboration model is to resolve issues detected by
                         Channels and by planners. The 'All issues" table aggregates all individual issues found in a
-                        template.
+                        model.
 
-                        [[File:template_analysis_issues_all.png|Browsing all issues in a template]]
+                        [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
                     </description>
                     <script>
                         <action>Open the All Issues table</action>
@@ -3589,11 +3601,11 @@
                     </script>
                 </item>
                 <item>
-                    <description>Metrics on all issues found in a template provide a sense of the current quality of the
-                        collaboration template.
+                    <description>Metrics on all issues found in a model provide a sense of the current quality of the
+                        collaboration model.
                     </description>
                     <script>
-                        <action>See template evaluation</action>
+                        <action>See model evaluation</action>
                         <change>
                             <subjectId>-9</subjectId>
                             <type>Expanded</type>
@@ -3638,7 +3650,7 @@
                         Which agents are assigned to a task is determined by...
 
                         * how a task specifies the agents assignable to it
-                        * what agents are in the template's environments and how they are profiled
+                        * what agents are in the model's environments and how they are profiled
                         * how the agents are employed (role, jurisdiction, organization)
                         * how the taxonomies of role, agent, organization etc. are defined
 
@@ -3685,11 +3697,11 @@
                         How entities are categorized largely determine the meaning of the tasks, flows, employments etc.
                         that are defined in terms of these entities.
 
-                        The meaning of a template boils down to the task assignments and consequent communication commitments
-                        (checklists) that are implied by the collaboration template.
+                        The meaning of a model boils down to the task assignments and consequent communication commitments
+                        (checklists) that are implied by the collaboration model.
 
                         Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause
-                        widespread changes to the checklists computed from a template, and thus its meaning.
+                        widespread changes to the checklists computed from a model, and thus its meaning.
 
                         Taxonomies are defined implicitly by categorizing individual entities. The best way to verify
                         that taxonomies are correct is to visualize them.
@@ -3710,7 +3722,7 @@
                 <item>
                     <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially
                         large number of communication commitments. The ''checklists map'' makes it easy to see if the sharing
-                        commitments generated from the template are the intended ones.
+                        commitments generated from the model are the intended ones.
 
                         [[File:template_improving_checklists_map.png|Using the checklists map]]
 
@@ -3737,7 +3749,7 @@
             <topic id="all-checklists">
                 <name>All checklists</name>
                 <item>
-                    <description>All the checklists (one for each task in the template) are listed, to be sorted on the
+                    <description>All the checklists (one for each task in the model) are listed, to be sorted on the
                         task names, segment names and their confirmation status.
 
                         Checklists can be filtered to see only the ones confirmed or not confirmed, or to see only the
@@ -3755,14 +3767,14 @@
                 <name>Compose a survey questionnaire</name>
                 <item>
                     <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about
-                        elements of the template or the template as a whole.
+                        elements of the model or the model as a whole.
 
                         [[File:template_learning_questionnaire.png|Composing a survey questionnaire]]
 
                         You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions
                         can be marked as required or optional.
 
-                        A questionnaire applies to the template as a whole or to one kind of template element (template
+                        A questionnaire applies to the model as a whole or to one kind of model element (model
                         questionnaire, task questionnaires, event questionnaires etc.)
 
                         Questionnaires can be activated and deactivated. They can be extended while they are being used
@@ -3785,10 +3797,10 @@
             <topic id="launch-survey">
                 <name>Launch a survey</name>
                 <item>
-                    <description>A survey is launched on the template or on a template element by applying a
+                    <description>A survey is launched on the model or on a model element by applying a
                         questionnaire to it, usually from within its definition.
 
-                        [[File:template_learning_survey_launching.png|Launching a survey on template element]]
+                        [[File:template_learning_survey_launching.png|Launching a survey on model element]]
 
                         A survey about fixing an issue can be launched from where the issue is reported. The questionnaire
                         is automatically built to offer a choice of remediation options.
@@ -3878,7 +3890,7 @@
                         *forward the survey to others (if it was marked as forwardable).
 
                         Note that anyone who is forwarded a survey and who is not yet a user of Channels is
-                        automatically given a login, password and limited access to the template as a participant.
+                        automatically given a login, password and limited access to the model as a participant.
                     </description>
                     <script>
                         <action>See all launched surveys</action>
@@ -3898,7 +3910,7 @@
                 <name>Lookup the results of a survey</name>
                 <item>
                     <description>As participants in a survey answer the questionnaire, results are compiled and made
-                        available to all template developers.
+                        available to all model developers.
 
                         Results can be viewed by opening the survey and selecting the Results tabs.
 
@@ -3924,10 +3936,10 @@
                     <description>Users can ask questions, report problems and make suggestions via a feedback widget
                         that appears in their home page, their checklists etc.
 
-                        You can see all feedback provided about the collaboration template and reply to any of it.
+                        You can see all feedback provided about the collaboration model and reply to any of it.
                         The user can then reply back etc. or mark the question, problem or suggestion as resolved.
 
-                        [[File:template_learning_feedback_managing.png|Managing feedback about the template]]
+                        [[File:template_learning_feedback_managing.png|Managing feedback about the model]]
                     </description>
                     <script>
                         <action>Open feedback manager</action>
@@ -3940,11 +3952,11 @@
             </topic>
         </section>
         <section id="searching">
-            <name>Searching in the template</name>
+            <name>Searching in the model</name>
             <topic id="search-by-name">
                 <name>Search anything by name</name>
                 <item>
-                    <description>Every element of a template that has a name can be found from the index.
+                    <description>Every element of a model that has a name can be found from the index.
 
                         The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial
                         name.
@@ -3969,7 +3981,7 @@
                         role, location of employer).
                     </description>
                     <script>
-                        <action>Open the template's who's who</action>
+                        <action>Open the model's who's who</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
@@ -3982,12 +3994,12 @@
                 <name>Search for attachments</name>
                 <item>
                     <description>Documents and Web pages of various types (policy, reference, picture etc.) can be
-                        attached to the template and any element in it.
+                        attached to the model and any element in it.
 
-                        A table with all attachments in the template can be found in the template's ''attachments''.
+                        A table with all attachments in the model can be found in the model's ''attachments''.
                     </description>
                     <script>
-                        <action>Open the template's attachments</action>
+                        <action>Open the model's attachments</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
@@ -3999,9 +4011,9 @@
             <topic id="tags">
                 <name>Search by tags</name>
                 <item>
-                    <description>The template and every element in it can be tagged.
+                    <description>The model and every element in it can be tagged.
 
-                        The list of all tags used in the template can be looked up to see what has been marked by any
+                        The list of all tags used in the model can be looked up to see what has been marked by any
                         given tag.
                     </description>
                     <script>
@@ -4021,7 +4033,7 @@
                         (entities) can themselves be categorized to create taxonomies.
 
                         Changes to a taxonomy can have profound impacts on the collaboration checklists that are
-                        generated by the template.
+                        generated by the model.
 
                         Taxonomies can be visualized to verify that they are correct.
                     </description>
@@ -4037,15 +4049,15 @@
                 <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="references">
-                <name>Cross-referencing template elements</name>
+                <name>Cross-referencing model elements</name>
                 <item>
-                    <description>Whenever a template element is referenced by name in the definition of another, there
+                    <description>Whenever a model element is referenced by name in the definition of another, there
                         will also be a link to get to the referenced element's definition.
 
-                        Also, most forms used to define an element of the template contain a table listing and linking
+                        Also, most forms used to define an element of the model contain a table listing and linking
                         to all other elements that reference it in their definitions.
 
-                        For example, at the bottom of in the profile of a role is an index of all other template
+                        For example, at the bottom of in the profile of a role is an index of all other model
                         elements that reference the role or that match the role.
                     </description>
                     <script>
@@ -4106,14 +4118,14 @@
             <topic id="about-settings-page">
                 <name>Channels settings</name>
                 <item>
-                    <description>As an administrator, you manage templates and users for a Channels server.
+                    <description>As an administrator, you manage models and users for a Channels server.
 
-                        Template management consists of...
+                        Model management consists of...
 
-                        * Creating a new template with a unique resource identifier (URI)
-                        * Deleting a template - permitted only if not yet adopted by a collaboration plan
-                        * Putting the current development version of a template into production
-                        * Naming the owner of the template
+                        * Creating a new model with a unique resource identifier (URI)
+                        * Deleting a model - permitted only if not yet adopted by a collaboration community
+                        * Putting the current development version of a model into production
+                        * Naming the owner of the model
                         * Changing the default email addresses at which user or developer feedback is sent
 
                         User management consists of...
@@ -4122,7 +4134,7 @@
                         * Giving a user a full name, email address and password - the user can later modify all of these
                         * Making the user as an admin
                         * Disabling the user - this can be later reversed
-                        * Giving the user developer vs guest (view-only) status for specific collaboration templates.
+                        * Giving the user developer vs guest (view-only) status for specific collaboration models.
 
                         Make sure to press the Apply button for changes to take effect.
                     </description>

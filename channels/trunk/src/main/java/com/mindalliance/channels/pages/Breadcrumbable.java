@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -22,7 +22,7 @@ public interface Breadcrumbable {
 
     boolean isPlanContext();
 
-    Plan getPlan();
+    CollaborationModel getCollaborationModel();
 
     boolean isCommunityContext();
 
@@ -30,7 +30,7 @@ public interface Breadcrumbable {
 
     PageParameters makePlanParameters();
 
-    PageParameters makePlanParameters( Plan plan );
+    PageParameters makePlanParameters( CollaborationModel collaborationModel );
 
     boolean isInCommunityContext();
 
@@ -42,11 +42,11 @@ public interface Breadcrumbable {
 
     PageParameters makeCommunityParameters( PlanCommunity planCommunity );
 
-    List<Plan> getOtherPlans();
+    List<CollaborationModel> getOtherPlans();
 
     List<PlanCommunity> getOtherPlanCommunities();
 
-    void setPlan( Plan plan );
+    void setCollaborationModel( CollaborationModel collaborationModel );
 
     void setPlanCommunity( PlanCommunity planCommunity );
 

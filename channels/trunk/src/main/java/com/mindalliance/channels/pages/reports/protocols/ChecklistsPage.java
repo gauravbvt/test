@@ -4,11 +4,11 @@ import com.mindalliance.channels.api.PlanCommunityEndPoint;
 import com.mindalliance.channels.api.community.CommunityIdentifierData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
-import com.mindalliance.channels.api.plan.PlanIdentifierData;
-import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.api.plan.ModelIdentifierData;
+import com.mindalliance.channels.api.plan.ModelSummaryData;
+import com.mindalliance.channels.api.procedures.ChecklistsData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.ObservationData;
-import com.mindalliance.channels.api.procedures.ProtocolsData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.community.Agency;
@@ -61,8 +61,8 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( ChecklistsPage.class );
 
-    private PlanSummaryData planSummaryData;
-    private ProtocolsData protocolsData;
+    private ModelSummaryData modelSummaryData;
+    private ChecklistsData checklistsData;
     private ProtocolsFinder finder;
     private String username;
     private Long agentId;
@@ -94,7 +94,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     public static PageParameters createParameters( Agent agent, String communityUri ) {
 
         PageParameters result = new PageParameters();
-        result.set( AbstractAllParticipantsPage.COLLAB_PLAN_PARM, communityUri );
+        result.set( AbstractAllParticipantsPage.COMMUNITY_PARM, communityUri );
         result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
         result.set( AbstractAllParticipantsPage.ORG, agent.getAgency().getRegisteredOrganizationUid() );
         return result;
@@ -168,9 +168,9 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private void initData() throws Exception {
         CommunityService communityService = getCommunityService();
         PlanCommunity planCommunity = communityService.getPlanCommunity();
-        planSummaryData = planCommunityEndPoint.getTemplate(
-                planCommunity.getPlanUri(),
-                Integer.toString( planCommunity.getPlanVersion() ) );
+        modelSummaryData = planCommunityEndPoint.getModel(
+                planCommunity.getModelUri(),
+                Integer.toString( planCommunity.getModelVersion() ) );
         if ( agentId != null ) {
             Actor actor = getQueryService().find( Actor.class, agentId );
             if ( registeredOrganizationId != null ) {
@@ -178,7 +178,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                         = registeredOrganizationService.load( registeredOrganizationId );
                 if ( registeredOrganization == null ) throw new NotFoundException();
                 agent = new Agent( actor, registeredOrganization, getCommunityService() );
-                protocolsData = planCommunityEndPoint.getAgentChecklists(
+                checklistsData = planCommunityEndPoint.getAgentChecklists(
                         planCommunity.getUri(),
                         Long.toString( agentId ),
                         registeredOrganizationId );
@@ -190,12 +190,12 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
-                if ( protocolsUser.isPlannerOrAdmin( communityService.getPlan().getUri() ) ) {
-                    protocolsData = planCommunityEndPoint.getUserChecklists(
+                if ( protocolsUser.isDeveloperOrAdmin( communityService.getPlan().getUri() ) ) {
+                    checklistsData = planCommunityEndPoint.getUserChecklists(
                             planCommunity.getUri(),
                             username );
                 } else if ( getUser().getUsername().equals( username ) ) {
-                    protocolsData = planCommunityEndPoint.getMyChecklists( planCommunity.getUri() );
+                    checklistsData = planCommunityEndPoint.getMyChecklists( planCommunity.getUri() );
                 } else {
                     throw new Exception( "Failed to retrieve protocols" );
                 }
@@ -203,7 +203,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         }
         finder = new ProtocolsFinder(
                 planCommunityEndPoint.getServerUrl(),
-                protocolsData,
+                checklistsData,
                 communityService,
                 protocolsUser,
                 planCommunityEndPoint,
@@ -242,16 +242,16 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     // ABOUT
 
     private void addAboutProtocols() {
-        CommunityIdentifierData communityIdentifierData = protocolsData.getCommunityIdentifier();
-        PlanIdentifierData planIdentifierData = communityIdentifierData.getPlanIdentifier();
+        CommunityIdentifierData communityIdentifierData = checklistsData.getCommunityIdentifier();
+        ModelIdentifierData modelIdentifierData = communityIdentifierData.getModelIdentifier();
         getContainer().add( new Label( "communityName", communityIdentifierData.getName() ) );
         aboutContainer = new WebMarkupContainer( "about" );
         getContainer().add( aboutContainer );
         aboutContainer
                 .add( new Label( "userOrAgentName", getParticipantName() ) )
-                .add( new Label( "planVersion", Integer.toString( planIdentifierData.getVersion() ) ) )
-                .add( new Label( "planDate", planIdentifierData.getDateVersioned() ) )
-                .add( new Label( "time", planIdentifierData.getTimeNow() ) );
+                .add( new Label( "planVersion", Integer.toString( modelIdentifierData.getVersion() ) ) )
+                .add( new Label( "planDate", modelIdentifierData.getDateVersioned() ) )
+                .add( new Label( "time", modelIdentifierData.getTimeNow() ) );
     }
 
     private String getParticipantName() {
@@ -268,7 +268,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private void addParticipation() {
         Label employmentsList = new Label(
                 "participationList",
-                asString( protocolsData.getEmployments() ) );
+                asString( checklistsData.getEmployments() ) );
         getContainer().add( employmentsList );
     }
 
@@ -289,7 +289,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     // DOCUMENTATION
 
     private void addDocumentation() {
-        DocumentationData documentationData = planSummaryData.getDocumentation();
+        DocumentationData documentationData = modelSummaryData.getDocumentation();
         DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, finder );
         docPanel.setVisible( documentationData.hasReportableDocuments() );
         getContainer().add( docPanel );

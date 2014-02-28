@@ -8,7 +8,7 @@ package com.mindalliance.channels.core;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +39,7 @@ public interface AttachmentManager {
      */
     boolean exists( CommunityService communityService, String url );
 
-    boolean exists( Plan plan, String url );
+    boolean exists( CollaborationModel collaborationModel, String url );
 
     boolean exists( PlanCommunity planCommunity, String url );
 
@@ -72,10 +72,10 @@ public interface AttachmentManager {
     /**
      * Get upload directory.
      *
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @return a string
      */
-    File getUploadDirectory( Plan plan );
+    File getUploadDirectory( CollaborationModel collaborationModel );
 
     /**
      * Get upload directory.
@@ -95,7 +95,7 @@ public interface AttachmentManager {
      */
     File getUploadedFile( CommunityService communityService, String planRelativePath );
 
-    File getUploadedFile( Plan plan, String url );
+    File getUploadedFile( CollaborationModel collaborationModel, String url );
 
     /**
      * Whether url points to an image.

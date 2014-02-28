@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.export.xml;
 
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.export.PartSpecification;
 import com.mindalliance.channels.core.export.SegmentSpecification;
@@ -345,8 +345,8 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Flow makeFlow(
             Node source, Node target, String name, Long flowId, boolean preserveId ) {
 
-        PlanDao planDao = getPlanDao();
-        Flow flow = planDao.connect( source, target, name, preserveId ? flowId : null );
+        ModelDao modelDao = getPlanDao();
+        Flow flow = modelDao.connect( source, target, name, preserveId ? flowId : null );
         idMap.put( flowId, flow.getId() );
         return flow;
     }

@@ -67,7 +67,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         super( id );
         this.classifiableProperty = classifiableProperty;
         this.classifiedModel = classifiedModel;
-        editEnabled = enabled && isLockedByUser( getPlan() );
+        editEnabled = enabled && isLockedByUser( getCollaborationModel() );
         init();
     }
 
@@ -126,10 +126,10 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
                 new ArrayList<String>()
         );
         if ( classifications.isEmpty() ) {
-            return getPlan().classificationSystems();
+            return getCollaborationModel().classificationSystems();
         } else {
             return (List<String>) CollectionUtils.select(
-                    getPlan().classificationSystems(),
+                    getCollaborationModel().classificationSystems(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
                             final String system = (String) obj;
@@ -153,7 +153,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             return new ArrayList<String>();
         } else {
             return (List<String>) CollectionUtils.collect(
-                    getPlan().classificationsFor( system ),
+                    getCollaborationModel().classificationsFor( system ),
                     new Transformer() {
                         public Object transform( Object input ) {
                             return ( (Classification) input ).getName();
@@ -288,7 +288,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
 
         private Classification getClassification() {
             if ( system != null && name != null ) {
-                return getPlan().getClassification( system, name );
+                return getCollaborationModel().getClassification( system, name );
             } else {
                 return null;
             }

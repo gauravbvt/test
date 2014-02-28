@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -59,7 +58,7 @@ public class InvalidChannel extends AbstractIssueDetector {
     }
 
     private static Level getSeverity( Channelable channelable, CommunityService communityService ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         if ( channelable instanceof Flow ) {
             Node target = ( (Flow) channelable ).getTarget();
             return target.isPart() ? queryService.computePartPriority( (Part) target ) : Level.Low;

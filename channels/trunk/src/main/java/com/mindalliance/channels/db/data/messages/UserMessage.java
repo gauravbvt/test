@@ -65,7 +65,7 @@ public class UserMessage extends UserStatement {
 
     public boolean isBroadcast( ChannelsUser currentUser, PlanCommunity planCommunity ) {
         return toUsername == null // legacy - all planners
-                || toUsername.equals( UserRecord.PLANNERS ) && currentUser.isPlannerOrAdmin( planCommunity.getPlanUri() )
+                || toUsername.equals( UserRecord.PLANNERS ) && currentUser.isDeveloperOrAdmin( planCommunity.getModelUri() )
                 || toUsername.equals( UserRecord.USERS );
     }
 

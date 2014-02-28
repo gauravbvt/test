@@ -43,11 +43,4 @@
         </property>
     </bean>
 
- <!--   <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
-        <property name="template" value="1800"/>
-        <property name="surveysFile" value="isp_surveys"/>
-        <property name="userDetailsService" ref="userDao"/>
-    </bean>
--->
-
 </beans>

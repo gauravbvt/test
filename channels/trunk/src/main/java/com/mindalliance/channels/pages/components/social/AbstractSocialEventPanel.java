@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.db.data.PersistentPlanObject;
+import com.mindalliance.channels.db.data.PersistentChannelsObject;
 import com.mindalliance.channels.db.data.activities.PresenceRecord;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -55,7 +55,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private PresenceRecord latestPresenceRecord = null;
 
     private int index;
-    private IModel<? extends PersistentPlanObject> poModel;
+    private IModel<? extends PersistentChannelsObject> poModel;
     private boolean allowMessageDelete;
     private Updatable updatable;
 
@@ -69,7 +69,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     public AbstractSocialEventPanel(
             String id,
             int index,
-            IModel<? extends PersistentPlanObject> poModel,
+            IModel<? extends PersistentChannelsObject> poModel,
             boolean showProfile,
             Updatable updatable ) {
         this( id, index, poModel, showProfile, true, updatable );
@@ -79,7 +79,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     public AbstractSocialEventPanel(
             String id,
             int index,
-            IModel<? extends PersistentPlanObject> poModel,
+            IModel<? extends PersistentChannelsObject> poModel,
             boolean showProfile,
             boolean allowMessageDelete,
             Updatable updatable ) {
@@ -186,7 +186,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             if ( poUserName == null ) {
                 return "?";
             } else if ( poUserName.equals( UserRecord.PLANNERS ) ) {
-                return "All template developers";
+                return "All model developers";
             } else if ( poUserName.equals( UserRecord.USERS ) ) {
                 return "Everyone";
             } else {
@@ -198,7 +198,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                     return name
                             + (
                             userRole.equals( ChannelsUser.PLANNER )
-                                    ? " (template developer)"
+                                    ? " (model developer)"
                                     : userRole.equals( ChannelsUser.ADMIN )
                                     ? " (admin)"
                                     : ""
@@ -295,7 +295,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             return ChannelsUtils.getLongTimeIntervalString( new Date().getTime() - date.getTime() ) + " ago";
     }
 
-    protected PersistentPlanObject getPersistentPlanObject() {
+    protected PersistentChannelsObject getPersistentPlanObject() {
         return poModel.getObject();
     }
 

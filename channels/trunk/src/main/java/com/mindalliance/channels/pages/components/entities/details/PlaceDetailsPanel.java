@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
@@ -143,7 +143,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     }
 
     public void setPlaceholder( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getPlace(), "placeholder", val ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getPlace(), "placeholder", val ) );
     }
 
     private void addWithinField() {
@@ -358,7 +358,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
 
     private void updatePlace( String property, Object value ) {
         Place place = getPlace();
-        doCommand( new UpdatePlanObject( getUser().getUsername(), place, property, value ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), place, property, value ) );
         geoService.validate( place );
 
     }
@@ -460,7 +460,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "mapLink",
                     new Model<String>( geoLocation.toString() ),
-                    geoLocation, getQueryService().getPlan() );
+                    geoLocation, getQueryService().getCollaborationModel() );
             add( geomapLink );
         }
 

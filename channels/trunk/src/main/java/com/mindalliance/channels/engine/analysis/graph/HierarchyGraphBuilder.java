@@ -50,9 +50,9 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
                             }
 
                         } );
-        for ( Hierarchical root : communityService.getPlanService().findRoots( hierarchical ) ) {
+        for ( Hierarchical root : communityService.getModelService().findRoots( hierarchical ) ) {
             populateGraph( digraph, root );
-            List<Hierarchical> descendants = communityService.getPlanService().findAllDescendants( root );
+            List<Hierarchical> descendants = communityService.getModelService().findAllDescendants( root );
             for ( Hierarchical descendant : descendants ) {
                 populateGraph( digraph, descendant );
             }
@@ -64,7 +64,7 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
                                 Hierarchical hierarchical ) {
         if ( !digraph.containsVertex( hierarchical ) ) {
             digraph.addVertex( hierarchical );
-            for ( Hierarchical superior : hierarchical.getSuperiors( communityService.getPlanService() ) ) {
+            for ( Hierarchical superior : hierarchical.getSuperiors( communityService.getModelService() ) ) {
                 populateGraph( digraph, superior );
                 digraph.addEdge( superior, hierarchical, new HierarchyRelationship( superior, hierarchical ) );
             }

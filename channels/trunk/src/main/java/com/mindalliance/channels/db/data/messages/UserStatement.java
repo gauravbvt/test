@@ -28,12 +28,12 @@ public abstract class UserStatement extends AbstractModelObjectReferencingDocume
     }
 
     public UserStatement( String username, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
     }
 
 
     public UserStatement( String username, String text, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.text = text;
     }
 
@@ -42,7 +42,7 @@ public abstract class UserStatement extends AbstractModelObjectReferencingDocume
             String text,
             ModelObject modelObject,
             PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username, modelObject );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username, modelObject );
         setText( text );
     }
 

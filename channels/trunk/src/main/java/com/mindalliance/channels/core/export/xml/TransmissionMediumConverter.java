@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -105,7 +105,7 @@ public class TransmissionMediumConverter extends EntityConverter {
                                 String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        Plan plan = getPlan();
+        CollaborationModel collaborationModel = getPlan();
         TransmissionMedium medium = (TransmissionMedium) entity;
         if ( nodeName.equals( "addressPattern" ) ) {
             medium.setAddressPattern( reader.getValue() );
@@ -113,7 +113,7 @@ public class TransmissionMediumConverter extends EntityConverter {
             medium.setCast( TransmissionMedium.Cast.valueOf( reader.getValue() ) );
         } else if ( nodeName.equals( "secureForClassification" ) ) {
             Classification classification = (Classification) context.convertAnother(
-                    plan,
+                    collaborationModel,
                     Classification.class );
             medium.addSecurity( classification );
         } else if ( nodeName.equals( "reach" ) ) {

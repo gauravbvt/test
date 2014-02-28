@@ -8,9 +8,9 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
@@ -25,7 +25,7 @@ import com.mindalliance.channels.pages.png.FailureImpactsPng;
 import com.mindalliance.channels.pages.png.FlowMapPng;
 import com.mindalliance.channels.pages.png.HierarchyPng;
 import com.mindalliance.channels.pages.png.IconPng;
-import com.mindalliance.channels.pages.png.PlanMapPng;
+import com.mindalliance.channels.pages.png.ModelMapPng;
 import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
@@ -83,11 +83,11 @@ public class Channels extends WebApplication
     public static final long ALL_CLASSIFICATIONS = -6;
     public static final long TASK_MOVER = -7;
     public static final long CHECKLISTS_MAP = -8;
-    public static final long PLAN_EVALUATION = -9;
+    public static final long MODEL_EVALUATION = -9;
     public static final long ALL_ISSUES = -10;
-    public static final long PLAN_VERSIONS = -11;
-    public static final long PLAN_PARTICIPATION = -12;
-    public static final long PLAN_SEARCHING = -13;
+    public static final long MODEL_VERSIONS = -11;
+    public static final long PLAN_PARTICIPATION = -12; // obsolete
+    public static final long MODEL_SEARCHING = -13;
     public static final long BIBLIOGRAPHY = -17;  // todo - check reference to -17 in guide
     public static final long ALL_CHECKLISTS = -18;
     public static final long ALL_GOALS = -19;
@@ -125,9 +125,9 @@ public class Channels extends WebApplication
 
     private SpringComponentInjector injector;
 
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
-    private PlanServiceFactory planServiceFactory;
+    private ModelServiceFactory modelServiceFactory;
 
     private ImagingService imagingService;
 
@@ -237,7 +237,7 @@ public class Channels extends WebApplication
 
         mountPage( "allChecklists", AllChecklistsPage.class );
         mountPage( "checklists", ChecklistsPage.class );
-        mountPage( "template", PlanPage.class );
+        mountPage( "model", ModelPage.class );
         mountPage( "admin", SettingsPage.class );
         mountPage( "nosops.html", NoAccessPage.class );
         mountPage( "login.html", LoginPage.class );
@@ -245,13 +245,13 @@ public class Channels extends WebApplication
         mountPage( "segment.xml", ExportPage.class );
         mountPage( "geomap", GeoMapPage.class );
         mountPage( "home", HomePage.class );
-        mountPage( "collabPlans", CollaborationPlansPage.class );
-        mountPage( CollaborationPlanPage.COLLAB_PLAN, CollaborationPlanPage.class );
-        mountPage( "templates", PlansPage.class );
+        mountPage( "communities", CollaborationCommunitiesPage.class );
+        mountPage( CollaborationCommunityPage.COMMUNITY, CollaborationCommunityPage.class );
+        mountPage( "models", ModelsPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( RFIsPage.SURVEYS, RFIsPage.class );
         mountPage( "requirements", RequirementsPage.class );
-        mountPage( CollaborationPlanPage.PARTICIPATION, PlanParticipationPage.class );
+        mountPage( CollaborationCommunityPage.PARTICIPATION, CommunityParticipationPage.class );
         mountPage( "issues", IssuesPage.class );
         mountPage( "help", HelpPage.class );
 
@@ -260,98 +260,98 @@ public class Channels extends WebApplication
         mountResource( "users/photos/${name}", new PngReference(
                 UserPhotoPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "icons/${name}", new PngReference(
                 IconPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "segment.png", new PngReference(
                 FlowMapPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
-        mountResource( "plan.png", new PngReference(
-                PlanMapPng.class,
+        mountResource( "model.png", new PngReference(
+                ModelMapPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "network.png", new PngReference(
                 EntityNetworkPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "entities.png", new PngReference(
                 EntitiesNetworkPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "hierarchy.png", new PngReference(
                 HierarchyPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "command_chains.png", new PngReference(
                 CommandChainsPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "essential.png", new PngReference(
                 FailureImpactsPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "dissemination.png", new PngReference(
                 DisseminationPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "checklist.png", new PngReference(
                 ChecklistPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "procedures.png", new PngReference(
                 ProceduresPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "required.png", new PngReference(
                 RequiredNetworkingPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "segment.png", new PngReference(
                 FlowMapPng.class,
                 getUserDao(),
-                getPlanManager(),
+                getModelManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
@@ -430,12 +430,12 @@ public class Channels extends WebApplication
         this.injector = injector;
     }
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
-    public void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    public void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
     public CommunityServiceFactory getCommunityServiceFactory() {
@@ -446,12 +446,12 @@ public class Channels extends WebApplication
         this.communityServiceFactory = communityServiceFactory;
     }
 
-    public PlanServiceFactory getPlanServiceFactory() {
-        return planServiceFactory;
+    public ModelServiceFactory getModelServiceFactory() {
+        return modelServiceFactory;
     }
 
-    public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {
-        this.planServiceFactory = planServiceFactory;
+    public void setModelServiceFactory( ModelServiceFactory modelServiceFactory ) {
+        this.modelServiceFactory = modelServiceFactory;
     }
 
     public ImagingService getImagingService() {

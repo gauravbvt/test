@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -35,7 +34,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
 
     @Override
     public List<Issue> detectIssues( final CommunityService communityService, Identifiable modelObject ) {
-        final QueryService queryService = communityService.getPlanService();
+        final QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
@@ -46,7 +45,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                 if ( !commitments.isEmpty() ) {
                     for ( Commitment commitment : commitments ) {
                         allProblems.addAll( getAnalyst().findRealizabilityProblems(
-                                queryService.getPlan(),
+                                queryService.getCollaborationModel(),
                                 commitment,
                                 communityService ) );
                     }
@@ -72,7 +71,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                     @Override
                                     public boolean evaluate( Object object ) {
                                         return getAnalyst().findRealizabilityProblems(
-                                                queryService.getPlan(),
+                                                queryService.getCollaborationModel(),
                                                 (Commitment) object,
                                                 communityService ).isEmpty();
                                     }

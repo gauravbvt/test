@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -50,7 +49,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
      */
     @SuppressWarnings( "unchecked" )
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getPlanService();
+        QueryService queryService = communityService.getModelService();
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         List<Organization> employers = queryService.findEmployers( actor );

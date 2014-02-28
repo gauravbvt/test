@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,7 +31,7 @@ public class AgreementWithoutCommitment extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( final CommunityService communityService, Identifiable modelObject ) {
-        final QueryService queryService = communityService.getPlanService();
+        final QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization organization = (Organization) modelObject;
         for ( final Agreement agreement : organization.getAgreements() ) {

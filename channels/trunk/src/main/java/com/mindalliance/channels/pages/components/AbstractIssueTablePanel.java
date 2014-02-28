@@ -284,7 +284,7 @@ public abstract class AbstractIssueTablePanel extends AbstractCommandablePanel i
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeColumn( "Issue", "detectorLabel", EMPTY ) );
-            if ( getPlanCommunity().isDomainCommunity() ) {
+            if ( getPlanCommunity().isModelCommunity() ) {
                 columns.add( makeFilterableLinkColumn( "About",
                         "about",
                         "about.name",
@@ -310,7 +310,7 @@ public abstract class AbstractIssueTablePanel extends AbstractCommandablePanel i
                     AbstractIssueTablePanel.this ) );
             // columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
 
-            if ( getPlan().isDevelopment() ) {
+            if ( getCollaborationModel().isDevelopment() ) {
                 columns.add( makeSurveyColumn( "Survey" ) );
             }
             // provider and table

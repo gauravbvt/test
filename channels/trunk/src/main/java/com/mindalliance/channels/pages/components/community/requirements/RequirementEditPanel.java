@@ -1,18 +1,14 @@
 package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Requirement;
-import com.mindalliance.channels.core.model.Taggable;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
-import com.mindalliance.channels.pages.components.TagsPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -215,7 +211,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     public void setName( String val ) {
         if ( val != null && !val.trim().isEmpty() ) {
             String name = val.trim();
-            doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "name", name ) );
+            doCommand( new UpdateModelObject( getUsername(), getRequirement(), "name", name ) );
         }
     }
 
@@ -225,7 +221,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
 
     public void setDescription( String val ) {
         String description = val == null ? "" : val.trim();
-        doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "description", description ) );
+        doCommand( new UpdateModelObject( getUsername(), getRequirement(), "description", description ) );
     }
 
     private Requirement getRequirement() {

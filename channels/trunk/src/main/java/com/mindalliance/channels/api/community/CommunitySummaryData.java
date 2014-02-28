@@ -71,14 +71,14 @@ public class CommunitySummaryData implements Serializable {
 
     private void initPlaceholders( String serverUrl, CommunityService communityService ) {
         placeholderOrganizations = new ArrayList<OrganizationData>(  );
-        for ( Organization placeholder : communityService.getPlanService().listPlaceholderOrganizations() ) {
+        for ( Organization placeholder : communityService.getModelService().listPlaceholderOrganizations() ) {
             placeholderOrganizations.add( new OrganizationData( serverUrl, placeholder, communityService ) );
         }
     }
 
     private void initFixedOrganizations( String serverUrl, CommunityService communityService ) {
         fixedOrganizations = new ArrayList<OrganizationData>(  );
-        for ( Organization placeholder : communityService.getPlanService().listFixedOrganizations() ) {
+        for ( Organization placeholder : communityService.getModelService().listFixedOrganizations() ) {
             fixedOrganizations.add( new OrganizationData( serverUrl, placeholder, communityService ) );
         }
     }

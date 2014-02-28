@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.plan.floating;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.community.requirements.RequirementDefinitionsPanel;
@@ -85,7 +85,7 @@ public class PlanRequirementsPanel extends AbstractFloatingMultiAspectPanel {
     @Override
     protected Component makeAspectPanel( String aspect, Change change ) {
          if ( aspect.equals( SATISFACTION )) {
-             return new RequirementsAnalysisPanel( "aspect", new Model<Plan>( getPlan() ), getExpansions() );
+             return new RequirementsAnalysisPanel( "aspect", new Model<CollaborationModel>( getCollaborationModel() ), getExpansions() );
          } else {
              return new RequirementDefinitionsPanel(
                      "aspect",

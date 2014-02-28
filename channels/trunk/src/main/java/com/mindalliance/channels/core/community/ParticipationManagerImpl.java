@@ -1,13 +1,13 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
@@ -54,7 +54,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     private UserParticipationConfirmationService userParticipationConfirmationService;
 
     @Autowired
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @Autowired
     private PlanCommunityManager planCommunityManager;
@@ -649,7 +649,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         allOtherAgents.remove( agent );
         final Agency agency = agent.getAgency();
         final List<Agency> ancestorAgencies = agent.getAgency().ancestors( communityService );
-        final List<Actor> supervisorActors = communityService.getPlanService().findAllSupervisorsOf( agent.getActor() );
+        final List<Actor> supervisorActors = communityService.getModelService().findAllSupervisorsOf( agent.getActor() );
         return (List<Agent>) CollectionUtils.select(
                 allOtherAgents,
                 new Predicate() {
@@ -812,8 +812,8 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
 
     @Override
-    public Plan getPlan( String communityUri, int planVersion ) {
-        return planManager.getPlan( communityUri, planVersion );
+    public CollaborationModel getPlan( String communityUri, int planVersion ) {
+        return modelManager.getModel( communityUri, planVersion );
     }
 
     @Override
@@ -842,7 +842,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @SuppressWarnings("unchecked")
     private List<Organization> findAllPlaceholders( CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
-                communityService.getPlanService().listActualEntities( Organization.class, true ),
+                communityService.getModelService().listActualEntities( Organization.class, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -1037,10 +1037,10 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     public void registerAllFixedOrganizations() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            if ( !planCommunity.isDomainCommunity() ) {
+            if ( !planCommunity.isModelCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 // register fixed organizations
-                for ( Organization organization : communityService.getPlanService().listActualEntities( Organization.class ) ) {
+                for ( Organization organization : communityService.getModelService().listActualEntities( Organization.class ) ) {
                     if ( organization.isFixedOrganization() && !organization.isUnknown() ) {
                         registeredOrganizationService.findOrAdd(
                                 ChannelsUser.current(),

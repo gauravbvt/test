@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.pages.components.guide.Guidable;
@@ -89,7 +89,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel implements Guidable {
      * @param timing an event timing
      */
     public void setTiming( Phase.Timing timing ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getPhase(), "timing", timing ) );
+        doCommand( new UpdateModelObject( getUser().getUsername(), getPhase(), "timing", timing ) );
     }
 
     private Phase getPhase() {

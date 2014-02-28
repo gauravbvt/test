@@ -14,7 +14,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.model.IModel;
@@ -85,12 +85,12 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     private boolean noLockRequired( long id ) {
-        return !getPlanCommunity().isDomainCommunity() || getPlan().getId() == id;
+        return !getPlanCommunity().isModelCommunity() || getCollaborationModel().getId() == id;
     }
 
 
     private boolean noLockRequired( Identifiable identifiable ) {
-        return !getPlanCommunity().isDomainCommunity() || identifiable instanceof Plan;
+        return !getPlanCommunity().isModelCommunity() || identifiable instanceof CollaborationModel;
     }
 
     /**
@@ -115,9 +115,9 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     protected boolean contextAllowsEditing( Identifiable identifiable ) {
-        return !getPlanCommunity().isDomainCommunity()
+        return !getPlanCommunity().isModelCommunity()
                 || identifiable.isModifiableInProduction()
-                || getPlan().isDevelopment();
+                || getCollaborationModel().isDevelopment();
     }
 
     /**

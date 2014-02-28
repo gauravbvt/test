@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -83,7 +83,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
     }
 
 
-    public RequirementsAnalysisPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
+    public RequirementsAnalysisPanel( String id, Model<CollaborationModel> planModel, Set<Long> expansions ) {
         super( id, planModel, expansions );
         init();
     }

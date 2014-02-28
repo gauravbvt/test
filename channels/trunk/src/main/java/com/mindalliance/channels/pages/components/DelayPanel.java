@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -141,7 +141,7 @@ public class DelayPanel extends AbstractCommandablePanel {
             doCommand( new UpdateSegmentObject( getUser().getUsername(),
                                                 model.getObject(), property + "." + prop, val ) );
         } else {
-            doCommand( new UpdatePlanObject( getUser().getUsername(),
+            doCommand( new UpdateModelObject( getUser().getUsername(),
                                              model.getObject(), property + "." + prop, val ) );
         }
     }

@@ -59,8 +59,8 @@ import java.util.List;
 public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implements NameRangeable {
 
     private static final String ALL_AGENCIES = "All organizations";
-    private static final String FIXED_AGENCIES = "Template-defined organizations";
-    private static final String REGISTERED_AGENCIES = "Plan-registered organizations";
+    private static final String FIXED_AGENCIES = "Model-defined organizations";
+    private static final String REGISTERED_AGENCIES = "Community-registered organizations";
     private static final String[] AGENCY_FILTER_CHOICES = {ALL_AGENCIES, FIXED_AGENCIES, REGISTERED_AGENCIES};
 
     @SpringBean
@@ -417,7 +417,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                             getCommunityService() );
                     updateContents( target );
                     update( target,
-                            Change.message( wrapper.toString() + " is now registered in all plans" ) );
+                            Change.message( wrapper.toString() + " is now registered in all communities" ) );
                 }
             } else if ( action.equals( "makeLocal" ) ) {
                 if ( wrapper.isCanBeMadeLocal() ) {
@@ -426,7 +426,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                             getCommunityService() );
                     updateContents( target );
                     update( target,
-                            Change.message( wrapper.toString() + " is now registered in this plan only" ) );
+                            Change.message( wrapper.toString() + " is now registered in this community only" ) );
                 }
             }
         }
@@ -487,11 +487,11 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
             if ( agency == null ) {
                 return null;
             } else if ( agency.isLocal() ) {
-                return "This plan only";
+                return "This community only";
             } else if ( !agency.isFixedOrganization() ) {
-                return "All plans";
+                return "All communities";
             } else {
-                return "The template";
+                return "The model";
             }
         }
 
@@ -527,9 +527,9 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
 
         public String getScopeChangeLabel() {
             if ( isCanBeMadeLocal() ) {
-                return "Make it this plan only";
+                return "Make it this community only";
             } else if ( isCanBeMadeGlobal() ) {
-                return "Make it all plans";
+                return "Make it all communities";
             } else
                 return "";
         }
@@ -545,9 +545,9 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
 
         public String getScopeChangeConfirmation() {
             if ( isCanBeMadeLocal() ) {
-                return "Make organization visible in this plan only?";
+                return "Make organization visible in this community only?";
             } else if ( isCanBeMadeGlobal() ) {
-                return "Make organization visible in all plans?";
+                return "Make organization visible in all communities?";
             } else
                 return "";
         }
@@ -634,9 +634,9 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "Registered in", "status", EMPTY ) );
             columns.add( makeActionLinkColumn( "",
-                    "@scopeChangeLabel", // "Make it this plan only" vs "Make it all plans"
+                    "@scopeChangeLabel", // "Make it this community only" vs "Make it all communities"
                     "@scopeChangeAction", // "makeLocal" vs. "makeGlobal",
-                    "@scopeChangeConfirmation", // "Make organization visible in this plan only?" vs "Make organization visible in all plans?"
+                    "@scopeChangeConfirmation", // "Make organization visible in this community only?" vs "Make organization visible in all communities?"
                     "organizationIfCanChangeScope",
                     "more",
                     OrganizationsRegistryPanel.this ) );

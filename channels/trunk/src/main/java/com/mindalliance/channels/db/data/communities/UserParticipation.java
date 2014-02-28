@@ -46,7 +46,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     }
 
     public UserParticipation( String username, ChannelsUser participatingUser, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getModelUri(), planCommunity.getModelVersion(), username );
         this.participantUsername = participatingUser.getUsername();
     }
 

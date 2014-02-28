@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.db.services.activities.ExecutedCommandService;
 import com.mindalliance.channels.db.services.activities.PresenceRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -38,7 +38,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private ImportExportFactory importExportFactory;
 
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     private int timeout;
 
@@ -56,7 +56,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     @Override
     public void afterPropertiesSet() {
-        planManager.assignPlans(); // todo - COMMUNITY - do we want this? It should be ok for a user to have no plan and no planCommunityUri set (when user is in the Home Page, about to enter a community)
+        modelManager.assignModels(); // todo - COMMUNITY - do we want this? It should be ok for a user to have no plan and no planCommunityUri set (when user is in the Home Page, about to enter a community)
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
             DefaultCommander newCommander = new DefaultCommander();
             commanders.put( planCommunity, newCommander );
             newCommander.setCommunityService( communityService );
-            newCommander.setPlanManager( planManager );
+            newCommander.setModelManager( modelManager );
             newCommander.setLockManager( new DefaultLockManager( ) );
 
             newCommander.setCommandListeners( getCommonListeners( communityService ) );
@@ -97,11 +97,11 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
      */
     public List<CommandListener> getCommonListeners( CommunityService communityService ) {
         List<CommandListener> listeners = new ArrayList<CommandListener>();
-        boolean isDomain = communityService.getPlanCommunity().isDomainCommunity();
+        boolean isDomain = communityService.getPlanCommunity().isModelCommunity();
         listeners.add( executedCommandService );
         if ( isDomain ) {
             listeners.add( analyst );
-            listeners.add( planManager );
+            listeners.add( modelManager );
         } else {
             listeners.add( planCommunityManager );
         }
@@ -155,14 +155,14 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
     /**
      * Specify the common plan manager for all commanders.
      *
-     * @param planManager a plan manager
+     * @param modelManager a plan manager
      */
-    public void setPlanManager( PlanManager planManager ) {
-        this.planManager = planManager;
+    public void setModelManager( ModelManager modelManager ) {
+        this.modelManager = modelManager;
     }
 
-    public PlanManager getPlanManager() {
-        return planManager;
+    public ModelManager getModelManager() {
+        return modelManager;
     }
 
     /**

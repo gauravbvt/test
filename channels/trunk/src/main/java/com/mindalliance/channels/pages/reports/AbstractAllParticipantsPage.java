@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.ParticipationManager;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
@@ -32,7 +32,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
 
 
     @SpringBean
-    private PlanManager planManager;
+    private ModelManager modelManager;
 
     @SpringBean
     private AttachmentManager attachmentManager;
@@ -69,7 +69,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
 
 
     protected int getPlanVersion() {
-        return getPlanCommunity().getPlanVersion();
+        return getPlanCommunity().getModelVersion();
     }
 
     protected List<UserParticipation> getVisibleParticipations() {
@@ -83,7 +83,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     protected void addContent(  ) {
         CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
-        boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
+        boolean isPlanner = getUser().isDeveloperOrAdmin( communityService.getPlan().getUri() );
         List<UserParticipation> participationList;
         if ( isPlanner ) {
             participationList = participationManager.getAllActiveParticipations( communityService );

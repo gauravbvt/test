@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.RemoveGoal;
+import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Level;
@@ -578,7 +578,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             assert markedForCreation;
             if ( isComplete() ) {
                 if ( !getSegment().getGoals().contains( goal ) ) {
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                    doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                             "goals",
                             goal,
                             UpdateObject.Action.AddUnique ) );
@@ -600,7 +600,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 if ( value != goal.isPositive() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                                 "goals[" + index + "].positive",
                                 value,
                                 UpdateObject.Action.Set ) );
@@ -621,7 +621,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 if ( value != goal.getLevel() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                                 "goals[" + index + "].level",
                                 value,
                                 UpdateObject.Action.Set ) );
@@ -642,7 +642,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 if ( value != goal.getCategory() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                                 "goals[" + index + "].category",
                                 value,
                                 UpdateObject.Action.Set ) );
@@ -663,7 +663,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             } else {
                 int index = getSegment().getGoals().indexOf( goal );
                 if ( index >= 0 ) {
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                    doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                             "goals[" + index + "].organization",
                             org,
                             UpdateObject.Action.Set ) );
@@ -683,7 +683,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             } else {
                 int index = getSegment().getGoals().indexOf( goal );
                 if ( index >= 0 ) {
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                    doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                             "goals[" + index + "].endsWithSegment",
                             val,
                             UpdateObject.Action.Set ) );
@@ -743,7 +743,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 } else {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                                 "goals[" + index + "].description",
                                 value,
                                 UpdateObject.Action.Set ) );
@@ -760,7 +760,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                 } else {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
+                        doCommand( new UpdateModelObject( getUser().getUsername(), getSegment(),
                                 "goals[" + index + "].name",
                                 value,
                                 UpdateObject.Action.Set ) );

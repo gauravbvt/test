@@ -6,14 +6,14 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.UserIssue;
@@ -68,10 +68,10 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     boolean isInDomainContext() {
-        return getDao() instanceof PlanDao;
+        return getDao() instanceof ModelDao;
     }
 
-    PlanDao getPlanDao() {
+    ModelDao getPlanDao() {
         return getContext().getPlanDao();
     }
 
@@ -95,7 +95,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a boolean
      */
     protected boolean isExportingPlan( MarshallingContext context ) {
-        return context.get( "exporting-plan" ) != null;
+        return context.get( "exporting-model" ) != null;
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a boolean
      */
     protected boolean isImportingPlan( UnmarshallingContext context ) {
-        return context.get( "importing-plan" ) != null;
+        return context.get( "importing-model" ) != null;
     }
 
     /**
@@ -320,7 +320,7 @@ public abstract class AbstractChannelsConverter implements Converter {
     }
 
     protected boolean isPlanContext() {
-        return getDao() instanceof PlanDao;
+        return getDao() instanceof ModelDao;
     }
 
     protected boolean isCommunityContext() {
@@ -384,8 +384,8 @@ public abstract class AbstractChannelsConverter implements Converter {
      *
      * @return a plan
      */
-    protected Plan getPlan() {
-        return getPlanDao().getPlan();
+    protected CollaborationModel getPlan() {
+        return getPlanDao().getCollaborationModel();
     }
 
     /**

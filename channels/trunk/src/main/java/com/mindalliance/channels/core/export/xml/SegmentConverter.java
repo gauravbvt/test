@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.export.xml;
 
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -57,9 +57,9 @@ public class SegmentConverter extends AbstractChannelsConverter {
     public void marshal( Object object, HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Segment segment = (Segment) object;
-        Plan plan = getContext().getPlan();
+        CollaborationModel collaborationModel = getContext().getPlan();
         context.put( "segment", segment );
-        writer.addAttribute( "plan", plan.getUri() );
+        writer.addAttribute( "plan", collaborationModel.getUri() );
         writer.addAttribute( "version", getVersion() );
         writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
         writer.addAttribute( "id", String.valueOf( segment.getId() ) );
@@ -146,11 +146,11 @@ public class SegmentConverter extends AbstractChannelsConverter {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         getProxyConnectors( context );
-        PlanDao planDao = getPlanDao();
+        ModelDao modelDao = getPlanDao();
         Long oldId = Long.parseLong( reader.getAttribute( "id" ) );
         Segment segment = importingPlan
-                ? planDao.createSegment( oldId, null )
-                : planDao.createSegment( null, null );
+                ? modelDao.createSegment( oldId, null )
+                : modelDao.createSegment( null, null );
         Part defaultPart = segment.getDefaultPart();
         context.put( "segment", segment );
         segment.setName( reader.getAttribute( "name" ) );
@@ -250,7 +250,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         // Remove automatically created default part
         getPlanDao().removeNode( defaultPart, segment );
         if ( segment.getPhase() == null ) {
-            LOG.warn( "Setting segment's phase to plan default." );
+            LOG.warn( "Setting segment's phase to model default." );
             segment.setPhase( getPlan().getDefaultPhase() );
         }
         Map<String, Object> state = new HashMap<String, Object>();

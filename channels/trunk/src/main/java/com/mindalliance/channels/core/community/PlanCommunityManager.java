@@ -2,7 +2,7 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,10 +62,10 @@ public interface PlanCommunityManager extends CommandListener {
     /**
      * Return the domain plan community for a plan (community of planners).
      *
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @return a plan community
      */
-    PlanCommunity getDomainPlanCommunity( Plan plan );
+    PlanCommunity getDomainPlanCommunity( CollaborationModel collaborationModel );
 
     /**
      * Clears community cache.
@@ -76,28 +76,28 @@ public interface PlanCommunityManager extends CommandListener {
     /**
      * Create a new community for a given plan.
      *
-     * @param plan    a plan
+     * @param collaborationModel    a plan
      * @param founder a user
      * @return a PlanCommunity
      */
-    PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder, CommunityService communityService );
+    PlanCommunity createNewCommunityFor( CollaborationModel collaborationModel, ChannelsUser founder, CommunityService communityService );
 
     /**
      * List the usernames who are members of communities having adopted a given plan.
      *
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @return a list of usernames
      */
-    List<String> listAllAdopters( Plan plan );
+    List<String> listAllAdopters( CollaborationModel collaborationModel );
 
     /**
      * Find a plan community with a given plan in which the user is a participant, community planner or template developer.
      *
-     * @param plan a plan
+     * @param collaborationModel a plan
      * @param user a Channels user
      * @return a plan community or null
      */
-    PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user );
+    PlanCommunity findPlanCommunity( CollaborationModel collaborationModel, ChannelsUser user );
 
     /**
      * Return the directory where a given plan community is persisted.

@@ -3,7 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.community.AbstractWaivableIdentifiable;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -53,7 +53,7 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
     /**
      * Current plan for this user.
      */
-    private Plan plan;
+    private CollaborationModel collaborationModel;
     /**
      * Web client info.
      */
@@ -78,25 +78,25 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
     public ChannelsUser( UserRecord userRecord, CommunityService communityService ) {
         this( userRecord );
         planCommunityUri = communityService.getPlanCommunity().getUri();
-        plan = communityService.getPlan();
+        collaborationModel = communityService.getPlan();
     }
 
     /**
      * Returns the "best practices" i.e. collaboration plan.
      * @return a plan
      */
-    public Plan getPlan() {
-        return plan;
+    public CollaborationModel getCollaborationModel() {
+        return collaborationModel;
     }
 
-    public void setPlan( Plan plan ) {
-        this.plan = plan;
-        if ( plan != null )
+    public void setCollaborationModel( CollaborationModel collaborationModel ) {
+        this.collaborationModel = collaborationModel;
+        if ( collaborationModel != null )
             planCommunityUri = null;
     }
 
     public void setCommunityService( CommunityService communityService ) {
-        setPlan( communityService.getPlan() );
+        setCollaborationModel( communityService.getPlan() );
         setPlanCommunityUri( communityService.getPlanCommunity().getUri() );
     }
 
@@ -107,7 +107,7 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
     public void setPlanCommunityUri( String planCommunityUri ) {
         this.planCommunityUri = planCommunityUri;
         if ( planCommunityUri != null )
-            plan = null;
+            collaborationModel = null;
     }
 
     public boolean isAnonymous() {
@@ -261,12 +261,12 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
      * @param uri a plan uri
      * @return a boolean
      */
-    public boolean isPlannerOrAdmin( String uri ) {
-        return userRecord.isPlannerOrAdmin( uri );
+    public boolean isDeveloperOrAdmin( String uri ) {
+        return userRecord.isDeveloperOrAdmin( uri );
     }
 
-    public boolean isPlanner( String uri ) {
-        return userRecord.hasPlannerAccess( uri );
+    public boolean isDeveloper( String uri ) {
+        return userRecord.hasDeveloperAccess( uri );
     }
 
     /**
@@ -374,7 +374,7 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
      */
     public String getRole( String planUri ) {
         return userRecord.isAdmin() ? ADMIN
-                : userRecord.isPlannerOrAdmin( planUri ) ? PLANNER
+                : userRecord.isDeveloperOrAdmin( planUri ) ? PLANNER
                 : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
@@ -387,7 +387,7 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
     public String getRole( ) {
         String planUri = getPlanUri();
         return userRecord.isAdmin() ? ADMIN
-                : userRecord.isPlannerOrAdmin( planUri ) ? PLANNER
+                : userRecord.isDeveloperOrAdmin( planUri ) ? PLANNER
                 : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
@@ -398,7 +398,7 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
      * @return a string or null
      */
     public String getPlanUri() {
-        return plan != null ? plan.getUri() : null;
+        return collaborationModel != null ? collaborationModel.getUri() : null;
     }
 
     /**
@@ -406,12 +406,12 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
      *
      * @return a plan
      */
-    public static Plan plan() {
+    public static CollaborationModel plan() {
 //        if ( Thread.currentThread() instanceof IssueScanner.Daemon ) {
 //            return ( (IssueScanner.Daemon) Thread.currentThread() ).getPlan();
 //        } else {
         ChannelsUser user = current();
-        return user == null ? null : user.getPlan();
+        return user == null ? null : user.getCollaborationModel();
 //        }
     }
 
@@ -436,13 +436,13 @@ public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDe
     }
 
     private String getContextUri() {
-        return plan != null
-                ? plan.getUri()
+        return collaborationModel != null
+                ? collaborationModel.getUri()
                 : planCommunityUri;
     }
 
     public boolean hasAccessTo( String uri ) {
-        return isPlannerOrAdmin( uri ) || isParticipant( uri );
+        return isDeveloperOrAdmin( uri ) || isParticipant( uri );
     }
 
     public boolean hasPhoto() {
