@@ -91,7 +91,11 @@ public class ENT0107_CreatePhase extends TestCase{
 			
 		}
 	}
-	
+	/**
+	 * This method adds phases 
+	 * @throws UIAutomationException
+	 * @throws IOException 
+	 */
 	@Test
 	public void testENT0107_CreatePhase() throws UIAutomationException, IOException{
 		try {

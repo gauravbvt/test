@@ -92,7 +92,7 @@ public class HP0006_ClickCollaborationTemplatesLink extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that admin page is displayed by clicking on 'Channels Settings' link
+	 * This method verify that Collaboration Model page opens after clicking on Collaboration Models link
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

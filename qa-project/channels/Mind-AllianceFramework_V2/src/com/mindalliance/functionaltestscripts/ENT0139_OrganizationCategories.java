@@ -87,7 +87,11 @@ public class ENT0139_OrganizationCategories extends TestCase{
 			
 		}
 	}
-	
+	/**
+	 * This method adds categories to the Organization
+	 * @throws UIAutomationException
+	 * @throws IOException 
+	 */
 	@Test
 	public void testENT0139_OrganizationCategories() throws UIAutomationException, IOException{
 		try {

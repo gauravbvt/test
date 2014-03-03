@@ -91,7 +91,7 @@ public class HP0004_ClickCommunitiesLink extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that admin page is displayed by clicking on 'Channels Settings' link
+	 * This method verify that Communities page is displayed by clicking on 'Collaboration Communities' link
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

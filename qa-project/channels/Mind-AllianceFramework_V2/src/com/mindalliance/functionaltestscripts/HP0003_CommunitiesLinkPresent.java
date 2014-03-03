@@ -94,7 +94,7 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that admin page is displayed by clicking on 'Channels Settings' link
+	 * This method verify that the "Collaboration Communities " link is present
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

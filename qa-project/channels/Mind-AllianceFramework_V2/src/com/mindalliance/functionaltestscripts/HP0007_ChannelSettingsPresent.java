@@ -91,7 +91,7 @@ public class HP0007_ChannelSettingsPresent extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that admin page is displayed by clicking on 'Channels Settings' link
+	 * This method verifies that the 'Channels Settings' link is present
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
