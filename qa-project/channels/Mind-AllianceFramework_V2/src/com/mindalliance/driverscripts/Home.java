@@ -150,7 +150,7 @@ public class Home {
 		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
 		suite.addTestSuite(MAV0274_ViewEventAnalyticsTab.class);
 		suite.addTestSuite(MAV0275_ViewEventIssueTab.class);
-		suite.addTestSuite(MAV0243_ShowRequirements.class);
+	/*	suite.addTestSuite(MAV0243_ShowRequirements.class);
 		suite.addTestSuite(MAV0245_ShowRequirementDefinition.class);
 		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
 		suite.addTestSuite(MAV0247_NewRequirement.class);
@@ -171,7 +171,7 @@ public class Home {
 		suite.addTestSuite(MAV0125_copyFlow.class);
 		suite.addTestSuite(MAV0030_viewMapWindow.class);
 		suite.addTestSuite(MAV0157_viewSocialPanelCalender.class);
-		suite.addTestSuite(MAV0213_AttachReceiveSentAttachOption.class);
+		suite.addTestSuite(MAV0213_AttachReceiveSentAttachOption.class);*/
 		
 		//		Plan
 		suite.addTestSuite(MAP0001_AddPlan.class);
@@ -232,7 +232,7 @@ public class Home {
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
     	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
-		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+	/*	suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
 		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
@@ -252,7 +252,7 @@ public class Home {
 		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
-		suite.addTestSuite(MAC0036_RedoCutTask.class);
+		suite.addTestSuite(MAC0036_RedoCutTask.class);*/
 		
     	// Channels Login
 
