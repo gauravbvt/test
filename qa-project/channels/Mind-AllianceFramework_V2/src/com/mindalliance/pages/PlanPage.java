@@ -2570,9 +2570,9 @@ public class PlanPage {
         elementController.requireElementSmart(fileName, "Who Can Modify This Segment", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
 	    String ownersTab=UIActions.getText(fileName, "Who Can Modify This Segment ", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
 	    String ownersTabText=dataController.getPageDataElements(fileName, "Who Can Modify This Segment Text", "Name");
-	/*	if(!ownersTab.contains(ownersTabText)){
+		if(!ownersTab.contains(ownersTabText)){
 			throw new UIAutomationException("Tab with Text '"+ownersTabText+"' not found");
-		}*/
+		}
 	    System.out.println(ownersTabText);
 	}
 	
@@ -2588,9 +2588,9 @@ public class PlanPage {
         elementController.requireElementSmart(fileName, "Message On Owners Tab For Admin", GlobalVariables.configuration.getAttrSearchList(), "Message On Owners Tab For Admin");
 	    String ownersTab=UIActions.getText(fileName, "Message On Owners Tab For Admin", GlobalVariables.configuration.getAttrSearchList(), "Message On Owners Tab For Admin");
 	    String ownersTabText=dataController.getPageDataElements(fileName, "Message On Owners Tab For Admin Text", "Name");
-	/*	if(!ownersTab.contains(ownersTabText)){
+		if(!ownersTab.contains(ownersTabText)){
 			throw new UIAutomationException("Tab with Text '"+ownersTabText+"' not found");
-		}*/
+		}
 	    System.out.println(ownersTabText);
 	    
 	}
@@ -2603,12 +2603,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName, "Create Survey In Task Panel", GlobalVariables.configuration.getAttrSearchList(),"Create Survey In Task Panel");
         UIActions.click(fileName, "Create Survey In Task Panel", GlobalVariables.configuration.getAttrSearchList(), "Create Survey In Task Panel");   	
 	
-       /* //Assertion: Check the text present on Surveys Page
+        //Assertion: Check the text present on Surveys Page
         elementController.requireElementSmart(fileName,"All Surveys Title",GlobalVariables.configuration.getAttrSearchList(), "All Surveys Title");
       	String surveysPageTitle=UIActions.getText(fileName,"All Surveys Title",GlobalVariables.configuration.getAttrSearchList(), "All Surveys Title");
       	String textInTitle=dataController.getPageDataElements(fileName,"All Surveys Text" , "Name");
       	if(!surveysPageTitle.contains(textInTitle)){
-      		throw new UIAutomationException( "'"+textInTitle +"' not found");}*/
+      		throw new UIAutomationException( "'"+textInTitle +"' not found");}
 	}
 	
 	/**
