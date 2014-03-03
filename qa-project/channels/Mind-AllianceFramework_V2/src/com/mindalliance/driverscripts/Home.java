@@ -383,8 +383,6 @@ public class Home {
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
         
-        
-        
 		return suite;
 	}
 }
