@@ -308,6 +308,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Who Can Modify This Segment Text</GivenName>
+		<Name>Who can modify this segment</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Admin Text</GivenName>
+		<Name>You can modify this segment because you are an administrator.</Name>
+	</Element>
+	
+	<Element>
 		<GivenName>Checklists Window Title</GivenName>
 		<Name>Unconfirmed Checklist</Name>
 	</Element>
@@ -821,6 +831,36 @@
 	<Element>
 		<GivenName>Scenario Tab</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Owners Tab</GivenName>
+		<Xpath>//div[contains(@class,'fp-tabs')]/span[5]/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Admin</GivenName>
+		<Xpath>//div[contains(@class,'explanation')]</Xpath>
+		<Name></Name>
+		<Id>id8d2</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Who Can Modify This Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/h3/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1536,7 +1576,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>About Plan Segment</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
