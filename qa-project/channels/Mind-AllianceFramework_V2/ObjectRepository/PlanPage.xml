@@ -175,12 +175,12 @@
 
 	<Element>
 		<GivenName>Template Evaluation Window Title</GivenName>
-		<Title>Collaboration Template Evaluation</Title>
+		<Title>Collaboration Model Evaluation</Title>
 	</Element>
 	
 	<Element>
 		<GivenName>Template Versions Window Title</GivenName>
-		<Title>Collaboration Template Versions</Title>
+		<Title>Collaboration Model Versions</Title>
 	</Element>
 	
 	<Element>
@@ -3779,8 +3779,6 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
-	
 	
 	<Element>
 		<GivenName>Task Mover Title</GivenName>
