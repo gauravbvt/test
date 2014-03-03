@@ -2,7 +2,7 @@
 <elements>
  	<Element>
 		<GivenName>Alert Window Title Of Delete Plan</GivenName>
-		<Title>Delete the selected collaboration template?</Title>
+		<Title>Delete the selected collaboration model?</Title>
 	</Element>
 	
 	<Element>
@@ -17,17 +17,17 @@
  	
  	<Element>
  		<GivenName>Same Plan Notification</GivenName>
- 		<Title>Invalid template identifier - New collaboration template not added.</Title>
+ 		<Title>Invalid template identifier - New collaboration model not added.</Title>
  	</Element>
 
  	<Element>
  		<GivenName>Settings Changed Notification Name</GivenName>
- 		<Name>Settings changed for template</Name>
+ 		<Name>Settings changed for model</Name>
  	</Element>
  	
  	<Element>
  		<GivenName>Invalid Template Notification Name</GivenName>
- 		<Name>Invalid template identifier - New collaboration template not added.</Name>
+ 		<Name>Invalid model identifier - New collaboration model not added.</Name>
  	</Element>
  	
  	<Element>
@@ -57,7 +57,7 @@
  	
  	<Element>
  		<GivenName>Plan Name</GivenName>
- 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newPlanUri')]</Xpath>
+ 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:newModelUri')]</Xpath>
  		<Name></Name>
  		<Id>id46</Id>
     	<PartialLinkText></PartialLinkText>
@@ -107,9 +107,9 @@
  	
  	<Element>
  		<GivenName>Owner Name</GivenName>
- 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:planProperties:planOwner')]</Xpath>
+ 		<Xpath>//input[contains(@name,'contentsContainer:settings:tabs:panel:settingsContainer:modelProperties:modelOwner')]</Xpath>
  		<Name></Name>
- 		<Id>id12b</Id>
+ 		<Id>id81</Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
     	<ClassName></ClassName>

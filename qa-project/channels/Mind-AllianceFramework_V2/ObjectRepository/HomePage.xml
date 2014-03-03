@@ -34,7 +34,7 @@
 	
 	<Element>
 		<GivenName>Collaboration Plans Link</GivenName>
-		<LinkText>COLLABORATION PLANS</LinkText>
+		<LinkText>COLLABORATION COMMUNITIES</LinkText>
 	</Element>
 	
 	<Element>
@@ -182,7 +182,7 @@
  	<Element>
  		<GivenName>Collaboration Plans</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
-    	<LinkText>Collaboration Plans</LinkText>
+    	<LinkText>Collaboration Models</LinkText>
  	</Element>
  	
  	<Element>
