@@ -151,15 +151,6 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Enter Feedback");
 	 		
-	 		//Select Suggestion Option
-	 		stepNo++;
-	 		description="Select Suggestion option";
-	 		headerController.clickSendFeedbackAsSuggestion();
-	 	    // Write log			
-	 		LogFunctions.writeLogs(description);
-	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Select Suggestion option");
-	 		
 	 		// Check Urgent Checkbox
 	 		stepNo++;
 	 		description="Check Urgent Checkbox";
@@ -168,7 +159,7 @@ public class CH0009_SendFeedbackAsUrgent extends TestCase {
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Check Urgent Checkbox");
-	 		
+
 	 		//Click Send button
 	 		stepNo++;
 	 		description="Click Send Button";

@@ -135,7 +135,7 @@ public class CA0033_UpdateOwnerName extends TestCase {
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlan"));
+			channelsAdmin.clickAddPlanButton(testData.get("AutomationTestPlanNew"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -262,6 +262,7 @@ public class CA0033_UpdateOwnerName extends TestCase {
 	        Element oXmlEleCA0033_UpdateOwnerName = (Element) eleCA0033_UpdateOwnerName;
 	       	
 	        this.testData.put("AutomationTestPlan",oXmlEleCA0033_UpdateOwnerName.getElementsByTagName("automationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AutomationTestPlanNew",oXmlEleCA0033_UpdateOwnerName.getElementsByTagName("automationTestPlanNew").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AuthorAutomationTestPlan",oXmlEleCA0033_UpdateOwnerName.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AuthorAutomationTestPlan1",oXmlEleCA0033_UpdateOwnerName.getElementsByTagName("authorAutomationTestPlan1").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleCA0033_UpdateOwnerName.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
