@@ -94,7 +94,7 @@ public class Segment extends ModelObject {
 
     @Override
     public String getKindLabel() {
-        return "Template segment";
+        return "Model segment";
     }
 
     public Event getEvent() {
