@@ -125,10 +125,6 @@ public class ChannelsAdmin {
 	{
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
-		try{
-			Thread.sleep(3500);
-		}
-		catch(Exception e){}
 		
 		//Check whether the "Settings Changed" notification appears
 		elementController.requireElementSmart(fileName,"Settings Changed Notification",GlobalVariables.configuration.getAttrSearchList(), "Settings Changed Notification");
@@ -261,19 +257,12 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 			
-		// Assertion: Verify that "User 1" is added
-		try{
-			Thread.sleep(4000);
-		}
-		catch(Exception e){}
 //		if(userName.equals(userName))
 //		{
-//			elementController.requireElementSmart(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
-//			String tabTextInPage=UIActions.getText(fileName,"Settings changed notification for users",GlobalVariables.configuration.getAttrSearchList(), "Settings changed notification for users");
-//			String tabTextInXML=dataController.getPageDataElements(fileName,"Settings changed notification for users Name" , "Name");
-//			if(!tabTextInPage.contains(tabTextInXML)){
-//			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-//			}
+//			
+//			String alert=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
+//			elementController.waitForElement("Title", "Failed: "+userName+" is already taken");
+//			UIActions.assertAlert(alert);
 //		}
 		
 	}

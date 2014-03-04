@@ -2238,6 +2238,15 @@ public class PlanPage {
 		UIActions.clearTextBox(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
 		UIActions.enterValueInTextBox(taskName,fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
 		UIActions.enterKey(Keys.TAB);
+		
+		// Assertion: Verify if the Task is added
+		elementController.requireElementSmart(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Textbox of Task");
+		taskName=UIActions.getText(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Textbox of Task");
+		
+		if(!taskName.contains(taskName)){
+			throw new UIAutomationException("Textbox of Task not selected");
+		}
+		
 	}
 	/**
 	 * Enters information in receives panel
@@ -2406,9 +2415,9 @@ public class PlanPage {
 		
 		Select secondRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(secondRatedDropDownList);
-		UIActions.selectByTextAndClick(High);
-		
+		UIActions.selectByText(High);
 	}
+	
 	/**
 	 * Select option from Occurring dropdown
 	 * @param occurring
@@ -2743,22 +2752,11 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
 		UIActions.click(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
 		UIActions.enterValueInTextBox(eventName,fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		UIActions.enterKey(Keys.TAB);
 		
-//		// Check checkbox of event
-//		elementController.requireElementSmart(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
-//		UIActions.click(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
-//		
 		// Verify event is added
 		elementController.requireElementSmart(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
 		String eventsInPage=UIActions.getText(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
-		
 		if(!eventsInPage.contains(eventName)){
 			throw new UIAutomationException("Event "+eventName+" is not added.");
 		}
@@ -4235,12 +4233,10 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void deleteEvent(String eventName) throws UIAutomationException{
-//		getEvent(eventName);
 		elementController.requireElementSmart(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
 		UIActions.click(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
 		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Event", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
-		
 	}
 	/**
 	 * Gets list of events

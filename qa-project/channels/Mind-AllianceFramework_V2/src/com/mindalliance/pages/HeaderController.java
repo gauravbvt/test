@@ -26,6 +26,7 @@ public class HeaderController {
      */
    
 	public void signOut() throws UIAutomationException{
+		UIActions.sendRefresh();
 		elementController.requireElementSmart(fileName, "Sign Out", GlobalVariables.configuration.getAttrSearchList(), "Sign Out Button");
 		UIActions.click(fileName, "Sign Out", GlobalVariables.configuration.getAttrSearchList(), "Sign Out Button");
 		
@@ -83,19 +84,13 @@ public class HeaderController {
 	public void clickSendButton() throws UIAutomationException{
 	    elementController.requireElementSmart(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
 	    UIActions.click(fileName, "Send Feedback Button", GlobalVariables.configuration.getAttrSearchList(), "Send Feedback Button");
-	    try{
-			Thread.sleep(3500);
-			}
-			catch(Exception e){}
-
+	    
 	    elementController.requireElementSmart(fileName,"Feedback Sent notification",GlobalVariables.configuration.getAttrSearchList(), "Feedback Sent notification");
 		String tabTextInPage=UIActions.getText(fileName,"Feedback Sent notification",GlobalVariables.configuration.getAttrSearchList(), "Feedback Sent notification");
 		String tabTextInXML=dataController.getPageDataElements(fileName,"Send Feedback Notification" , "Name");
 		if(!tabTextInPage.contains(tabTextInXML)){
 			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
 		}
-		
-		
 	}
 	
 	/**
