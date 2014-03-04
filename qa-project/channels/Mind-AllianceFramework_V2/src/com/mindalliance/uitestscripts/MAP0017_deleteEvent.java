@@ -144,21 +144,6 @@ public class MAP0017_deleteEvent extends TestCase{
 			planPage.enterSegmentName(testData.get("SegmentForDeleteEvent"));
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");	
 			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
- 		    // Click on 'Add Event to The Plan Segment' under 'Show' pop up menu
- 			stepNo++;
-			description="Add Event To The Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Event To The Plan Segment");	
-			
  			//Click on Scenario tab in the 'About Plan Segment' window
 			stepNo++;
 			description="Scenario Tab in the About Plan Segment window";
@@ -207,7 +192,7 @@ public class MAP0017_deleteEvent extends TestCase{
  		    // Enter second event
 			stepNo++;
 			description="Enter Second Event";
- 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
+ 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event"));
  			//Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
@@ -225,7 +210,7 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Verify event is added
  			stepNo++;
 			description="Event Is Added to The Plan Segment";
-			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event2"));
+			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

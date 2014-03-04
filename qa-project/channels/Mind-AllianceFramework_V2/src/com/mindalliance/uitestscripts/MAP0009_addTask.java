@@ -148,7 +148,7 @@ public class MAP0009_addTask extends TestCase{
 			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			planPage.enterSegmentName(testData.get("SegmentForAddRoleJurisdiction"));
+			planPage.enterSegmentName(testData.get("SegmentForAddTask"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -185,33 +185,33 @@ public class MAP0009_addTask extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");	
  			
-			// Click on 'Move Tasks' under 'Actions' pop up menu
- 			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");	
+//			// Click on 'Move Tasks' under 'Actions' pop up menu
+// 			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");	
  			
-			// Verify task is present 
- 			stepNo++;
-			description="Task Added Successfully";
-			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");	
- 			
-			// Close Task mover window
- 			stepNo++;
-			description="Close Task Mover Window";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover Window");	
+//			// Verify task is present 
+// 			stepNo++;
+//			description="Task Added Successfully";
+//			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");	
+// 			
+//			// Close Task mover window
+// 			stepNo++;
+//			description="Close Task Mover Window";
+//			planPage.closeTaskMoverWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover Window");	
  			
 			// Close Segment window
  			stepNo++;

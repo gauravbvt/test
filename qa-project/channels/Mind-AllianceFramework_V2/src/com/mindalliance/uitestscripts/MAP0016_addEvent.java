@@ -148,21 +148,21 @@ public class MAP0016_addEvent extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");	
 			
-			// Close Segment window
- 			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");	
-			
-			// Click on 'Add Event to The Plan Segment' under 'Show' pop up menu
- 			stepNo++;
-			description="Add Event To The Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Event To The Plan Segment");	
+//			// Close Segment window
+// 			stepNo++;
+//			description="Close About Plan Segment";
+//			planPage.closeSegmentWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");	
+//			
+//			// Click on 'Add Event to The Plan Segment' under 'Show' pop up menu
+// 			stepNo++;
+//			description="Add Event To The Plan Segment";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			Log4J.getlogger(this.getClass()).info(testCaseId +"Add Event To The Plan Segment");	
 			
 			//Click on Scenario tab in the 'About Plan Segment' window
 			stepNo++;
@@ -172,15 +172,6 @@ public class MAP0016_addEvent extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Scenario Tab in the About Plan Segment window");	
-			
-			// Select Responding from Phase dropdown list
-			stepNo++;
-			description="Select option from Phase Dropdown List";
-			planPage.selectFromPhaseDropdown(testData.get("Responding"));
-			//Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Select option from Phase Dropdown List");	
 			
 			// Enter event
 			stepNo++;
@@ -212,7 +203,7 @@ public class MAP0016_addEvent extends TestCase{
  		    // Enter second event
  			stepNo++;
  			description="Enter Second Event";
- 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
+ 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event"));
  		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -227,15 +218,15 @@ public class MAP0016_addEvent extends TestCase{
  		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  		 	Log4J.getlogger(this.getClass()).info(testCaseId +"Select option from Second Rated Dropdown");	
 			
- 		/*	// Verify event is added
-			stepNo++;
-			description="Event Added To About Plan Segment";
-			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event2"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event Added To About Plan Segment");	
-			*/
+// 			// Verify event is added
+//			stepNo++;
+//			description="Event Added To About Plan Segment";
+//			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Event Added To About Plan Segment");	
+//			
 			// Close Segment window
 			stepNo++;
 			description="Closed About Plan Segment";
