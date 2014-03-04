@@ -177,11 +177,12 @@ public class UIActions {
 				optionsList.get(option).click();
 				optionsList.get(option).click();
 				
-				enterKey(Keys.ENTER);				
+				enterKey(Keys.ENTER);
 				break;
 			}
 		}
 	}
+	
 	/**
 	 * Selects value from dropdown
 	 * @param text
