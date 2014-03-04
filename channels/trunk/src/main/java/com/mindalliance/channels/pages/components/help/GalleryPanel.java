@@ -35,7 +35,7 @@ public class GalleryPanel extends AbstractUpdatablePanel {
 
     private static Map<String,List<GalleryGroup>> GROUPS;
 
-    // todo - get gallery content from XML file
+    // todo - get gallery content from file
     static {
         GROUPS = new HashMap<String, List<GalleryGroup>>();
         // Visualizations in Channels Planner
@@ -55,6 +55,7 @@ public class GalleryPanel extends AbstractUpdatablePanel {
                 .add( "chainsOfCommand", "Chains of command", "Participants can see who they report to and who report to them given their current participation in the collaboration community. " )
                 .add( "requirements", "Collaboration requirements", "Planners can define requirements for how member organizations ought to share information. The diagram shows to what extent these requirements would be satisfied should organizations follow the plan and carry out their checklists." )
                 .add( "checklistsReport", "Checklists", "Each participant in a collaboration community has access to checklists generated based on the participant's current roles and responsibilities in member organizations. A checklist describes what triggers a task assignable to the participant, the steps, including the sharing of information, by which the task is to be carried out, and it provides the contact information of all involved with this task.")
+                .add( "issuesReport", "Issues report", "The issues report summarizes, categorizes and prioritizes all the issues in a collaboration community that were detected by Channels or were reported by planners.")
         );
         GROUPS.put( "planner", planner_groups );
         // Visualizations for others

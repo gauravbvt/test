@@ -52,7 +52,7 @@ public class CollaborationModel extends ModelObject implements ModelObjectContex
      */
     private static final int SHORT_NAME_LENGTH = 30;
     /**
-     * Whether the plan is meant as a template.
+     * Whether viewable by all.
      */
     private boolean viewableByAll;
 
@@ -740,7 +740,7 @@ public class CollaborationModel extends ModelObject implements ModelObjectContex
 
     @Override
     public String getKindLabel() {
-        return "Template";
+        return "Model";
     }
 
 }

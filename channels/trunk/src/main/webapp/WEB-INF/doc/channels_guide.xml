@@ -166,7 +166,7 @@
                     <description>
                         A '''goal-driven strategy''' focuses on achieving organizational goals in each scenario.
 
-                        [[File:template_strategies_goal_driven.png|The goal-driven strategy]]
+                        [[File:model_strategies_goal_driven.png|The goal-driven strategy]]
 
                         When applying this strategy, model developers...
 
@@ -191,7 +191,7 @@
                     <description>
                         An '''effects-driven strategy''' focuses on the consequences of events and on the impacts of communicating.
 
-                        [[File:template_strategies_effects_driven.png|The effects-driven strategy]]
+                        [[File:model_strategies_effects_driven.png|The effects-driven strategy]]
 
                         When applying this strategy, model developers...
 
@@ -218,7 +218,7 @@
                     <description>
                         An ''issues-drive''' focuses on strategy focuses on eliminating or waiving outstanding issues until none are outstanding.
 
-                        [[File:template_strategies_issues_driven.png|The issues-driven strategy]]
+                        [[File:model_strategies_issues_driven.png|The issues-driven strategy]]
 
                         When applying this strategy, model developers...
 
@@ -414,9 +414,9 @@
                     <description>A collaboration community defines how identified individuals in positions of responsibility within organizations
                         are expected to act and communicate in anticipated planning scenarios.
 
-                        [[File:collaboration_plan_illustration.png|Collaboration community ]]
+                        [[File:collaboration_community_illustration.png|Collaboration community ]]
 
-                        A collaboration community  is based on a production version of a collaboration model. [[File:collaboration_plan_based_on_template.png|Collaboration community s are based on collaboration models]]
+                        A collaboration community  is based on a production version of a collaboration model. [[File:collaboration_community_based_on_model.png|Collaboration community s are based on collaboration models]]
 
                         The model defines...
 
@@ -465,7 +465,7 @@
                         It expresses collaboration rules and practices in terms of roles and it uses placeholders to
                         represent what might change during a collaboration or according to its context.
 
-                        [[File:collaboration_template_illustration.png|A collaboration model captures generally applicable collaboration rules and practices]]
+                        [[File:collaboration_model_illustration.png|A collaboration model captures generally applicable collaboration rules and practices]]
 
                         A collaboration model is defined in terms of...
 
@@ -481,7 +481,7 @@
                         A model also identifies the positions (aka organizational roles) that make up the collaborating
                         organizations. Users participate in the collaboration community s based on a model by being assigned to one or more positions defined in the model.
 
-                        A collaboration model has versions. [[File:collaboration_template_versions.png|Collaboration model versions]] The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Communities can only adopt the latest production version of a model.
+                        A collaboration model has versions. [[File:collaboration_model_versions.png|Collaboration model versions]] The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Communities can only adopt the latest production version of a model.
                     </description>
                 </item>
             </topic>
@@ -653,7 +653,7 @@
                         When a user receives checklists from being assigned to positions assigned to tasks, the checklists
                         are personalized with contact names and information of other users who participate in positions the user collaborates with.
 
-                        [[File:checklists_in_templates_and_plans.png|Checklists defined in models are personalized in communities]]
+                        [[File:checklists_in_models_and_communities.png|Checklists defined in models are personalized in communities]]
 
                         A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
 
@@ -726,7 +726,7 @@
                         * create a new collaboration community by first selecting the production version of a collaboration model on which the community is to be based, and then pressing the "Start it" button - you will be the founding planner for this community,
                         * access a collaboration community visible to you (select the Go button next to its name in the list of communities).
 
-                        [[File:collaboration_plans_page.png|Collaboration communities page]]
+                        [[File:collaboration_communities_page.png|Collaboration communities page]]
                     </description>
                 </item>
                 <next section="community-page" topic="about-community-page"/>
@@ -741,33 +741,33 @@
 
                         As a user, you can decide to participate in positions (roughly, organizational roles) that are open to participation by all.
 
-                        [[File:plan_user_managing_participation.png|User-managed participation]]
+                        [[File:community_user_managing_participation.png|User-managed participation]]
 
                         If you created the collaboration community, you are the initial collaboration planner for this community.
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
 
-                        [[File:plan_planner_authorizing.png|Authorizing planners]]
+                        [[File:community_planner_authorizing.png|Authorizing planners]]
 
                         A newly created collaboration community is initially closed for participation. As a planner, you
                         decide when to open it (or later close it) for participation. The collaboration plan can not be opened
-                        for participation [[File:plan_opening_participation.png|Opening a community for participation]]
+                        for participation [[File:community_opening_participation.png|Opening a community for participation]]
                         until the model's locale has been given an actual location, if it is a placeholder.
 
                         As a planner, you can name the community, describe it and localize it.
                         You can also update it to a new version of the collaboration model if one is detected by Channels.
 
-                        [[File:plan_setting_up.png|Setting up a collaboration community]]
+                        [[File:community_setting_up.png|Setting up a collaboration community]]
 
                         As a planner you can set collaboration requirements for the collaboration community.
                         An issue is raised by Channels for each requirement that is not met.
 
-                        [[File:plan_requirements_page.png|Community requirements page]]
+                        [[File:community_requirements_page.png|Community requirements page]]
 
                         A community is localized by resolving placeholder places from the model to known locations.
                         At a minimum, the placeholder locale of the adopted model, if identified, needs
                         to be resolved. Until it is, a planner can not open the community for participation.
 
-                        [[File:template_locale.png|Collaboration model locale]]
+                        [[File:model_locale.png|Collaboration model locale]]
 
                         As a planner, you are automatically a guest of the adopted collaboration model. If you are a guest or
                         a developer of the collaboration model upon which the community is based, you can access it.
@@ -776,39 +776,39 @@
                         all communities), in addition to the known organizations defined by the community's collaboration model
                         (they automatically participate).
 
-                        [[File:plan_registering_orgs.png|Registering organizations in a community]]
+                        [[File:community_registering_orgs.png|Registering organizations in a community]]
 
                         You can then assign known organizations (registered and from the model) to organization placeholders defined in the model.
 
-                        [[File:plan_participation_organizations.png|Managing organization participation in a community]]
+                        [[File:community_participation_organizations.png|Managing organization participation in a community]]
 
                         You can also assign any and all users to positions that need to be filled.
 
-                        [[File:plan_participation_users.png|User filling into positions a community]]
+                        [[File:community_participation_users.png|User filling into positions a community]]
 
                         As a planner, you can define requirements on the collaboration and visualize the extent
                         to which they are fulfilled given the current participation.
 
-                        [[File:plan_requirements_page.png|Community requirements]]
+                        [[File:community_requirements_page.png|Community requirements]]
 
                         As a planner, you can view all issues detected in and reported about the collaboration community.
                         You can waive issues that are "waivable".
 
-                        [[File:plan_issues_managing.png|Managing a community's issues]]
+                        [[File:community_issues_managing.png|Managing a community's issues]]
 
                         You can also see all issues, with metrics, in the community issues report
 
-                        [[File:plan_issues_report.png||Community issues report]]
+                        [[File:community_issues_report.png||Community issues report]]
 
                         If, as a participant, you are assigned to a position where you supervise other positions, you can assign
                         users to these positions, subject to some constraints, and subject to they accepting the
                         assignment. You are also responsible for confirming these assignments in order to activate them.
 
-                        [[File:plan_participation_confirmation.png|Confirming supervised participation]]
+                        [[File:community_participation_confirmation.png|Confirming supervised participation]]
 
                         As a participant, you can access your collaboration checklists.
 
-                        [[File:plan_checklists_accessing.png|Accessing the community's checklists]]
+                        [[File:community_checklists_accessing.png|Accessing the community's checklists]]
 
                         You can also access the surveys you take part in.
 
@@ -869,7 +869,7 @@
                     <description>You can accept to participate in positions that are open to all users or in positions that have
                         been assigned to you by authorized users (planners or your supervisors).
 
-                        [[File:plan_user_managing_participation.png|User-managed participation]]
+                        [[File:community_user_managing_participation.png|User-managed participation]]
 
                         By checking a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
                         this position. By un-checking an already checked box, you unilaterally resign the assignment.
@@ -877,7 +877,7 @@
                         By pressing the "command chains" icons next to the help icon, you can see your chains of command
                         defined by your participation and that of other users in the community.
 
-                        [[File:plan_chains_of_command.png|Chains of command in a plan]]
+                        [[File:community_chains_of_command.png|Chains of command in a plan]]
                     </description>
                 </item>
             </topic>
@@ -887,7 +887,7 @@
                     <description>Based on your user privileges or current participation, other assignments in the
                         collaboration community's organization may be available to you.
 
-                        [[File:plan_user_managing_participation.png|User-managed participation]]
+                        [[File:community_user_managing_participation.png|User-managed participation]]
 
                         First select an organization where a desired position would be listed and then select the position.
 
@@ -901,7 +901,7 @@
                 <item>
                     <description>This is a list of positions your participation as await confirmation by your supervisors.
 
-                        [[File:plan_user_managing_participation.png|User-managed participation]]
+                        [[File:community_user_managing_participation.png|User-managed participation]]
 
                         You can withdraw your participation request by un-checking the box next to the position.
                     </description>
@@ -917,7 +917,7 @@
                     <description>As a collaboration planner, the ''Collaboration Requirements'' page enables you to define
                         information sharing requirements between organizations participating in the community.
 
-                        [[File:plan_requirements_page.png|Community requirements page]]
+                        [[File:community_requirements_page.png|Community requirements page]]
 
                         You can then examine to what extent each requirement can be satisfied by the applicable pairs of
                         organizations (information source-sink pairs), should they follow the adopted collaboration model.
@@ -965,7 +965,7 @@
                         Documents can be attached to a requirement and planners can report issues
                         about the definition of a requirement.
 
-                        [[File:plan_requirement_issues.png| Community requirement issues]]
+                        [[File:community_requirement_issues.png| Community requirement issues]]
 
                         If information to be communicated is not specified then any information will satisfy the requirement.
                         If the sources are not specified then any user in any position in any organization can be a source satisfying the requirements.
@@ -977,7 +977,7 @@
                         * tags applied to information flows in the collaboration model from which the communication commitments are derived (any information from a flow tagged by all the given tags will match)
                         * element names (any information with all the named elements will match)
 
-                        [[File:plan_requirement_info.png|Community requirement - Specifying information]]
+                        [[File:community_requirement_info.png|Community requirement - Specifying information]]
 
                         If the information is not specified, then all communication commitments would match the information requirement.
 
@@ -987,7 +987,7 @@
                         * the organization the agent works for
                         * the placeholder organization the above organization participates as
 
-                        [[File:plan_requirement_source.png|Community requirement - Specifying source]]
+                        [[File:community_requirement_source.png|Community requirement - Specifying source]]
 
                         The commitments can be further specified in terms of how the sources would acquire the information to be communicated.
                         This is done by naming none, any or all of...
@@ -1017,7 +1017,7 @@
                         The required redundancy of distinct sources per receiver is defined in terms of a minimum, preferred,
                         and an optional maximum number.
 
-                        [[File:plan_requirement_sources_per_receiver.png|Community requirement - Sources per receiver]]
+                        [[File:community_requirement_sources_per_receiver.png|Community requirement - Sources per receiver]]
 
                     </description>
                 </item>
@@ -1029,7 +1029,7 @@
                     <description>
                         Requirement analysis measures how well the requirements are satisfied by participation in the community.
 
-                        [[File:plan_requirement_analysis.png|Community requirement analysis]]
+                        [[File:community_requirement_analysis.png|Community requirement analysis]]
 
                         Analysis consists in doing the following for each requirement ...
 
@@ -1070,7 +1070,7 @@
                         * review, as planner, the participation issues detected by Channels,
                         * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
 
-                        [[File:plan_participation_page.png|Community participation page]]
+                        [[File:community_participation_page.png|Community participation page]]
                     </description>
                 </item>
                 <next section="participation-page" topic="registering-organizations"/>
@@ -1095,7 +1095,7 @@
                        into the community (or globally into all communities) and then, optionally, profile them. Only planners
                        can register new organizations and change the profiles of registered organizations.
 
-                       [[File:plan_registering_orgs.png|Organizations registered and known to the community]]
+                       [[File:community_registering_orgs.png|Organizations registered and known to the community]]
 
                        An organization is registered into a community by giving its name and by indicating whether it is to be
                        known to the community alone or to all communities hosted
@@ -1114,7 +1114,7 @@
                        * Identifying its parent organization (optional)
                        * Providing contact information for the organization as a whole
 
-                       [[File:plan_organization_profile.png|Editing the profile of an organization registered in the community]]
+                       [[File:community_organization_profile.png|Editing the profile of an organization registered in the community]]
 
                        The profile of a known organization defined in the collaboration model can not be modified by planners.
                    </description>
@@ -1133,7 +1133,7 @@
                         however await authorized participants in the community to identify which organizations known to the
                         community participate as these placeholders.
 
-                        [[File:plan_participation_organizations.png|Managing organization participation]]
+                        [[File:community_participation_organizations.png|Managing organization participation]]
 
                         A participant is authorized to associate a known organization to a placeholder organization if
                         that user is a planner or participates in a position that makes him/her a custodian of that
@@ -1164,7 +1164,7 @@
                         assigned to the position by supervisors or by planners. A supervisor for a hiring position (if
                         the position has one) is any user who is participating in a position that supervises the hiring position.
 
-                        [[File:plan_participation_users.png|Managing user participation]]
+                        [[File:community_participation_users.png|Managing user participation]]
 
                         A position might accept only one user or some number of users participating in it. This is set
                         by model developers in the model and can not be altered in a community by planners.
@@ -1199,7 +1199,7 @@
                         As a participant, you are presented with all user participation that you either need to confirm or that
                         you have already confirmed. You then confirm participation or un-confirm participation you have confirmed.
 
-                        [[File:plan_participation_confirmation.png|Confirming supervised participation]]
+                        [[File:community_participation_confirmation.png|Confirming supervised participation]]
 
                         If there are no confirmations past or requested, the pane is empty.
                     </description>
@@ -1213,7 +1213,7 @@
                         You can browse, filter and search all participation by users in hiring positions of participating organizations.
                         You can also see all hiring positions that are empty and need to be filled by users.
 
-                        [[File:plan_participation_users_viewing.png|Participation by users and unfilled positions]]
+                        [[File:community_participation_users_viewing.png|Participation by users and unfilled positions]]
 
                     </description>
                 </item>
@@ -1228,7 +1228,7 @@
                         You can resign as planner if you are not the last one. You can not "resign" someone else unless
                         you are a Channels administrator.
 
-                        [[File:plan_planner_authorizing.png|Authorizing users as planners]]
+                        [[File:community_planner_authorizing.png|Authorizing users as planners]]
 
                         Note that when a user creates a new collaboration community (any user can do this), that user becomes the first
                         and founding planner.
@@ -1255,7 +1255,7 @@
 
                         Planners can waive an issue if it can be waived ("waivability" depends on the kind of issue).
 
-                        [[File:plan_issues_managing.png|Community issues]]
+                        [[File:community_issues_managing.png|Community issues]]
                     </description>
                 </item>
                 <next section="participation-page" topic="about-participation-page"/>
@@ -1270,7 +1270,7 @@
                     <description>The ''All Checklists'' page let's you access
                         all your collaboration checklists and those of all participants you are allowed to see.
 
-                        [[File:plan_checklists_accessing.png|All checklists page]]
+                        [[File:community_checklists_accessing.png|All checklists page]]
 
                         If you are a planner, you can see the personalized checklists of all users and the generic checklists for all positions.
 
@@ -1343,13 +1343,13 @@
                 <item>
                     <description>The issues report provides metrics on all the issues found in a collaboration community.
 
-                        [[File:plan_issues_report.png|Community issues report]]
+                        [[File:community_issues_report.png|Community issues report]]
 
                         The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
 
                         Individual issues are revealed by clicking on the text of an issue kind.
 
-                        [[File:plan_issues_report_expanded.png|Expanded issues]]
+                        [[File:community_issues_report_expanded.png|Expanded issues]]
                     </description>
                 </item>
             </topic>
@@ -1778,14 +1778,14 @@
                     <description>A task with the same name as another task overrides it if it assigns a subset of the
                         agents the other task assigns.
 
-                        [[File:template_task_overriding.png|How a task overrides another]]
+                        [[File:model_task_overriding.png|How a task overrides another]]
 
                         An agent is assigned to the overriding task (the more exclusive one), not the overridden task.
 
                         An information flow with the same name as another flow overrides it if its source task and target task
                         both override the source and target tasks of the other flows.
 
-                        [[File:template_flow_overriding.png|Flow overriding]]
+                        [[File:model_flow_overriding.png|Flow overriding]]
 
                         Agents with commitments from a flow can not have commitments from an another flow
                         that's overridden by the first flow.
@@ -1931,7 +1931,7 @@
                         * a self-assigned research sub-task
                         * a self-assigned follow up sub-task
 
-                        [[File:template_checklist_editor_steps.png|Steps in a checklist]]
+                        [[File:model_checklist_editor_steps.png|Steps in a checklist]]
 
                         A step may be required or optional. A step may have identify the completion of other steps as
                         pre-requisites.
@@ -1943,7 +1943,7 @@
                         The communication steps of a checklist are implied by the flows in and out of a task, to and
                         from other agents(requested info to be received and notifications to be sent).
 
-                        [[File:template_checklist_communication_steps.png|Communication steps from flows]]
+                        [[File:model_checklist_communication_steps.png|Communication steps from flows]]
 
                         If a flow triggers the task the checklist is for and if the flow is marked as requesting confirmation
                         of receipt, then a confirm receipt communication step is automatically added to the checklist.
@@ -1951,7 +1951,7 @@
                         The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to
                         self and followup sub-tasks are triggering notifications to self.
 
-                        [[File:template_checklist_subtask_steps.png|Subtask steps from flows]]
+                        [[File:model_checklist_subtask_steps.png|Subtask steps from flows]]
 
                         The conditions on executing steps can be the goals achieved and events triggered by the task, or
                         other stated conditions.
@@ -1993,7 +1993,7 @@
                     <description>As a model developer, you can access collaboration model editor and a summary report
                         on all issues found in the model.
 
-                        [[File:template_page.png|A collaboration model home page]]
+                        [[File:model_page.png|A collaboration model home page]]
 
                         As a developer or authorized user you can access the planning surveys you participate in and the
                         feedback you provided.
@@ -2025,7 +2025,7 @@
                         * report issues in addition to those automatically detected by Channels
                         * view analytics to better understand the consequences, strengths and weaknesses of the model
 
-                        [[File:template_editor_page.png|The collaboration model editor]]
+                        [[File:model_editor_page.png|The collaboration model editor]]
 
                         The collaboration model editor is composed of the panes...
 
@@ -2036,7 +2036,7 @@
                         * "Sent" pane
                         * Flow map issues pane (hidden unless revealed)
 
-                        [[File:template_editor_panes.png|The model editor's panes and content]]
+                        [[File:model_editor_panes.png|The model editor's panes and content]]
                     </description>
                 </item>
                 <next section="about-channels" topic="model-building-strategies"/>
@@ -2288,7 +2288,7 @@
                     <description>This shows the list of all model developers currently working on this collaboration
                         model.
 
-                        [[File:template_presence.png|Developers currently working on the model]]
+                        [[File:model_presence.png|Developers currently working on the model]]
 
                         You can also see the list of all authorized developers for this model, whether they are online
                         or not.
@@ -2301,7 +2301,7 @@
                     <description>This gives you the list of the most recent changes made to the model by yourself and
                         other developers. You can hide your own activities.
 
-                        [[File:template_activities.png|Records of the latest changes made to the model]]
+                        [[File:model_activities.png|Records of the latest changes made to the model]]
 
                         You can click on the name of the model element that was changed to quickly navigate to it.
                     </description>
@@ -2335,7 +2335,7 @@
                         an event and by the event itself. For examples, planning scenarios could be responding during an
                         earthquake (the event), or recovering after an earthquake.
 
-                        [[File:template_scoping_events_phases.png|Naming all events and event phases in scope]]
+                        [[File:model_scoping_events_phases.png|Naming all events and event phases in scope]]
 
                         The list of all events and phases within the scope of a model thus determines what planning
                         scenarios are within the scope of the collaboration model.
@@ -2374,7 +2374,7 @@
                 <item>
                     <description>Name the phases that are within the scope of the collaboration model.
 
-                        [[File:template_scoping_phases.png|Naming the event phases in scope]]
+                        [[File:model_scoping_phases.png|Naming the event phases in scope]]
 
                     </description>
                     <script>
@@ -2398,7 +2398,7 @@
                     <description>Name the events that are within the scope of the collaboration model.
                         Channels will now expect to see at least one segment for each combination of phase and event in scope.
 
-                        [[File:template_scoping_events.png|Naming the events in scope]]
+                        [[File:model_scoping_events.png|Naming the events in scope]]
 
                         Note that events can also be named anywhere they are used to define another model
                         element. When they are, they are automatically added to the scope of the model.
@@ -2416,7 +2416,7 @@
                         within the scope of this model and indicate which ones are expected to be involved in tasks (via assignments)
                         or in flows (via communication commitments), and thus be referenced in checklists.
 
-                    [[File:template_involvements.png|Stating expectations of involvement in the model]]
+                    [[File:model_involvements.png|Stating expectations of involvement in the model]]
                     </description>
                     <script>
                         <action>Edit the list of involved entities</action>
@@ -2434,7 +2434,7 @@
                     <description>All segments in the model are grouped either by event or by phase. They are
                         connected by cross-segment flows and by causation links.
 
-                        [[File:template_all_segments.png|All segments in a model, grouped and connected]]
+                        [[File:model_all_segments.png|All segments in a model, grouped and connected]]
 
                         A cross-segment flow is a flow from a task in one segment to a task in another. A causation link
                         is an event caused or terminated by a task in one segment that sets the conditions for another
@@ -2451,7 +2451,7 @@
                         From the top action menu, add new segment, then name it and identify the planning scenario
                         it addresses.
 
-                        [[File:template_segment_adding_removing.png|Adding and removing segments]]
+                        [[File:model_segment_adding_removing.png|Adding and removing segments]]
 
                     </description>
                     <script>
@@ -2479,7 +2479,7 @@
                         * attach documents to it
                         * add a new issue
 
-                        [[File:template_segment_details.png|Defining a segment's basic attributes]]
+                        [[File:model_segment_details.png|Defining a segment's basic attributes]]
                     </description>
                 </item>
                 <next section="scoping" topic="segment-scenario"/>
@@ -2496,7 +2496,7 @@
                         * rate the event severity that qualifies an event for this planning scenario
                         * specify a context in terms of other events occurring or having occurred
 
-                        [[File:template_segment_scenario.png|Defining a segment's scenario]]
+                        [[File:model_segment_scenario.png|Defining a segment's scenario]]
                     </description>
                 </item>
                 <next section="scoping" topic="segment-details"/>
@@ -2513,11 +2513,11 @@
                         * the organization, type or actual, whose goal it is,
                         * the severity/importance of the risk to be mitigated or gain to be achieved.
 
-                        [[File:template_segment_goals.png|Adding goals to a segment]]
+                        [[File:model_segment_goals.png|Adding goals to a segment]]
 
                         Naming and further describing the goal is optional.
 
-                        [[File:template_segment_goals_details.png|Adding to the definition of a goal]]
+                        [[File:model_segment_goals_details.png|Adding to the definition of a goal]]
                     </description>
                     <script>
                         <action>Set segment goals</action>
@@ -2567,7 +2567,7 @@
                     <description>You define a secrecy classification system by first giving it a unique name and then adding and ordering
                         uniquely named classification levels.
 
-                        [[File:template_classification_systems.png|Defining a classification system]]
+                        [[File:model_classification_systems.png|Defining a classification system]]
 
                     </description>
                     <script>
@@ -2597,7 +2597,7 @@
                         * The information needs and capabilities of tasks
                         * Information sharing flows connecting tasks
 
-                        [[File:template_flow_map_legend.png|Flow map legend]]
+                        [[File:model_flow_map_legend.png|Flow map legend]]
 
                         Using view controls in the left-hand side, you can...
 
@@ -2612,7 +2612,7 @@
                         * replace the task and flow forms by a table showing issues related to the selected flow or task
                         * show a legend about the flow map
 
-                        [[File:template_flow_map_view_controls.png|Flow map viewing controls]]
+                        [[File:model_flow_map_view_controls.png|Flow map viewing controls]]
 
                         A task is brought into focus for editing by clicking on it in the flow map. Flows can also be
                         opened for editing by clicking on them in the flow map.
@@ -2625,14 +2625,14 @@
                     <description>Add new task to a segment by clicking ''ADD'' in the Task panel or by selecting ''add
                         new task'' from the top Actions menu.
 
-                        [[File:template_task_adding.png|Adding a task to a segment]]
+                        [[File:model_task_adding.png|Adding a task to a segment]]
 
                         The newly created task is initially empty and presented as ''someone doing something''.
 
                         Any task in a segment can be removed, unless it is the last one, whether or not it is connected by flows
                         to other tasks.
 
-                        [[File:template_task_removing.png|Removing a task]]
+                        [[File:model_task_removing.png|Removing a task]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="define-task"/>
@@ -2642,15 +2642,15 @@
                 <item>
                     <description>Define a task by...
 
-                        [[File:template_task_definition_form.png|Accessing a task definition form]]
+                        [[File:model_task_definition_form.png|Accessing a task definition form]]
 
-                        * naming it [[File:template_task_definition_about.png|What the task is about]]
-                        * identifying the function it implements [[File:template_task_definition_function.png|The function the task implements]]
-                        * identifying where it is to be executed [[File:template_task_definition_location.png|Where the task is to be executed]]
-                        * profiling which agents will be assigned to it [[File:template_task_definition_assigned.png|The task's assignment profile]]
-                        * stating timing attributes [[File:template_task_definition_timing.png|The task's time-related attributes]]
-                        * what effects it is meant to have [[File:template_task_definition_effects.png|The intended effects of the task]]
-                        * and instructions and documentation for those assigned to the task [[File:template_task_definition_documentation.png|Documenting the task]]
+                        * naming it [[File:model_task_definition_about.png|What the task is about]]
+                        * identifying the function it implements [[File:model_task_definition_function.png|The function the task implements]]
+                        * identifying where it is to be executed [[File:model_task_definition_location.png|Where the task is to be executed]]
+                        * profiling which agents will be assigned to it [[File:model_task_definition_assigned.png|The task's assignment profile]]
+                        * stating timing attributes [[File:model_task_definition_timing.png|The task's time-related attributes]]
+                        * what effects it is meant to have [[File:model_task_definition_effects.png|The intended effects of the task]]
+                        * and instructions and documentation for those assigned to the task [[File:model_task_definition_documentation.png|Documenting the task]]
 
                         Note that as little and as much as wanted can be put into a task's definition.
 
@@ -2686,7 +2686,7 @@
                         * terminate the task (useful)
                         * or improve its execution
 
-                        [[File:template_flow_add.png|Adding a send or a receive]]
+                        [[File:model_flow_add.png|Adding a send or a receive]]
 
                         An information flow connecting one task to another can be built by first creating an information need and
                         then identifying a source task.
@@ -2703,12 +2703,12 @@
                         Sends panel. An info capability specifies info agents assigned to a task expect to acquire and
                         be able to share with others, and how and how quickly.
 
-                        [[File:template_flow_add.png|Adding a send or a receive]]
+                        [[File:model_flow_add.png|Adding a send or a receive]]
 
                         A flow connecting one task to another can be built by first creating an information capability and
                         then identifying a target task.
 
-                        [[File:template_capability_to_flow.png|From capability to flow]]
+                        [[File:model_capability_to_flow.png|From capability to flow]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="add-need"/>
@@ -2720,20 +2720,20 @@
                 <item>
                     <description>Specify an information need, capability or flow by...
 
-                        * what is to be communicated [[File:template_flow_about.png|What is to be communicated]]
-                        * requiring the information to be compliant with a named information product [[File:template_flow_info_product.png|Standardizing the information as an info product]]
-                        * listing the elements of information [[File:template_flow_eois|Defining the elements of information]]
-                        * indicating the intent and whether it is ''pushed'' (a notification) or ''pulled' (a requested answer) [[File:template_flow_mode_intent.png|The mode and intent of a communication]]
-                        * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets [[File:template_flow_restrictions.png|Restrictions on a flow]]
-                        * the communication channels to use, each including transmission medium and, optionally, a required format [[File:template_flow_channels.png|Communication channels]]
-                        * timeliness constraints [[File:template_flow_timing.png|Communication timeliness]]
-                        * if a flow to a ''middleman'', whether it can be bypassed [[File:template_flow_bypassing_intermediate.png|Permission to disintermediate]]
-                        * and documenting it [[File:template_flow_documentation.png|Documenting a send or receive]]
+                        * what is to be communicated [[File:model_flow_about.png|What is to be communicated]]
+                        * requiring the information to be compliant with a named information product [[File:model_flow_info_product.png|Standardizing the information as an info product]]
+                        * listing the elements of information [[File:model_flow_eois|Defining the elements of information]]
+                        * indicating the intent and whether it is ''pushed'' (a notification) or ''pulled' (a requested answer) [[File:model_flow_mode_intent.png|The mode and intent of a communication]]
+                        * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets [[File:model_flow_restrictions.png|Restrictions on a flow]]
+                        * the communication channels to use, each including transmission medium and, optionally, a required format [[File:model_flow_channels.png|Communication channels]]
+                        * timeliness constraints [[File:model_flow_timing.png|Communication timeliness]]
+                        * if a flow to a ''middleman'', whether it can be bypassed [[File:model_flow_bypassing_intermediate.png|Permission to disintermediate]]
+                        * and documenting it [[File:model_flow_documentation.png|Documenting a send or receive]]
 
                         A flow is defined by first adding an information need and then identifying a source task, or by
                         first adding an information capability and then identifying a target task.
 
-                        [[File:template_flow_source_target.png|Identifying a source or target task]]
+                        [[File:model_flow_source_target.png|Identifying a source or target task]]
 
                         What is to be communicated in a send or receive is a combination of...
 
@@ -2747,7 +2747,7 @@
                         to participants in a collaboration community. This will come into play when Channels supports the execution
                         of plans.
 
-                        [[File:template_flow_private_need_capability.png|Privacy of info needs and capabilities]]
+                        [[File:model_flow_private_need_capability.png|Privacy of info needs and capabilities]]
                     </description>
                     <script>
                         <action>Open the send/receive form</action>
@@ -2780,7 +2780,7 @@
                         * if produced, how it transforms , if at all, received elements
                         * if defining an info need, whether its delivery is subject to timeliness constraints
 
-                        [[File:template_flow_eois.png|Defining the elements of information]]
+                        [[File:model_flow_eois.png|Defining the elements of information]]
 
                         If the information to be sent or received is standardized as an information product, then the send/receive
                         inherits the information product's elements of information. Other elements of information can be added
@@ -2797,7 +2797,7 @@
                         that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info
                         need of another.
 
-                        [[File:template_flow_source_target.png|Identifying a source or target task]]
+                        [[File:model_flow_source_target.png|Identifying a source or target task]]
 
                         A sharing flow is created by connecting an info need or a capability to a task. The flow appears
                         in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
@@ -2831,12 +2831,12 @@
                 <item>
                     <description>You can see the list of all tasks that either override this task or are overridden by it.
 
-                        [[File:template_task_overrides.png|List of overridden tasks]]
+                        [[File:model_task_overrides.png|List of overridden tasks]]
 
                         A task is said to override another if the task names are the same (case is unimportant) and if the
                         agent assignment profile of the first task narrows the assignment profile of the other task.
 
-                        [[File:template_task_overriding.png|How a task overrides another]]
+                        [[File:model_task_overriding.png|How a task overrides another]]
 
                         In other words, any agent assigned to the overriding task would also be assigned to the overridden
                         task but not vice-versa. For example, a task "Detect threats" assigned to all Managers overrides
@@ -2859,7 +2859,7 @@
                         received, the notifications to be sent, the research and follow-up sub-tasks that are defined
                         for the task as flows.
 
-                        [[File:template_checklist_editor.png|Checklist editor]]
+                        [[File:model_checklist_editor.png|Checklist editor]]
 
                         These communication steps can not be removed from the checklist. Action steps, representing
                         simple activities requiring no communication or new information, can be added and removed.
@@ -2888,7 +2888,7 @@
                         * Events, if any, caused or terminated by the task
                         * Sharing capabilities acquired for or from successfully executing the task
 
-                        [[File:template_checklist_step_editor.png|Editing a step in a checklist]]
+                        [[File:model_checklist_step_editor.png|Editing a step in a checklist]]
 
                         A checklist must be confirmed to be deployed to participants as such. Any change to the implied
                         communication steps or to the action steps requires a re-confirmation.
@@ -2898,7 +2898,7 @@
                         as icons set between a start and stop icons. The process diagram shows when steps can be executed in no
                         particular order or in a sequence.
 
-                        [[File:template_checklist_editor_step_flow.png|Checklist editor open on a step and showing process flow]]
+                        [[File:model_checklist_editor_step_flow.png|Checklist editor open on a step and showing process flow]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="checklist-flow"/>
@@ -2909,7 +2909,7 @@
                 <item>
                     <description>The checklist flow diagram depicts how the steps in the checklist are to be executed.
 
-                        [[File:template_checklist_process_diagram.png|Checklist process diagram]]
+                        [[File:model_checklist_process_diagram.png|Checklist process diagram]]
 
                         The green dot represents start of execution and the red dot its end. Execution is from left to
                         right.
@@ -3445,7 +3445,7 @@
                         * actual organizations
                         * types of organizations
 
-                        [[File:template_analysis_network.png|Communication commitments between agents aggregated by types of organization]]
+                        [[File:model_analysis_network.png|Communication commitments between agents aggregated by types of organization]]
 
                         You can drill down on each commitment relationship to see the communication commitments it
                         summarizes.
@@ -3466,7 +3466,7 @@
                     <description>You can see the different ways in which this domain entity is involved in the model, and
                         then drill down.
 
-                        [[File:template_analysis_entities.png|Miscellaneous domain entity analytics]]
+                        [[File:model_analysis_entities.png|Miscellaneous domain entity analytics]]
                     </description>
                 </item>
             </topic>
@@ -3493,7 +3493,7 @@
 
                         Timeliness of delivery is examined whenever task in the dissemination have information needs that set timeliness constraints.
 
-                        [[File:template_analysis_dissemination_targets.png|Dissemination of element of information from selected task]] [[File:template_analysis_dissemination_sources.png|Dissemination of element of information to selected task]]
+                        [[File:model_analysis_dissemination_targets.png|Dissemination of element of information from selected task]] [[File:model_analysis_dissemination_sources.png|Dissemination of element of information to selected task]]
                     </description>
                 </item>
             </topic>
@@ -3503,7 +3503,7 @@
                     <description>You can visualize how the failure of a task or of a flow can cause the cascading
                         failures of useful tasks, thus jeopardizing the achievement of organizational goals.
 
-                        [[File:template_analysis_failure_impacts.png|Task failure analysis]]
+                        [[File:model_analysis_failure_impacts.png|Task failure analysis]]
 
                         Only useful tasks and critical flows are considered when doing failure impact analysis.
                     </description>
@@ -3518,13 +3518,13 @@
                     <description>Channels automatically detected issues about this model element. You or other
                         developers may also have reported issues about it.
 
-                        [[File:template_analysis_issue_detected.png|Issue detected]]
+                        [[File:model_analysis_issue_detected.png|Issue detected]]
 
                         Issues are reported in a number of places...
 
-                        * With the model element they are about [[File:template_analysis_issues_in_context.png|Issues in context]]
-                        * With all other issues in a table for browsing [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
-                        * In an issues report with metrics [[File:template_analysis_issues_report.png|Model issues report]] [[File:template_analysis_issues_report_expanded.png|Model issues report, expanded]]
+                        * With the model element they are about [[File:model_analysis_issues_in_context.png|Issues in context]]
+                        * With all other issues in a table for browsing [[File:model_analysis_issues_all.png|Browsing all issues in a model]]
+                        * In an issues report with metrics [[File:model_analysis_issues_report.png|Model issues report]] [[File:model_analysis_issues_report_expanded.png|Model issues report, expanded]]
 
                         Some issues detected by Channels can be waived (marked as false positives).
 
@@ -3532,7 +3532,7 @@
                         to edit their names, description, severity and remediation options. When editing remediation
                         options, start each one on a new line.
 
-                        [[File:template_analysis_issue_user_reporting.png|A developer can report an issue]]
+                        [[File:model_analysis_issue_user_reporting.png|A developer can report an issue]]
 
                         You can report a new issue by pressing the New button and then editing the issue. When
                         describing remediation options, start each one on a new line.
@@ -3578,7 +3578,7 @@
                     <description>All issues found in the model are listed in a paged table. You can sort them, filter
                         them, search on their names and drill down on them.
 
-                        [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
+                        [[File:model_analysis_issues_all.png|Browsing all issues in a model]]
                     </description>
                 </item>
                 <next section="improving" topic="resolving-issues"/>
@@ -3590,7 +3590,7 @@
                         Channels and by planners. The 'All issues" table aggregates all individual issues found in a
                         model.
 
-                        [[File:template_analysis_issues_all.png|Browsing all issues in a model]]
+                        [[File:model_analysis_issues_all.png|Browsing all issues in a model]]
                     </description>
                     <script>
                         <action>Open the All Issues table</action>
@@ -3625,7 +3625,7 @@
                     <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To
                         shrink a bloated segment, a new segment is usually created and tasks are moved to it.
 
-                        [[File:template_improving_task_mover.png|Task mover]]
+                        [[File:model_improving_task_mover.png|Task mover]]
                     </description>
                     <script>
                         <action>Transfer tasks</action>
@@ -3654,7 +3654,7 @@
                         * how the agents are employed (role, jurisdiction, organization)
                         * how the taxonomies of role, agent, organization etc. are defined
 
-                        [[File:template_improving_task_assignments.png|Verifying a task's assignments]]
+                        [[File:model_improving_task_assignments.png|Verifying a task's assignments]]
                     </description>
                     <script>
                         <action>See a task's assignments</action>
@@ -3672,7 +3672,7 @@
                         * what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
                         * whether an overriding flow prohibits a pairing of agents
 
-                        [[File:template_improving_commitments.png|Verifying a flow's communication commitments]]
+                        [[File:model_improving_commitments.png|Verifying a flow's communication commitments]]
                     </description>
                     <script>
                         <action>See communication commitments derived from a flow</action>
@@ -3692,7 +3692,7 @@
                         Agents are categorized by agent types, organization by organization types, events by other
                         events (events are always types) etc.
 
-                        [[File:template_improving_taxonomies.png|Validating domain entity taxonomies]]
+                        [[File:model_improving_taxonomies.png|Validating domain entity taxonomies]]
 
                         How entities are categorized largely determine the meaning of the tasks, flows, employments etc.
                         that are defined in terms of these entities.
@@ -3724,7 +3724,7 @@
                         large number of communication commitments. The ''checklists map'' makes it easy to see if the sharing
                         commitments generated from the model are the intended ones.
 
-                        [[File:template_improving_checklists_map.png|Using the checklists map]]
+                        [[File:model_improving_checklists_map.png|Using the checklists map]]
 
                         The map is focused on one agent or one organization (as an aggregate of agents). It shows the
                         commitments that involved that agent or organizations.
@@ -3769,7 +3769,7 @@
                     <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about
                         elements of the model or the model as a whole.
 
-                        [[File:template_learning_questionnaire.png|Composing a survey questionnaire]]
+                        [[File:model_learning_questionnaire.png|Composing a survey questionnaire]]
 
                         You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions
                         can be marked as required or optional.
@@ -3800,12 +3800,12 @@
                     <description>A survey is launched on the model or on a model element by applying a
                         questionnaire to it, usually from within its definition.
 
-                        [[File:template_learning_survey_launching.png|Launching a survey on model element]]
+                        [[File:model_learning_survey_launching.png|Launching a survey on model element]]
 
                         A survey about fixing an issue can be launched from where the issue is reported. The questionnaire
                         is automatically built to offer a choice of remediation options.
 
-                        [[File:template_learning_survey_launching_issue.png|Launching an issue remediation survey]]
+                        [[File:model_learning_survey_launching_issue.png|Launching an issue remediation survey]]
                     </description>
                     <script>
                         <action>View launched and launch-able surveys on a task</action>
@@ -3819,9 +3819,9 @@
                 <item>
                     <description>Once a survey is launched, it can be managed by...
 
-                        * inviting users to participate [[File:template_learning_survey_participation.png|Managing participation in a survey]]
-                        * looking at a preview of the survey [[File:template_learning_survey_preview.png|Previewing a survey]]
-                        * looking at the current answers from survey participants [[File:template_learning_survey_results.png|Looking up the answers to a survey]]
+                        * inviting users to participate [[File:model_learning_survey_participation.png|Managing participation in a survey]]
+                        * looking at a preview of the survey [[File:model_learning_survey_preview.png|Previewing a survey]]
+                        * looking at the current answers from survey participants [[File:model_learning_survey_results.png|Looking up the answers to a survey]]
                         * deactivating or reactivating the survey
                         * modifying the survey questionnaire - even after participants have started answering the survey
 
@@ -3848,7 +3848,7 @@
                     <description>Surveys can be launched on an issue that was detected. The questionnaire is
                         automatically generated based on the remediation options.
 
-                        [[File:template_learning_survey_launching_issue.png|Launching an issue remediation survey]]
+                        [[File:model_learning_survey_launching_issue.png|Launching an issue remediation survey]]
 
                         The questionnaire can be modified and extended while the survey is ongoing.
 
@@ -3878,7 +3878,7 @@
                     <description>Once a survey is launched, users can be invited to participate in it. Users can be
                         given a deadline to answer all of the required questions in a survey.
 
-                        [[File:template_learning_survey_participation.png|Managing participation in a survey]]
+                        [[File:model_learning_survey_participation.png|Managing participation in a survey]]
 
                         After the deadline has passed, the survey is considered late. Late participants can be
                         ''nagged'' (nags are sent by email).
@@ -3914,7 +3914,7 @@
 
                         Results can be viewed by opening the survey and selecting the Results tabs.
 
-                        [[File:template_learning_survey_results.png|Looking up the answers to a survey]]
+                        [[File:model_learning_survey_results.png|Looking up the answers to a survey]]
                     </description>
                     <script>
                         <action>See all launched surveys</action>
@@ -3939,7 +3939,7 @@
                         You can see all feedback provided about the collaboration model and reply to any of it.
                         The user can then reply back etc. or mark the question, problem or suggestion as resolved.
 
-                        [[File:template_learning_feedback_managing.png|Managing feedback about the model]]
+                        [[File:model_learning_feedback_managing.png|Managing feedback about the model]]
                     </description>
                     <script>
                         <action>Open feedback manager</action>
@@ -4084,7 +4084,7 @@
                         * rating the severity of the issue
                         * giving options for its remediation (start each option on a new line)
 
-                        [[File:template_analysis_issue_user_reporting.png|User-reported issues]]
+                        [[File:model_analysis_issue_user_reporting.png|User-reported issues]]
 
                     </description>
                 </item>

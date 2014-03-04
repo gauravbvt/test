@@ -42,7 +42,7 @@ public class FlowLegendPanel extends AbstractFloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return "Flow diagrams legend";
+        return "Flow map legend";
     }
     
 
