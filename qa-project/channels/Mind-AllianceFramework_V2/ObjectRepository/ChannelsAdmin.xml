@@ -22,6 +22,8 @@
 
  	<Element>
  		<GivenName>Settings Changed Notification Name</GivenName>
+ 		<Name>Notification
+Settings changed for model</Name>
  		<Name>Settings changed for model</Name>
  	</Element>
  	
@@ -97,7 +99,7 @@
  	
  	<Element>
  		<GivenName>New Plan Added Assertion</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]</Xpath>
+ 		<Xpath>//tr[contains(@class,'even')]/td/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
