@@ -44,7 +44,7 @@
 	
 	<Element>
 		<GivenName>Collaboration Templates Link</GivenName>
-		<LinkText>COLLABORATION PLANS</LinkText>
+		<LinkText>COLLABORATION MODELS</LinkText>
 	</Element>
 	
 	<Element>
@@ -140,7 +140,7 @@
  	
  	<Element>
  		<GivenName>Domain Plan Editor</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+ 		<Xpath>//div[contains(@class,'goto model')]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>

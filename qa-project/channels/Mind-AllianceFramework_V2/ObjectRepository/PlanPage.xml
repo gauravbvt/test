@@ -72,7 +72,7 @@
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Delete Event</GivenName>
-		<Title>Remove from segment context?</Title>
+		<Title>Delete event?</Title>
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Goal</GivenName>
@@ -3294,7 +3294,7 @@
 	
    <Element>
 		<GivenName>Event Table In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table</Xpath>
+		<Xpath>//tr[contains(@class,'even last')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3364,7 +3364,7 @@
 	
 	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table/tbody/tr/td[2]/a/img</Xpath>
+		<Xpath>//tr[contains(@class,'even')]/td[3]/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

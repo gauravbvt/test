@@ -80,7 +80,7 @@
  	
  	<Element>
  		<GivenName>Send Feedback As Question</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li/a</Xpath>
+ 		<Xpath>//div[contains(@class,'feedback-options')]/ul/li/ul/li/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -90,7 +90,7 @@
  	
  	<Element>
  		<GivenName>Send Feedback As Problem</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/a</Xpath>
+ 		<Xpath>//div[contains(@class,'feedback-options')]/ul/li/a</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -100,7 +100,7 @@
  
    <Element>
  		<GivenName>Send Feedback As Suggestion</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[3]/ul/li/ul/li[2]/a/span</Xpath>
+ 		<Xpath>//div[contains(@class,'feedback-options')]/ul/li/ul/li[2]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -120,7 +120,7 @@
  	
  	<Element>
  		<GivenName>Urgent Checkbox</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/div/div/div/div[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'feedback:aware:feedback:priority')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
