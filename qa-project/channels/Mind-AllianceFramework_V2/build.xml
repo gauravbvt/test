@@ -45,7 +45,7 @@
 	
     
 	<echo>Running JUnit Test Suite...</echo>  
-	<target name="testsuite" depends="compile" description="Running Test Suite">
+	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">
 		<jacoco:coverage destfile="${result.exec.file}" xmlns:jacoco="antlib:org.jacoco.ant">
 			<junit fork="true"> 
 				<classpath>
@@ -62,7 +62,7 @@
 		</jacoco:coverage>
 		
    </target>
-	<target name="report" depends="testsuite">
+	<target name="report" depends="testsuiteAutomation">
 		<!-- Step 3. Create coverage report -->
 		<jacoco:report>
 		<!-- This task needs the collected execution data and ... -->
