@@ -15,7 +15,7 @@ public class TopicItem implements Serializable {
 
     private String description;
 
-    @XStreamAlias( value = "script" )
+    @XStreamAlias( value = "scripted" )
     private TopicItemScript itemScript;
 
     public TopicItem() {

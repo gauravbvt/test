@@ -712,7 +712,7 @@
                 </item>
             </topic>
         </section>
-        <section id="ccommunities-page">
+        <section id="communities-page">
             <name>All Collaboration Communities page</name>
             <topic id="about-communities-page">
                 <name>All Collaboration Communities page</name>
@@ -812,11 +812,11 @@
 
                         You can also access the surveys you take part in.
 
-                        [[File:surveys_page|The surveys page]]
+                        [[File:surveys_page.png|The surveys page]]
 
                         And you can access the replies to feedback you have provided.
 
-                        [[File:feedback_page|The feedback page]].
+                        [[File:feedback_page.png|The feedback page]].
                     </description>
                 </item>
                 <next section="what-i-do" topic="participating-in-community"/>
@@ -987,7 +987,7 @@
                         * the organization the agent works for
                         * the placeholder organization the above organization participates as
 
-                        [[File:community_requirement_source.png|Community requirement - Specifying source]]
+                        [[File:community_requirement_sources.png|Community requirement - Specifying source]]
 
                         The commitments can be further specified in terms of how the sources would acquire the information to be communicated.
                         This is done by naming none, any or all of...
@@ -2356,13 +2356,13 @@
 
                         [[File:phases_times_events.png|Planning scenario scope = all combinations of phases and events]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open all events and phases</action>
                         <change>
                             <subjectId>-3</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="scoping" topic="phases"/>
                 <next section="scoping" topic="events"/>
@@ -2377,14 +2377,14 @@
                         [[File:model_scoping_phases.png|Naming the event phases in scope]]
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>Edit list of phases in scope</action>
                         <change>
                             <subjectPath>modelPage</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="scoping" topic="events"/>
                 <next section="scoping" topic="add-define-segment"/>
@@ -2418,14 +2418,14 @@
 
                     [[File:model_involvements.png|Stating expectations of involvement in the model]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Edit the list of involved entities</action>
                         <change>
                             <subjectId>-4</subjectId>
                             <type>Expanded</type>
                             <property>All involvements</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="all-segments">
@@ -2454,14 +2454,14 @@
                         [[File:model_segment_adding_removing.png|Adding and removing segments]]
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>Define a segment</action>
                         <change>
                             <subjectPath>page.segment</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-scenario"/>
@@ -2519,14 +2519,14 @@
 
                         [[File:model_segment_goals_details.png|Adding to the definition of a goal]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Set segment goals</action>
                         <change>
                             <subjectPath>page.segment</subjectPath>
                             <type>Expanded</type>
                             <property>goals</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="scoping" topic="all-goals"/>
             </topic>
@@ -2570,13 +2570,13 @@
                         [[File:model_classification_systems.png|Defining a classification system]]
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>Define classifications</action>
                         <change>
                             <subjectId>-6</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
         </section>
@@ -2662,13 +2662,13 @@
                         can be used in defining collaboration requirements in a collaboration community.
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the task form</action>
                         <change>
                             <subjectPath>page.part</subjectPath>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="info-sharing" topic="add-need"/>
                 <next section="info-sharing" topic="add-capability"/>
@@ -2709,6 +2709,10 @@
                         then identifying a target task.
 
                         [[File:model_capability_to_flow.png|From capability to flow]]
+
+                        Information flows, needs and capabilities are defined by mostly the same attributes.
+
+                        [[File:model_flow_define.png|Defining sends and receives]]
                     </description>
                 </item>
                 <next section="info-sharing" topic="add-need"/>
@@ -2749,13 +2753,13 @@
 
                         [[File:model_flow_private_need_capability.png|Privacy of info needs and capabilities]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the send/receive form</action>
                         <change>
                             <subjectPath>guide.anyFlow</subjectPath>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="info-sharing" topic="add-need"/>
                 <next section="info-sharing" topic="add-capability"/>
@@ -2812,14 +2816,14 @@
                         information capabilities and needs, within and across segments. This is done by using the
                         menu item ''Satisfy all needs'' in a task's actions menu.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the send/receive form</action>
                         <change>
                             <subjectPath>guide.anyFlow</subjectPath>
                             <type>Expanded</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="info-sharing" topic="add-task"/>
                 <next section="info-sharing" topic="add-need"/>
@@ -2940,35 +2944,35 @@
 
                         Note that all profile attributes are optional
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open an event profile</action>
                         <change>
                             <subjectPath>guide.anyEvent</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>All events are listed in '''All events'''</description>
-                    <script>
+                    <scripted>
                         <action>Open all events</action>
                         <change>
                             <subjectId>-3</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Events can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="profiling-phase"/>
                 <next section="profiling" topic="profiling-place"/>
@@ -2985,36 +2989,36 @@
 
                         Note that all profile attributes are optional.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open a phase profile</action>
                         <change>
                             <subjectPath>guide.anyPhase</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>All phases are listed in the model's '''details'''.</description>
-                    <script>
+                    <scripted>
                         <action>Open model details</action>
                         <change>
                             <subjectPath>model</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Phases can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="profiling-phase"/>
                 <next section="scoping" topic="eventsAndPhases"/>
@@ -3040,14 +3044,14 @@
                         An actual organization can be declared a placeholder, meaning its identity (or identities)
                         will be decided in each collaboration community that adopts the model where the organization is defined.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open an organization profile</action>
                         <change>
                             <subjectPath>guide.anyActualOrganization</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="organization-jobs"/>
                 <next section="profiling" topic="organization-participation"/>
@@ -3078,14 +3082,14 @@
                         organizations as participating as the placeholder. Whoever in a community participates as this agent is an acting
                         custodian. Collaboration planners are by default acting custodians.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open organization participation</action>
                         <change>
                             <subjectPath>guide.anyActualOrganization</subjectPath>
                             <type>Expanded</type>
                             <property>participation</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="profiling-organization"/>
                 <next section="profiling" topic="profiling-agent"/>
@@ -3099,14 +3103,14 @@
 
                         Selecting an organization opens its profile.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open organization chart</action>
                         <change>
                             <subjectPath>guide.anyActualOrganization</subjectPath>
                             <type>Expanded</type>
                             <property>hierarchy</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="profiling-organization"/>
             </topic>
@@ -3120,25 +3124,25 @@
 
                         Note that all profile attributes are optional
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open a role profile</action>
                         <change>
                             <subjectPath>guide.anyRole</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Roles can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="profiling-agent">
@@ -3156,36 +3160,36 @@
 
                         Note that all profile attributes are optional.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open an agent profile</action>
                         <change>
                             <subjectPath>guide.anyActualAgent</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Agents can be found in the model's ''who's who''.</description>
-                    <script>
+                    <scripted>
                         <action>Open models's who's who</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Who's who</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Agents can also be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="agent-participation"/>
                 <next section="profiling" topic="profiling-organization"/>
@@ -3212,14 +3216,14 @@
                         users will not appear in the checklists of other users.
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open agent participation</action>
                         <change>
                             <subjectPath>guide.anyActualAgent</subjectPath>
                             <type>Expanded</type>
                             <property>participation</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="agent"/>
                 <next section="profiling" topic="profiling-organization"/>
@@ -3232,14 +3236,14 @@
 
                         Selecting an agent opens its profile.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open agent participation</action>
                         <change>
                             <subjectPath>guide.anyActualAgent</subjectPath>
                             <type>Expanded</type>
                             <property>hierarchy</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="profiling" topic="agent"/>
                 <next section="profiling" topic="profiling-agent"/>
@@ -3262,25 +3266,25 @@
 
                         Note that all profile attributes are optional.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open a place profile</action>
                         <change>
                             <subjectPath>guide.anyActualPlace</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Places can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="profiling-medium">
@@ -3300,25 +3304,25 @@
 
                         Note that all profile attributes are optional.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open a transmission medium profile</action>
                         <change>
                             <subjectPath>guide.anyMedium</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Transmission media can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="profiling-info-product">
@@ -3332,25 +3336,25 @@
 
                         Note that all profile attributes are optional.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open an information product profile</action>
                         <change>
                             <subjectPath>guide.anyInfoProduct</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Information products can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="profiling-info-format">
@@ -3363,25 +3367,25 @@
 
                         Note that all profile attributes are optional
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open an information format profile</action>
                         <change>
                             <subjectPath>guide.anyInfoFormat</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Information formats can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="profiling-function">
@@ -3408,25 +3412,25 @@
                         When a function is categorized by other functions, it adds to the goals, information needs and
                         information capabilities that the categorizing functions define.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open a function profile</action>
                         <change>
                             <subjectPath>guide.anyFunction</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Functions can be found by name in the model's index.</description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
 
             </topic>
@@ -3592,25 +3596,25 @@
 
                         [[File:model_analysis_issues_all.png|Browsing all issues in a model]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the All Issues table</action>
                         <change>
                             <subjectId>-10</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Metrics on all issues found in a model provide a sense of the current quality of the
                         collaboration model.
                     </description>
-                    <script>
+                    <scripted>
                         <action>See model evaluation</action>
                         <change>
                             <subjectId>-9</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>If the resolution of an issue is not self-evident and requires input from stakeholders,
@@ -3627,13 +3631,13 @@
 
                         [[File:model_improving_task_mover.png|Task mover]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Transfer tasks</action>
                         <change>
                             <subjectId>-7</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="scoping" topic="add-define-segment"/>
             </topic>
@@ -3656,14 +3660,14 @@
 
                         [[File:model_improving_task_assignments.png|Verifying a task's assignments]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>See a task's assignments</action>
                         <change>
                             <subjectPath>page.part</subjectPath>
                             <type>AspectViewed</type>
                             <property>assignments</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Exactly what communication commitments are generated for a flow depends on...
@@ -3672,16 +3676,16 @@
                         * what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
                         * whether an overriding flow prohibits a pairing of agents
 
-                        [[File:model_improving_commitments.png|Verifying a flow's communication commitments]]
+                        [[File:model_improving_commitments.png|Verifying the communication commitments from a flow]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>See communication commitments derived from a flow</action>
                         <change>
                             <subjectPath>guide.anySharingFlow</subjectPath>
                             <type>AspectViewed</type>
                             <property>commitments</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
@@ -3706,14 +3710,14 @@
                         Taxonomies are defined implicitly by categorizing individual entities. The best way to verify
                         that taxonomies are correct is to visualize them.
                     </description>
-                    <script>
+                    <scripted>
                         <action>View taxonomies</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Taxonomies</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
@@ -3734,13 +3738,13 @@
                         Clicking on an assigned task navigates to the task's definition and opens the checklist flow
                         diagram for this task.
                     </description>
-                    <script>
+                    <scripted>
                         <action>See checklists map</action>
                         <change>
                             <subjectId>-8</subjectId>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="tune-task-flow-definition"/>
@@ -3780,7 +3784,7 @@
                         Questionnaires can be activated and deactivated. They can be extended while they are being used
                         in surveys.
                     </description>
-                    <script>
+                    <scripted>
                         <action>See the questionnaires</action>
                         <change>
                             <subjectPath>guide.unknownRFISurvey</subjectPath>
@@ -3790,7 +3794,7 @@
                                 <value>Questionnaires</value>
                             </qualifier>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="learning" topic="launch-survey"/>
             </topic>
@@ -3807,14 +3811,14 @@
 
                         [[File:model_learning_survey_launching_issue.png|Launching an issue remediation survey]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>View launched and launch-able surveys on a task</action>
                         <change>
                             <subjectPath>page.part</subjectPath>
                             <type>AspectViewed</type>
                             <property>surveys</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <item>
                     <description>Once a survey is launched, it can be managed by...
@@ -3826,7 +3830,7 @@
                         * modifying the survey questionnaire - even after participants have started answering the survey
 
                     </description>
-                    <script>
+                    <scripted>
                         <action>See all launched surveys</action>
                         <change>
                             <subjectPath>guide.unknownRFISurvey</subjectPath>
@@ -3836,7 +3840,7 @@
                                 <value>Surveys</value>
                             </qualifier>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="learning" topic="compose-questionnaire"/>
                 <next section="learning" topic="add-survey-participants"/>
@@ -3857,7 +3861,7 @@
                         Note that the issue remediation questionnaires are by default not shown in the list of all
                         questionnaires; a checkbox must be checked to see them.
                     </description>
-                    <script>
+                    <scripted>
                         <action>See all remediation questionnaires</action>
                         <change>
                             <subjectPath>guide.unknownRFISurvey</subjectPath>
@@ -3867,7 +3871,7 @@
                                 <value>Questionnaires</value>
                             </qualifier>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="learning" topic="add-survey-participants"/>
                 <next section="learning" topic="compose-questionnaire"/>
@@ -3892,7 +3896,7 @@
                         Note that anyone who is forwarded a survey and who is not yet a user of Channels is
                         automatically given a login, password and limited access to the model as a participant.
                     </description>
-                    <script>
+                    <scripted>
                         <action>See all launched surveys</action>
                         <change>
                             <subjectPath>guide.unknownRFISurvey</subjectPath>
@@ -3902,7 +3906,7 @@
                                 <value>Surveys</value>
                             </qualifier>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="learning" topic="survey-results"/>
             </topic>
@@ -3916,7 +3920,7 @@
 
                         [[File:model_learning_survey_results.png|Looking up the answers to a survey]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>See all launched surveys</action>
                         <change>
                             <subjectPath>guide.unknownRFISurvey</subjectPath>
@@ -3926,7 +3930,7 @@
                                 <value>Surveys</value>
                             </qualifier>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="learning" topic="add-survey-participants"/>
             </topic>
@@ -3941,13 +3945,13 @@
 
                         [[File:model_learning_feedback_managing.png|Managing feedback about the model]]
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open feedback manager</action>
                         <change>
                             <subjectPath>unknownFeedback</subjectPath>
                             <type>Expanded</type>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
         </section>
@@ -3961,33 +3965,33 @@
                         The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial
                         name.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Index</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="searching" topic="references"/>
             </topic>
             <topic id="whos-who">
                 <name>Search for agents</name>
                 <item>
-                    <description>Every employement of every agent is aggregated in the ''who's who'' table.
+                    <description>Every employment of every agent is aggregated in the ''who's who'' table.
 
                         The table can be indexed by the name of the agent or by attributes of employment (organization,
                         role, location of employer).
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the model's who's who</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Who's who</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="documents">
@@ -3998,14 +4002,14 @@
 
                         A table with all attachments in the model can be found in the model's ''attachments''.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the model's attachments</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>All attachments</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="tags">
@@ -4016,14 +4020,14 @@
                         The list of all tags used in the model can be looked up to see what has been marked by any
                         given tag.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the tag index</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Tags</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
             <topic id="taxonomies">
@@ -4037,14 +4041,14 @@
 
                         Taxonomies can be visualized to verify that they are correct.
                     </description>
-                    <script>
+                    <scripted>
                         <action>View taxonomies</action>
                         <change>
                             <subjectId>-13</subjectId>
                             <type>AspectViewed</type>
                             <property>Taxonomies</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
                 <next section="improving" topic="verify-checklists"/>
             </topic>
@@ -4060,14 +4064,14 @@
                         For example, at the bottom of in the profile of a role is an index of all other model
                         elements that reference the role or that match the role.
                     </description>
-                    <script>
+                    <scripted>
                         <action>Open the a role profile to see its references</action>
                         <change>
                             <subjectPath>guide.anyRole</subjectPath>
                             <type>Expanded</type>
                             <property>details</property>
                         </change>
-                    </script>
+                    </scripted>
                 </item>
             </topic>
         </section>

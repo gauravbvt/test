@@ -51,7 +51,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="description" type="xs:string"/>
-                <xs:element ref="script" maxOccurs="1" minOccurs="0"/>
+                <xs:element ref="scripted" maxOccurs="1" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -65,7 +65,7 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="script">
+    <xs:element name="scripted">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="action" type="xs:string"/>

@@ -7,9 +7,9 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * COllaboration plan page.
+ * Collaboration community page.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -249,6 +249,8 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
         Label updateVersionLabel = new Label( "updateVersionLabel", "Update to version " + latestProdVersion );
         updateVersionButton.add( updateVersionLabel );
         makeVisible( updateVersionButton, planVersion != latestProdVersion && isCollaborationPlanner() );
+        addTipTitle( updateVersionButton, "Update to the current production release of the collaboration model "
+                + getCollaborationModel().getName() );
         detailsContainer.addOrReplace( updateVersionButton );
     }
 
