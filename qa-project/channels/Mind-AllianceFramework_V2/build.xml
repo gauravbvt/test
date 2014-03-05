@@ -8,7 +8,7 @@
   	<property name="classes.dir" value="bin"/>  
   	<property name="junit.out.dir.xml"  value="target"/>  
   	<property name="junit.out.dir.html" value="target"/>  
-	<property name ="report.dir" value="Reports"/>
+	<property name ="report.dir" value="ReportsJacaco"/>
 	<property name="result.dir" location="./target"/>
 	<property name="result.classes.dir" location="${result.dir}/classes"/>
 	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
@@ -52,7 +52,8 @@
   
 	<echo>Running JUnit Channels Automation Test Suite...</echo>  
 	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">  
-		<mkdir  dir="${junit.out.dir.xml}"/>  
+		<!--<delete dir="${junit.out.dir.xml}"/> -->  
+ 		<mkdir  dir="${junit.out.dir.xml}"/>  
 		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
 			<classpath refid="classpath.test"/>  
 			<sysproperty key="ant.home" value="${ant.home}"/>  
@@ -86,7 +87,7 @@
 	
 	<echo>Running JUnit Channels BVT Test Suite...</echo>
 	<target name="testsuiteAutomationBVT" depends="compile" description="Running Test Suite">  
-			<delete dir="${junit.out.dir.xml}"/>  
+			<!--<delete dir="${junit.out.dir.xml}"/> -->  
 	 		<mkdir  dir="${junit.out.dir.xml}"/>  
 			<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
 				<classpath refid="classpath.test"/>  
@@ -97,7 +98,7 @@
 							includes="	**/AutomationBVTHome.class" />  
 				</batchtest>  
 	    	</junit> 	
-	   		<junitreport todir="Reports">
+	   		<junitreport todir="ReportsJunit">
 	   	  		<fileset dir="target">
 		  			<include name="TEST-*.xml"/>
 				</fileset>
