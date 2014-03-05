@@ -1,86 +1,78 @@
-<?xml version="1.0"?>  
-<project name="Mind-Alliance Framework" default="report" xmlns:jacoco="antlib:org.jacoco.ant">  
-	
-	<property name="project.name" value="Mind-Alliance Framework"/>  
-	<property name="src.dir" value="./src"/>  
-  	<property name="lib.dir" value="lib"/>  
-	<property name="bin" value="target"/>  
-	<property name="classes.dir" value="bin"/>  
-  	<property name="junit.out.dir.xml"  value="target"/>  
-  	<property name="junit.out.dir.html" value="target"/> 
-	<property name ="report.dir" value="Reports"/>
-	<property name="result.dir" location="./target"/>
-	<property name="result.classes.dir" location="${result.dir}/classes"/>
-	<property name="result.report.dir" location="${result.dir}/site1/jacoco"/>
-	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
-  	
-  	<!-- Step 1: Import JaCoCo Ant tasks -->
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-	<classpath path="${lib.dir}/lib/jacocoant.jar"/></taskdef>
-	
-	<echo>Cleaning classes dir...</echo>  
-  	<target name="clean" description="Delete Earlier Classes"> 
-    	<delete dir="${target.dir}" quiet="yes"/>  
-  		<delete dir="${classes.dir}" quiet="yes"/>
-  	</target>  
-  
-	<echo>Make Required Directories...</echo>  
-  	<target name="makedir" depends="clean" description="Create Required Directories">  
-   		<mkdir dir="${result.classes.dir}"/>  	
-  		<mkdir dir="${result.dir}/xml"/>
-  		<mkdir dir="${result.dir}/html"/> 
-  	</target>  
-  
-	<echo>Compile</echo>  
-  	<target name="compile" depends="makedir" description="Compile java code.">  
-   		<javac debug="true" destdir="${result.classes.dir}">  
-    		<src path="${src.dir}"/>  
-    		<classpath>  
-     			<fileset dir="${lib.dir}" includes="**/*.jar"/>  
-    		</classpath>  
-   		</javac>  
+<?xml version="1.0"?>
+<project name="Mind-Alliance Framework">
+
+	<property name="project.name" value="Mind-Alliance Framework" />
+	<property name="src.dir" value="src" />
+	<property name="lib.dir" value="lib" />
+	<property name="bin" value="target" />
+	<property name="classes.dir" value="bin" />
+	<property name="junit.out.dir.xml" value="target" />
+	<property name="junit.out.dir.html" value="target" />
+
+	<echo>Cleaning classes dir...</echo>
+	<target name="clean" description="Delete Earlier Classes">
+		<delete dir="${target.dir}" quiet="yes" />
 	</target>
-	
-    
-	<echo>Running JUnit Test Suite...</echo>  
+
+	<echo>Make Required Directories...</echo>
+	<target name="makedir" depends="clean" description="Create Required Directories">
+		<mkdir dir="${classes.dir}" />
+	</target>
+
+	<echo>Compile</echo>
+	<target name="compile" depends="makedir" description="Compile java code.">
+		<javac debug="true" destdir="${classes.dir}" includeantruntime="false">
+			<src path="${src.dir}" />
+			<classpath>
+				<fileset dir="${lib.dir}" includes="**/*.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<path id="classpath.test">
+		<path path="${java.class.path}" />
+		<pathelement location="${classes.dir}" />
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<path location="${classes.dir}" />
+	</path>
+
+	<echo>Running JUnit Channels BVT Test Suite...</echo>
+	<target name="testsuiteAutomationBVT" depends="compile" description="Running Test Suite">
+		<delete dir="${junit.out.dir.xml}" />
+		<mkdir dir="${junit.out.dir.xml}" />
+		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">
+			<classpath refid="classpath.test" />
+			<sysproperty key="ant.home" value="${ant.home}" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${junit.out.dir.xml}">
+				<fileset dir="${classes.dir}" includes=" **/AutomationBVTHome.class" />
+			</batchtest>
+		</junit>
+		<junitreport todir="Reports">
+			<fileset dir="target">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="Reports" />
+		</junitreport>
+	</target>
+
+	<echo>Running JUnit Channels Automation Test Suite...</echo>
 	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">
-		<jacoco:coverage destfile="${result.exec.file}" xmlns:jacoco="antlib:org.jacoco.ant">
-			<junit fork="true"> 
-				<classpath>
-					<pathelement location="${result.classes.dir}" />
-						<fileset dir="${lib.dir}">
-							<include name="**/*.jar" />
-						</fileset>
-				</classpath>	
-				<test name="com.mindalliance.driverscripts.Home" haltonfailure="no"
-					todir="${result.dir}/xml" outfile="MindAlliance-Result">
-					<formatter type="xml" />
-				</test>
-	    	</junit>			
-		</jacoco:coverage>
-		
-   </target>
-	<target name="report" depends="testsuiteAutomation">
-		<!-- Step 3. Create coverage report -->
-		<jacoco:report>
-		<!-- This task needs the collected execution data and ... -->
-		<executiondata>
-			<file file="${result.exec.file}"/>
-		</executiondata>
-		<!-- the class files and optional source files ... -->
-		<structure name="JaCoCo Ant Example">
-		<classfiles>
-		<fileset dir="${result.classes.dir}"/>
-		</classfiles>
-		<sourcefiles encoding="UTF-8">
-		<fileset dir="${src.dir}"/>
-		</sourcefiles>
-		</structure>
-		<!-- to produce reports in different formats. -->
-		<html destdir="${result.report.dir}"/>
-		<csv destfile="${result.report.dir}/report.csv"/>
-		<xml destfile="${result.report.dir}/report.xml"/>
-		</jacoco:report>
+		<delete dir="${junit.out.dir.xml}" />
+		<mkdir dir="${junit.out.dir.xml}" />
+		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">
+			<classpath refid="classpath.test" />
+			<sysproperty key="ant.home" value="${ant.home}" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${junit.out.dir.xml}">
+				<fileset dir="${classes.dir}" includes=" **/Home.class" />
+			</batchtest>
+		</junit>
+		<junitreport todir="Reports">
+			<fileset dir="target">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="Reports" />
+		</junitreport>
 	</target>
-	
-</project>  
+</project>
