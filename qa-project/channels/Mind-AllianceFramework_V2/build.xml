@@ -12,13 +12,21 @@
 	<echo>Cleaning classes dir...</echo>  
   	<target name="clean" description="Delete Earlier Classes">  
     	<delete dir="${target.dir}" quiet="yes"/>  
+		<delete dir="${classes.dir}" quiet="yes"/>
   	</target>  
   
 	<echo>Make Required Directories...</echo>  
   	<target name="makedir" depends="clean" description="Create Required Directories">  
    		<mkdir dir="${classes.dir}"/>  
+		<mkdir dir="${result.classes.dir}"/>  	
+  		<mkdir dir="${result.dir}/xml"/>
+  		<mkdir dir="${result.dir}/html"/> 
   	</target>  
   
+	<!-- Step 1: Import JaCoCo Ant tasks -->
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="${lib.dir}/lib/jacocoant.jar"/></taskdef>
+	
 	<echo>Compile</echo>  
   	<target name="compile" depends="makedir" description="Compile java code.">  
    		<javac debug="true" destdir="${classes.dir}" includeantruntime="false">  
