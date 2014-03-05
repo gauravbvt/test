@@ -83,9 +83,9 @@
 		</jacoco:coverage>
 	</target>
 
-	<!--<echo>Running JUnit Channels BVT Test Suite...</echo>
+	<echo>Running JUnit Channels BVT Test Suite...</echo>
 	<target name="testsuiteAutomationBVT" depends="compile" description="Running Test Suite">
-		delete dir="${junit.out.dir.xml}"/> 
+		<!-- <delete dir="${junit.out.dir.xml}"/> --> 
 		<mkdir dir="${junit.out.dir.xml}" />
 		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">
 			<classpath refid="classpath.test" />
@@ -101,9 +101,9 @@
 			</fileset>
 			<report format="frames" todir="Reports" />
 		</junitreport>
-	</target> -->
+	</target> 
 
-	<echo>Creating Reports of Jacoco</echo>
+	<echo>Creating Reports of Jacoco for Automation</echo>
 	<target name="report" depends="testsuiteAutomation">
 		<!-- Step 3. Create coverage report -->
 		<jacoco:report>
@@ -126,4 +126,28 @@
 			<xml destfile="${result.report.dir}/report.xml" />
 		</jacoco:report>
 	</target>
+	
+	<echo>Creating Reports of Jacoco for Automation</echo>
+		<target name="reportBVT" depends="testsuiteAutomationBVT">
+			<!-- Step 3. Create coverage report -->
+			<jacoco:report>
+				<!-- This task needs the collected execution data and ... -->
+				<executiondata>
+					<file file="${result.exec.file}" />
+				</executiondata>
+				<!-- the class files and optional source files ... -->
+				<structure name="JaCoCo Ant Example">
+					<classfiles>
+						<fileset dir="${result.classes.dir}" />
+					</classfiles>
+					<sourcefiles encoding="UTF-8">
+						<fileset dir="${src.dir}" />
+					</sourcefiles>
+				</structure>
+				<!-- to produce reports in different formats. -->
+				<html destdir="${result.report.dir}" />
+				<csv destfile="${result.report.dir}/report.csv" />
+				<xml destfile="${result.report.dir}/report.xml" />
+			</jacoco:report>
+		</target>
 </project>
