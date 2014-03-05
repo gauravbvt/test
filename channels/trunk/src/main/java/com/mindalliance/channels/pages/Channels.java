@@ -51,9 +51,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.session.SessionIdentifierAware;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 
 /**
  * Application object for Channels.
@@ -362,13 +361,11 @@ public class Channels extends WebApplication
 
     @Override
     public void onApplicationEvent( ApplicationEvent event ) {
-        if ( LOG.isDebugEnabled() && event instanceof AbstractAuthenticationEvent ) {
-            Authentication auth = ( (AbstractAuthenticationEvent) event ).getAuthentication();
-            String name = auth.getName();
-            String session = ( (SessionIdentifierAware) auth.getDetails() ).getSessionId();
-            LOG.debug( event.getClass().getSimpleName() + ": " + name
-                    + ";session=" + session );
-        }
+         if ( event instanceof AuthenticationSuccessEvent ) {
+            AuthenticationSuccessEvent ae = (AuthenticationSuccessEvent) event;
+            LOG.info( "login user={}", ae.getAuthentication().getPrincipal() );
+        } else if ( event instanceof HttpSessionDestroyedEvent )
+            LOG.info( "end of session" );
 
     }
 
