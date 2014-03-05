@@ -51,7 +51,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 
 /**
@@ -364,9 +366,15 @@ public class Channels extends WebApplication
          if ( event instanceof AuthenticationSuccessEvent ) {
             AuthenticationSuccessEvent ae = (AuthenticationSuccessEvent) event;
             LOG.info( "login user={}", ae.getAuthentication().getPrincipal() );
-        } else if ( event instanceof HttpSessionDestroyedEvent )
-            LOG.info( "end of session" );
-
+         } else if ( event instanceof AuthenticationFailureBadCredentialsEvent ) {
+             AuthenticationFailureBadCredentialsEvent ae = (AuthenticationFailureBadCredentialsEvent) event;
+             Object principal = ( (Authentication) ae.getSource() ).getPrincipal();
+             if ( userDao.getUserRecord( principal.toString() ) == null )
+                 LOG.info( "Unknown user {}", principal );
+             else
+                 LOG.info( "Invalid password for user {}", principal );
+         } else if ( event instanceof HttpSessionDestroyedEvent )
+             LOG.info( "end of session" );
     }
 
     @Override
