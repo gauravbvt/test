@@ -1,5 +1,5 @@
 <?xml version="1.0"?>  
-<project name="Mind-Alliance Framework">  
+<project name="Mind-Alliance Framework" xmlns:jacoco="antlib:org.jacoco.ant">  
 	
 	<property name="project.name" value="Mind-Alliance Framework"/>  
  	<property name="src.dir" value="src"/>  
@@ -8,6 +8,12 @@
   	<property name="classes.dir" value="bin"/>  
   	<property name="junit.out.dir.xml"  value="target"/>  
   	<property name="junit.out.dir.html" value="target"/>  
+	<property name ="report.dir" value="ReportsJacaco"/>
+	<property name="result.dir" location="./target"/>
+	<property name="result.classes.dir" location="${result.dir}/classes"/>
+	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
+  	
   
 	<echo>Cleaning classes dir...</echo>  
   	<target name="clean" description="Delete Earlier Classes">  
