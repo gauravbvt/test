@@ -2,7 +2,7 @@
 	  
 	<Element>
 		<GivenName>About Plan Window Title</GivenName>
-		<Title>About Template: </Title>
+		<Title>About Model: </Title>
 	</Element>
 	
 	<Element>
@@ -80,7 +80,7 @@
 	</Element>
 	<Element>
 		<GivenName>About Plan Segment Window Title</GivenName>
-		<Title>About Template Segment:</Title>
+		<Title>About Model Segment:</Title>
 	</Element>
 	
 	<Element>
@@ -318,8 +318,33 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Message On Owners Tab For Developer Text</GivenName>
+		<Name>You can not modify this segment because even though you are a developer others own it.</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Developer Who Is Not Owner Text</GivenName>
+		<Name>You can not modify this segment because even though you are a developer others own it.</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Guest User Text</GivenName>
+		<Name>You can not modify this segment because you are not a developer.</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Can Modify Column Text</GivenName>
+		<Name>Yes</Name>
+	</Element>
+	
+	<Element>
 		<GivenName>Checklists Window Title</GivenName>
 		<Name>Unconfirmed Checklist</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Help For Segment Owners Text</GivenName>
+		<Name>Segment owners and editing privileges</Name>
 	</Element>
 	
 	<Element>
@@ -859,8 +884,58 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Message On Owners Tab For Developer</GivenName>
+		<Xpath>//div[contains(@class,'explanation')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Guest User</GivenName>
+		<Xpath>//div[contains(@class,'explanation')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Message On Owners Tab For Developer Who Is Not Owner</GivenName>
+		<Xpath>//div[contains(@class,'explanation')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Who Can Modify This Segment</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/h3/span</Xpath>
+		<Name></Name>
+		<Id>id1b9</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Is Owner Check Box</GivenName>
+		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:ownersTable:segmentOwners:body:rows:2:cells:4:cell:checkBox')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Can Modify Column</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1461,6 +1536,26 @@
 	<Element>
 		<GivenName>Actions In About Function</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Help Icon In About Template Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div/div[2]/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Help For Segment Owners</GivenName>
+		<Xpath>/html/body/form/span/div[2]/div[2]/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
