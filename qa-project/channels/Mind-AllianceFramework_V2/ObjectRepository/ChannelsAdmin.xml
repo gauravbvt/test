@@ -22,8 +22,7 @@
 
  	<Element>
  		<GivenName>Settings Changed Notification Name</GivenName>
- 		<Name>Notification
-Settings changed for model</Name>
+ 		<Name>Notification Settings changed for model</Name>
  	</Element>
  	
  	<Element>
@@ -172,6 +171,16 @@ Settings changed for model</Name>
 		<GivenName>IsDisabled</GivenName>
 		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled')]</Xpath>
 		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>UserRoleDropDown</GivenName>
+		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:privilegesContainer:modelPrivilegesContainer:modelPrivileges:0:userRole')]</Xpath>
+		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:privilegesContainer:modelPrivilegesContainer:modelPrivileges:0:userRole</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
