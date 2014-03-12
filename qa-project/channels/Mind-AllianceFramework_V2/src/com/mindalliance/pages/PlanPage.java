@@ -1500,11 +1500,7 @@ public class PlanPage {
 		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		try{
-			Thread.sleep(2000);
-		}
-		catch (Exception e) {}
-		
+
 		// Assertion : Verify new issue is added 
 		elementController.requireElementSmart(fileName, "New Issue Text In Sends Panel", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text In Sends Panel");
 		headingOfWindowInPage=UIActions.getText(fileName, "New Issue Text In Sends Panel", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text In Sends Panel");
@@ -1518,10 +1514,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Remove Segment", "Title");
-		try{
-			Thread.sleep(1000);
-		}
-		catch(Exception e){}
+		
 		UIActions.assertAlert(headingOfWindowInXML);
 		break;
 		
@@ -1529,10 +1522,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Remove Segment", "Title");
-		try{
-			Thread.sleep(1000);
-		}
-		catch(Exception e){}
+
 		UIActions.assertAlert(headingOfWindowInXML);
 		break;	
 		
@@ -1557,10 +1547,7 @@ public class PlanPage {
 	case "Issue In Task Panel":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		try{
-			Thread.sleep(3000);
-		}
-		catch (Exception e) {}
+		
 	/*	// Assertion : Verify new issue is added 
 	
 		elementController.requireElementSmart(fileName, "New Issue Text In Task Panel", GlobalVariables.configuration.getAttrSearchList(),"New Issue Text In Task Panel");
@@ -2258,10 +2245,6 @@ public class PlanPage {
 		UIActions.click(fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.enterValueInTextBox(informationName,fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.enterKey(Keys.TAB);
-		try{
-			Thread.sleep(2000);
-		}
-		catch(Exception e){}
 		
 //		// Assertion: verify information is added
 //		elementController.requireElementSmart(fileName,"Add New Receives Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Receives Header");
@@ -2282,11 +2265,7 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(informationName,fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		elementController.requireElementSmart(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.enterKey(Keys.TAB);
-//		try{
-//			Thread.sleep(1000);
-//		}
-//		catch(Exception e){}
-//		
+		
 //		// Assertion: verify information is added
 //		elementController.requireElementSmart(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
 //		String informationNameInSendsPanel=UIActions.getText(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
@@ -2337,11 +2316,6 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(information,fileName,"Contact Info For Agent Text Field",GlobalVariables.configuration.getAttrSearchList(), "Contact Info For Agent Text Field");
 		UIActions.enterKey(Keys.ENTER);
 		
-		try{
-			Thread.sleep(2000);
-		}
-		catch(Exception e){}
-		
 //		// Assertion: verify information is added
 //		elementController.requireElementSmart(fileName,"Add New Receives Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Receives Header");
 //		String informationNameInSendsPanel=UIActions.getText(fileName,"Add New Receives Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Receives Header");
@@ -2358,10 +2332,10 @@ public class PlanPage {
 	public void selectFromInSends(String Other) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
 		UIActions.click(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
-		
-		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
-		Configuration.getConfigurationObject().setSelect(fromDropDownList);
-		UIActions.selectByTextAndClick(Other);
+		UIActions.enterKey(Keys.TAB);
+		Select organizationDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(organizationDropDownList);
+		UIActions.selectByText(Other);
 		UIActions.enterKey(Keys.TAB);
 	}
 	/**
@@ -2455,7 +2429,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
 		UIActions.click(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
 	    UIActions.enterValueInTextBox(fromTaskNameInSendsPanel,fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends");
-		UIActions.enterKey(Keys.TAB);
+		UIActions.enterKey(Keys.ENTER);
 	}
 	
 	/**
@@ -3381,10 +3355,6 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Goals Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Goals Link In Task Panel");
 		UIActions.click(fileName,"Goals Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Goals Link In Task Panel");
 		clickStrenchUpForm();
-		try{
-			Thread.sleep(1000);
-		}
-		catch(Exception e){}
 		
 		// Assertion : Verify 'Goals' tab is present 
 		String nameOfTabInPage=UIActions.getText(fileName, "Goals Tab", GlobalVariables.configuration.getAttrSearchList(),"Goals Tab");
@@ -3392,10 +3362,6 @@ public class PlanPage {
 		if(!nameOfTabInPage.equals(nameOfTabInXML)){
 			throw new UIAutomationException("Tab with name '"+nameOfTabInXML+"' not found");
 		}
-		try{
-			Thread.sleep(1000);
-		}
-		catch(Exception e){}
 	}
 	/**
 	 * Click on 'doing unnamed task'
@@ -3979,56 +3945,33 @@ public class PlanPage {
 	 * @param organization
 	 * @throws UIAutomationException
 	 */
-	public void addGoal(String selectGoal,String type,String organization) throws UIAutomationException
+	public void addGoal(String category,String type,String organization) throws UIAutomationException
 	{
 		// Select goal from dropdown
 		elementController.requireElementSmart(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
-		UIActions.click(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
-			
+		UIActions.click(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");	
+		UIActions.enterKey(Keys.TAB);
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
-		UIActions.selectByTextAndClick(selectGoal);
+		UIActions.selectByText(category);
 		UIActions.enterKey(Keys.TAB);
 		
 		// Select Organization (Type/Actual)
-		elementController.requireElementSmart(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
-		UIActions.click(fileName,"Organization in goal dropdown",GlobalVariables.configuration.getAttrSearchList(),"Organization in goal dropdown");
+		elementController.requireElementSmart(fileName,"Type Or Actual",GlobalVariables.configuration.getAttrSearchList(),"Type Or Actual");
+		UIActions.click(fileName,"Type Or Actual",GlobalVariables.configuration.getAttrSearchList(),"Type Or Actual");
 		UIActions.enterKey(Keys.TAB);
-		
 		Select organizationDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(organizationDropDownList);
-		UIActions.selectByTextAndClick(type);
+		UIActions.selectByText(type);
 		UIActions.enterKey(Keys.TAB);
 		
-		elementController.requireElementSmart(fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
-		UIActions.enterValueInTextBox(organization,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
+		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
+		UIActions.enterValueInTextBox(organization,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		UIActions.enterKey(Keys.TAB);
 		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		elementController.requireElementSmart(fileName,"Acheived at end",GlobalVariables.configuration.getAttrSearchList(),"Acheived at end");
+		UIActions.click(fileName,"Acheived at end",GlobalVariables.configuration.getAttrSearchList(),"Acheived at end");
 		
-		/*// Achieved at the end checkbox
-		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
-		UIActions.click(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
-	    UIActions.enterKey(Keys.ENTER);
-	try {
-		Thread.sleep(5000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	*/
-	
-//	elementController.requireElementSmart(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
-//	String showLinkTextInPage=UIActions.getText(fileName,"Goal Added In About Segment",GlobalVariables.configuration.getAttrSearchList(), "Goal Added In About Segment");
-//	String showLinkTextInXML=dataController.getPageDataElements(fileName,"Goal Added In About Segment Name" , "Name");
-//	if(!showLinkTextInPage.contains(showLinkTextInXML)){
-//		throw new UIAutomationException( "'"+showLinkTextInXML +"' not found");
-//	}
-	
 	}
 	
 	

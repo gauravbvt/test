@@ -241,7 +241,7 @@ public class ChannelsAdmin {
 	 * @throws UIAutomationException
 	 */
 	public void addUser(String userName) throws UIAutomationException{
-		UIActions.sendRefresh();
+//		UIActions.sendRefresh();
 		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.enterValueInTextBox(userName,fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
@@ -249,13 +249,11 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 			
-//		if(userName.equals(userName))
-//		{
-//			
-//			String alert=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
-//			elementController.waitForElement("Title", "Failed: "+userName+" is already taken");
-//			UIActions.assertAlert(alert);
-//		}
+		String isDisabled="false";
+		if(userName.equals(userName))
+		{
+			disableUser(userName, isDisabled);
+		}
 		
 	}
 	
@@ -268,7 +266,6 @@ public class ChannelsAdmin {
 		
 		samePlanAlert=dataController.getPageDataElements(fileName, "Alert Window Title Of Same Plan", "Title");
 		UIActions.assertAlert(samePlanAlert);
-			
 	}
 	 
 	/**
@@ -282,11 +279,11 @@ public class ChannelsAdmin {
 		UIActions.click(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(),"User Role Drop Down");
 		Select adminDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(adminDropDownList);
-		UIActions.selectByTextAndClick(userRole);
+		UIActions.selectByText(userRole);
 			
 		elementController.requireElementSmart(fileName,"Apply Button For User Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
 		UIActions.click(fileName,"Apply Button User For Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
-		return "yes";
+		return userRole;
 	
 	}
 	
