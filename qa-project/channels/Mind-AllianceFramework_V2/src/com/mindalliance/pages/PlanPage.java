@@ -3881,17 +3881,15 @@ public class PlanPage {
 	 */
 	public void enterQuestionnaireName(String questionnaireName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-		UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
 		UIActions.click(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-		
-		for (int i = 0; i <= 7; i++){
-			UIActions.enterKey(Keys.BACK_SPACE);
-		}
-		
-		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-		
+		for(int i=0; i<10; i++)
+			UIActions.enterKey(Keys.CLEAR);
+//		UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
+		UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
 		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-		UIActions.enterKey(Keys.ENTER);
+		UIActions.enterKey(Keys.TAB);
+		
+		
 	}
 	
 	/**
@@ -3901,11 +3899,7 @@ public class PlanPage {
 	public void activateQuestionnaire() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Activate Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Activate Questionnaire");
 		UIActions.click(fileName,"Activate Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Activate Questionnaire");
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
 		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Activate Questionnaire", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 		
