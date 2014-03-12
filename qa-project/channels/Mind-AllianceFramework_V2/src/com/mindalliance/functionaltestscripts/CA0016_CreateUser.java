@@ -154,7 +154,8 @@ public class CA0016_CreateUser extends TestCase{
  			//Add User Details
  			stepNo++;
  			description="Add User Details";
-			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"),testData.get("isAdministrator"),testData.get("isDisabled"));
+//			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"),testData.get("isAdministrator"),testData.get("isDisabled"));
+			channelsAdmin.selectOptionFromTemplateDropDown(testData.get("Access"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -244,6 +245,7 @@ public class CA0016_CreateUser extends TestCase{
 	        this.testData.put("Password",oXmlEleCA0016_CreateUser.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("IsAdministrator",oXmlEleCA0016_CreateUser.getElementsByTagName("isAdministrator").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("IsDisabled",oXmlEleCA0016_CreateUser.getElementsByTagName("isDisabled").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Access",oXmlEleCA0016_CreateUser.getElementsByTagName("access").item(0).getChildNodes().item(0).getNodeValue());
 		
 		}
 		catch(SAXException se){
