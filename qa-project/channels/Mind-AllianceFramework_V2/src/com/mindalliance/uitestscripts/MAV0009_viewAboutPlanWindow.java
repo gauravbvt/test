@@ -141,15 +141,6 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
 					
-//			// Close Plan Map window
-//			stepNo++;
-//			description="Plan Map window closed";
-//			PlanPage planPage=new PlanPage();
-//			planPage.closePlanMap();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
-		
 			// Click on 'About Plan' under 'Show' pop up menu
 			stepNo++;
 			description="About plan window opened";

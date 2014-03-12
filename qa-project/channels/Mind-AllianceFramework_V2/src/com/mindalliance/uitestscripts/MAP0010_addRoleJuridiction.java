@@ -213,7 +213,7 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Enter Supervisor
 			planPage.enterSupervisorInOrganizationInScope(testData.get("Supervisor"));
 			// Check checkbox of agent 1
-			planPage.checkCheckboxOfAgentInOrganizationInScope();
+			planPage.clickAddButtonOfAgentInOrganizationInScope(testData.get("Agent"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -222,42 +222,43 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 			// Close Actual organization window
  			stepNo++;
 			description="Close Organization Window";
-			planPage.closeActualOrganizationWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
-			
-			// Click on 'Organization'
- 			stepNo++;
-			description="Remove Organization Details";
-			planPage.clickOnOrganizationEntered(testData.get("Organization"));
-			planPage.clickOnOrganizationEntered(testData.get("Organization"));
-			// Check checkbox of agent 1
 			planPage.checkCheckboxOfAgentInOrganizationInScope();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Organization Details");	
-			
-			// Close Actual organization window
- 			stepNo++;
-			description="Close Organization Window";
 			planPage.closeActualOrganizationWindow();
-			planPage.clickOnOrganizationEntered(testData.get("Organization"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
 			
-			// Close Actual organization window
- 			stepNo++;
-			description="Close Actual Organization Window";
-			planPage.closeActualOrganizationWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Actual Organization Window");	
+//						// Click on 'Organization'
+//			 			stepNo++;
+//						description="Remove Organization Details";
+//						planPage.clickOnOrganizationEntered(testData.get("Organization"));
+//						planPage.clickOnOrganizationEntered(testData.get("Organization"));
+//						// Check checkbox of agent 1
+//						planPage.checkCheckboxOfAgentInOrganizationInScope();
+//						// Write log
+//			 			LogFunctions.writeLogs(description);
+//			 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove Organization Details");	
+//						
+//						// Close Actual organization window
+//			 			stepNo++;
+//						description="Close Organization Window";
+//						planPage.closeActualOrganizationWindow();
+//						planPage.clickOnOrganizationEntered(testData.get("Organization"));
+//						// Write log
+//			 			LogFunctions.writeLogs(description);
+//			 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
+//						
+//						// Close Actual organization window
+//			 			stepNo++;
+//						description="Close Actual Organization Window";
+//						planPage.closeActualOrganizationWindow();
+//						// Write log
+//			 			LogFunctions.writeLogs(description);
+//			 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Actual Organization Window");	
 			
 			// Remove expectation
  			stepNo++;
@@ -276,16 +277,6 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Organization Window");	
-			
-			//Click on Remove this segment
- 			stepNo++;
-			description="Remove This Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Remove This Segment");	
 								
 			// Sign Out from 'Plan' page
  			stepNo++;
