@@ -2445,7 +2445,7 @@
 	<Element>
 		<GivenName>Category in goal</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
-		<Name></Name>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</Name>
 	</Element>
 	
 	<Element>
@@ -2456,22 +2456,23 @@
 	
 	
 	<Element>
-		<GivenName>Organization in goal dropdown</GivenName>
+		<GivenName>Type Or Actual</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/select</Xpath>
-		<Name></Name>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</Name>
 	</Element>
 	
     <Element>
-		<GivenName>Organization for goal</GivenName>
+		<GivenName>Goal Name</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/input</Xpath>
-		<Name></Name>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:name</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
-		<GivenName>Goal Name</GivenName>
+		<GivenName>Organization for goal</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -2483,7 +2484,7 @@
 	<Element>
 		<GivenName>Acheived at end</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[5]/input</Xpath>
-		<Name></Name>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:endsWithSegment</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
