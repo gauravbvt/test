@@ -27,19 +27,19 @@ import com.mindalliance.configuration.Log4J;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
-import com.mindalliance.pages.HomePage;
-
 /**
- * Test Case ID: CP0001_ViewCollaborationPlansPage
- * Summary: Send Feedback from Collaboration Templates Page
+ * Test Case ID: CT0001_VerifyDomainPlanPagePresent
+ * Summary: Verify that the "Home" page renders
  * @author Administrator
  *
  */
-public class CP0001_ViewCollaborationPlansPage extends TestCase{
+
+public class CT0001_VerifyDomainPlanPagePresent extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="CP0001_ViewCollaborationPlansPage";
+	public String testCaseId="CT0001_VerifyDomainPlanPagePresent";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -78,7 +78,7 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser initialized");
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Testcase Execution Started");
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
@@ -91,13 +91,12 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that Collaboration Plans page is shown after Clicking the Collaboration Plans
+	 * This method verify that home page is displayed after login to the Channels
 	 * @throws UIAutomationException
 	 * @throws IOException 
-	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testCP0001_ViewCollaborationPlansPage() throws UIAutomationException, IOException, InterruptedException{
+	public void testCT0001_VerifyDomainPlanPagePresent() throws UIAutomationException, IOException{
 		try{
 			// Enter URL of Channels
 			stepNo++;
@@ -117,38 +116,39 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 		    // Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Login successful");
-			
-			//Click on Collaboration Plan link
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Login Successful");
+	
+			// Domain Plans
 			stepNo++;
-	 		description="Collaboration Communities";
-	 		HomePage homePage=new HomePage();
-	 		homePage.clickCollaborationPlanLink();
-	 		// Write log			
-	 		LogFunctions.writeLogs(description);
-	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
-		    
-		   // Sign out from home page
-		    stepNo++;
-		    description="Logout successful";
+			description="Domain Plans page present";
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+			domainPlanPage.clickDomainPlans();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plans");	
+			
+			// Sign Out from 'Home' page
+			stepNo++;
+			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
-			
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
+
 			Reporting reporting= new Reporting();
-			reporting.generateAutomationReport();
+		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
 			Log4J.getlogger(this.getClass()).error(testCaseId +ue.getErrorMessage());
-		    
+
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
@@ -157,8 +157,8 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout successful");
-				
+			Log4J.getlogger(this.getClass()).info(testCaseId +"Logout Successful");
+
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
@@ -177,12 +177,10 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
-			Log4J.getlogger(this.getClass()).info(testCaseId +"Browser Quit");
-			
 		}
 	}
 	/**
-     * Loads Test Data for CP0001_ViewCollaborationPlansPage.
+     * Loads Test Data for CT0001_VerifyDomainPlanPagePresent.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -197,26 +195,25 @@ public class CP0001_ViewCollaborationPlansPage extends TestCase{
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File CP0001_ViewCollaborationPlansPage=new File(path + "CP0001_ViewCollaborationPlansPage.xml");
+			File CT0001_VerifyDomainPlanPagePresent=new File(path + "CT0001_VerifyDomainPlanPagePresent.xml");
 			
-			Document docCP0001_ViewCollaborationPlansPage=db.parse(CP0001_ViewCollaborationPlansPage);
-			Element eleCP0001_ViewCollaborationPlansPage=docCP0001_ViewCollaborationPlansPage.getDocumentElement();
+			Document docCT0001_VerifyDomainPlanPagePresent=db.parse(CT0001_VerifyDomainPlanPagePresent);
+			Element eleCT0001_VerifyDomainPlanPagePresent=docCT0001_VerifyDomainPlanPagePresent.getDocumentElement();
 	              
-	        Element oXmlEleCP0001_ViewCollaborationPlansPage = (Element) eleCP0001_ViewCollaborationPlansPage;
+	        Element oXmlEleCT0001_VerifyDomainPlanPagePresent = (Element) eleCT0001_VerifyDomainPlanPagePresent;
 	                     	
 	        
-			this.testData.put("ChannelsURL",oXmlEleCP0001_ViewCollaborationPlansPage.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Title",oXmlEleCP0001_ViewCollaborationPlansPage.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-		
+			this.testData.put("ChannelsURL",oXmlEleCT0001_VerifyDomainPlanPagePresent.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Title",oXmlEleCT0001_VerifyDomainPlanPagePresent.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File CP0001_ViewCollaborationPlansPage not found.");
+			throw new UIAutomationException("File CT0001_VerifyDomainPlanPagePresent not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File CP0001_ViewCollaborationPlansPage.xml not found.");
+			throw new UIAutomationException("File CT0001_VerifyDomainPlanPagePresent.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File CP0001_ViewCollaborationPlansPage can not be parsed.");
+			throw new UIAutomationException("File CT0001_VerifyDomainPlanPagePresent can not be parsed.");
 		}
 	}
 }
