@@ -358,14 +358,14 @@ public class ChannelsAdmin {
 		UIActions.enterValueInTextBox(password,fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password Of User");
 		UIActions.enterKey(Keys.TAB);
 		
-		elementController.requireElementSmart(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
-		UIActions.click(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
+		elementController.requireElementSmart(fileName,"Is Administrator",GlobalVariables.configuration.getAttrSearchList(),"Is Administrator");
+		UIActions.click(fileName,"Is Administrator",GlobalVariables.configuration.getAttrSearchList(),"Is Administrator");
 		Select adminDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(adminDropDownList);
 		UIActions.selectByTextAndClick(IsAdministrator);
 		
-		elementController.requireElementSmart(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
-		UIActions.click(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		elementController.requireElementSmart(fileName,"Is Disabled",GlobalVariables.configuration.getAttrSearchList(),"Is Disabled");
+		UIActions.click(fileName,"Is Disabled",GlobalVariables.configuration.getAttrSearchList(),"Is Disabled");
 		Select disabledDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(disabledDropDownList);
 		UIActions.selectByTextAndClick(IsDisabled);
@@ -406,6 +406,34 @@ public class ChannelsAdmin {
 			
 	}
 	
+	/**
+	 * Change user access as "Developer"
+	 * @param role
+	 * throws UIAutomationException
+	 */
+	public void changeUserRole(String role) throws UIAutomationException{	
+		elementController.requireElementSmart(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(),"User Role Drop Down");
+		UIActions.click(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(),"User Role Drop Down");
+		Select userDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(userDropDownList);
+		UIActions.selectByTextAndClick(role);
+		
+		// Assertion: Verify option name is selected from dropdown
+		elementController.requireElementSmart(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(), "User Role Drop Down");
+		String optionInDropdown=UIActions.getText(fileName,"User Role Drop Down",GlobalVariables.configuration.getAttrSearchList(), "User Role Drop Down");
+		if(!optionInDropdown.contains(role)){
+		throw new UIAutomationException("Option not selected.");
+		}
+	}
+	
+	/**
+	 * Click on Apply button for Changing user role
+	 * 
+	 */
+	public void clickApplyButtonForUserRole() throws UIAutomationException{
+	elementController.requireElementSmart(fileName,"Apply Button For User Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
+	UIActions.click(fileName,"Apply Button For User Role",GlobalVariables.configuration.getAttrSearchList(),"Apply Button For User Role");
+	}
 	/**
 	 * Disable user 
 	 * @param userName

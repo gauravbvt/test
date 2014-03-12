@@ -237,7 +237,8 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	        this.testData.put("Password",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("IsAdministrator",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("isAdministrator").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("IsDisabled",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("isDisabled").item(0).getChildNodes().item(0).getNodeValue());
-		
+	        this.testData.put("Role",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("role").item(0).getChildNodes().item(0).getNodeValue());
+			
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAP0003_AddNewUserToPlan not found.");
