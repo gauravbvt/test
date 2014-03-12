@@ -177,6 +177,7 @@ public class Home {
 		suite.addTestSuite(MAP0001_AddPlan.class);
 		suite.addTestSuite(MAP0005_DeletePlan.class);
 		suite.addTestSuite(MAP0006_addOrganizations.class);
+		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
 		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
 		suite.addTestSuite(MAP0008_removeExpectation.class);
 		suite.addTestSuite(MAP0009_addTask.class);
@@ -286,7 +287,10 @@ public class Home {
 		suite.addTestSuite(HP0008_ClickChannelsSettings.class);
 		
 		// Collaboration Templates Page
+		suite.addTestSuite(CT0001_VerifyDomainPlanPagePresent.class);
+		suite.addTestSuite(CT0002_VerifyCollaborationTemplateEditorLinkPresent.class);
 		suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
+		suite.addTestSuite(CT0004_VerifyPlanIssuesLinkPresent.class);
 		suite.addTestSuite(CT0005_ClickTemplateIssuesLink.class);
 		suite.addTestSuite(CT0007_ClickSurveysLink.class);
 		suite.addTestSuite(CT0009_ClickFeedbackAndRepliesLink.class);
@@ -371,17 +375,25 @@ public class Home {
         suite.addTestSuite(TFP0113_AddNewIssueInTask.class);
        
         //Channels Admin
+        suite.addTestSuite(CA0001_HomePage.class);
         suite.addTestSuite(CA0003_CreateNewTemplate.class);
         suite.addTestSuite(CA0005_CreateTemplateWithExistingId.class);
         suite.addTestSuite(CA0006_CreateTemplateWithExistingOwner.class);
         suite.addTestSuite(CA0007_CreateTemplateWithSpecialCharacters.class);
         suite.addTestSuite(CA0009_CreateTemplateWithoutOwnerName.class);
         suite.addTestSuite(CA0010_CreateNewBlankNameTemplate.class);
+        suite.addTestSuite(CA0013_ProductizeTemplate.class);
         suite.addTestSuite(CA0016_CreateUser.class);
         suite.addTestSuite(CA0021_DisableUser.class);
 //        suite.addTestSuite(CA0025_CreateUserWithSameName.class);
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
+        
+        //Channels Entities
+        suite.addTestSuite(ENT0001_CreateAgent.class);
+        suite.addTestSuite(ENT0002_CreateAgentWithSpecialCharacters.class);
+        suite.addTestSuite(ENT0003_ViewAgent.class);
+        suite.addTestSuite(ENT0107_CreatePhase.class);
         
 		return suite;
 	}
