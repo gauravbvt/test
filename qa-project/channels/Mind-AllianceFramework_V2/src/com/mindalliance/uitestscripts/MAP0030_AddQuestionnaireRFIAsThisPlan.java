@@ -175,14 +175,14 @@ public class MAP0030_AddQuestionnaireRFIAsThisPlan extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Questionnaire - This Template");	
 			
-			// Verify Questionnaire is added
- 			stepNo++;
-			description="Questionnaire - This Plan Added";
-			planPage.verifyQuestionnaireIsAdded(testData.get("Questionnaire1"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Questionnaire - This Plan Added");	
+//			// Verify Questionnaire is added
+// 			stepNo++;
+//			description="Questionnaire - This Plan Added";
+//			planPage.verifyQuestionnaireIsAdded(testData.get("Questionnaire1"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Questionnaire - This Plan Added");	
 			
 			// Delete questionnaire added
  			stepNo++;
