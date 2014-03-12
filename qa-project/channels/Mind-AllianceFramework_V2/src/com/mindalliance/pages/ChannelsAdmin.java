@@ -94,7 +94,7 @@ public class ChannelsAdmin {
 
 		elementController.requireElementSmart(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
 		String newPlan=UIActions.getText(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
-		if(!planName.equals(newPlan)){
+		if(planName.contains(newPlan)){
 		throw new UIAutomationException( "'"+planName +"' not found");
 		}
 	}
@@ -171,11 +171,12 @@ public class ChannelsAdmin {
 	 */
 	public void clickProductizePlanButton() throws UIAutomationException
 	{
-		String headingOfWindowInXML=null;
 		elementController.requireElementSmart(fileName,"Put In Production",GlobalVariables.configuration.getAttrSearchList(), "Put In Production");
 		UIActions.click(fileName,"Put In Production",GlobalVariables.configuration.getAttrSearchList(), "Put In Production");
-		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Productize Plan", "Title");
-		UIActions.assertAlert(headingOfWindowInXML);
+		
+		String alert=dataController.getPageDataElements(fileName, "Alert Window Title Of Productize Plan", "Title");
+		elementController.waitForElement("Title", "Alert Window Title Of Productize Plan");
+		UIActions.assertAlert(alert);
 	}
 	
 	/**

@@ -49,6 +49,20 @@ public class DomainPlanPage {
 	}
 	
 	/**
+	 * 'clickIssuesReportLink' method clicks on 'Model Issues' Link
+	 * @throws UIAutomationException 
+	 */
+	public void clickIssuesReportLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Issues Report Link",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Link");
+		UIActions.click(fileName,"Issues Report Link",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Link");
+
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Domain Plan Editor Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+		
+	}	
+	
+	/**
 	 * Clicks on 'About Me' tab
 	 * @throws UIAutomationException
 	 */
@@ -124,7 +138,9 @@ public class DomainPlanPage {
 		String textInTitle=dataController.getPageDataElements(fileName,"Issue Summary Report Page Title Name" , "Name");
 		if(!title1.contains(textInTitle)){
 			throw new UIAutomationException( "'"+textInTitle +"' not found");
-	}}
+		}
+	}
+	
 	/**
 	 * Click on Template link on Issue Summary Report Page
 	 * @throws UIAutomationException

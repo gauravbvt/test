@@ -2180,13 +2180,32 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(supervisorName,fileName,"Supervisor In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Supervisor In Organization In Scope");
 		UIActions.enterKey(Keys.TAB);
 	}
+	
 	/**
 	 * Check checkbox of Agent in organization in scope
 	 * @throws UIAutomationException
 	 */
 	public void checkCheckboxOfAgentInOrganizationInScope() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Checkbox Of Agent  Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent  Organization In Scope");
-		UIActions.click(fileName,"Checkbox Of Agent  Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent  Organization In Scope");
+		elementController.requireElementSmart(fileName,"Checkbox Of Agent Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent Organization In Scope");
+		UIActions.click(fileName,"Checkbox Of Agent Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent Organization In Scope");
+	}
+	
+	/**
+	 * Check checkbox of Agent in organization in scope
+	 * @throws UIAutomationException
+	 */
+	public void clickAddButtonOfAgentInOrganizationInScope(String Agent) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Agent Add Button",GlobalVariables.configuration.getAttrSearchList(), "Agent Add Button");
+		UIActions.click(fileName,"Agent Add Button",GlobalVariables.configuration.getAttrSearchList(), "Agent Add Button");
+		
+		// Assertion: Verify if the Agent Tab is added
+		elementController.requireElementSmart(fileName,"Agent Added",GlobalVariables.configuration.getAttrSearchList(), "Agent Added");
+		String agentName=UIActions.getText(fileName,"Agent Added",GlobalVariables.configuration.getAttrSearchList(), "Agent Added");
+		
+		if(!agentName.contains(Agent)){
+			throw new UIAutomationException("Agent Not Added");
+		}
+
 	}
 	
 	/**
@@ -2553,10 +2572,10 @@ public class PlanPage {
         elementController.requireElementSmart(fileName, "Who Can Modify This Segment", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
 	    String ownersTab1=UIActions.getText(fileName, "Who Can Modify This Segment ", GlobalVariables.configuration.getAttrSearchList(), "Who Can Modify This Segment");
 	    String ownersTabText=dataController.getPageDataElements(fileName, "Who Can Modify This Segment Text", "Name");
-	/*	if(!ownersTab1.contains(ownersTabText)){
+		if(!ownersTab1.contains(ownersTabText)){
 			throw new UIAutomationException("Tab with Text '"+ownersTabText+"' not found");
 		}
-	    System.out.println(ownersTabText);*/
+	    System.out.println(ownersTabText);
 	}
 	
 	/**

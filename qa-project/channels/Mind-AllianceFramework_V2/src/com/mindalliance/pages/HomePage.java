@@ -212,21 +212,7 @@ public class HomePage {
        	//UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
-	/**
-	 * 'clickIssuesReportLink' method clicks on 'Issues Report' Link
-	 * @throws UIAutomationException 
-	 */
-	public void clickIssuesReportLink(String heading) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Issues Report Link",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Link");
-		UIActions.click(fileName,"Issues Report Link",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Link");
-		// Assertion : Check Heading of Page
-		elementController.requireElementSmart(fileName,"Issues Report Heading",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Heading");
-		String headingInPage=UIActions.getText(fileName,"Issues Report Heading",GlobalVariables.configuration.getAttrSearchList(), "Issues Report Heading");
-  
-		if(!headingInPage.contains(heading)){
-    		throw new UIAutomationException("Issues Summary Report page not found.");
-    	}
-	}	
+	
 	
 	/**
 	 * Enters Email address in About Me tab
