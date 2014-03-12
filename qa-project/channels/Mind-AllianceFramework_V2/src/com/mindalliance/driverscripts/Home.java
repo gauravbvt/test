@@ -393,7 +393,7 @@ public class Home {
         suite.addTestSuite(ENT0001_CreateAgent.class);
         suite.addTestSuite(ENT0002_CreateAgentWithSpecialCharacters.class);
         suite.addTestSuite(ENT0003_ViewAgent.class);
-        suite.addTestSuite(ENT0107_CreatePhase.class);
+        suite.addTestSuite(ENT0107_CreatePhase	.class);
         
 		return suite;
 	}
