@@ -8,4 +8,5 @@
 <password>@test2345</password>
 <isAdministrator>No</isAdministrator>
 <isDisabled>No</isDisabled>
+<role>Developer</role>
 </elements>
