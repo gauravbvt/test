@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<elements>
+<scoping>Scoping</scoping>
+<organizationsInScope>Organizations In Scope</organizationsInScope>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<organization>Agent View</organization>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForAddRoleJurisdiction>Segment For Add Agent Jurisdiction</segmentForAddRoleJurisdiction>
+<agent>ENT0003_ViewAgent</agent>
+<role>Role 1</role>
+<titleInOrg>Title 1</titleInOrg>
+<jurisdiction>Jurisdiction 1</jurisdiction>
+<supervisor>Supervisor 1</supervisor>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+</elements>
