@@ -178,7 +178,7 @@ public class MAC0003_UndoAddGoal extends TestCase {
 			//Add Goal
 			stepNo++;
 			description="Add Goal";
-			planPage.addGoal(testData.get("AddGoal"),testData.get("SelectgoalFromList"),testData.get("Type"));
+			planPage.addGoal(testData.get("Category"),testData.get("Type"),testData.get("NewGoal"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -227,6 +227,10 @@ public class MAC0003_UndoAddGoal extends TestCase {
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			PlanPage planPage= new PlanPage();
+			if(GlobalVariables.configuration.getWebDriver().getTitle().equals("Internal Error")){
+				planPage.getStackTraceOnPlanPage();
+			}
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
@@ -292,13 +296,14 @@ public class MAC0003_UndoAddGoal extends TestCase {
 	        this.testData.put("SegmentForUndoaddgoal",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("segmentForUndoaddgoal").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AboutPlanSegment",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("GoalsTab",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("goalsTab").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddGoal",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("addGoal").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Category",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("category").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("UndoUpdateSegment",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("undoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Title",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("SelectgoalFromList",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Type",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
+	     	this.testData.put("NewGoal",oXmlEleMAC0003_UndoAddGoal.getElementsByTagName("newGoal").item(0).getChildNodes().item(0).getNodeValue());
 	     	
 		}
 		catch(SAXException se){

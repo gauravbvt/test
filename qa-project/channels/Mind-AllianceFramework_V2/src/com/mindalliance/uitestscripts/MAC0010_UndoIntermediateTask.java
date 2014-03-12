@@ -193,19 +193,21 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
 			stepNo++;
 			description="Intermediate Task";
+			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
+			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("Intermediate"));
 			// Verify intermediate task should gets added to the segment
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Open Task Mover
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Verify Task is added
-			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
-			// Close Task Mover window
-			planPage.closeTaskMoverWindow();
+//			// Open Task Mover
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			// Verify Task is added
+//			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
+//			// Close Task Mover window
+//			planPage.closeTaskMoverWindow();
 			// Close Segment window
 			planPage.closeSegmentWindow();
 			// Write log
@@ -223,12 +225,12 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));			
 			// Open Task Mover
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));			
-			// Verify Task is added
-			planPage.verifyTaskIsRemoved(testData.get("IntermediateTaskName"));		
-			// Close Task Mover window
-			planPage.closeTaskMoverWindow();			
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));			
+//			// Verify Task is added
+//			planPage.verifyTaskIsRemoved(testData.get("IntermediateTaskName"));		
+//			// Close Task Mover window
+//			planPage.closeTaskMoverWindow();			
 			// Close Segment window
 			planPage.closeSegmentWindow();	
 			// Write log

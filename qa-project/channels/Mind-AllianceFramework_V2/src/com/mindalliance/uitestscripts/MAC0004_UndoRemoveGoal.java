@@ -169,7 +169,7 @@ public class MAC0004_UndoRemoveGoal extends TestCase {
 			// Add Goal
 			stepNo++;
 			description="Add Goal";
-			planPage.addGoal(testData.get("Organization"),testData.get("SelectgoalFromList"),testData.get("Type"));
+			planPage.addGoal(testData.get("Category"),testData.get("Type"),testData.get("NewGoal"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -300,6 +300,8 @@ public class MAC0004_UndoRemoveGoal extends TestCase {
 	     	this.testData.put("Title",oXmlEleMAC0004_UndoRemoveGoal.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("SelectgoalFromList",oXmlEleMAC0004_UndoRemoveGoal.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Type",oXmlEleMAC0004_UndoRemoveGoal.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
+	     	this.testData.put("NewGoal",oXmlEleMAC0004_UndoRemoveGoal.getElementsByTagName("newGoal").item(0).getChildNodes().item(0).getNodeValue());
+	     	this.testData.put("Category",oXmlEleMAC0004_UndoRemoveGoal.getElementsByTagName("category").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAC0004_UndoRemoveGoal not found.");
