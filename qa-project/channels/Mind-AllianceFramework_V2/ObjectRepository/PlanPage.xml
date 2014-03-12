@@ -954,6 +954,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Agent Added</GivenName>
+		<Xpath>//tr[contains(@class,'even')]/td/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Issues Tab</GivenName>
 		<Xpath>//div[contains(@class,'fp-tabs')]/span[6]/a/span</Xpath>
 		<Name></Name>
@@ -1021,6 +1031,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+
 	<Element>
 		<GivenName>Supervisor In Organization In Scope</GivenName>
 		<Xpath></Xpath>
@@ -1030,7 +1041,27 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-=
+
+	<Element>
+		<GivenName>Checkbox Of Agent Organization In Scope</GivenName>
+		<Xpath></Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Agent Add Button</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>button</ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Contact Info Drop Down For Agent</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[7]/td/ol/li/select</Xpath>

@@ -29,7 +29,7 @@
 	
 	<Element>
 		<GivenName>Collaboration Plans Page Title</GivenName>
-		<Title>Channels - Collaboration Planning</Title>
+		<Title>All Collaboration Communities</Title>
 	</Element>
 	
 	<Element>
@@ -154,8 +154,8 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Domain Plan Editor Page Title</GivenName>
-		<Title>Channels: </Title>
+		<GivenName>Model Issues Page Title</GivenName>
+		<Title>Issues In Collaboration Model</Title>
 	</Element>
 	
 	<Element>
@@ -320,7 +320,7 @@
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText>Collaboration Plans</LinkText>
+    	<LinkText>Collaboration Communities</LinkText>
     	<ClassName></ClassName>
  	</Element>
  	

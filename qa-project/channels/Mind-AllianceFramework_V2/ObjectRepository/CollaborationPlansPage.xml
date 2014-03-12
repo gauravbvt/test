@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<elements>
+	<Element>
+		<GivenName>Communities Page Title</GivenName>
+		<Title>All Collaboration Communities</Title>
+	</Element>
+	
+ 	
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+</elements>

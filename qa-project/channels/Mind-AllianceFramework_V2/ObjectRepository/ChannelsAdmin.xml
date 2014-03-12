@@ -98,7 +98,7 @@
  	<Element>
  		<GivenName>New Plan Added Assertion</GivenName>
  		<Xpath>//tr[contains(@class,'even')]/td/span</Xpath>
- 		<Name></Name>
+ 		<Name>Demo_Automation_Template</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>

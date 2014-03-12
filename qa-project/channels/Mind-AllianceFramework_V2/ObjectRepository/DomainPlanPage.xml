@@ -84,6 +84,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Issues Report Link</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Model Issues</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
  		<GivenName>About Me In Social Panel</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li/a</Xpath>
  		<Name></Name>
