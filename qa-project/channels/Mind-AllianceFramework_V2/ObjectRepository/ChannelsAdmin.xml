@@ -22,7 +22,8 @@
 
  	<Element>
  		<GivenName>Settings Changed Notification Name</GivenName>
- 		<Name>Notification Settings changed for model</Name>
+ 		<Name>Notification
+Settings changed for model</Name>
  	</Element>
  	
  	<Element>
@@ -161,14 +162,14 @@
 	</Element>
 	
 	<Element>
-		<GivenName>IsAdministrator</GivenName>
+		<GivenName>Is Administrator</GivenName>
 		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin')]</Xpath>
 		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin</Name>
 		<Id>id99</Id>
 	</Element>
 	
 	<Element>
-		<GivenName>IsDisabled</GivenName>
+		<GivenName>Is Disabled</GivenName>
 		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled')]</Xpath>
 		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled</Name>
 		<Id></Id>
