@@ -94,7 +94,7 @@ public class ChannelsAdmin {
 
 		elementController.requireElementSmart(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
 		String newPlan=UIActions.getText(fileName,"New Plan Added Assertion",GlobalVariables.configuration.getAttrSearchList(), "New Plan Added Assertion");
-		if(planName.contains(newPlan)){
+		if(!planName.contains(newPlan)){
 		throw new UIAutomationException( "'"+planName +"' not found");
 		}
 	}
@@ -250,11 +250,11 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 			
-		String isDisabled="false";
-		if(userName.equals(userName))
-		{
-			disableUser(userName, isDisabled);
-		}
+//		String isDisabled="false";
+//		if(userName.equals(userName))
+//		{
+//			disableUser(userName, isDisabled);
+//		}
 		
 	}
 	
