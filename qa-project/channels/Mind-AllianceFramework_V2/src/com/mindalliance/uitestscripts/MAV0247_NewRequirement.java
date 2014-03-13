@@ -122,7 +122,6 @@ public class MAV0247_NewRequirement extends TestCase{
  			channelsAdmin.clickSavePlanButton();
  			channelsAdmin.clickProductizePlanButton();
  			channelsAdmin.clickHomeLink();			
- 					
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -136,7 +135,7 @@ public class MAV0247_NewRequirement extends TestCase{
  				
  		    CommunitiesPage communitiesPage=new CommunitiesPage();
  		    //Click Start it button
-		    communitiesPage.clickStartItButton();
+		    communitiesPage.clickStartItButton(testData.get("PlanName"));
  		    //Click Go button
  		    communitiesPage.clickGoButton();
  			
