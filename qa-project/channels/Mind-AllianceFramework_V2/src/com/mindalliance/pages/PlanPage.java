@@ -448,7 +448,6 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void verifyReceivesPanelIsPresent(String receives) throws UIAutomationException{
-		
 		// Assertion: Verify 'Receives' is present
 		elementController.requireElementSmart(fileName,"Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Receives Panel");
 		String receivesPanelText=UIActions.getText(fileName,"Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Receives Panel");
@@ -4041,8 +4040,6 @@ public class PlanPage {
 			}
 		}
 	}
-
-	
 	
 	/**
 	 * Adds goal to Segment

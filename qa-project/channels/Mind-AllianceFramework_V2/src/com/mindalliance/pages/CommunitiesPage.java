@@ -1,5 +1,9 @@
 package com.mindalliance.pages;
 
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.ui.Select;
+
+import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -23,7 +27,8 @@ public class CommunitiesPage {
 	 * 'clickStartItButton' method clicks on 'Start It' button
 	 * @throws UIAutomationException 
 	*/
-	public void clickStartItButton() throws UIAutomationException{
+	public void clickStartItButton(String planName) throws UIAutomationException{
+		dropDownNewCommunity(planName);
 		elementController.requireElementSmart(fileName,"Start It",GlobalVariables.configuration.getAttrSearchList(), "Start It");
 		UIActions.click(fileName,"Start It",GlobalVariables.configuration.getAttrSearchList(), "Start It");
 				
@@ -33,6 +38,18 @@ public class CommunitiesPage {
 	}
 	
 	
+	public void dropDownNewCommunity(String planName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Drop Down Start It",GlobalVariables.configuration.getAttrSearchList(), "Drop Down Start It");
+		UIActions.click(fileName,"Drop Down Start It",GlobalVariables.configuration.getAttrSearchList(), "Drop Down Start It");
+		UIActions.enterKey(Keys.TAB);
+
+		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(fromDropDownList);
+		UIActions.selectByText(planName);
+		UIActions.enterKey(Keys.TAB);
+		
+	}
+	
 	/**
 	 * 'clickGoButton' method clicks on 'Go' button
 	 * @throws UIAutomationException 
@@ -41,8 +58,8 @@ public class CommunitiesPage {
 		elementController.requireElementSmart(fileName,"Go",GlobalVariables.configuration.getAttrSearchList(), "Go");
 		UIActions.click(fileName,"Go",GlobalVariables.configuration.getAttrSearchList(), "Go");
 				
-		 //Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Unnamed", "cTitle");
+       	// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Communities Page Title", "Title");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
@@ -67,9 +84,9 @@ public class CommunitiesPage {
 		elementController.requireElementSmart(fileName,"Collaboration Requirements Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Requirements Link");
 		UIActions.click(fileName,"Collaboration Requirements Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Requirements Link");
 				
-		// Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Collaboration requirements", "PlanTitle");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+//		// Assertion : Check Title of Page
+//    	String title=dataController.getPageDataElements(fileName, "Requirements Page Title", "PlanTitle");
+//       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
