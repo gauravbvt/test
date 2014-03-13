@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <elements>
-<automationTestPlan>Demo Automation Template</automationTestPlan>
+<automationTestPlan>Demo_Automation_Template</automationTestPlan>
 <automationTestPlanNew>Demo_Automation_Template</automationTestPlanNew>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <planName>Demo Plan</planName>
-<authorAutomationTestPlan>Demo Company</authorAutomationTestPlan>
-<authorAutomationTestPlan1>Demo Company 2</authorAutomationTestPlan1>
+<authorAutomationTestPlan>Demo_Company</authorAutomationTestPlan>
+<authorAutomationTestPlan1>Demo_Company_2</authorAutomationTestPlan1>
 </elements>
