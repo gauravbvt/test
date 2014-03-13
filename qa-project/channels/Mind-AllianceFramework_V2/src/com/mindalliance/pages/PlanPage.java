@@ -2408,7 +2408,9 @@ public class PlanPage {
 		
 		Select secondRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(secondRatedDropDownList);
-		UIActions.selectByText(High);
+		UIActions.selectByTextAndClick(High);
+		System.out.println("Hi1");
+		
 	}
 	
 	/**
