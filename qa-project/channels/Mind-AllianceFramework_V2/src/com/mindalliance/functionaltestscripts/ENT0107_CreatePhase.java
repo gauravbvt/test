@@ -139,31 +139,11 @@ public class ENT0107_CreatePhase extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Domain Plan Editor");	
 			
- 			// Click on 'Add New Segment' under 'Actions' pop up menu
- 			stepNo++;
-			description="Add New Segment";
-			PlanPage planPage=new PlanPage();
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			planPage.enterSegmentName(testData.get("SegmentForAddPhase"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Add New Segment");	
-			
-			// Close segment window
- 			stepNo++;
-			description="Closed Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Closed Segment");	
-			
  		    // Click on 'Events In Scope' under 'Scoping' pop up menu
  			//'Events in Scope' has been renamed to 'All Events and phases'
  			stepNo++;
 			description="All Events and Phases";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("EventsInScope"));
 			// Write log
