@@ -179,52 +179,52 @@ public class MAC0038_RedoPasteTaskUsingCopy extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Update Task Name");
 			
-			// Click on 'About Plan segment' under 'Show' pop up menu
- 			stepNo++;
-			description="About Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			 // Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
-			
-			// Open Task Mover
- 			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			 // Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
-			
-			// Verify Task is added
- 			stepNo++;
-			description="Task Added Successfully";
-			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			 // Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
-			
-			// Close Task Mover window
- 			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			 // Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
-			
-			// Close Segment window
- 			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();
-			 // Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+//			// Click on 'About Plan segment' under 'Show' pop up menu
+// 			stepNo++;
+//			description="About Plan Segment";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			 // Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+//			
+//			// Open Task Mover
+// 			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			 // Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+//			
+//			// Verify Task is added
+// 			stepNo++;
+//			description="Task Added Successfully";
+//			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
+//			 // Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
+//			
+//			// Close Task Mover window
+// 			stepNo++;
+//			description="Close Task Mover";
+//			planPage.closeTaskMoverWindow();
+//			 // Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+//			
+//			// Close Segment window
+// 			stepNo++;
+//			description="Close About Plan Segment Window";
+//			planPage.closeSegmentWindow();
+//			 // Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
 			
 			// Click on Actions popup in Task Panel and also click on 'Copy Task'
  			stepNo++;
@@ -250,7 +250,7 @@ public class MAC0038_RedoPasteTaskUsingCopy extends TestCase {
 			
 			// Close Segment window
 			stepNo++;
-			description="Close Plan Map Window";
+			description="Close Segment Window";
 			planPage.closeSegmentWindow();
 			// Click Stretch up forms
 			planPage.clickStrenchUpForm();
@@ -269,52 +269,52 @@ public class MAC0038_RedoPasteTaskUsingCopy extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Paste Task");
 			
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			stepNo++;
-			description="About Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
-			
-			// Open Task Mover
-			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
-			
-			// Verify Task is added
-			stepNo++;
-			description="Task Added Successfully";
-			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
-			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+//			// Click on 'About Plan segment' under 'Show' pop up menu
+//			stepNo++;
+//			description="About Plan Segment";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+//			
+//			// Open Task Mover
+//			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+//			
+//			// Verify Task is added
+//			stepNo++;
+//			description="Task Added Successfully";
+//			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Added Successfully");
+//			
+//			// Close Task Mover window
+//			stepNo++;
+//			description="Close Task Mover";
+//			planPage.closeTaskMoverWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+//			
+//			// Close Segment window
+//			stepNo++;
+//			description="Close About Plan Segment Window";
+//			planPage.closeSegmentWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
  			
 			// Click on Actions Menu and click on 'Undo Paste Task'
 			stepNo++;
@@ -326,52 +326,52 @@ public class MAC0038_RedoPasteTaskUsingCopy extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Undo Paste Task");
 			
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			stepNo++;
-			description="About Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
-			
-			// Open Task Mover
-			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
-			
-			// Verify Task is removed
-			stepNo++;
-			description="Task Removed Successfully";
-			planPage.verifyTaskIsRemoved(testData.get("TaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Removed Successfully");
-			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();			
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
+//			// Click on 'About Plan segment' under 'Show' pop up menu
+//			stepNo++;
+//			description="About Plan Segment";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+//			
+//			// Open Task Mover
+//			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+//			
+//			// Verify Task is removed
+//			stepNo++;
+//			description="Task Removed Successfully";
+//			planPage.verifyTaskIsRemoved(testData.get("TaskName"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Removed Successfully");
+//			
+//			// Close Task Mover window
+//			stepNo++;
+//			description="Close Task Mover";
+//			planPage.closeTaskMoverWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+//			
+//			// Close Segment window
+//			stepNo++;
+//			description="Close About Plan Segment Window";
+//			planPage.closeSegmentWindow();			
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment Window");
 				
 			// Click on Actions Menu and click on 'Redo Paste Task'
 			stepNo++;
@@ -383,52 +383,52 @@ public class MAC0038_RedoPasteTaskUsingCopy extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Log4J.getlogger(this.getClass()).info(testCaseId +"Redo Paste Task");
 			
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			stepNo++;
-			description="About Plan Segment";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
-			
-			// Open Task Mover
-			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
-			
-			// Verify Task is removed
-			stepNo++;
-			description="Task Redo Successfully";
-			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Redo Successfully");
-			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeSegmentWindow();			
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
+//			// Click on 'About Plan segment' under 'Show' pop up menu
+//			stepNo++;
+//			description="About Plan Segment";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"About Plan Segment");
+//			
+//			// Open Task Mover
+//			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Mover");
+//			
+//			// Verify Task is removed
+//			stepNo++;
+//			description="Task Redo Successfully";
+//			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Task Redo Successfully");
+//			
+//			// Close Task Mover window
+//			stepNo++;
+//			description="Close Task Mover";
+//			planPage.closeTaskMoverWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close Task Mover");
+//			
+//			// Close Segment window
+//			stepNo++;
+//			description="Close About Plan Segment";
+//			planPage.closeSegmentWindow();			
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			Log4J.getlogger(this.getClass()).info(testCaseId +"Close About Plan Segment");
 			
 			// Click on Remove this segment
 			stepNo++;
