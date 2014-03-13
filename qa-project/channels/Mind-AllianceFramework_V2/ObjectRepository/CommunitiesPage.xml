@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<elements>
+	<Element>
+		<GivenName>Communities Page Title</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Requirements Page Title</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	
+ 	<Element>
+ 		<GivenName>Start It</GivenName>
+ 		<Xpath>//div[contains(@class,'new-community')]/input</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Start It</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Drop Down Start It</GivenName>
+ 		<Xpath>//div[contains(@class,'new-community')]/select</Xpath>
+ 		<Name>contentsContainer:allCommunities:productionModels</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Start It</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Go</GivenName>
+ 		<Xpath>//tr[contains(@class,'even')]/td[7]/span/a</Xpath>
+ 		<Name>contentsContainer:allCommunities:productionModels</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Go</LinkText>
+    	<ClassName>link</ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Collaboration Requirements Link</GivenName>
+ 		<Xpath>//div[contains(@class,'goto')]/a/span</Xpath>
+ 		<Name>contentsContainer:allCommunities:productionModels</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Collaboration requirements</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Plan Participation Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Plan Participation</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+</elements>
