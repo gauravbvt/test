@@ -286,7 +286,7 @@ public class Home {
 		suite.addTestSuite(HP0007_ChannelSettingsPresent.class);
 		suite.addTestSuite(HP0008_ClickChannelsSettings.class);
 		
-		/*// Collaboration Templates Page
+		// Collaboration Templates Page
 		suite.addTestSuite(CT0001_VerifyDomainPlanPagePresent.class);
 		suite.addTestSuite(CT0002_VerifyCollaborationTemplateEditorLinkPresent.class);
 		suite.addTestSuite(CT0003_ClickCollaborationPlanEditorLink.class);
@@ -393,7 +393,7 @@ public class Home {
         suite.addTestSuite(ENT0001_CreateAgent.class);
         suite.addTestSuite(ENT0002_CreateAgentWithSpecialCharacters.class);
         suite.addTestSuite(ENT0003_ViewAgent.class);
-        suite.addTestSuite(ENT0107_CreatePhase	.class);*/
+        suite.addTestSuite(ENT0107_CreatePhase	.class);
         
 		return suite;
 	}
