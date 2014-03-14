@@ -209,7 +209,7 @@
 	
 	<Element>
 		<GivenName>All Events And Phases Window Title</GivenName>
-		<Title>Events</Title>
+		<Title>All Events And Phases</Title>
 	</Element>
 	
 	<Element>
@@ -368,7 +368,7 @@
 	</Element>
 	<Element>
 		<GivenName>Add New Questionnaire</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/input</Xpath>
+		<Xpath>//input[contains(@class,'add-new-questionnaire')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -406,7 +406,7 @@
 	
 	<Element>
 		<GivenName>Questionnaire Table</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[2]/table</Xpath>
+		<Xpath>/html/body/form/div[28]/div/div[3]/div/div/div[2]/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1626,7 +1626,7 @@
 	
 	<Element>
 		<GivenName>Searching</GivenName>
-		<Xpath>//span[contains(@class,'menuitem')]/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1852,7 +1852,7 @@
  	
  	<Element>
  		<GivenName>Close Classification Window</GivenName>
- 		<Xpath>/html/body/form/div[20]/div/div/div[4]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[21]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1872,7 +1872,7 @@
  	
  	<Element>
  		<GivenName>Close Searching Window</GivenName>
- 		<Xpath>/html/body/form/div[29]/div/div/div[4]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[30]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1942,7 +1942,7 @@
  	
  	<Element>
  		<GivenName>Close All Surveys Window</GivenName>
- 		<Xpath>/html/body/form/div[27]/div/div/div[4]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[28]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -3373,7 +3373,7 @@
 	
 	<Element>
 		<GivenName>Actual Segment Dropdown On Plan Page</GivenName>
-		<Xpath>/html/body/form/div[29]/div/ul/li[3]</Xpath>
+		<Xpath>/html/body/form/div[30]/div/ul/li[3]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3637,12 +3637,12 @@
 	
 	<Element>
 		<GivenName>Events In Scope Title</GivenName>
-		<Xpath>//div[contains(@class,'float-header')]/h1</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>float-bar-title</ClassName>
+		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
@@ -3711,7 +3711,7 @@
 	
 	<Element>
 		<GivenName>Classification Systems Title</GivenName>
-		<Xpath>/html/body/form/div[20]/div/span/div/div/h1</Xpath>
+		<Xpath>//div[contains(@class,'float-bar-title')]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3751,7 +3751,7 @@
 	
 	<Element>
 		<GivenName>Who's Who Title</GivenName>
-		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/div/span[4]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3772,7 +3772,7 @@
 	
 	<Element>
 		<GivenName>Index Title</GivenName>
-		<Xpath>/html/body/form/div[29]/div/div[2]/div/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/div/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3802,7 +3802,7 @@
 	
 	<Element>
 		<GivenName>Tags Title</GivenName>
-		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3812,7 +3812,7 @@
 	
 	<Element>
 		<GivenName>All Involvements Title</GivenName>
-		<Xpath>//div[contains(@class,'float-header')]</Xpath>
+		<Xpath>//div[contains(@class,'fp-title')]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3822,18 +3822,18 @@
 	
 	<Element>
 		<GivenName>Taxonomies Title</GivenName>
-		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[3]/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/div/span[3]/a/span</Xpath>
 	</Element>
 	
 	<Element>
 		<GivenName>All Attachments Title</GivenName>
-		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[5]/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/div/span[5]/a/span</Xpath>
 	</Element>
 	
 	
 	<Element>
 		<GivenName>All Events And Phases Title</GivenName>
-		<Xpath>//div[contains(@class,'tab-panel')]/h3/span</Xpath>
+		<Xpath>//div[contains(@class,'float-bar-title')]/span</Xpath>
 	</Element>
 	
 	<Element>
@@ -3998,11 +3998,11 @@
 	</Element>
 	<Element>
 		<GivenName>QUESTIONNAIRES</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-tabs')]/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>QUESTIONNAIRES</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -4016,7 +4016,7 @@
 	</Element>
 	<Element>
 		<GivenName>Activate Questionnaire</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/a[2]</Xpath>
+		<Xpath>/html/body/form/div[28]/div/div[3]/div/div/div[3]/div/a[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -4034,12 +4034,12 @@
 	</Element>
 	<Element>
 		<GivenName>All Surveys Title</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div/div/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-title')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>fp-title</ClassName>
+		<ClassName></ClassName>
 	</Element>
 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	

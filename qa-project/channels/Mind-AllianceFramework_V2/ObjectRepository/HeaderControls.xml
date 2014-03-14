@@ -218,6 +218,15 @@
     	<ClassName></ClassName>
  	</Element>
  	
+ 	<Element>
+ 		<GivenName>Sign Out Communities Model Page</GivenName>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	
  	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	

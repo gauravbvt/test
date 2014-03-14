@@ -162,14 +162,14 @@ Settings changed for model</Name>
 	</Element>
 	
 	<Element>
-		<GivenName>Is Administrator</GivenName>
+		<GivenName>IsAdministrator</GivenName>
 		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin')]</Xpath>
 		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isAdmin</Name>
-		<Id>id99</Id>
+		<Id></Id>
 	</Element>
 	
 	<Element>
-		<GivenName>Is Disabled</GivenName>
+		<GivenName>IsDisabled</GivenName>
 		<Xpath>//select[contains(@name,'contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled')]</Xpath>
 		<Name>contentsContainer:settings:tabs:panel:userRecord:userRecordContainer:userIdentityContainer:isDisabled</Name>
 		<Id></Id>
