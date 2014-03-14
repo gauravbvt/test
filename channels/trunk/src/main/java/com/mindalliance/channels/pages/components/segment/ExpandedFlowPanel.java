@@ -23,6 +23,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -267,6 +268,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private AjaxCheckBox privateCheckBox;
 
+    /**
+     * Assets container.
+     */
+    private WebMarkupContainer assetsContainer;
+
     protected ExpandedFlowPanel(
             String id,
             IModel<Flow> model,
@@ -318,6 +324,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addFlowDescription();
         addCanBypassIntermediate();
         addReceiptConfirmationRequested();
+        addAssets();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
         issuesPanel = new IssuesPanel(
                 "issues",
@@ -985,6 +992,21 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         receiptConfirmationRequestedContainer.add( receiptConfirmationRequestedCheckBox );
     }
 
+    private void addAssets() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        makeVisible( assetsContainer, !isShowSimpleForm() );
+        add( assetsContainer );
+        AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getFlow(), AssetConnectable.ASSETS ) );
+            }
+        };
+        assetsContainer.add( assetsLink );
+        Label assetsLabel = new Label( "assets-text", getFlow().getAssetConnections().toString() );
+        assetsContainer.add( assetsLabel );
+    }
 
     /**
      * Return label string according to type of flow.
@@ -1062,6 +1084,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.add( timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
         target.add( significanceToSourceContainer );
+        makeVisible( assetsContainer, !showSimpleForm );
+        target.add( assetsContainer );
     }
 
 

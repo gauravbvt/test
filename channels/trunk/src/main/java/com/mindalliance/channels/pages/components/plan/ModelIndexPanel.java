@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 
@@ -40,7 +41,7 @@ public class ModelIndexPanel extends AbstractIndexPanel implements Guidable {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EOIS, EVENTS, FUNCTIONS, FLOWS, INFO_FORMATS, INFO_PRODUCTS, MEDIA, PHASES,
+            {ALL, ACTORS, ASSETS, EOIS, EVENTS, FUNCTIONS, FLOWS, INFO_FORMATS, INFO_PRODUCTS, MEDIA, PHASES,
                     PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
 
 
@@ -128,6 +129,12 @@ public class ModelIndexPanel extends AbstractIndexPanel implements Guidable {
     protected List<Function> findIndexedFunctions() {
         return getQueryService().listKnownEntities( Function.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
+
+    @Override
+    protected List<MaterialAsset> findIndexedMaterialAssets() {
+        return getQueryService().listKnownEntities( MaterialAsset.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
+    }
+
 
     /**
      * {@inheritDoc}

@@ -21,6 +21,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ModelPage;
@@ -261,6 +262,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Show simple vs advanced form label.
      */
     private Label simpleAdvanced;
+    /**
+     * Assets container.
+     */
+    private WebMarkupContainer assetsContainer;
 
     /**
      * The containing plan page.
@@ -286,6 +291,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addTimingFields();
         addGoalsLink();
         addGoals();
+        addAssets();
         addIssuesPanel();
         addAttachments();
         adjustFields();
@@ -370,6 +376,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         target.add( executionContainer );
         makeVisible( timingContainer, !showSimpleForm );
         target.add( timingContainer );
+        makeVisible( assetsContainer, !showSimpleForm );
+        target.add( assetsContainer );
     }
 
     private String getCssClasses() {
@@ -771,6 +779,22 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "asTeam" ) );
             }
         } );
+    }
+
+    private void addAssets() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        makeVisible( assetsContainer, !isShowSimpleForm() );
+        add( assetsContainer );
+        AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPart(), AssetConnectable.ASSETS ) );
+            }
+        };
+        assetsContainer.add( assetsLink );
+        Label assetsLabel = new Label( "assets-text", getPart().getAssetConnections().toString() );
+        assetsContainer.add( assetsLabel );
     }
 
     private void addGoalsLink() {

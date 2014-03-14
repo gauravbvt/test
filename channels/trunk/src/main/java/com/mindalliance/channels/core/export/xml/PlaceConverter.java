@@ -72,7 +72,7 @@ public class PlaceConverter extends EntityConverter {
             writer.endNode();
         }
         if ( isPlanContext() ) {
-            Place locale = getPlan().getLocale();
+            Place locale = getModel().getLocale();
             if ( place.getMustBeContainedIn().isSet( locale ) ) {
                 writer.startNode( "mustBeContainedIn" );
                 writePlaceReference( writer, place.getMustBeContainedIn() );

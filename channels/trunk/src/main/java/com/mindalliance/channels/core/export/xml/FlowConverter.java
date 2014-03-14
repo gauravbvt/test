@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -159,7 +160,12 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "infoProductTimeSensitive" );
         writer.setValue( Boolean.toString( flow.isInfoProductTimeSensitive() ) );
         writer.endNode();
-
+        // Asset connections
+        for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+            writer.startNode( "assetConnection" );
+            context.convertAnother( assetConnection );
+            writer.endNode();
+        }
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -324,13 +330,16 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "standardized" ) ) {
                 flow.setStandardized( Boolean.valueOf( reader.getValue() ) );
                 if ( flow.isStandardized() ) {
-                    flow.setProductInfoFromName( getPlanDao() );
+                    flow.setProductInfoFromName( getModelDao() );
                 }
             } else if ( nodeName.equals( "published" ) ) {
                 flow.setPublished( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "infoProductTimeSensitive" ) ) {
                 flow.setInfoProductTimeSensitive( Boolean.valueOf( reader.getValue() ) );
-            } else {
+            } else if ( nodeName.equals( "assetConnection" ) ) {
+                AssetConnection assetConnection = (AssetConnection) context.convertAnother( flow, AssetConnection.class );
+                flow.addAssetConnection( assetConnection );
+            }  else {
                 LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
@@ -345,7 +354,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Flow makeFlow(
             Node source, Node target, String name, Long flowId, boolean preserveId ) {
 
-        ModelDao modelDao = getPlanDao();
+        ModelDao modelDao = getModelDao();
         Flow flow = modelDao.connect( source, target, name, preserveId ? flowId : null );
         idMap.put( flowId, flow.getId() );
         return flow;
@@ -386,10 +395,10 @@ public class FlowConverter extends AbstractChannelsConverter {
         if ( importingPlan && externalSegmentName == null ) {
             // reuse prior id
             Long id = Long.parseLong( reader.getAttribute( "id" ) );
-            connector = getPlanDao().createConnector( segment, id );
+            connector = getModelDao().createConnector( segment, id );
         } else {
             // use new id
-            connector = getPlanDao().createConnector( segment, null );
+            connector = getModelDao().createConnector( segment, null );
         }
         if ( externalSegmentName != null ) {
             // Connector is in other segment

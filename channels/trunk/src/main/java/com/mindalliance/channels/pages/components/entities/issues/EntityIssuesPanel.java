@@ -9,7 +9,6 @@ package com.mindalliance.channels.pages.components.entities.issues;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Function;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Issue;
@@ -22,9 +21,9 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
@@ -190,6 +189,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             return "";
         } else if ( entity instanceof Function ) {
             return "";
+        } else if ( entity instanceof MaterialAsset ) {
+            return "any assets this one depends on";
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }
@@ -223,6 +224,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             return new ArrayList<InfoFormat>();
         } else if ( entity instanceof Function ) {
             return new ArrayList<Function>();
+        } else if ( entity instanceof MaterialAsset ) {
+            return queryService.findAllEntitiesIn( (MaterialAsset) entity );
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }

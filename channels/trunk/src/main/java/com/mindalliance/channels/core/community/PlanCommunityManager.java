@@ -91,7 +91,7 @@ public interface PlanCommunityManager extends CommandListener {
     List<String> listAllAdopters( CollaborationModel collaborationModel );
 
     /**
-     * Find a plan community with a given plan in which the user is a participant, community planner or template developer.
+     * Find a plan community with a given plan in which the user is a participant, community planner or model developer.
      *
      * @param collaborationModel a plan
      * @param user a Channels user

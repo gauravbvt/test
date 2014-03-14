@@ -1,0 +1,34 @@
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="groupsContainer">
+        <div wicket:id="fieldGroups">
+            <div wicket:id="groupName">group name</div>
+                <div wicket:id="fieldsContainer">
+                    <table class="data-table">
+                        <tr wicket:id="fields">
+                            <td>
+                                <span wicket:id="name">field name</span> <!-- class = "required" when required-->
+                            </td>
+                            <td>
+                                <a wicket:id="delete" href="#"><img src="images/delete.png" alt="Delete"/></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+    </div>
+    <div wicket:id="newFieldContainer">
+        <input wicket:id="required" type="checkbox"/> Required field
+        <input wicket:id="name" type="text"/>
+        in group <input wicket:id="group" type="text"/>
+        has description <input wicket:id="description" type="text"/>
+        <a wicket:id="add" href="#" class="button">Add</a>
+    </div>
+</wicket:panel>
+</body>
+</html>

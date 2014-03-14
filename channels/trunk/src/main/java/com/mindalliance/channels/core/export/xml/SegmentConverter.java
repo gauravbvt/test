@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.dao.ModelDao;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
@@ -9,7 +10,6 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -106,7 +106,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         writer.endNode();
         // Segment user issues
         exportUserIssues( segment, writer, context );
-        // Risks in scope
+        // Goals in scope
         for ( Goal goal : segment.getGoals() ) {
             writer.startNode( "goal" );
             context.convertAnother( goal );
@@ -146,7 +146,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         getProxyConnectors( context );
-        ModelDao modelDao = getPlanDao();
+        ModelDao modelDao = getModelDao();
         Long oldId = Long.parseLong( reader.getAttribute( "id" ) );
         Segment segment = importingPlan
                 ? modelDao.createSegment( oldId, null )
@@ -248,10 +248,10 @@ public class SegmentConverter extends AbstractChannelsConverter {
         }
 
         // Remove automatically created default part
-        getPlanDao().removeNode( defaultPart, segment );
+        getModelDao().removeNode( defaultPart, segment );
         if ( segment.getPhase() == null ) {
             LOG.warn( "Setting segment's phase to model default." );
-            segment.setPhase( getPlan().getDefaultPhase() );
+            segment.setPhase( getModel().getDefaultPhase() );
         }
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "segment", segment );

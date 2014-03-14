@@ -70,7 +70,8 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
 
     @Override
     public boolean appliesTo( Identifiable modelObject ) {
-        return modelObject instanceof Channelable;
+        return modelObject instanceof Channelable
+                && ((Channelable)modelObject).hasAddresses();
     }
 
     @Override

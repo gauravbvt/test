@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 
@@ -35,7 +36,7 @@ public class TagIndexPanel extends AbstractIndexPanel {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
+            {ALL, ACTORS, ASSETS, EVENTS, INFO_FORMATS, INFO_PRODUCTS, FUNCTIONS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
 
     private IModel<Tag> tagModel;
     private static final boolean EXCLUDE_IMMUTABLE = false;
@@ -126,6 +127,12 @@ public class TagIndexPanel extends AbstractIndexPanel {
     protected List<Function> findIndexedFunctions() {
         return selectTagged( getQueryService().listKnownEntities( Function.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
+
+    @Override
+    protected List<MaterialAsset> findIndexedMaterialAssets() {
+        return selectTagged( getQueryService().listKnownEntities( MaterialAsset.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
+    }
+
 
     @Override
     protected List<Flow> findIndexedFlows() {

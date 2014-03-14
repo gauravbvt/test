@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -371,7 +372,8 @@ public abstract class ModelObject
                 || equals( Requirement.UNKNOWN )
                 || equals( InfoProduct.UNKNOWN )
                 || equals( InfoFormat.UNKNOWN )
-                || equals( Function.UNKNOWN );
+                || equals( Function.UNKNOWN )
+                || equals( MaterialAsset.UNKNOWN );
     }
 
     /**
@@ -466,7 +468,7 @@ public abstract class ModelObject
                 CollaborationModel.class, PlanCommunity.class,  // added
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
-                Requirement.class, InfoFormat.class, InfoProduct.class, Function.class
+                Requirement.class, InfoFormat.class, InfoProduct.class, Function.class, MaterialAsset.class
         };
         return Arrays.asList( classes );
     }
@@ -546,7 +548,7 @@ public abstract class ModelObject
         return state;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         setName( (String) state.get( "name" ) );
         setDescription( (String) state.get( "description" ) );

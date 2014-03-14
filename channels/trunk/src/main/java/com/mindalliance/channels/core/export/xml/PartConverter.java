@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -160,9 +161,16 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.startNode( "prohibited" );
         writer.setValue( Boolean.toString( part.isProhibited() ) );
         writer.endNode();
+        // checklist
         if ( !part.getChecklist().isEmpty() ) {
             writer.startNode( "checklist" );
             context.convertAnother( part.getChecklist() );
+            writer.endNode();
+        }
+        // Asset connections
+        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+            writer.startNode( "assetConnection" );
+            context.convertAnother( assetConnection );
             writer.endNode();
         }
         // Part user issues
@@ -172,15 +180,15 @@ public class PartConverter extends AbstractChannelsConverter {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Segment segment = (Segment) context.get( "segment" );
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         Part part = importingPlan
-                ? getPlanDao().createPart( segment, id )
-                : getPlanDao().createPart( segment, null );
+                ? getModelDao().createPart( segment, id )
+                : getModelDao().createPart( segment, null );
         idMap.put( id, part.getId() );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
@@ -291,6 +299,9 @@ public class PartConverter extends AbstractChannelsConverter {
                 Checklist checklist = (Checklist) context.convertAnother( part, Checklist.class );
                 checklist.setPart( part );
                 part.setChecklist( checklist );
+            } else if ( nodeName.equals( "assetConnection" ) ) {
+                AssetConnection assetConnection = (AssetConnection) context.convertAnother( part, AssetConnection.class );
+                part.addAssetConnection( assetConnection );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

@@ -61,7 +61,7 @@ public class ClassificationConverter extends AbstractChannelsConverter {
             reader.moveUp();
         }
         // Make sure all used classifications are registered with the plan.
-        getPlan().addClassification( classification );
+        getModel().addClassification( classification );
         return classification;
     }
 

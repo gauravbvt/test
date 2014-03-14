@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -18,8 +19,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -59,7 +62,13 @@ public class OrganizationProfile extends AbstractCommandablePanel {
      */
     private TextArea missionField;
 
-//    private WebMarkupContainer mediaNotDeployedContainer;
+    /**
+     * Assets container.
+     */
+    private WebMarkupContainer assetsContainer;
+
+
+    //    private WebMarkupContainer mediaNotDeployedContainer;
     private WebMarkupContainer locationContainer;
 
 
@@ -75,6 +84,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
         addLocationField();
         addLocationLink();
         addContactInfoPanel();
+        addAssets();
 //        addMediaNotDeployedPanel();
         adjustFields();
     }
@@ -190,7 +200,23 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 true ) );
     }
 
-/*
+    private void addAssets() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        add( assetsContainer );
+        AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getOrganization(), AssetConnectable.ASSETS ) );
+            }
+        };
+        assetsContainer.add( assetsLink );
+        Label assetsLabel = new Label( "assets-text", getOrganization().getAssetConnections().toString() );
+        assetsContainer.add( assetsLabel );
+    }
+
+
+    /*
     private void addMediaNotDeployedPanel() {
         mediaNotDeployedContainer = new WebMarkupContainer( "mediaNotDeployedContainer" );
         mediaNotDeployedContainer.setVisible( getOrganization().isActual() );

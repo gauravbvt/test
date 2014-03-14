@@ -118,7 +118,7 @@ public class FunctionConverter extends EntityConverter {
                 } else if ( nodeName.equals( "eoi" ) ) {
                     info.addEoi(
                             (ElementOfInformation) context.convertAnother(
-                                    getPlan(),
+                                    getModel(),
                                     ElementOfInformation.class ) );
                 }
                 reader.moveUp();
@@ -143,7 +143,7 @@ public class FunctionConverter extends EntityConverter {
                 } else if ( nodeName.equals( "eoi" ) ) {
                     info.addEoi(
                             (ElementOfInformation) context.convertAnother(
-                                    getPlan(),
+                                    getModel(),
                                     ElementOfInformation.class ) );
                 }
                 reader.moveUp();

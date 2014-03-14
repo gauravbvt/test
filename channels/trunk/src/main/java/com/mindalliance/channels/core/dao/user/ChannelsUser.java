@@ -2,8 +2,8 @@ package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.community.AbstractWaivableIdentifiable;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ChannelsUser extends AbstractWaivableIdentifiable implements UserDetails, Identifiable {
 
     public static final String ADMIN = "Admin";
-    public static final String PLANNER = "Template developer";
+    public static final String PLANNER = "Model developer";
     public static final String PARTICIPANT = "Participant";
     public static final String UNAUTHORIZED = "Unauthorized";
     

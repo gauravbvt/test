@@ -1,0 +1,27 @@
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="groupsContainer">
+        <div wicket:id="fieldGroups">
+            <div wicket:id="groupName">group name</div>
+            <div wicket:id="fieldsContainer">
+                <table class="data-table">
+                    <tr wicket:id="fields">
+                        <td>
+                            <span wicket:id="name">field name</span>:
+                        </td>
+                        <td>
+                            <input wicket:id="value" type="text"/><!-- class = "required" when required-->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+ </wicket:panel>
+</body>
+</html>

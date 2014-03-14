@@ -20,6 +20,7 @@ import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -594,7 +595,7 @@ public abstract class AbstractModelObjectDao {
         Set<? extends ModelObject> referencers = getReferencingObjects();
         Class<?>[] classes = {
                 TransmissionMedium.class, Actor.class, Role.class, Place.class, Organization.class, Event.class,
-                Phase.class, InfoProduct.class, InfoFormat.class, Function.class
+                Phase.class, InfoProduct.class, InfoFormat.class, Function.class, MaterialAsset.class
         };
 
         Iterator<? extends ModelEntity>[] iterators = new Iterator[classes.length];
@@ -798,6 +799,8 @@ public abstract class AbstractModelObjectDao {
             return (T) InfoFormat.UNKNOWN;
         else if ( clazz.isAssignableFrom( Function.class ) && Function.UNKNOWN.getId() == id )
             return (T) Function.UNKNOWN;
+        else if ( clazz.isAssignableFrom( MaterialAsset.class ) && MaterialAsset.UNKNOWN.getId() == id )
+            return (T) MaterialAsset.UNKNOWN;
         else
             throw new NotFoundException();
     }
@@ -831,6 +834,9 @@ public abstract class AbstractModelObjectDao {
         else if ( clazz.isAssignableFrom( Function.class )
                 && ModelEntity.getUniversalTypeFor( Function.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( Function.class );
+        else if ( clazz.isAssignableFrom( MaterialAsset.class )
+                && ModelEntity.getUniversalTypeFor( MaterialAsset.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( MaterialAsset.class );
         else {
             LOG.debug( "Universal " + clazz.getName() + " " + id + " not found" );
             throw new NotFoundException();

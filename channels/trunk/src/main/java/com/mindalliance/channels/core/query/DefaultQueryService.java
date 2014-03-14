@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Delay;
@@ -39,7 +40,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -49,6 +49,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -1486,6 +1487,14 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public List<? extends ModelEntity> findAllEntitiesIn( MaterialAsset asset ) {
+        return (List<ModelEntity>) CollectionUtils.select(
+                findAllModelObjectsIn( asset ),
+                PredicateUtils.invokerPredicate( "isEntity" ) );
+    }
+
+    @Override
     public List<String> findAllEntityNames( Class<? extends ModelEntity> aClass ) {
         Set<String> allNames = new HashSet<String>();
         for ( ModelObject mo : listReferencedEntities( aClass ) ) {
@@ -1755,9 +1764,13 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public List<? extends ModelObject> findAllModelObjectsIn( TransmissionMedium medium ) {
         return medium.getEffectiveDelegatedToMedia();
+    }
+
+    @Override
+    public List<? extends ModelObject> findAllModelObjectsIn( MaterialAsset asset ) {
+        return asset.getDependencies();
     }
 
     @Override
@@ -2100,6 +2113,10 @@ public abstract class DefaultQueryService implements QueryService {
                         while ( receives.hasNext() ) segmentObjects.add( receives.next() );
                     }
                     if ( ModelObject.areIdentical( part.getFunction(), entity ) ) {
+                        segmentObjects.add( part );
+                    }
+                    if ( entity instanceof MaterialAsset
+                            && part.getAssetConnections().getAllAssets().contains( (MaterialAsset) entity ) ) {
                         segmentObjects.add( part );
                     }
                 }

@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
@@ -64,7 +65,8 @@ public class ModelInvolvementsPanel extends AbstractCommandablePanel implements 
             InfoProduct.classLabel(),
             Organization.classLabel(),
             Place.classLabel(),
-            TransmissionMedium.classLabel()
+            TransmissionMedium.classLabel(),
+            MaterialAsset.classLabel()
     };
 
     private Class<? extends ModelEntity> selectedEntityClass = Organization.class;
@@ -408,7 +410,8 @@ public class ModelInvolvementsPanel extends AbstractCommandablePanel implements 
     private boolean isActualEntityInvolvement() {
         return selectedEntityClass == Actor.class
                 || selectedEntityClass == Organization.class
-                || selectedEntityClass == Place.class;
+                || selectedEntityClass == Place.class
+                || selectedEntityClass == MaterialAsset.class;
     }
 
     private String getInvolvementTitle() {
@@ -552,7 +555,8 @@ public class ModelInvolvementsPanel extends AbstractCommandablePanel implements 
                                                       boolean mustBeReferenced ) {
         if ( modelEntityClass == Organization.class
                 || modelEntityClass == Place.class
-                || modelEntityClass == Actor.class )
+                || modelEntityClass == Actor.class
+                || modelEntityClass == MaterialAsset.class )
             return getQueryService().listActualEntities( modelEntityClass, mustBeReferenced );
         else
             return getQueryService().listTypeEntities( modelEntityClass, mustBeReferenced );
@@ -584,6 +588,16 @@ public class ModelInvolvementsPanel extends AbstractCommandablePanel implements 
             else
                 return new ArrayList<Function>();
         }
+
+        @Override
+        @SuppressWarnings( "unchecked" )
+        protected List<MaterialAsset> findIndexedMaterialAssets() {
+            if ( getSelectedEntityClass() == MaterialAsset.class )
+                return (List<MaterialAsset>) getIndexedEntities( MaterialAsset.class, isMustBeReferenced() );
+            else
+                return new ArrayList<MaterialAsset>();
+        }
+
 
         @Override
         @SuppressWarnings( "unchecked" )

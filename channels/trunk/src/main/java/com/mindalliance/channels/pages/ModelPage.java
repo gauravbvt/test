@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages;
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -20,18 +21,19 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.ConnectedAssetsFloatingPanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
@@ -306,6 +308,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
     private Component planSearchingPanel;
     private Component allChecklistsPanel;
     private Component allGoalsPanel;
+    private Component assetsPanel;
 
     /**
      * Refresh button.
@@ -608,6 +611,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
         addChecklistFlowPanel( null );
         addCommitmentsPanel();
         addEOIsPanel();
+        addAssetsPanel();
         addFailureImpactsPanel();
         addDisseminationPanel( null, false );
         addModelObjectSurveysPanel();
@@ -1468,6 +1472,20 @@ public final class ModelPage extends AbstractChannelsWebPage {
         form.addOrReplace( eoisPanel );
     }
 
+    private void addAssetsPanel() {
+        AssetConnectable assetConnectable = (AssetConnectable)getModelObjectViewed( ModelObject.class, "assets" );
+        if ( assetConnectable == null ) {
+            assetsPanel = new Label( "assets", "" );
+            assetsPanel.setOutputMarkupId( true );
+            makeVisible( assetsPanel, false );
+        } else {
+            assetsPanel = new ConnectedAssetsFloatingPanel( "assets",
+                    new Model<AssetConnectable>( assetConnectable ),
+                    getReadOnlyExpansions() );
+        }
+        form.addOrReplace( assetsPanel );
+    }
+
     private void addFailureImpactsPanel() {
         SegmentObject segmentObject =
                 (SegmentObject) getModelObjectViewed( ModelObject.class, "failure" );
@@ -1878,6 +1896,8 @@ public final class ModelPage extends AbstractChannelsWebPage {
         // Close aspects of collapsed object
         if ( change.isForInstanceOf( Flow.class ) ) {
             closeAspect( change, ExpandedFlowPanel.EOIS );
+        } else if ( change.isForInstanceOf( AssetConnectable.class )) {
+            closeAspect( change, AssetConnectable.ASSETS );
         } else if ( !( change.isForInstanceOf( Part.class ) ) )
             closeAspect( change, null );
     }
@@ -1927,11 +1947,15 @@ public final class ModelPage extends AbstractChannelsWebPage {
             return aspect.equals( SegmentEditPanel.GOALS );
         } else if ( identifiable instanceof Flow )
             return aspect.equals( ExpandedFlowPanel.EOIS );
+        else if ( identifiable instanceof AssetConnectable )
+            return aspect.equals( AssetConnectable.ASSETS );
         else return false;
     }
 
     private boolean closingAspectReleasesLock( Change change, String aspect ) {
-        return !( change.isForInstanceOf( Flow.class ) && aspect.equals( ExpandedFlowPanel.EOIS ) );
+        return !( change.isForInstanceOf( Flow.class ) && aspect.equals( ExpandedFlowPanel.EOIS )
+                || change.isForInstanceOf( AssetConnectable.class ) && aspect.equals( AssetConnectable.ASSETS )
+        );
     }
 
 
@@ -2303,6 +2327,8 @@ public final class ModelPage extends AbstractChannelsWebPage {
             refreshDisseminationPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "commitments" ) ) {
             refreshCommitmentsPanel( target, change, updated );
+        }  else if ( change.isForInstanceOf( AssetConnectable.class ) && change.isForProperty( "assets" ) ) {
+            refreshAssetsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "eois" ) ) {
             refreshEOIsPanel( target, change, updated );
             if ( (Boolean) change.getQualifier( "updated" ) ) {
@@ -2620,6 +2646,21 @@ public final class ModelPage extends AbstractChannelsWebPage {
             ( (FlowsEOIsFloatingPanel) eoisPanel ).refresh( target, change, updated );
         }
     }
+
+    private void refreshAssetsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getCommunityService() );
+        if ( identifiable != null
+                && identifiable instanceof AssetConnectable
+                && ( change.isCollapsed()
+                || change.isAspect( AssetConnectable.ASSETS ) ) ) {
+            addAssetsPanel();
+            target.add( assetsPanel );
+        } else if ( assetsPanel instanceof ConnectedAssetsFloatingPanel ) {
+            ( (ConnectedAssetsFloatingPanel) assetsPanel ).refresh( target, change, updated );
+        }
+    }
+
 
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {

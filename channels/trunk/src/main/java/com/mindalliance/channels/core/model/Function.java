@@ -26,7 +26,7 @@ public class Function extends ModelEntity {
     public static Function UNKNOWN;
 
     /**
-     * Name of unknown event.
+     * Name of unknown function.
      */
     public static String UnknownName = "(unknown)";
     /**

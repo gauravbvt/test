@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -13,10 +14,10 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -595,6 +596,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         : modelObject instanceof InfoFormat ? "info_format"
                         : modelObject instanceof InfoProduct ? "info_product"
                         : modelObject instanceof Function ? "function"
+                        : modelObject instanceof MaterialAsset ? "asset"
                         : "unknown" );
     }
 

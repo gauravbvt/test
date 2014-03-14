@@ -139,6 +139,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getEntity(), "name" ) );
             }
         } );
+        nameField.setEnabled( isLockedByUser( getEntity() ) );
         addInputHint( nameField, "The name of this " + getEntity().getTypeName() );
         moDetailsDiv.add( nameField );
     }
@@ -155,6 +156,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getEntity(), "description" ) );
             }
         } );
+        descriptionField.setEnabled( isLockedByUser( getEntity() ) );
         addInputHint( descriptionField, "A brief description of this " + getEntity().getTypeName() );
         moDetailsDiv.add( descriptionField );
     }

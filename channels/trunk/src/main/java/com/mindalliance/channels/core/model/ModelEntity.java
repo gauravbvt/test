@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
@@ -75,6 +76,10 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      */
     private static final Function ANY_FUNCTION_TYPE;
     /**
+     * Universal asset.
+     */
+    private static final MaterialAsset ANY_ASSET_TYPE;
+    /**
      * All universal types.
      */
     private static final List<ModelEntity> UNIVERSAL_TYPES;
@@ -145,6 +150,11 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         ANY_FUNCTION_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_FUNCTION_TYPE );
 
+        ANY_ASSET_TYPE = new MaterialAsset( "any asset" );
+        ANY_ASSET_TYPE.setId( 10000000L - 20 );
+        ANY_ASSET_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_ASSET_TYPE );
+
     }
 
     protected ModelEntity() {
@@ -156,6 +166,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     /**
      * Whether this entity is involved in any assignment or commitment.
+     *
      * @param allAssignments all assignments
      * @param allCommitments all commitments
      * @return a boolean
@@ -185,6 +196,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 ? InfoFormat.classLabel()
                 : entityClass == Function.class
                 ? Function.classLabel()
+                : entityClass == MaterialAsset.class
+                ? MaterialAsset.classLabel()
                 : "UNKNOWN";
     }
 
@@ -196,7 +209,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 : entityClass == Organization.class
                 ? new Organization().getTypeName()
                 : entityClass == Place.class
-                ? new Place(  ).getTypeName()
+                ? new Place().getTypeName()
                 : entityClass == Role.class
                 ? new Role().getTypeName()
                 : entityClass == Phase.class
@@ -209,6 +222,9 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 ? new InfoFormat().getTypeName()
                 : entityClass == Function.class
                 ? new Function().getTypeName()
+                : entityClass == MaterialAsset.class
+                ? new MaterialAsset().getTypeName()
+
                 : "UNKNOWN";
     }
 
@@ -234,6 +250,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 ? InfoFormat.class
                 : label.equals( Function.classLabel().toLowerCase() )
                 ? Function.class
+                : label.equals( MaterialAsset.classLabel().toLowerCase() )
+                ? MaterialAsset.class
                 : null;
     }
 
@@ -250,6 +268,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         classLabels.add( InfoProduct.classLabel() );
         classLabels.add( InfoFormat.classLabel() );
         classLabels.add( Function.classLabel() );
+        classLabels.add( MaterialAsset.classLabel() );
         return classLabels;
     }
 
@@ -424,7 +443,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || equals( ANY_MEDIUM_TYPE )
                 || equals( ANY_INFO_PRODUCT_TYPE )
                 || equals( ANY_INFO_FORMAT_TYPE )
-                || equals( ANY_FUNCTION_TYPE );
+                || equals( ANY_FUNCTION_TYPE )
+                || equals( ANY_ASSET_TYPE );
     }
 
     @SuppressWarnings("unchecked")
@@ -449,6 +469,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
             return (T) ANY_INFO_FORMAT_TYPE;
         } else if ( entityClass == Function.class ) {
             return (T) ANY_FUNCTION_TYPE;
+        } else if ( entityClass == MaterialAsset.class ) {
+            return (T) ANY_ASSET_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }

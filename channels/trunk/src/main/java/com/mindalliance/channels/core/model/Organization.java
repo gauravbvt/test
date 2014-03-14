@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
@@ -17,7 +20,7 @@ import java.util.Set;
  * A company, agency, social club, etc.
  */
 public class Organization extends AbstractUnicastChannelable
-        implements GeoLocatable, Hierarchical, Specable {
+        implements GeoLocatable, Hierarchical, Specable, AssetConnectable {
 
     /**
      * Parent organization. May be null.
@@ -37,6 +40,7 @@ public class Organization extends AbstractUnicastChannelable
      */
     private List<Job> jobs = new ArrayList<Job>();
 
+    private AssetConnections assetConnections = new AssetConnections();
     /**
      * Whether roles must have associated actors, else issues.
      */
@@ -459,6 +463,7 @@ public class Organization extends AbstractUnicastChannelable
                 || ModelObject.areIdentical( getParent(), mo )
                 || ModelObject.areIdentical( location, mo )
                 || ModelObject.areIdentical( custodian, mo )
+                || getAssetConnections().references( mo )
                 ||
                 CollectionUtils.exists(
                         jobs,
@@ -567,6 +572,43 @@ public class Organization extends AbstractUnicastChannelable
 
     public boolean isFixedOrganization() {
         return isActual() && !isPlaceHolder();
+    }
+
+    // AssetConnectable
+
+
+    @Override
+    public boolean isCanStockAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanProduceAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanUseAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProvisionAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanBeAssetDemand() {
+        return false;
+    }
+
+    @Override
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        assetConnections.add( assetConnection );
     }
 
     /**

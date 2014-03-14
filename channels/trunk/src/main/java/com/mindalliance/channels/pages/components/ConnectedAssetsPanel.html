@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td>
+                <table class="data-table" wicket:id="assetConnectionsContainer">
+                     <tr wicket:id="assetConnections">
+                         <td>
+                             <select wicket:id="connection">
+                                 <option>Uses</option>
+                                 <option>Produces</option>
+                             </select>
+                             <span wicket:id="assetString">assets of type</span>
+                         </td>
+                         <td><span wicket:id="asset">[entity reference panel]</span> </td>
+                         <td wicket:id="usageProperties">
+                             <table>
+                                 <tr>
+                                     <td>
+                                         <input wicket:id="consumes" type="checkbox"/> consumes it
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td>
+                                         <input wicket:id="critical" type="checkbox"/> critical
+                                     </td>
+                                 </tr>
+                             </table>
+                         </td>
+                         <td>
+                             <a wicket:id="delete" href="#"><img src="images/delete.png" alt="delete"/></a>
+                             <a wicket:id="add" href="#" class="button">Add</a>
+                         </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+     </table>
+</wicket:panel>
+</body>
+</html>

@@ -26,6 +26,7 @@ import com.mindalliance.channels.core.model.AssignedLocation;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
@@ -42,7 +43,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
@@ -50,6 +50,9 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetField;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -174,7 +177,7 @@ public class XmlStreamer implements ImportExportFactory {
             registerConverters( xstream );
         }
 
-        protected ModelDao getPlanDao() {
+        protected ModelDao getModelDao() {
             return (ModelDao) getModelObjectDao();
         }
 
@@ -187,7 +190,7 @@ public class XmlStreamer implements ImportExportFactory {
         }
 
         public CollaborationModel getPlan() {
-            return getPlanDao().getCollaborationModel();
+            return getModelDao().getCollaborationModel();
         }
 
         public AbstractModelObjectDao getModelObjectDao() {
@@ -234,6 +237,9 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new InfoProductConverter( this ) );
             stream.registerConverter( new InfoFormatConverter( this ) );
             stream.registerConverter( new FunctionConverter( this ) );
+            stream.registerConverter( new MaterialAssetConverter( this ) );
+            stream.registerConverter( new AssetFieldConverter( this ) );
+            stream.registerConverter( new AssetConnectionConverter( this ) );
             stream.registerConverter( new TransformationConverter( this ) );
             stream.registerConverter( new EventPhaseConverter( this ) );
             stream.registerConverter( new EventTimingConverter( this ) );
@@ -267,6 +273,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "issue", UserIssue.class );
             stream.alias( "segment", Segment.class );
             stream.alias( "goal", Goal.class );
+            stream.alias( "assetfield", AssetField.class );
             stream.alias( "checklist", Checklist.class );
             stream.alias( "channel", Channel.class );
             stream.alias( "job", Job.class );
@@ -278,7 +285,9 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "assignedLocation", AssignedLocation.class );
             stream.alias( "infoproduct", InfoProduct.class );
             stream.alias( "function", Function.class );
+            stream.alias( "asset", MaterialAsset.class );
             stream.alias( "format", InfoFormat.class );
+            stream.alias( "assetconnection", AssetConnection.class );
             stream.alias( "issuedetectionwaiver", IssueDetectionWaiver.class );
         }
 
@@ -437,12 +446,12 @@ public class XmlStreamer implements ImportExportFactory {
             if ( loadingPlan ) {
                 Long id = conSpec.getExternalFlowId();
                 externalFlow = (ExternalFlow) ( conSpec.isSource() ?
-                        getPlanDao().connect( externalConnector, part, innerName, id )
-                        : getPlanDao().connect( part, externalConnector, innerName, id ) );
+                        getModelDao().connect( externalConnector, part, innerName, id )
+                        : getModelDao().connect( part, externalConnector, innerName, id ) );
             } else {
                 externalFlow = (ExternalFlow) ( conSpec.isSource() ?
-                        getPlanDao().connect( externalConnector, part, innerName, null )
-                        : getPlanDao().connect( part, externalConnector, innerName, null ) );
+                        getModelDao().connect( externalConnector, part, innerName, null )
+                        : getModelDao().connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
             List<String> restrictions = conSpec.getRestrictions();
@@ -451,7 +460,7 @@ public class XmlStreamer implements ImportExportFactory {
             }
             externalFlow.setReceiptConfirmationRequested( conSpec.isReceiptConfirmationRequested() );
             externalFlow.setCanBypassIntermediate( conSpec.isCanBypassIntermediate() );
-            getPlanDao().disconnect( localInnerFlow );
+            getModelDao().disconnect( localInnerFlow );
         }
 
         private void copy( Flow inner, ExternalFlow external ) {
@@ -475,7 +484,7 @@ public class XmlStreamer implements ImportExportFactory {
         @SuppressWarnings("unchecked")
         private List<Connector> findMatchingConnectors( final ConnectionSpecification conSpec ) {
             List<Connector> connectors = new ArrayList<Connector>();
-            List<Segment> segments = ConverterUtils.findMatchingSegments( getPlanDao(), conSpec.getSegmentSpecification() );
+            List<Segment> segments = ConverterUtils.findMatchingSegments( getModelDao(), conSpec.getSegmentSpecification() );
             for ( Segment segment : segments ) {
                 Iterator<Connector> iterator =
                         (Iterator<Connector>) new FilterIterator( segment.nodes(), new Predicate() {

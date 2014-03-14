@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.analytics.ActorAnalyticsPanel;
@@ -33,6 +34,7 @@ import com.mindalliance.channels.pages.components.entities.details.EventDetailsP
 import com.mindalliance.channels.pages.components.entities.details.FunctionDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.InfoFormatDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.InfoProductDetailsPanel;
+import com.mindalliance.channels.pages.components.entities.details.MaterialAssetDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.MediumDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.OrganizationDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.PhaseDetailsPanel;
@@ -293,7 +295,12 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
-        } else {
+        }  else if ( getObject() instanceof MaterialAsset ) {
+            return new MaterialAssetDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelEntity>( this, "object" ),
+                    getExpansions() );
+        }else {
             return new EntityDetailsPanel(
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table wicket:id="dependenciesContainer" class="data-table">
+        <tr wicket:id="dependencies">
+            <td>
+                <span wicket:id="dependency">[asset entity mo link]</span>
+            </td>
+            <td><a wicket:id="delete" href="#"><img src="images/delete.png" alt="Delete"/></a> </td>
+        </tr>
+        <tr wicket:id="newDependencyContainer">
+            <td>
+                <span wicket:id="newDependency">[asset entity reference panel]</span>
+            </td>
+            <td><a wicket:id="add" href="#" class="button">Add</a> </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

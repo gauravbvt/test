@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
@@ -606,6 +607,12 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     public Function getAnyFunction() {
         return chooseOne( getQueryService().list( Function.class ) );
     }
+
+    @Override
+    public MaterialAsset getAnyMaterialAsset() {
+        return chooseOne( getQueryService().list( MaterialAsset.class ) );
+    }
+
 
     @Override
     @SuppressWarnings( "unchecked" )

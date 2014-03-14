@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
-import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.WorkTime;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -109,7 +109,7 @@ public class ActorConverter extends EntityConverter {
     protected void setSpecific( ModelEntity entity, String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        CollaborationModel collaborationModel = getPlan();
+        CollaborationModel collaborationModel = getModel();
         Actor actor = (Actor) entity;
         if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( collaborationModel, Channel.class );

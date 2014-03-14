@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.ModelDefinition.Version;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -19,12 +20,12 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
@@ -217,6 +218,8 @@ public class ModelDao extends AbstractModelObjectDao {
             InfoFormat.UNKNOWN.makeImmutable();
             Function.UNKNOWN = findOrCreateType( Function.class, Function.UnknownName, null );
             Function.UNKNOWN.makeImmutable();
+            MaterialAsset.UNKNOWN = findOrCreateType( MaterialAsset.class, MaterialAsset.UnknownName, null );
+            MaterialAsset.UNKNOWN.makeImmutable();
             if ( Requirement.UNKNOWN == null ) {  // todo - COMMUNITY - remove
                 Requirement.UNKNOWN = findOrCreateModelObject( Requirement.class, Requirement.UnknownName, null );
             }

@@ -23,6 +23,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -131,6 +132,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Indexing choice.
      */
     protected static final String FUNCTIONS = "Functions";
+    /**
+     * Indexing choice.
+     */
+    protected static final String ASSETS = "Assets";
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -476,7 +481,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             taggables = findIndexedInfoFormats();
         } else if ( indexedOn.equals( FUNCTIONS ) ) {
             taggables = findIndexedFunctions();
-        } else {
+        }  else if ( indexedOn.equals( ASSETS ) ) {
+            taggables = findIndexedMaterialAssets();
+        }else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
         return (List<String>) CollectionUtils.collect(
@@ -534,6 +541,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedInfoFormats() );
         }  else if ( indexedOn.equals( FUNCTIONS ) ) {
             names = indexNamesFor( findIndexedFunctions() );
+        }  else if ( indexedOn.equals( ASSETS ) ) {
+            names = indexNamesFor( findIndexedMaterialAssets() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -568,6 +577,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedInfoProducts() ) );
         names.addAll( indexNamesFor( findIndexedInfoFormats() ) );
         names.addAll( indexNamesFor( findIndexedFunctions() ) );
+        names.addAll( indexNamesFor( findIndexedMaterialAssets() ) );
         return new ArrayList<String>( names );
     }
 
@@ -588,6 +598,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         taggables.addAll( findIndexedInfoProducts() );
         taggables.addAll( findIndexedInfoFormats() );
         taggables.addAll( findIndexedFunctions() );
+        taggables.addAll( findIndexedMaterialAssets() );
         return taggables;
     }
 
@@ -719,6 +730,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedInfoFormats() );
             }  else if ( indexedOn.equals( FUNCTIONS ) ) {
                 indices = indicesFor( findIndexedFunctions() );
+            }  else if ( indexedOn.equals( ASSETS ) ) {
+                indices = indicesFor( findIndexedMaterialAssets() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
             }
@@ -744,6 +757,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexEntries.addAll( indicesFor( findIndexedInfoProducts() ) );
         indexEntries.addAll( indicesFor( findIndexedInfoFormats() ) );
         indexEntries.addAll( indicesFor( findIndexedFunctions() ) );
+        indexEntries.addAll( indicesFor( findIndexedMaterialAssets() ) );
         return indexEntries;
     }
 
@@ -1144,6 +1158,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedInfoProducts().isEmpty() ) choices.add( INFO_PRODUCTS );
         if ( !findIndexedInfoFormats().isEmpty() ) choices.add( INFO_FORMATS );
         if ( !findIndexedFunctions().isEmpty() ) choices.add( FUNCTIONS );
+        if ( !findIndexedMaterialAssets().isEmpty() ) choices.add( ASSETS );
         return choices;
     }
 
@@ -1281,6 +1296,16 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     protected List<Function> findIndexedFunctions() {
         return new ArrayList<Function>();
     }
+
+    /**
+     * Find all material assets to index.
+     *
+     * @return a list of material assets
+     */
+    protected List<MaterialAsset> findIndexedMaterialAssets() {
+        return new ArrayList<MaterialAsset>();
+    }
+
 
     /**
      * An element of information in a flow.

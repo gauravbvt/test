@@ -1,9 +1,9 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Agreement;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -65,7 +65,7 @@ public class AgreementConverter extends AbstractChannelsConverter {
             UnmarshallingContext context ) {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
-        CollaborationModel collaborationModel = getPlan();
+        CollaborationModel collaborationModel = getModel();
         Agreement agreement = new Agreement();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();

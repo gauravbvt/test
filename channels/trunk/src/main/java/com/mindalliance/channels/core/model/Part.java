@@ -2,6 +2,9 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
@@ -27,7 +30,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
+public class Part extends Node implements GeoLocatable, Specable, Prohibitable, AssetConnectable {
 
     /**
      * Default actor label, when unknown.
@@ -111,8 +114,15 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * Whether the part is prohibited.
      */
     private boolean prohibited = false;
-
+    /**
+     * The task's checklist.
+     */
     private Checklist checklist;
+
+    /**
+     * The task's asset connections.
+     */
+    private AssetConnections assetConnections = new AssetConnections(  );
 
     public Part() {
         adjustName();
@@ -718,6 +728,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                 || ModelObject.areIdentical( location.getNamedPlace(), mo )
                 || ModelObject.areIdentical( initiatedEvent, mo )
                 || ModelObject.areIdentical( function, mo )
+                || getAssetConnections().references( mo )
                 || CollectionUtils.exists( goals, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
@@ -1470,6 +1481,42 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         return initiatedEvent != null && initiatedEvent.equals( event );
     }
 
+    // AssetConnectable
+
+
+    @Override
+    public boolean isCanStockAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProduceAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanUseAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanProvisionAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanBeAssetDemand() {
+        return false;
+    }
+
+    @Override
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        assetConnections.add( assetConnection );
+    }
 
     /**
      * Category of tasks.
@@ -1539,6 +1586,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             }
             return null;
         }
+
 
     }
 }

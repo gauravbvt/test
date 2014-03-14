@@ -3,6 +3,9 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -25,7 +28,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable, EOIsHolder {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable, EOIsHolder, AssetConnectable {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -118,6 +121,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Whether the info product is time sensitive.
      */
     private boolean infoProductTimeSensitive = false;
+
+    /**
+     * The flow's asset connections.
+     */
+    private AssetConnections assetConnections = new AssetConnections(  );
+
 
     protected Flow() {
     }
@@ -1303,7 +1312,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         return ( (Channel) obj ).references( mo );
                     }
                 } )
-                || ( infoProduct != null && infoProduct.equals( mo ) );
+                || ( infoProduct != null && infoProduct.equals( mo ) )
+                || getAssetConnections().references( mo );
     }
 
     /**
@@ -1879,9 +1889,46 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
+    // AssetConnectable
+
+
+    @Override
+    public boolean isCanStockAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProduceAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanUseAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProvisionAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanBeAssetDemand() {
+        return true;
+    }
+
+    @Override
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        assetConnections.add( assetConnection );
+    }
+
     /**
-     * Intent of flows.
-     */
+         * Intent of flows.
+         */
     public enum Intent {
 
         Alarm,

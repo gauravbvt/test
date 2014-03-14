@@ -2,9 +2,9 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -105,7 +105,7 @@ public class TransmissionMediumConverter extends EntityConverter {
                                 String nodeName,
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
-        CollaborationModel collaborationModel = getPlan();
+        CollaborationModel collaborationModel = getModel();
         TransmissionMedium medium = (TransmissionMedium) entity;
         if ( nodeName.equals( "addressPattern" ) ) {
             medium.setAddressPattern( reader.getValue() );

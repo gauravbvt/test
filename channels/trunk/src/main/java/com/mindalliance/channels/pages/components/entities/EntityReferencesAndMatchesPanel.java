@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -221,6 +222,15 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
             return isShowReferences()
                     ? getQueryService().findAllReferencing( getEntity(), Function.class )
                     : new ArrayList<Function>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<MaterialAsset> findIndexedMaterialAssets() {
+            return isShowReferences()
+                    ? getQueryService().findAllReferencing( getEntity(), MaterialAsset.class )
+                    : new ArrayList<MaterialAsset>();
         }
 
         /**

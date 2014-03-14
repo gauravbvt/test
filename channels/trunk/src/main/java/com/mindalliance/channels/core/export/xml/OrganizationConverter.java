@@ -2,11 +2,12 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -59,7 +60,7 @@ public class OrganizationConverter extends EntityConverter {
             writer.startNode( "placeHolder" );
             writer.setValue( "true" );
             writer.endNode();
-         }
+        }
         if ( org.isSingleParticipation() ) {
             writer.startNode( "singleParticipation" );
             writer.setValue( "true" );
@@ -115,6 +116,12 @@ public class OrganizationConverter extends EntityConverter {
             context.convertAnother( job );
             writer.endNode();
         }
+        // Asset connections
+        for ( AssetConnection assetConnection : org.getAssetConnections().getAll() ) {
+            writer.startNode( "assetConnection" );
+            context.convertAnother( assetConnection );
+            writer.endNode();
+        }
         // agreements
 /*
         for ( Agreement agreement : org.getAgreements()) {
@@ -142,13 +149,13 @@ public class OrganizationConverter extends EntityConverter {
                                 HierarchicalStreamReader reader,
                                 UnmarshallingContext context ) {
         Organization org = (Organization) entity;
-        CollaborationModel collaborationModel = getPlan();
+        CollaborationModel collaborationModel = getModel();
         if ( nodeName.equals( "placeHolder" ) ) {
             org.setPlaceHolder( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "singleParticipation" ) ) {
             org.setSingleParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "custodian" ) ) {
-            String id = reader.getAttribute( "id");
+            String id = reader.getAttribute( "id" );
             org.setCustodian( findOrCreate( Actor.class, reader.getValue(), id ) );
 /*
         } else if ( nodeName.equals( "actorsRequired" ) ) {
@@ -159,10 +166,10 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "mission" ) ) {
             org.setMission( reader.getValue() );
         } else if ( nodeName.equals( "parent" ) ) {
-            Long id = Long.parseLong( reader.getAttribute( "id") );
+            Long id = Long.parseLong( reader.getAttribute( "id" ) );
             String kindName = reader.getAttribute( "kind" );
             ModelEntity.Kind kind;
-            if (kindName == null) {
+            if ( kindName == null ) {
                 kind = ModelEntity.Kind.Actual;
             } else {
                 kind = ModelEntity.Kind.valueOf( kindName );
@@ -176,7 +183,7 @@ public class OrganizationConverter extends EntityConverter {
             );
             org.setParent( parent );
         } else if ( nodeName.equals( "location" ) ) {
-            String id = reader.getAttribute( "id");
+            String id = reader.getAttribute( "id" );
             org.setLocation( findOrCreate( Place.class, reader.getValue(), id ) );
         } else if ( nodeName.equals( "channel" ) ) {
             Channel channel = (Channel) context.convertAnother( collaborationModel, Channel.class );
@@ -192,6 +199,9 @@ public class OrganizationConverter extends EntityConverter {
             String id = reader.getAttribute( "id");
             org.addMediumNotDeployed( findOrCreate( TransmissionMedium.class, reader.getValue(), id ) );
 */
+        } else if ( nodeName.equals( "assetConnection" ) ) {
+            AssetConnection assetConnection = (AssetConnection) context.convertAnother( org, AssetConnection.class );
+            org.addAssetConnection( assetConnection );
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }

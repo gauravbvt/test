@@ -9,6 +9,7 @@ package com.mindalliance.channels.core.export.xml;
 import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
@@ -17,12 +18,12 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -59,7 +60,7 @@ public class ModelConverter extends AbstractChannelsConverter {
     @Override
     public void marshal( Object source, HierarchicalStreamWriter writer, MarshallingContext context ) {
         CollaborationModel collaborationModel = (CollaborationModel) source;
-        ModelDao modelDao = getPlanDao();
+        ModelDao modelDao = getModelDao();
         writer.addAttribute( "id", String.valueOf( collaborationModel.getId() ) );
         writer.addAttribute( "uri", collaborationModel.getUri() );
         writer.addAttribute( "version", getVersion() );
@@ -196,7 +197,7 @@ public class ModelConverter extends AbstractChannelsConverter {
         collaborationModel.setUri( uri );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         collaborationModel.setId( id );
-        getPlanDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos
+        getModelDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -271,6 +272,8 @@ public class ModelConverter extends AbstractChannelsConverter {
                 context.convertAnother( collaborationModel, InfoFormat.class );
             } else if ( nodeName.equals( "function" ) ) {
                 context.convertAnother( collaborationModel, Function.class );
+            } else if ( nodeName.equals( "asset" ) ) {
+                context.convertAnother( collaborationModel, MaterialAsset.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreateType( Event.class, reader.getValue(), eventId );

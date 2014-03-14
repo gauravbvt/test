@@ -53,7 +53,7 @@ public class InfoProductConverter extends EntityConverter {
         // eois
         if ( nodeName.equals( "eoi" ) ) {
             ElementOfInformation eoi = (ElementOfInformation) context.convertAnother(
-                    getPlan(),
+                    getModel(),
                     ElementOfInformation.class );
             infoProduct.addLocalEoi( eoi );
             // classifications linked

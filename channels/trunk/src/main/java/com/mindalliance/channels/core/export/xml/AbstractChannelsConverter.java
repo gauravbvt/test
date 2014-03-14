@@ -9,11 +9,11 @@ import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.AttachmentImpl;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.UserIssue;
@@ -71,8 +71,8 @@ public abstract class AbstractChannelsConverter implements Converter {
         return getDao() instanceof ModelDao;
     }
 
-    ModelDao getPlanDao() {
-        return getContext().getPlanDao();
+    ModelDao getModelDao() {
+        return getContext().getModelDao();
     }
 
     CommunityDao getCommunityDao() {
@@ -276,7 +276,7 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     private boolean attachmentExists( String url ) {
         if ( isInDomainContext() )
-            return getAttachmentManager().exists( getPlan(), url );
+            return getAttachmentManager().exists( getModel(), url );
         else
             return getAttachmentManager().exists( getPlanCommunity(), url );
     }
@@ -384,8 +384,8 @@ public abstract class AbstractChannelsConverter implements Converter {
      *
      * @return a plan
      */
-    protected CollaborationModel getPlan() {
-        return getPlanDao().getCollaborationModel();
+    protected CollaborationModel getModel() {
+        return getModelDao().getCollaborationModel();
     }
 
     /**

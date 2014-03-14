@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Dissemination;
@@ -28,7 +29,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -37,6 +37,7 @@ import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 
 import java.util.Date;
@@ -902,6 +903,14 @@ public interface QueryService {
     List<? extends ModelObject> findAllModelObjectsIn( TransmissionMedium medium );
 
     /**
+     * Find all assets an asset depends on.
+     *
+     * @param asset a material asset
+     * @return a list of model objects
+     */
+    List<? extends ModelObject> findAllModelObjectsIn( MaterialAsset asset );
+
+    /**
      * Find all model objects directly impacted by or impacting an event.
      *
      * @param event an event
@@ -1061,6 +1070,14 @@ public interface QueryService {
      * @return a list of entities
      */
     List<? extends ModelEntity> findAllEntitiesIn( TransmissionMedium medium );
+
+    /**
+     * Find all entities in a given asset.
+     *
+     * @param asset a material asset
+     * @return a list of entities
+     */
+    List<? extends ModelEntity> findAllEntitiesIn( MaterialAsset asset );
 
     /**
      * Find all model objects of a given class that reference a given model object.

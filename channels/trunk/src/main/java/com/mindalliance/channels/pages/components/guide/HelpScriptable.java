@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
 
@@ -37,6 +38,7 @@ public interface HelpScriptable {
     InfoProduct getAnyInfoProduct();
     InfoFormat getAnyInfoFormat();
     Function getAnyFunction();
+    MaterialAsset getAnyMaterialAsset();
     Flow getAnySharingFlow();
     RFISurvey getUnknownRFISurvey();
     Feedback  getUnknownFeedback();

@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -91,8 +92,9 @@ public class ModelTypologiesPanel extends AbstractCommandablePanel implements Gu
     private static final String INFO_PRODUCT = "Info product";
     private static final String INFO_FORMAT = "Info format";
     private static final String FUNCTION = "Function";
+    private static final String ASSET = "Asset";
 
-    private static String[] TYPE_KINDS = {AGENT, EVENT, FUNCTION, INFO_FORMAT, INFO_PRODUCT, ORG, PLACE, ROLE, MEDIUM};
+    private static String[] TYPE_KINDS = {AGENT, ASSET, EVENT, FUNCTION, INFO_FORMAT, INFO_PRODUCT, ORG, PLACE, ROLE, MEDIUM};
     private CheckBox neatoCheckBox;
     private CheckBox dotCheckBox;
 
@@ -228,10 +230,12 @@ public class ModelTypologiesPanel extends AbstractCommandablePanel implements Gu
                         ? Role.class
                         : selectedTypeKind.equals( INFO_PRODUCT )
                         ? InfoProduct.class
-                        :selectedTypeKind.equals( INFO_FORMAT )
+                        : selectedTypeKind.equals( INFO_FORMAT )
                         ? InfoFormat.class
-                        :selectedTypeKind.equals( FUNCTION )
+                        : selectedTypeKind.equals( FUNCTION )
                         ? Function.class
+                        : selectedTypeKind.equals( ASSET )
+                        ? MaterialAsset.class
                         : null;
         assert clazz != null;
         return ModelEntity.getUniversalTypeFor( clazz );

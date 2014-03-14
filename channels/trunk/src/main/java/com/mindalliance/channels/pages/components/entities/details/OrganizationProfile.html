@@ -7,52 +7,61 @@
         lang="en">
 <body>
 <wicket:panel>
-        <tr>
-            <th class="area" align="right" valign="top"><label>Mission:</label></th>
-            <td><textarea cols="40" rows="2" wicket:id="mission">Mission</textarea></td>
-        </tr>
-        <tr>
-            <th align="right">
-                <label for="parent"><span wicket:id="org-link"
-                                          title="Parent organization's details">Parent</span>:</label>
-            </th>
-            <td>
-                <input id="parent" width="40" wicket:id="actualParent" type="text"/>
-                <span wicket:id="parent">[entity reference panel]</span>
-            </td>
-        </tr>
-        <tr wicket:id="locationContainer">
-            <th align="right"><label for="location"><a wicket:id="loc-link" href=""
-                                                       title="Location's details">Location</a>:</label>
-            </th>
-            <td><input type="text" size="40" id="location" wicket:id="location" value=""/></td>
-        </tr>
-        <tr wicket:id="contactContainer">
-            <th align="right">
-                <label for="contact-info">Contact info:</label>
-            </th>
-            <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
-        </tr>
- <!--       <tr wicket:id="mediaNotDeployedContainer">
-            <th align="right">
-                <label>Media not deployed:</label>
-            </th>
-            <td>
-                <ul class="media-not-deployed">
-                    <li wicket:id="mediaNotDeployed">
-                        <span wicket:id="notDeployedMediumLink" title="Medium's details">Phone</span>
-                        <a class="medium-delete" wicket:id="deleteNotDeployedMedium" href="#">
-                            Delete
-                        </a>
-                        <select wicket:id="mediumChoice">
-                            <option>Secure Radio</option>
-                            <option></option>
-                        </select>
-                    </li>
-                </ul>
-            </td>
-        </tr>
--->
+    <tr>
+        <th class="area" align="right" valign="top"><label>Mission:</label></th>
+        <td><textarea cols="40" rows="2" wicket:id="mission">Mission</textarea></td>
+    </tr>
+    <tr>
+        <th align="right">
+            <label for="parent"><span wicket:id="org-link"
+                                      title="Parent organization's details">Parent</span>:</label>
+        </th>
+        <td>
+            <input id="parent" width="40" wicket:id="actualParent" type="text"/>
+            <span wicket:id="parent">[entity reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="locationContainer">
+        <th align="right"><label for="location"><a wicket:id="loc-link" href=""
+                                                   title="Location's details">Location</a>:</label>
+        </th>
+        <td><input type="text" size="40" id="location" wicket:id="location" value=""/></td>
+    </tr>
+    <tr wicket:id="contactContainer">
+        <th align="right">
+            <label for="contact-info">Contact info:</label>
+        </th>
+        <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
+    </tr>
+    <tr wicket:id="assetsContainer">
+        <th align="right">
+            <a wicket:id="assets-link">Related assets</a>:
+        </th>
+        <td>
+            <span wicket:id="assets-text">Uses...</span>
+        </td>
+    </tr>
+
+    <!--       <tr wicket:id="mediaNotDeployedContainer">
+               <th align="right">
+                   <label>Media not deployed:</label>
+               </th>
+               <td>
+                   <ul class="media-not-deployed">
+                       <li wicket:id="mediaNotDeployed">
+                           <span wicket:id="notDeployedMediumLink" title="Medium's details">Phone</span>
+                           <a class="medium-delete" wicket:id="deleteNotDeployedMedium" href="#">
+                               Delete
+                           </a>
+                           <select wicket:id="mediumChoice">
+                               <option>Secure Radio</option>
+                               <option></option>
+                           </select>
+                       </li>
+                   </ul>
+               </td>
+           </tr>
+   -->
 </wicket:panel>
 </body>
 </html>
