@@ -21,7 +21,7 @@ public class Home {
 		new ElementController();
 		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
 
-		/*//		View
+		//		View
 		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
@@ -192,7 +192,7 @@ public class Home {
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
     	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
-    			suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
+   /* 			suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 		suite.addTestSuite(MAP0004_DeleteUser.class);
     	suite.addTestSuite(MAP0018_attachFile.class);
@@ -204,7 +204,7 @@ public class Home {
 		suite.addTestSuite(MAP0024_moveTask.class);
 		suite.addTestSuite(MAP0025_receiveTask.class);
 		suite.addTestSuite(MAP0026_sendTask.class);
-		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);
+		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);*/
 
     	//		Command
 
@@ -233,7 +233,7 @@ public class Home {
     	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
     	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
     	
-		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+	/*	suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
 		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
@@ -253,7 +253,7 @@ public class Home {
 		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
-		suite.addTestSuite(MAC0036_RedoCutTask.class);
+		suite.addTestSuite(MAC0036_RedoCutTask.class);*/
 		
     	// Channels Login
 
@@ -385,15 +385,27 @@ public class Home {
         suite.addTestSuite(CA0013_ProductizeTemplate.class);
         suite.addTestSuite(CA0016_CreateUser.class);
         suite.addTestSuite(CA0021_DisableUser.class);
-//        suite.addTestSuite(CA0025_CreateUserWithSameName.class);
+//      suite.addTestSuite(CA0025_CreateUserWithSameName.class);
         suite.addTestSuite(CA0030_CreateUserWithInvalidEmailID.class);
         suite.addTestSuite(CA0033_UpdateOwnerName.class);
         
         //Channels Entities
         suite.addTestSuite(ENT0001_CreateAgent.class);
         suite.addTestSuite(ENT0002_CreateAgentWithSpecialCharacters.class);
-*/        suite.addTestSuite(ENT0003_ViewAgent.class);
+        suite.addTestSuite(ENT0003_ViewAgent.class);
         suite.addTestSuite(ENT0107_CreatePhase	.class);
+        
+        //Collaboration Plans
+        suite.addTestSuite(CP0000_ProductizeDefaultModel.class);
+        suite.addTestSuite(CP0001_ViewCollaborationPlansPage.class);
+        suite.addTestSuite(CP0009_ClickGoButton.class);  
+        suite.addTestSuite(CP0007_ClickStartItButton.class);
+        suite.addTestSuite(CP0044_ClickCollaborationRequirementsLink.class);
+        suite.addTestSuite(CP0045_ClickCollaborationModelLink.class);
+        suite.addTestSuite(CP0077_ClickSurveysLink.class);
+        suite.addTestSuite(CP0046_ClickPlanParticipationLink.class);
+        suite.addTestSuite(CP0078_ClickFeedbackAndRepliesLink.class);
+        suite.addTestSuite(CP0079_ClickCollaborationChecklistsLink.class);
         
 		return suite;
 	}
