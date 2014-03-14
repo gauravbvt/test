@@ -11,6 +11,9 @@ import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -97,8 +100,11 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         connectionChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                if ( !wrapper.isMarkedForCreation() )
+                if ( !wrapper.isMarkedForCreation() ) {
                     update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
+                }
+                addAssetConnectionsContainer();
+                target.add( assetConnectionsContainer );
             }
         } );
         connectionChoice.setEnabled( isLockedByUser( getAssetConnectable() ) );
@@ -117,8 +123,16 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         item.add( label );
     }
 
+    @SuppressWarnings( "unchecked" )
     private List<String> getTypeLabelsChoicesFor( ListItem<AssetConnectionWrapper> item ) {
-        return AssetConnection.getTypeLabelsChoicesFor( getAssetConnectable() );
+        return (List<String>)CollectionUtils.collect(
+                AssetConnection.getTypeLabelsChoicesFor( getAssetConnectable()),
+                        new Transformer() {
+                            @Override
+                            public Object transform( Object input ) {
+                                return StringUtils.capitalize( (String) input );
+                            }
+                        });
     }
 
     private void addAsset( ListItem<AssetConnectionWrapper> item ) {
@@ -268,7 +282,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         }
 
         public String getTypeLabel() {
-            return getAssetConnection().getTypeLabel();
+            return StringUtils.capitalize( getAssetConnection().getTypeLabel() );
         }
 
         private AssetConnection.Type getType() {
@@ -339,7 +353,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         }
 
         public boolean isCritical() {
-            return getAssetConnection().hasProperty( AssetConnection.CONSUMING );
+            return getAssetConnection().hasProperty( AssetConnection.CRITICAL );
         }
 
         public void setCritical( boolean val ) {

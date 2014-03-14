@@ -995,7 +995,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addAssets() {
         assetsContainer = new WebMarkupContainer( "assetsContainer" );
         assetsContainer.setOutputMarkupId( true );
-        makeVisible( assetsContainer, !isShowSimpleForm() );
+        makeVisible( assetsContainer, getFlow().canSetAssets( isSend() ) &&  !isShowSimpleForm( ) );
         add( assetsContainer );
         AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
             @Override

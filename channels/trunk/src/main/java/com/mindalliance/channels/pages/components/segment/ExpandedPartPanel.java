@@ -33,6 +33,7 @@ import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -793,7 +794,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         };
         assetsContainer.add( assetsLink );
-        Label assetsLabel = new Label( "assets-text", getPart().getAssetConnections().toString() );
+        Label assetsLabel = new Label(
+                "assets-text",
+                StringUtils.capitalize( getPart().getAssetConnections().getLabel() ) );
         assetsContainer.add( assetsLabel );
     }
 

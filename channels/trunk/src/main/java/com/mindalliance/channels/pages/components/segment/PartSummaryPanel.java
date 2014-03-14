@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -170,6 +171,11 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         }
         if ( part.isAsTeam() ) {
             sb.append( " Assignees work as a team." );
+        }
+        if ( !part.getAssetConnections().isEmpty() ) {
+            sb.append(" ")
+                    .append( StringUtils.capitalize( part.getAssetConnections().getLabel() ) )
+                    .append(".");
         }
         if ( part.isProhibited() ) {
             sb.append( " PROHIBITED." );

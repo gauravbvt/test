@@ -139,27 +139,32 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private String getPost() {
+        StringBuilder sb = new StringBuilder(  );
         Node node = flow.getTarget();
         if ( isSend ) {
-            return node.isConnector() ? flow.getRestrictionString( isSend ) : "";
+            sb.append( node.isConnector() ? flow.getRestrictionString( isSend ) : "" );
         } else {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() )
-                return ( flow.isRestricted() ? "if " + flow.getRestrictionString( isSend ) : "" );
+                sb.append( ( flow.isRestricted() ? "if " + flow.getRestrictionString( isSend ) : "" ) );
 
             else {
                 Part part = (Part) source;
-                return flow.isAskedFor() ?
+                sb.append( flow.isAskedFor() ?
                         "" :
                         MessageFormat.format( " by {0}{1}{2}{3}",
                                 flow.getShortName( part, false ),
                                 Flow.getOrganizationString( part ),
                                 Flow.getJurisdictionString( part ),
-                                ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) );
+                                ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) ) );
             }
         }
-
+        if ( flow.canSetAssets( isSend ) && !flow.getAssetConnections().isEmpty() ) {
+            sb.append(". ")
+                    .append( StringUtils.capitalize( flow.getAssetConnections().getLabel() ) );
+        }
+        return sb.toString();
     }
 
     private void addOverridesImage() {

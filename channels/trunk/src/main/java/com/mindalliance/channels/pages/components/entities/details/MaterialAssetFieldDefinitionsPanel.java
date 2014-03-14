@@ -56,7 +56,6 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
     private void addFieldGroups() {
         groupsContainer = new WebMarkupContainer( "groupsContainer" );
         groupsContainer.setOutputMarkupId( true );
-        addOrReplace( groupsContainer );
         ListView<String> assetFieldListView = new ListView<String>(
                 "fieldGroups",
                 getMaterialAsset().getGroups()
@@ -69,6 +68,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
             }
         };
         groupsContainer.add( assetFieldListView );
+        addOrReplace( groupsContainer );
     }
 
     private void addListViewOfFieldsInGroup( String group, ListItem<String> item ) {
@@ -133,6 +133,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                 // Do nothing
             }
         };
+        addTipTitle( requiredCheckBox, "whether a value will be required for this property in actual assets categorized by this one." );
         newFieldContainer.add( requiredCheckBox );
     }
 
@@ -147,6 +148,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                 // Do nothing
             }
         });
+        addInputHint( nameField, "Enter a unique name" );
         newFieldContainer.add( nameField );
     }
 
@@ -155,7 +157,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
         Collections.sort( choices );
         AutoCompleteTextField<String> groupField = new AutoCompleteTextField<String>(
                 "group",
-                new PropertyModel<String>( this, "group"  )
+                new PropertyModel<String>( this, "fieldGroup"  )
         ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
@@ -168,6 +170,13 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                 return candidates.iterator();
             }
         };
+        groupField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        });
+        addInputHint( groupField, "Name the group" );
          newFieldContainer.add( groupField );
     }
 
@@ -184,6 +193,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                 // Do nothing
             }
         } );
+        addInputHint( descriptionField, "Enter a brief hint for the property" );
         newFieldContainer.add( descriptionField );
     }
 
@@ -197,12 +207,15 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                                     getUsername(),
                                     getMaterialAsset(),
                                     "fields",
+                                    newAssetField,
                                     UpdateObject.Action.AddUnique
                             )
                     );
                     reset();
                     addFieldGroups();
                     target.add( groupsContainer );
+                    addNewField();
+                    target.add( newFieldContainer );
                     update( target, new Change( Change.Type.Updated, getMaterialAsset(), "fields"));
                 } else {
                     Change change = Change.message( "Please the new field a unique name." );
@@ -221,7 +234,7 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
         return newAssetField.isRequired();
     }
 
-    public void setRequired( boolean val ) {
+    public void setFieldRequired( boolean val ) {
         newAssetField.setRequired( val );
     }
 
@@ -233,11 +246,11 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
         newAssetField.setName( val );
     }
 
-    public String getGroup() {
+    public String getFieldGroup() {
         return newAssetField.getGroup();
     }
 
-    public void setGroup( String val ) {
+    public void setFieldGroup( String val ) {
         newAssetField.setGroup( val );
     }
 

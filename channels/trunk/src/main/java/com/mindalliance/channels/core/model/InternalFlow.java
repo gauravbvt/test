@@ -84,6 +84,7 @@ public class InternalFlow extends Flow {
         setIntent( flow.getIntent() );
         setRestrictions( new ArrayList<Restriction>( flow.getRestrictions() ) );
         setEois( flow.copyEois() );
+        setAssetConnections( flow.getAssetConnections().copy() );
     }
 
     /**

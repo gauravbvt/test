@@ -734,6 +734,14 @@ input[type='text'] {
     width: 97%;
 }
 
+input[type='text'].small {
+    width:10em;
+}
+
+input[type='text'].medium {
+    width:20em;
+}
+
 textarea {
     width: 97%;
 }
@@ -4078,6 +4086,14 @@ div.explanation {
     font-style: normal;
     margin: 15px 0 15px 0;
     padding: 10px;
+}
+
+div.newAssetField {
+    margin-top: 10px;
+}
+
+.required:after {
+    content: " (required)";
 }
 
 

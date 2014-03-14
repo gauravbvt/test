@@ -2329,6 +2329,9 @@ public final class ModelPage extends AbstractChannelsWebPage {
             refreshCommitmentsPanel( target, change, updated );
         }  else if ( change.isForInstanceOf( AssetConnectable.class ) && change.isForProperty( "assets" ) ) {
             refreshAssetsPanel( target, change, updated );
+            if ( (Boolean) change.getQualifier( "updated" ) ) {
+                refreshSegmentPanel( target, change, updated );
+            }
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "eois" ) ) {
             refreshEOIsPanel( target, change, updated );
             if ( (Boolean) change.getQualifier( "updated" ) ) {

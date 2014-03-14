@@ -1657,6 +1657,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "canBypassIntermediate", isCanBypassIntermediate() );
         state.put( "receiptConfirmationRequested", isReceiptConfirmationRequested() );
         state.put( "infoProductTimeSensitive", isInfoProductTimeSensitive() );
+        if ( !getAssetConnections().isEmpty() )
+            state.put( "assetConnections", getAssetConnections().copy() );
         return state;
     }
 
@@ -1701,6 +1703,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
         if ( state.containsKey( "infoProductTimeSensitive" ) )
             setInfoProductTimeSensitive( (Boolean) state.get( "infoProductTimeSensitive" ) );
+        if ( state.containsKey( "assetConnections") )
+            setAssetConnections( (AssetConnections) state.get("assetConnections") );
     }
 
     public void setProductInfoFromName( AbstractModelObjectDao dao ) {
@@ -1731,6 +1735,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @Override
     public boolean canSetTimeSensitivity() {
         return isNeed();
+    }
+
+    public boolean canSetAssets( boolean isSend ) {
+        return isSend && isNotification() || !isSend && isAskedFor();
     }
 
     @Override
@@ -1920,6 +1928,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @Override
     public AssetConnections getAssetConnections() {
         return assetConnections;
+    }
+
+    public void setAssetConnections( AssetConnections assetConnections ) {
+        this.assetConnections = assetConnections;
     }
 
     public void addAssetConnection( AssetConnection assetConnection ) {

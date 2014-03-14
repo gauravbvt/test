@@ -12,8 +12,6 @@ import java.io.Serializable;
  */
 public class AssetField implements Serializable {
 
-    private static final String UNNAMED = "Unnamed";
-
     private String name;
     private String description;
     private String group;
@@ -28,7 +26,7 @@ public class AssetField implements Serializable {
     }
 
     public String getName() {
-        return name == null ? UNNAMED : name;
+        return name;
     }
 
     public void setName( String name ) {

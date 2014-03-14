@@ -1,13 +1,17 @@
 package com.mindalliance.channels.core.model.asset;
 
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -111,6 +115,48 @@ public class AssetConnections implements Serializable {
         return hasConnectionProperty( AssetConnection.Type.Using, asset, AssetConnection.CRITICAL );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder();
+        List<MaterialAsset> assets = findAllMaterialAssets();
+        Collections.sort( assets );
+        for ( MaterialAsset asset : assets ) {
+            if ( sb.length() > 0 )
+                sb.append( ", and " );
+            List<String> typeStrings = findConnectionTypesLabelsFor( asset );
+            sb.append( ChannelsUtils.listToString( typeStrings, " and " ) )
+                    /*.append( asset.isType()
+                            ? " any kind of "
+                            : ChannelsUtils.startsWithVowel( asset.getName() )
+                            ? " an "
+                            : " a " )*/
+                    .append( " " )
+                    .append( asset.getName() );
+
+        }
+        return sb.toString();
+    }
+
+    private List<MaterialAsset> findAllMaterialAssets() {
+        Set<MaterialAsset> assets = new HashSet<MaterialAsset>(  );
+        for ( AssetConnection assetConnection : getAll() ) {
+            assets.add( assetConnection.getAsset() );
+        }
+        return new ArrayList<MaterialAsset>( assets );
+    }
+
+    private List<String> findConnectionTypesLabelsFor( MaterialAsset materialAsset ) {
+        Set<String> typeLabels = new HashSet<String>(  );
+        for ( AssetConnection assetConnection : getAll() ) {
+            if ( assetConnection.getAsset().equals( materialAsset)) {
+                typeLabels.add( assetConnection.getDetailedTypeLabel() );
+            }
+        }
+        List<String> result = new ArrayList<String>( typeLabels );
+        Collections.sort( result );
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -135,5 +181,17 @@ public class AssetConnections implements Serializable {
                     }
                 }
         );
+    }
+
+    public boolean isEmpty() {
+        return getAll().isEmpty();
+    }
+
+    public AssetConnections copy() {
+        AssetConnections copy = new AssetConnections();
+        for (AssetConnection assetConnection : getAll() ) {
+            copy.add( new AssetConnection( assetConnection.getType(), assetConnection.getAsset() ) );
+        }
+        return copy;
     }
 }

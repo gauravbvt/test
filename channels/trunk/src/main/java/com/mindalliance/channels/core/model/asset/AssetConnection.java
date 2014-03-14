@@ -26,6 +26,7 @@ public class AssetConnection implements Serializable {
     private static final String STOCKING_LABEL = "stocks";
     private static final String USING_LABEL = "uses";
 
+
     public enum Type {
         Demanding,
         Producing,
@@ -34,15 +35,16 @@ public class AssetConnection implements Serializable {
         Using;
 
         public static Type fromLabel( String label ) {
-            return label.equals( DEMANDING_LABEL )
+            String lcLabel = label.toLowerCase();
+            return lcLabel.equals( DEMANDING_LABEL )
                     ? Type.Demanding
-                    : label.equals( PRODUCING_LABEL )
+                    : lcLabel.equals( PRODUCING_LABEL )
                     ? Type.Producing
-                    : label.equals( PROVISIONING_LABEL )
+                    : lcLabel.equals( PROVISIONING_LABEL )
                     ? Type.Provisioning
-                    : label.equals( STOCKING_LABEL )
+                    : lcLabel.equals( STOCKING_LABEL )
                     ? Type.Stocking
-                    : label.equals( USING_LABEL )
+                    : lcLabel.equals( USING_LABEL )
                     ? Type.Using
                     : null;
         }
@@ -162,6 +164,20 @@ public class AssetConnection implements Serializable {
 
     public String getTypeLabel() {
         return getType() == null ? null : getLabelFor( getType() );
+    }
+
+    public String getDetailedTypeLabel() {
+        if ( type == Type.Using ) {
+          return isConsuming() && isCritical()
+                  ? "requires as well as consumes"
+                      : isConsuming()
+                      ? "consumes"
+                      : isCritical()
+                      ? "requires"
+                      : getTypeLabel();
+        } else {
+            return getTypeLabel();
+        }
     }
 
     public void setTypeLabel( String typeLabel ) {

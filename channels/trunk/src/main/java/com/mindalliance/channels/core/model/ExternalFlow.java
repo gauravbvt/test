@@ -463,6 +463,7 @@ public class ExternalFlow extends Flow {
         if ( !isPartTargeted() ) setSignificanceToSource( flow.getSignificanceToSource() );
         if ( isPartTargeted() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
         setPublished( flow.isPublished() );
+        setAssetConnections( flow.getAssetConnections().copy() );
     }
 
     /**

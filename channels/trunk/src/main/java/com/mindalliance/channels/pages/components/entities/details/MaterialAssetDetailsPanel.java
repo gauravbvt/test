@@ -141,7 +141,7 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
                     // link
                     ModelObjectLink assetLink = new ModelObjectLink(
                             "dependency",
-                            new Model<MaterialAsset>(getMaterialAsset() ),
+                            new Model<MaterialAsset>( dependency ),
                             new Model<String>((dependency.isType() ? "Any kind of " : "" )  + dependency.getName() ) );
                     item.add( assetLink );
                     // delete
@@ -155,6 +155,7 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
                                     dependency,
                                     UpdateObject.Action.Remove
                             ) );
+                            refresh( target );
                             update( target, new Change( Change.Type.Updated, getMaterialAsset() ) );
                         }
                     };
@@ -179,31 +180,6 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
                     MaterialAsset.class
             );
             newDependencyContainer.add( newDependencyPanel );
-            // add button
-            AjaxLink<String> addButton = new AjaxLink<String>( "add" ) {
-                @Override
-                public void onClick( AjaxRequestTarget target ) {
-                    if ( newDependency != null ) {
-                        doCommand(
-                                new UpdateModelObject(
-                                        getUsername(),
-                                        getMaterialAsset(),
-                                        "dependencies",
-                                        newDependency,
-                                        UpdateObject.Action.AddUnique
-                                )
-                        );
-                        reset();
-                        addDependenciesContainer();
-                        target.add( dependenciesContainer );
-                        update( target, new Change( Change.Type.Updated, getMaterialAsset() ) );
-                    } else {
-                        Change change = Change.message( "Please identify the new asset dependency" );
-                        update( target, change );
-                    }
-                }
-            };
-            newDependencyContainer.add( addButton );
         }
 
         private List<String> getCandidateDependencies() {
@@ -229,10 +205,25 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
         @Override
         public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
             if ( change.isForProperty( "asset" ) ) {
-                addDependenciesContainer();
-                target.add( dependenciesContainer );
+                doCommand(
+                        new UpdateModelObject(
+                                getUsername(),
+                                getMaterialAsset(),
+                                "dependencies",
+                                newDependency,
+                                UpdateObject.Action.AddUnique
+                        )
+                );
+                refresh( target );
             }
             super.updateWith( target, change, updated );
+        }
+
+        private void refresh( AjaxRequestTarget target ) {
+            reset();
+            addDependenciesContainer();
+            target.add( dependenciesContainer );
+            update( target, new Change( Change.Type.Updated, getMaterialAsset() ) );
         }
 
     }
