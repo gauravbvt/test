@@ -169,12 +169,12 @@ public class MAP0012_addPhase extends TestCase{
 			
  			//Click on Phases tab in the 'All Events and Phases' window	
  			stepNo++;
-			description="All Events and Phases";
+			description="Phases tab";
 		    planPage.clickEventPhasesTab();
 		    // Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Log4J.getlogger(this.getClass()).info(testCaseId +"All Events and Phases");	
+ 			Log4J.getlogger(this.getClass()).info(testCaseId +"Phases tab");	
 			 
 		    //Add Phase
 		    stepNo++;
