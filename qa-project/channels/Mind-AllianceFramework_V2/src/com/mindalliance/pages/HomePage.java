@@ -35,7 +35,6 @@ public class HomePage {
     		throw new UIAutomationException("Welcome To Channels page not found.");
     	}
 	}
-	
 
 	/**
 	 * 'verifyCollaborationTemplateLink' method verifies that link is present on home page

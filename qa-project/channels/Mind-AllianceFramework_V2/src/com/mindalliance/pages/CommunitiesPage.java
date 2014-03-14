@@ -77,6 +77,55 @@ public class CommunitiesPage {
 	}
 	
 	/**
+	 * 'clickSurveysLink' method clicks on 'Surveys' link
+	 * @throws UIAutomationException 
+	*/
+	public void clickSurveysLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
+		UIActions.click(fileName,"Surveys Link",GlobalVariables.configuration.getAttrSearchList(), "Surveys Link");
+        
+		//Assertion: Check the text present on Surveys Page
+		elementController.requireElementSmart(fileName,"Surveys Page Title",GlobalVariables.configuration.getAttrSearchList(), "Surveys Page Title");
+		String surveysPageTitle=UIActions.getText(fileName,"Surveys Page Title",GlobalVariables.configuration.getAttrSearchList(), "Surveys Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Surveys Page Title Text" , "Name");
+		if(!surveysPageTitle.contains(textInTitle)){
+			throw new UIAutomationException( "'"+textInTitle +"' not found");}
+		
+	}
+	
+	/**
+	 * 'clickFeedbackAndRepliesLink' method clicks on 'Feedback And Replies' link
+	 * @throws UIAutomationException 
+	*/
+	public void clickFeedbackAndRepliesLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
+		UIActions.click(fileName,"Feedback And Replies Link",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Link");
+
+		//Assertion: Check the text present on Feedback And Replies Page
+		elementController.requireElementSmart(fileName,"Feedback And Replies Page Title",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Page Title");
+		String feedbackPageTitle=UIActions.getText(fileName,"Feedback And Replies Page Title",GlobalVariables.configuration.getAttrSearchList(), "Feedback And Replies Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Feedback And Replies Page Title Text" , "Name");
+		if(!feedbackPageTitle.contains(textInTitle)){
+		throw new UIAutomationException( "'"+textInTitle +"' not found");}
+	}
+	
+	/**
+	 * 'clickCollaborationChecklistsLink' method clicks on 'Collaboration Checklists' link
+	 * @throws UIAutomationException 
+	*/
+	public void clickCollaborationChecklistsLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Checklists Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Checklists Link");
+		UIActions.click(fileName,"Collaboration Checklists Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Checklists Link");
+
+		/*//Assertion: Check the text present on Collaboration Checklists Page
+		elementController.requireElementSmart(fileName,"Collaboration Checklists Page Title",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Checklists Page Title");
+		String feedbackPageTitle=UIActions.getText(fileName,"Collaboration Checklists Page Title",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Checklists Page Title");
+		String textInTitle=dataController.getPageDataElements(fileName,"Collaboration Checklists Page Title Text" , "Name");
+		if(!feedbackPageTitle.contains(textInTitle)){
+		throw new UIAutomationException( "'"+textInTitle +"' not found");}*/
+	}
+	
+	/**
 	 * 'clickCollaborationRequirementsLink' method clicks on 'Collaboration requirements' link
 	 * @throws UIAutomationException 
 	*/
@@ -89,6 +138,18 @@ public class CommunitiesPage {
 //       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
+	/**
+	 * 'clickCollaborationModelLink' method clicks on 'Collaboration Model' link
+	 * @throws UIAutomationException 
+	*/
+	public void clickCollaborationModelLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Model Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Model Link");
+		UIActions.click(fileName,"Collaboration Model Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Model Link");
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Collaboration Model Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));		
+		
+	}
 	/**
 	 * 'clickNewRequirementButton' method clicks on 'New' button on the 'Collaboration Requirements' page
 	 * @throws UIAutomationException 
