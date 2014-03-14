@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <elements>
-<automationTestPlan>Demo_Automation_Template</automationTestPlan>
-<automationTestPlanNew>Demo_Automation_Template</automationTestPlanNew>
+<automationTestPlan>Demo_Automation_Template_1</automationTestPlan>
+<automationTestPlanNew>Demo_Automation_Template_1</automationTestPlanNew>
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <planName>Demo Plan</planName>
