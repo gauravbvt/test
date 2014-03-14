@@ -424,7 +424,7 @@
 	</Element>
 	<Element>
 		<GivenName>Actual Phase In About Plan</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/div/ul/li/span/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div[2]/div/ul/li/span/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -452,7 +452,7 @@
 	</Element>
 	<Element>
 		<GivenName>Remove Expectation</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[19]/div/div[3]/div/div/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -480,7 +480,7 @@
 	
 	<Element>
 		<GivenName>Default Event</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div[2]/span/div/table/tbody/tr/td/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -744,7 +744,7 @@
 	
 	<Element>
 		<GivenName>Organization Table In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/div[2]/div[2]/table</Xpath>
+		<Xpath>/html/body/form/div[19]/div/div[3]/div/div/div[2]/div[2]/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -764,7 +764,7 @@
 	
 	<Element>
 		<GivenName>Event Phases</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -774,7 +774,7 @@
 	
 	<Element>
 		<GivenName>All event phases in the collaboration template</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/h3/span</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div[2]/h3/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1516,7 +1516,7 @@
 	
 	<Element>
 		<GivenName>Actions</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1606,7 +1606,7 @@
 	
 	<Element>
 		<GivenName>Show</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1616,7 +1616,7 @@
 	
 	<Element>
 		<GivenName>Scoping</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[2]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1626,7 +1626,7 @@
 	
 	<Element>
 		<GivenName>Searching</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/a/span</Xpath>
+		<Xpath>//span[contains(@class,'menuitem')]/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1636,7 +1636,7 @@
 	
 	<Element>
 		<GivenName>Improving</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1646,7 +1646,7 @@
 	
 	<Element>
 		<GivenName>Learning</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1658,7 +1658,7 @@
 	
 	<Element>
 		<GivenName>About Plan</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1698,7 +1698,7 @@
 	
 	<Element>
 		<GivenName>About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1718,7 +1718,7 @@
 	
 	<Element>
 		<GivenName>Add New Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[8]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[8]/span/a/span</Xpath>
 		<Name>Add new segment</Name>
 		<Id></Id>
 		<PartialLinkText>Add new segment</PartialLinkText>
@@ -1728,7 +1728,7 @@
 	
 	<Element>
 		<GivenName>New Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1749,7 +1749,7 @@
 		
 	<Element>
 		<GivenName>Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[9]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[9]/span/a/span</Xpath>
 		<Name>Remove this segment</Name>
 		<Id></Id>
 		<PartialLinkText>Remove this segment</PartialLinkText>
@@ -1832,7 +1832,7 @@
  	
  	<Element>
  		<GivenName>Close Events Window</GivenName>
- 		<Xpath>/html/body/form/div[16]/div/div/div[4]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[17]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1862,7 +1862,7 @@
  	
  	<Element>
  		<GivenName>Close Organization Window</GivenName>
- 		<Xpath>/html/body/form/div[18]/div/div/div[4]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[19]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2000,7 +2000,7 @@
  	</Element>
  	<Element>
 		<GivenName>Undo Update Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2009,7 +2009,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Duplicate Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2018,7 +2018,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Add New Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2027,7 +2027,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Add New Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2036,7 +2036,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2054,7 +2054,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Paste Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2063,7 +2063,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2115,7 +2115,7 @@
 	
 	<Element>
 		<GivenName>Redo Update Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2124,7 +2124,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove Goal</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2133,7 +2133,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Remove Flow</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2142,7 +2142,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Remove Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2151,7 +2151,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2198,7 +2198,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Duplicate Flow</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2216,7 +2216,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Add Information Need</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2225,7 +2225,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Intermediate</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2263,7 +2263,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Add Information Capability</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2272,7 +2272,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Add Information Capability</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2301,7 +2301,7 @@
 	
 	<Element>
 		<GivenName>Undo New Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2330,7 +2330,7 @@
 	
 	<Element>
 		<GivenName>Undo Remove Goal</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2340,7 +2340,7 @@
 	
 	<Element>
 		<GivenName>Redo New Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2350,7 +2350,7 @@
 	
 	<Element>
 		<GivenName>Add New Issue</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2360,7 +2360,7 @@
 	
 	<Element>
 		<GivenName>Undo Add New Requirement</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText>Undo add new requirement</PartialLinkText>
@@ -2370,7 +2370,7 @@
 	
 	<Element>
 		<GivenName>Redo Add New Requirement</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText>Redo add new requirement</PartialLinkText>
@@ -2400,7 +2400,7 @@
 	
 	<Element>
 		<GivenName>Undo Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2410,7 +2410,7 @@
 	
 	<Element>
 		<GivenName>Undo Update Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2420,7 +2420,7 @@
 	
 	<Element>
 		<GivenName>Undo Remove Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2430,7 +2430,7 @@
 	
 	<Element>
 		<GivenName>Undo Paste Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2439,7 +2439,7 @@
 	</Element>
 	<Element>
 		<GivenName>Close Plan Map Window</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div/div[3]/a/img</Xpath>
+		<Xpath>/html/body/form/div[17]/div/div/div[3]/a/img</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2574,7 +2574,7 @@
 	
 	<Element>
 		<GivenName>Add New Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[6]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2967,7 +2967,7 @@
 	</Element>
 	<Element>
 		<GivenName>Paste Task</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3587,7 +3587,7 @@
 	</Element>
 	<Element>
 		<GivenName>Hide Planners</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[3]/span/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3597,7 +3597,7 @@
 	
 	<Element>
 		<GivenName>All Events And Phases</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3607,7 +3607,7 @@
 
 	<Element>
 		<GivenName>All Involvements</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3617,7 +3617,7 @@
 
 	<Element>
 		<GivenName>Event Phases Tab</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3627,7 +3627,7 @@
 	
 	<Element>
 		<GivenName>Phase In All Events And Phases</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/div/ul/li[2]/span/input</Xpath>
+		<Xpath>/html/body/form/div[17]/div/span/div/div[2]/div/div[2]/div/ul/li[2]/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3691,7 +3691,7 @@
 	</Element>
 	<Element>
 		<GivenName>Classification Systems</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3721,7 +3721,7 @@
 	
 	<Element>
 		<GivenName>Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id>link</Id>
 		<PartialLinkText></PartialLinkText>
@@ -3731,9 +3731,9 @@
 	
 	<Element>
 		<GivenName>Organizations In Scope Title</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
+		<Xpath>//div[contains(@class,'fp-header')]</Xpath>
 		<Name></Name>
-		<Id>id185</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>All involvements</LinkText>
 		<ClassName>fp-header</ClassName>
@@ -3741,7 +3741,7 @@
 	
 	<Element>
 		<GivenName>Who's Who</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3762,7 +3762,7 @@
 	
 	<Element>
 		<GivenName>Index</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3782,7 +3782,7 @@
 	
 	<Element>
 		<GivenName>Tags</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3792,12 +3792,12 @@
 	
 	<Element>
 		<GivenName>Taxonomies</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
 	</Element>
 	
 	<Element>
 		<GivenName>All Attachments</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[5]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span/span/ul/li/ul/li[5]/span/a/span</Xpath>
 	</Element>
 	
 	<Element>
@@ -3812,7 +3812,7 @@
 	
 	<Element>
 		<GivenName>All Involvements Title</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
+		<Xpath>//div[contains(@class,'float-header')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3833,7 +3833,7 @@
 	
 	<Element>
 		<GivenName>All Events And Phases Title</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li/a/span</Xpath>
+		<Xpath>//div[contains(@class,'tab-panel')]/h3/span</Xpath>
 	</Element>
 	
 	<Element>
@@ -3848,7 +3848,7 @@
 	
 	<Element>
 		<GivenName>All Checklists</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3858,7 +3858,7 @@
 	
 	<Element>
 		<GivenName>Checklists Map</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3868,7 +3868,7 @@
 	
 	<Element>
 		<GivenName>All Feedback</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[4]/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3879,7 +3879,7 @@
 	
 	 <Element>
 		<GivenName>All Issues</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[5]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3899,7 +3899,7 @@
 	
 	<Element>
 		<GivenName>Task Mover</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3919,7 +3919,7 @@
 	
 	<Element>
 		<GivenName>Template Evaluation</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3929,7 +3929,7 @@
 	
 	<Element>
 		<GivenName>Template Versions</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3939,7 +3939,7 @@
 	
 	<Element>
 		<GivenName>Plan Versions</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[3]/span/ul/li/ul/li[6]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3989,7 +3989,7 @@
 	
 	<Element>
 		<GivenName>All Surveys</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/div[2]/span[4]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
