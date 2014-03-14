@@ -34,7 +34,7 @@ import com.mindalliance.pages.HomePage;
 
 /**
  * Test Case ID: CP0046_ClickPlanParticipationLink
- * Summary: Send Feedback from Collaboration Templates Page
+ * Summary: Click on Plan Participation link
  * @author Administrator
  *
  */
@@ -92,7 +92,7 @@ public class CP0046_ClickPlanParticipationLink extends TestCase{
 		}
 	}
 	/**
-	 * This method verify that Collaboration Plans page is shown after Clicking the Collaboration Plans
+	 * This method verify that Plan Participation page is shown after Clicking the Plan Participation
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 * @throws InterruptedException 
@@ -138,7 +138,7 @@ public class CP0046_ClickPlanParticipationLink extends TestCase{
 		 	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Start It");
 	 		
 	 		// Click on Go button
 	 		stepNo++;
@@ -147,7 +147,7 @@ public class CP0046_ClickPlanParticipationLink extends TestCase{
 		 	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Go");
 	 		
 	 		// Click Collaboration Requirement
 	 		stepNo++;
@@ -156,7 +156,7 @@ public class CP0046_ClickPlanParticipationLink extends TestCase{
 		 	// Write log			
 	 		LogFunctions.writeLogs(description);
 	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Collaboration Templates");
+	 		Log4J.getlogger(this.getClass()).info(testCaseId +"Plan Participations");
 	 		
 	 		// Sign out from home page
 		    stepNo++;

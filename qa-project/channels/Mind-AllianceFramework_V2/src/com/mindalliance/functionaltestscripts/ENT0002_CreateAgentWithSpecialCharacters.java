@@ -94,7 +94,7 @@ public class ENT0002_CreateAgentWithSpecialCharacters extends TestCase{
 	}
 	
 	/**
-	 * This method adds organization to the plan and also its details to the plan
+	 * This method creates Agent with special characters
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
