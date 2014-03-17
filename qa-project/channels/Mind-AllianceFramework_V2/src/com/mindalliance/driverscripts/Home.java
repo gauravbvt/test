@@ -67,8 +67,8 @@ public class Home {
 		suite.addTestSuite(MAV0092_addNewSegment.class);
 		suite.addTestSuite(MAV0093_closeNewSegment.class);
 		suite.addTestSuite(MAV0098_removeSegmentUnderAction.class);
-		suite.addTestSuite(MAV0100_moveTaskUnderAction.class);
-		suite.addTestSuite(MAV0101_closeTaskMover.class);
+//		suite.addTestSuite(MAV0100_moveTaskUnderAction.class);
+//		suite.addTestSuite(MAV0101_closeTaskMover.class);
 		suite.addTestSuite(MAV0107_viewPresence.class);
 		suite.addTestSuite(MAV0109_hideInactiveUsers.class);
 		suite.addTestSuite(MAV0110_viewActivitiesAllUsers.class);
