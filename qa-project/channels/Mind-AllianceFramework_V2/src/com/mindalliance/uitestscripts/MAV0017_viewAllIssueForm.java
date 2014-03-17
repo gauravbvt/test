@@ -142,15 +142,6 @@ public class MAV0017_viewAllIssueForm extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 			Log4J.getlogger(this.getClass()).info(testCaseId +"Navigated to Plan page");	
-			
-//			// Close Plan Map window
-//			stepNo++;
-//			description="Plan Map window closed";
-//			PlanPage planPage=new PlanPage();
-//			planPage.closePlanMap();
-//			// Write log			
-//			LogFunctions.writeLogs(description);
-//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
 
 			// Click on 'All Issues' under 'Improving' pop up menu
 			stepNo++;
