@@ -1,4 +1,7 @@
 package com.mindalliance.configuration;
+/**
+ * User defined exception are defined in this class
+ */
 
 public class UIAutomationException extends Exception{
 	/**
