@@ -37,7 +37,7 @@
 	</path>  
   
 	<echo>Running JUnit Test Suite...</echo>  
-	<target name="testsuiteAuomation" depends="compile" description="Running Test Suite">  
+	<target name="testsuiteAutomation" depends="compile" description="Running Test Suite">  
 		<delete dir="${junit.out.dir.xml}"/>  
  		<mkdir  dir="${junit.out.dir.xml}"/>  
 		<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
