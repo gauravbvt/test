@@ -185,11 +185,11 @@ public class Reporting extends TakeScreenshot {
 				if (cnt == 1)
 					file = new File(GlobalVariables.configuration
 							.getCurrentDir().getCanonicalPath().toString()
-							+ "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+							+ File.separator+"TestCases"+ File.separator+"Mind-AllianceTestCaseSheet.ods");
 				else
 					file = new File(GlobalVariables.configuration
 							.getCurrentDir().getCanonicalPath().toString()
-							+ "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+							+ File.separator+"TestCases"+ File.separator+"Mind-AllianceTestCaseSheet_V2.ods");
 				Sheet sheet = SpreadSheet.createFromFile(file).getSheet(0);
 
 				// Update View, Plan & Command Sheets
@@ -266,13 +266,13 @@ public class Reporting extends TakeScreenshot {
 				if (cnt == 1)
 					outputFile = new File(GlobalVariables.configuration
 							.getCurrentDir().getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport"
-							+ "\\Mind-AllianceTestCaseSheet.ods");
+							+ File.separator+"Reports"+File.separator+"UIAutomationReport"
+							+ File.separator+"Mind-AllianceTestCaseSheet.ods");
 				else
 					outputFile = new File(GlobalVariables.configuration
 							.getCurrentDir().getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport"
-							+ "\\Mind-AllianceTestCaseSheet_V2.ods");
+							+ File.separator+"Reports"+File.separator+"UIAutomationReport"
+							+ File.separator+"Mind-AllianceTestCaseSheet_V2.ods");
 				sheet.getSpreadSheet().saveAs(outputFile);
 
 				// Set Pass/Fail Count to 0.
@@ -288,8 +288,8 @@ public class Reporting extends TakeScreenshot {
 			throw new UIAutomationException("File not found at path '"
 					+ GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath()
-					+ "\\Reports\\UIAutomationReport"
-					+ "\\Mind-AllianceTestCaseSheet.ods" + "'");
+					+ File.separator+"Reports"+File.separator+"UIAutomationReport"
+					+ File.separator+"Mind-AllianceTestCaseSheet.ods" + "'");
 		}
 	}
 
@@ -305,7 +305,7 @@ public class Reporting extends TakeScreenshot {
 			File file = new File(
 					GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath().toString()
-							+ "\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
+							+ File.separator+"TestCases"+ File.separator+"Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(0);
 
 			// Update Test Case Sheet
@@ -390,15 +390,15 @@ public class Reporting extends TakeScreenshot {
 
 			File outputFile = new File(GlobalVariables.configuration
 					.getCurrentDir().getCanonicalPath()
-					+ "\\Reports\\UIAutomationReport"
-					+ "\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
+					+ File.separator+"Reports"+File.separator+"UIAutomationReport"
+					+ File.separator+"Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		} catch (IOException ie) {
 			throw new UIAutomationException(
 					"File not found at path '"
 							+ GlobalVariables.configuration.getCurrentDir()
 									.getCanonicalPath()
-							+ "\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods"
+							+ File.separator+"TestCases"+ File.separator+"Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods"
 							+ "'");
 		}
 	}
@@ -418,7 +418,7 @@ public class Reporting extends TakeScreenshot {
 		try {
 			File currentDir = new File(".");
 			String path = currentDir.getCanonicalPath().toString()
-					+ "\\TestCases\\";
+					+ File.separator+"TestCases"+ File.separator;
 			File file = new File(path + "Mind-AllianceTestCaseSheet.ods");
 
 			// TestCase sheet: Tree_Navigation_Views
@@ -443,7 +443,7 @@ public class Reporting extends TakeScreenshot {
 		} catch (IOException ie) {
 			throw new UIAutomationException("File not found at path '"
 					+ GlobalVariables.configuration.getCurrentDir()
-							.getCanonicalPath() + "\\TestCases\\" + "'");
+							.getCanonicalPath() + File.separator+"TestCases"+ File.separator + "'");
 		}
 	}
 
@@ -460,7 +460,7 @@ public class Reporting extends TakeScreenshot {
 			csvErrorReport = blank;
 			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration
 					.getCurrentDir().getCanonicalPath()
-					+ "\\Logs\\UILogs\\Results.csv");
+					+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Results.csv");
 			csvTestCase.readHeaders();
 			while (csvTestCase.readRecord()) {
 				if (sTestCaseId.equals(csvTestCase.get("TestCaseId"))
@@ -480,7 +480,7 @@ public class Reporting extends TakeScreenshot {
 		} catch (IOException e) {
 			throw new UIAutomationException("File not found at path '"
 					+ GlobalVariables.configuration.getCurrentDir()
-							.getCanonicalPath() + "\\Logs\\UILogs\\Results.csv"
+							.getCanonicalPath() + File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Results.csv"
 					+ "'");
 		}
 	}
@@ -520,10 +520,10 @@ public class Reporting extends TakeScreenshot {
 
 		System.out.println("Report generated successfully");
 		zipFolder(GlobalVariables.configuration.getCurrentDir()
-				.getCanonicalPath() + "\\Reports\\UIAutomationReport",
+				.getCanonicalPath() + File.separator+"Reports"+File.separator+"UIAutomationReport",
 				GlobalVariables.configuration.getCurrentDir()
 						.getCanonicalPath()
-						+ "\\Reports\\UIAutomationReport.zip");
+						+ File.separator+"Reports"+ File.separator+"UIAutomationReport.zip");
 		System.out.println("Zipped");
 	}
 
@@ -537,7 +537,7 @@ public class Reporting extends TakeScreenshot {
 	private void generateFinalTestPassReport() throws UIAutomationException,
 			IOException {
 		try {
-			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport\\index.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ File.separator+"Reports"+ File.separator+"UIAutomationReport"+ File.separator+"index.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -570,7 +570,7 @@ public class Reporting extends TakeScreenshot {
 			xml.close();
 			destination.close();
 		} catch (IOException ie) {
-			throw new UIAutomationException("File not found at path '"+ GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport\\index.htm" + "'");
+			throw new UIAutomationException("File not found at path '"+ GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ File.separator+"Reports"+ File.separator+"UIAutomationReport"+ File.separator+"index.htm" + "'");
 		} catch (XMLStreamException xe) {
 			throw new UIAutomationException("XML File not found");
 		}
@@ -588,8 +588,8 @@ public class Reporting extends TakeScreenshot {
 
 			OutputStream destination = new FileOutputStream(
 					GlobalVariables.configuration.getCurrentDir()
-							.getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport\\TestPassSummary.htm");
+							.getCanonicalPath()+
+							File.separator+"Reports"+File.separator+"UIAutomationReport"+File.separator+"TestPassSummary.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory
 					.createXMLStreamWriter(destination);
@@ -665,7 +665,8 @@ public class Reporting extends TakeScreenshot {
 			OutputStream destination = new FileOutputStream(
 					GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport\\TestCaseFailureList.htm");
+							+
+							File.separator+"Reports"+File.separator+"UIAutomationReport"+File.separator+"TestCaseFailureList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory
 					.createXMLStreamWriter(destination);
@@ -790,7 +791,7 @@ public class Reporting extends TakeScreenshot {
 						.getElementAt(i) != null) {
 					csvTestCase = new CsvReader(GlobalVariables.configuration
 							.getCurrentDir().getCanonicalPath()
-							+ "\\Logs\\UILogs\\Results.csv");
+							+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Results.csv");
 					// csvTestCase = new
 					// CsvReader(GlobalVariables.configuration.getLogDirectoryPath()
 					// + "\\Results.csv");
@@ -900,7 +901,7 @@ public class Reporting extends TakeScreenshot {
 			OutputStream destination = new FileOutputStream(
 					GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport\\TestCaseList.htm");
+							+File.separator+"Reports"+File.separator+"UIAutomationReport"+File.separator+"TestCaseList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory
 					.createXMLStreamWriter(destination);
@@ -1003,14 +1004,11 @@ public class Reporting extends TakeScreenshot {
 		try {
 			csvTestCase = new CsvReader(GlobalVariables.configuration
 					.getCurrentDir().getCanonicalPath()
-					+ "\\Logs\\UILogs\\Results.csv");
+					+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Results.csv");
 			OutputStream destination = new FileOutputStream(
 					GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport"
-							+ "\\"
-							+ testName
-							+ ".htm");
+							+ File.separator+"Reports"+File.separator+"UIAutomationReport"+ File.separator+ testName+ ".htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory
 					.createXMLStreamWriter(destination);
@@ -1118,7 +1116,7 @@ public class Reporting extends TakeScreenshot {
 						xml.writeAttribute("href",
 								GlobalVariables.configuration.getCurrentDir()
 										.getCanonicalPath()
-										+ "\\Reports_Snapshot\\"
+										+ File.separator+"Reports_Snapshot"+File.separator
 										+ testName
 										+ ".png");
 						xml.writeCharacters(csvTestCase.get("ScriptException"));
@@ -1164,7 +1162,7 @@ public class Reporting extends TakeScreenshot {
 			File file1 = new File(
 					GlobalVariables.configuration.getCurrentDir()
 							.getCanonicalPath().toString()
-							+ "\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
+							+ File.separator+"TestCases"+ File.separator+"Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(
 					sheetNumber);

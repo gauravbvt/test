@@ -106,15 +106,15 @@ public class DataController {
 		try {
 			// Create Report Directory
 			reportDirectoryName="UIAutomationReport";
-			reportSrcDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\Mind-AllianceTestCaseSheet.ods";
-			reportDstDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\"+reportDirectoryName;
+			reportSrcDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+File.separator+"TestCases"+ File.separator+"Mind-AllianceTestCaseSheet.ods";
+			reportDstDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+File.separator+"Reports"+File.separator+reportDirectoryName;
 			File Dir = new File(reportDstDirectoryPath);
 			if (!Dir.exists())
 				Dir.mkdir();
 			
 			// Create Log Directory
 			logDirectoryName="UILogs";
-			logDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\"+logDirectoryName;
+			logDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ File.separator+"Logs"+File.separator+logDirectoryName;
 		
 			// Set Log directory
 			Dir = new File(logDirectoryPath); 
@@ -128,8 +128,8 @@ public class DataController {
 				Dir.mkdir();
 			
 			// Logs Files
-			resultCsvFile = logDirectoryPath + "\\Results.csv";
-			logFile = logDirectoryPath + "\\Logs.logs";
+			resultCsvFile = logDirectoryPath + File.separator+"Results.csv";
+			logFile = logDirectoryPath + File.separator+"Logs.logs";
 			FileWriter fileWriter = new FileWriter(resultCsvFile, true);
 			BufferedWriter oBWriter = new BufferedWriter(fileWriter);
 			oBWriter.write("TestCaseId,VerificationStepNo,Description,Result,ScriptException,ErrorReport");

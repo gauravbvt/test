@@ -1,5 +1,6 @@
 package com.mindalliance.configuration;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -20,8 +21,8 @@ public class Log4J {
 	  */
 	 public static void setLog4JProperties() throws IOException {
 //	  DataController dataController = new DataController();
-	  baseDirPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\";
-	  PropertyConfigurator.configure(baseDirPath+"\\Log4J\\log4j.properties");
+	  baseDirPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ File.separator;
+	  PropertyConfigurator.configure(baseDirPath+ File.separator+"Log4J"+ File.separator+"log4j.properties");
 	 }
 	 
 	 /**

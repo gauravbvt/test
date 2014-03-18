@@ -32,7 +32,7 @@ public class LogFunctions {
 	 */
 	public static void writeLogs(String sLog) throws UIAutomationException {	
 		try {	
-			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Logs.log",true);
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Logs.log",true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
 		    out.newLine();
@@ -60,7 +60,7 @@ public class LogFunctions {
 				sScriptException = sScriptException.replaceAll(",", "|");
 				sScriptException = sScriptException.replaceAll("\n", " ");
 			}
-			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Results.csv",true);
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Results.csv",true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
 			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
 			out.newLine();
@@ -80,7 +80,7 @@ public class LogFunctions {
 	 */
 	public static void writeErrorLogs(String sLog) throws UIAutomationException {
 		try {
-			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Errors");
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs"+ File.separator+"UILogs"+ File.separator+"Errors");
 		    BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
 		    out.newLine(); 
