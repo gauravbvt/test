@@ -5164,7 +5164,7 @@ public void enterFileNameInAttachFileInAboutPlanSegment(String fileName) throws 
 	public String getPath(String fileName) throws UIAutomationException{
 		try{
 			File currentDir=new File(".");
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			path=path+fileName;
 			return path;
 		}
