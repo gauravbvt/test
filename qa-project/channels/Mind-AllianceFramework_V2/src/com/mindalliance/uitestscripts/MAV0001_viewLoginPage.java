@@ -144,11 +144,11 @@ public class MAV0001_viewLoginPage extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0001_viewLoginPage=new File(path + "MAV0001_viewLoginPage.xml");
-			
+			System.out.println(path + "MAV0001_viewLoginPage.xml");
 			Document docMAV0001_viewLoginPage=db.parse(MAV0001_viewLoginPage);
 			Element eleMAV0001_viewLoginPage=docMAV0001_viewLoginPage.getDocumentElement();
 	              

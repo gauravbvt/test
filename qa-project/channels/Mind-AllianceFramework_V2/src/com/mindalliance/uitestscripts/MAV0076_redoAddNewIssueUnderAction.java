@@ -239,7 +239,7 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0076_redoAddNewIssueUnderAction=new File(path + "MAV0076_redoAddNewIssueUnderAction.xml");

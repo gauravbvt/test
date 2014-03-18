@@ -262,7 +262,7 @@ public class MAV0221_AddInfoReceiveSentSendMessage extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0221_AddInfoReceiveSentSendMessage=new File(path + "MAV0221_AddInfoReceiveSentSendMessage.xml");

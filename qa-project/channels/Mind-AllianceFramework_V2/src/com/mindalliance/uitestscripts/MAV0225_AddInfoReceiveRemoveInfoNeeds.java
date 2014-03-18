@@ -229,7 +229,7 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0225_AddInfoReceiveRemoveInfoNeeds=new File(path + "MAV0225_AddInfoReceiveRemoveInfoNeeds.xml");

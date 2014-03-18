@@ -240,7 +240,7 @@ public class MAC0062_RedoAddNewRequirement extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAC0062_RedoAddNewRequirement=new File(path + "MAC0062_RedoAddNewRequirement.xml");

@@ -235,7 +235,7 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0075_undoAddNewIssueUnderAction=new File(path + "MAV0075_undoAddNewIssueUnderAction.xml");

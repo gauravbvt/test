@@ -356,7 +356,7 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAC0041_RedoDisintermediateTask=new File(path + "MAC0041_RedoDisintermediateTask.xml");

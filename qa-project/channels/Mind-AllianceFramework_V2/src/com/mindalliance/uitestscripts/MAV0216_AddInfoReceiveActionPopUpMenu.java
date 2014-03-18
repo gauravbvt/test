@@ -245,7 +245,7 @@ public class MAV0216_AddInfoReceiveActionPopUpMenu extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0216_AddInfoReceiveActionPopUpMenu=new File(path + "MAV0216_AddInfoReceiveActionPopUpMenu.xml");

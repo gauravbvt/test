@@ -246,7 +246,7 @@ public class MAV0223_AddInfoSentCopyCapability extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0223_AddInfoSentCopyCapability=new File(path + "MAV0223_AddInfoSentCopyCapability.xml");

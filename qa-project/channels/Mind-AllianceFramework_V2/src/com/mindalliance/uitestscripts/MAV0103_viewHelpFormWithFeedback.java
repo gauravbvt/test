@@ -228,7 +228,7 @@ public class MAV0103_viewHelpFormWithFeedback extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0103_viewHelpFormWithFeedback=new File(path + "MAV0103_viewHelpFormWithFeedback.xml");

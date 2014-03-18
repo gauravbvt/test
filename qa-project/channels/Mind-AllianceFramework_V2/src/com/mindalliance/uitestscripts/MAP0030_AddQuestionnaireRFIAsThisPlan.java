@@ -266,7 +266,7 @@ public class MAP0030_AddQuestionnaireRFIAsThisPlan extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAP0030_AddQuestionnaireRFIAsThisPlan=new File(path + "MAP0030_AddQuestionnaireRFIAsThisPlan.xml");

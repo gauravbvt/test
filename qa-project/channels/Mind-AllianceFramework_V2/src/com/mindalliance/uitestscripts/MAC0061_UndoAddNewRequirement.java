@@ -230,7 +230,7 @@ public class MAC0061_UndoAddNewRequirement extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAC0061_UndoAddNewRequirement=new File(path + "MAC0061_UndoAddNewRequirement.xml");

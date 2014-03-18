@@ -225,7 +225,7 @@ public class MAV0033_closeAboutPlanSegmentWindow extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0033_closeAboutPlanSegmentWindow=new File(path + "MAV0033_closeAboutPlanSegmentWindow.xml");

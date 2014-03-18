@@ -223,10 +223,11 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MAV0009_viewAboutPlanWindow=new File(path + "MAV0009_viewAboutPlanWindow.xml");
+			System.out.println(path + "MAV0009_viewAboutPlanWindow.xml");
 			
 			Document docMAV0009_viewAboutPlanWindow=db.parse(MAV0009_viewAboutPlanWindow);
 			Element eleMAV0009_viewAboutPlanWindow=docMAV0009_viewAboutPlanWindow.getDocumentElement();
