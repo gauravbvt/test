@@ -320,7 +320,7 @@ public class ModelDao extends AbstractModelObjectDao {
                 results.addAll( listSegmentObjects( clazz ) );
             } else if ( CollaborationModel.class.isAssignableFrom( clazz ) ) {
                 results.add( (T) getCollaborationModel() );
-            }else {
+            } else {
                 for ( Object mo : getIndexMap().values() ) {
                     if ( clazz.isAssignableFrom( mo.getClass() ) ) {
                         results.add( (T) mo );

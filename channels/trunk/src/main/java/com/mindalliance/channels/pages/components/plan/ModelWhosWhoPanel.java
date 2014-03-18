@@ -173,10 +173,10 @@ public class ModelWhosWhoPanel extends AbstractCommandablePanel implements NameR
         boolean filteredOut = false;
         for ( Identifiable filter : filters ) {
             filteredOut = filteredOut ||
-                    ( filter instanceof Actor && employment.getActor() != filter )
-                    || ( filter instanceof Role && employment.getRole() != filter )
-                    || ( filter instanceof Organization && employment.getOrganization() != filter )
-                    || ( filter instanceof Place && ( employment.getLocation() != filter ) );
+                    ( filter instanceof Actor && !employment.getActor().equals(filter ) )
+                    || ( filter instanceof Role && !employment.getRole().equals( filter ) )
+                    || ( filter instanceof Organization && !employment.getOrganization().equals( filter ) )
+                    || ( filter instanceof Place && !employment.getLocation().equals( filter ) );
         }
         return filteredOut;
     }

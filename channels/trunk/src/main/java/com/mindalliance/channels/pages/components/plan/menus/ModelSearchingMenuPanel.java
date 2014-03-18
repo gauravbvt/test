@@ -38,6 +38,7 @@ public class ModelSearchingMenuPanel extends MenuPanel {
         menuItems.add( showAspect( Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.TAXONOMIES ) );
         menuItems.add( showAspect( Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.WHOSWHO ) );
         menuItems.add( showAspect( Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.ATTACHMENTS ) );
+        menuItems.add( showAspect( Channels.MODEL_SEARCHING, ModelSearchingFloatingPanel.ASSETS ) );
         return menuItems;
     }
 }

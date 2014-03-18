@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import com.mindalliance.channels.pages.components.plan.ModelAssetsPanel;
 import com.mindalliance.channels.pages.components.plan.ModelBibliographyPanel;
 import com.mindalliance.channels.pages.components.plan.ModelIndexPanel;
 import com.mindalliance.channels.pages.components.plan.ModelTagsPanel;
@@ -43,17 +44,19 @@ public class ModelSearchingFloatingPanel extends AbstractFloatingMultiAspectPane
     public static final String TAXONOMIES = "Taxonomies";
     public static final String WHOSWHO = "Who's who";
     public static final String ATTACHMENTS = "All attachments";
+    public static final String ASSETS = "Material assets";
 
     private ModelIndexPanel modelIndexPanel;
     private ModelTagsPanel modelTagsPanel;
     private ModelTypologiesPanel modelTypologiesPanel;
     private ModelBibliographyPanel modelBibliographyPanel;
     private ModelWhosWhoPanel modelWhosWhoPanel;
+    private ModelAssetsPanel modelAssetsPanel;
 
     /**
      * Aspects.
      */
-    private static final String[] ASPECTS = {INDEX, TAGS, TAXONOMIES, WHOSWHO, ATTACHMENTS};
+    private static final String[] ASPECTS = {INDEX, TAGS, TAXONOMIES, WHOSWHO, ATTACHMENTS, ASSETS};
 
 
     public ModelSearchingFloatingPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -101,6 +104,8 @@ public class ModelSearchingFloatingPanel extends AbstractFloatingMultiAspectPane
             return getModelWhosWhoPanel();
         } else if ( aspect.equals( ATTACHMENTS ) ) {
             return getModelBibliographyPanel();
+        } else if ( aspect.equals( ASSETS ) ) {
+            return getModelAssetsPanel();
         } else {
             throw new RuntimeException( "Unknown searching aspect " + aspect );
         }
@@ -140,6 +145,13 @@ public class ModelSearchingFloatingPanel extends AbstractFloatingMultiAspectPane
     @Override
     protected PathIcon getIssuesPathIcon( String id ) {
         return null;
+    }
+
+    private ModelAssetsPanel getModelAssetsPanel() {
+        if ( modelAssetsPanel == null ) {
+            modelAssetsPanel = new ModelAssetsPanel( "aspect" );
+        }
+        return modelAssetsPanel;
     }
 
     private ModelBibliographyPanel getModelBibliographyPanel() {
