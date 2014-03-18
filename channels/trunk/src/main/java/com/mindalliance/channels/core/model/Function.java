@@ -1,6 +1,9 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
@@ -21,7 +24,7 @@ import java.util.Set;
  * Date: 5/21/13
  * Time: 10:25 AM
  */
-public class Function extends ModelEntity {
+public class Function extends ModelEntity implements AssetConnectable {
 
     public static Function UNKNOWN;
 
@@ -41,6 +44,9 @@ public class Function extends ModelEntity {
      * Kinds of goals achievable from doing function.
      */
     private List<Objective> objectives = new ArrayList<Objective>();
+
+    private AssetConnections assetConnections = new AssetConnections();
+
 
     public Function() {
     }
@@ -278,4 +284,43 @@ public class Function extends ModelEntity {
                 }
         );
     }
+
+
+    // AssetConnectable
+
+
+    @Override
+    public boolean isCanStockAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProduceAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanUseAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanProvisionAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanBeAssetDemand() {
+        return false;
+    }
+
+    @Override
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        assetConnections.add( assetConnection );
+    }
+
 }

@@ -192,7 +192,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * Get the value of named argument, allowing for resoluton of ModelObjectRef values.
+     * Get the value of named argument, allowing for resolution of ModelObjectRef values.
      *
      * @param commander a commander
      * @return an object
@@ -502,6 +502,11 @@ public abstract class AbstractCommand implements Command {
     @Override
     public void setUndoes( String undoes ) {
         this.undoes = undoes;
+    }
+
+    @Override
+    public boolean triggersAfterCommand() {
+        return true; // default
     }
 
     @Override

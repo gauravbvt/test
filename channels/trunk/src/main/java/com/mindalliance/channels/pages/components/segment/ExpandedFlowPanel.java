@@ -1004,7 +1004,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         };
         assetsContainer.add( assetsLink );
-        Label assetsLabel = new Label( "assets-text", getFlow().getAssetConnections().toString() );
+        Label assetsLabel = new Label( "assets-text", getFlow().getAssetConnections().getLabel( ) );
         assetsContainer.add( assetsLabel );
     }
 

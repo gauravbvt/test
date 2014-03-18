@@ -14,11 +14,11 @@ import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ModelDao;
 import com.mindalliance.channels.core.dao.ModelListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
@@ -220,7 +220,7 @@ public class IssueScanner implements Scanner, ModelListener {
                 for ( ModelObject mo : communityService.list( ModelObject.class ) ) {
                     if ( !active ) return;
                     // Garbage-collect unreferenced and undefined entities.
-                    communityService.getDao().cleanup( mo.getClass(), mo.getName() );
+                    communityService.getDao().cleanup( mo.getClass(), mo.getName() ); // todo - race condition where an entity is created and then GCed before allocated?
                 }
                 if ( !active ) return;
                 if ( planCommunity.isModelCommunity() ) {

@@ -2498,6 +2498,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
         refreshPlanVersionsPanel( target, change, updated );
         // refreshUserParticipationPanel( target, change, updated );
         refreshPlanSearchingPanel( target, change, updated );
+        refreshAssetsPanel( target, change, updated );
     }
 
 

@@ -215,6 +215,7 @@ public class Goal implements Serializable, Mappable {
         map.put( "level", level );
         map.put( "organization", organization );
         map.put( "description", description );
+        map.put( "endsWithSegment", endsWithSegment );
     }
 
     /**
@@ -255,7 +256,6 @@ public class Goal implements Serializable, Mappable {
     /**
      * Return a failure label for the goals.
      *
-     * @param sep the separator string
      * @return a string
      */
     public String getFailureLabel(  ) {

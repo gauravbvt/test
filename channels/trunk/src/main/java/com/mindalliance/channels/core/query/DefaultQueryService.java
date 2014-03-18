@@ -49,6 +49,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
@@ -2116,7 +2117,7 @@ public abstract class DefaultQueryService implements QueryService {
                         segmentObjects.add( part );
                     }
                     if ( entity instanceof MaterialAsset
-                            && part.getAssetConnections().getAllAssets().contains( (MaterialAsset) entity ) ) {
+                            && part.getAssetConnections().references( (MaterialAsset) entity ) ) {
                         segmentObjects.add( part );
                     }
                 }
@@ -3156,6 +3157,16 @@ public abstract class DefaultQueryService implements QueryService {
         goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
         goal.setOrganization( retrieveEntity( Organization.class, map, "organization" ) );
         return goal;
+    }
+
+    @Override
+    public AssetConnection assetConnectionFromMap( Map<String, Object> map ) {
+        AssetConnection assetConnection = new AssetConnection();
+        assetConnection.setType( AssetConnection.Type.valueOf( (String) map.get( "type" ) ) );
+        assetConnection.setAsset( retrieveEntity( MaterialAsset.class, map, "asset" ) );
+        assetConnection.setConsuming( (Boolean) map.get( "consuming" ) );
+        assetConnection.setCritical( (Boolean) map.get( "critical" ) );
+        return assetConnection;
     }
 
     /**

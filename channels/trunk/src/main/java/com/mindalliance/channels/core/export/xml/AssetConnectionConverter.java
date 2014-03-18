@@ -31,20 +31,22 @@ public class AssetConnectionConverter extends AbstractChannelsConverter {
 
     @Override
     public void marshal( Object object, HierarchicalStreamWriter writer, MarshallingContext context ) {
-        AssetConnection assetConnection = (AssetConnection)object;
+        AssetConnection assetConnection = (AssetConnection) object;
         // type
         writer.startNode( "type" );
         writer.setValue( assetConnection.getType().name() );
         writer.endNode();
         // asset
-        writer.startNode( "asset" );
         MaterialAsset asset = assetConnection.getAsset();
-        writer.addAttribute( "id", Long.toString( asset.getId() ) );
-        writer.addAttribute( "kind", asset.getKind().name() );
-        writer.setValue( asset.getName() );
-        writer.endNode();
+        if ( asset != null ) {
+            writer.startNode( "asset" );
+            writer.addAttribute( "id", Long.toString( asset.getId() ) );
+            writer.addAttribute( "kind", asset.getKind().name() );
+            writer.setValue( asset.getName() );
+            writer.endNode();
+        }
         // properties
-        Map<String,String> properties = assetConnection.getProperties();
+        Map<String, String> properties = assetConnection.getProperties();
         for ( String key : properties.keySet() ) {
             writer.startNode( "property" );
             writer.addAttribute( "name", key );
@@ -55,34 +57,30 @@ public class AssetConnectionConverter extends AbstractChannelsConverter {
 
     @Override
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        AssetConnection assetConnection = null;
-        String typeName = null;
-        MaterialAsset asset = null;
-        Map<String, String> properties = new HashMap<String, String>(  );
+        AssetConnection assetConnection = new AssetConnection();
+        Map<String, String> properties = new HashMap<String, String>();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "type" ) ) {
-                typeName = reader.getValue();
+                assetConnection.setType( AssetConnection.Type.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "asset" ) ) {
                 Long id = Long.parseLong( reader.getAttribute( "id" ) );
                 String kind = reader.getAttribute( "kind" );
-                asset = getEntity(
+                MaterialAsset asset = getEntity(
                         MaterialAsset.class,
                         reader.getValue(),
                         id,
                         ModelEntity.Kind.valueOf( kind ),
                         context );
-            } else if ( nodeName.equals( "property") ) {
+                assetConnection.setAsset( asset );
+            } else if ( nodeName.equals( "property" ) ) {
                 String name = reader.getAttribute( "name" );
                 properties.put( name, reader.getValue() );
             }
             reader.moveUp();
         }
-        if ( typeName != null && asset != null ) {
-            assetConnection = new AssetConnection( AssetConnection.Type.valueOf( typeName ), asset );
-            assetConnection.setProperties( properties );
-        }
+        assetConnection.setProperties( properties );
         return assetConnection;
     }
 

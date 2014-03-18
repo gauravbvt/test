@@ -162,7 +162,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         }
         if ( flow.canSetAssets( isSend ) && !flow.getAssetConnections().isEmpty() ) {
             sb.append(". ")
-                    .append( StringUtils.capitalize( flow.getAssetConnections().getLabel() ) );
+                    .append( StringUtils.capitalize( flow.getAssetConnections().getLabel( ) ) );
         }
         return sb.toString();
     }

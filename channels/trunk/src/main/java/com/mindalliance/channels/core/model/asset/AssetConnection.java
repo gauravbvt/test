@@ -1,7 +1,10 @@
 package com.mindalliance.channels.core.model.asset;
 
-import java.io.Serializable;
+import com.mindalliance.channels.core.model.Mappable;
+import com.mindalliance.channels.core.model.ModelObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.Map;
  * Date: 3/7/14
  * Time: 4:25 PM
  */
-public class AssetConnection implements Serializable {
+public class AssetConnection implements Mappable {
 
 
     public static final String CONSUMING = "consuming";
@@ -25,7 +28,6 @@ public class AssetConnection implements Serializable {
     private static final String PROVISIONING_LABEL = "provisions";
     private static final String STOCKING_LABEL = "stocks";
     private static final String USING_LABEL = "uses";
-
 
     public enum Type {
         Demanding,
@@ -52,9 +54,9 @@ public class AssetConnection implements Serializable {
 
     }
 
-    private MaterialAsset asset = MaterialAsset.UNKNOWN;
+    private MaterialAsset asset;
 
-    private Type type;
+    private Type type = Type.Using;
 
     private Map<String, String> properties = new HashMap<String, String>();
 
@@ -104,7 +106,8 @@ public class AssetConnection implements Serializable {
     }
 
     public void setType( Type type ) {
-        this.type = type;
+        if ( type != null )
+            this.type = type;
     }
 
     public MaterialAsset getAsset() {
@@ -147,19 +150,19 @@ public class AssetConnection implements Serializable {
     }
 
     public boolean isDemanding() {
-        return type != null &&type == Type.Demanding;
+        return type != null && type == Type.Demanding;
     }
 
     public boolean isStocking() {
-        return type != null &&type == Type.Stocking;
+        return type != null && type == Type.Stocking;
     }
 
     public boolean isUsing() {
-        return type != null &&type == Type.Using;
+        return type != null && type == Type.Using;
     }
 
     public boolean isProvisioning() {
-        return type != null &&type == Type.Provisioning;
+        return type != null && type == Type.Provisioning;
     }
 
     public String getTypeLabel() {
@@ -168,13 +171,13 @@ public class AssetConnection implements Serializable {
 
     public String getDetailedTypeLabel() {
         if ( type == Type.Using ) {
-          return isConsuming() && isCritical()
-                  ? "requires as well as consumes"
-                      : isConsuming()
-                      ? "consumes"
-                      : isCritical()
-                      ? "requires"
-                      : getTypeLabel();
+            return isConsuming() && isCritical()
+                    ? "requires as well as consumes"
+                    : isConsuming()
+                    ? "consumes"
+                    : isCritical()
+                    ? "requires"
+                    : getTypeLabel();
         } else {
             return getTypeLabel();
         }
@@ -206,14 +209,49 @@ public class AssetConnection implements Serializable {
         return hasProperty( CRITICAL );
     }
 
-    ////////////
+    public String getLabel( ) {
+        StringBuilder sb = new StringBuilder();
+        if ( asset.isType() ) {
+            sb.append( " assets of type \"" );
+        } else {
+            sb.append( " asset \"" );
+        }
+        sb.append( asset.getName() ).append( "\"" );
+        return sb.toString();
+    }
+
+    /**
+     * Convert to a serializable map for copy-paste.
+     *
+     * @return a map
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put( "type", type.name() );
+        map.put( "asset",  Arrays.asList( getAsset().getName(), getAsset().isType() ) );
+        map.put( "critical", isCritical() );
+        map.put( "consuming", isConsuming() );
+        return map;
+    }
+
+    /////// MAPPABLE ////////
+
+    @Override
+    public void map( Map<String, Object> map ) {
+        map.put( "type", type );
+        map.put( "asset", asset );
+        map.put( "properties", properties );
+    }
+
+
+    ////// OBJECT //////
 
     @Override
     public boolean equals( Object object ) {
         if ( object instanceof AssetConnection ) {
             AssetConnection other = (AssetConnection) object;
-            return type != null && type == other.getType()
-                    && asset.equals( other.getAsset() );
+            return type == other.getType()
+                    && ModelObject.areEqualOrNull( asset, other.getAsset() );
         } else {
             return false;
         }
@@ -222,7 +260,7 @@ public class AssetConnection implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        if ( type != null) hash = hash * 31 + type.hashCode();
+        hash = hash * 31 + type.hashCode();
         hash = hash * 31 + asset.hashCode();
         return hash;
     }
@@ -230,13 +268,13 @@ public class AssetConnection implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getTypeLabel() );
-        if ( asset.isType() ) {
-            sb.append( " assets of type \"" );
+        sb.append( getTypeLabel() == null ? "? " : getTypeLabel() );
+        if ( getAsset().isType() ) {
+            sb.append( " type of assets \"" );
         } else {
-            sb.append( " asset \"" );
+            sb.append( " actual asset \"" );
         }
-        sb.append( asset.getName() ).append( "\"" );
+        sb.append( getAsset().getName() );
         return sb.toString();
     }
 

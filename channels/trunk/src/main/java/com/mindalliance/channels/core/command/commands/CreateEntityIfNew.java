@@ -81,4 +81,9 @@ public class CreateEntityIfNew extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
     }
+
+    @Override
+    public boolean triggersAfterCommand() {
+        return false;    // Prevent clean up of new entity by issue scanner before it is referenced.
+    }
 }

@@ -103,7 +103,7 @@ public class ConnectedAssetsFloatingPanel extends AbstractFloatingCommandablePan
 
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isUnknown() || change.isModified() || change.isRefresh() ) {
+        if ( change.isUnknown() || change.isModified() || change.isRefresh() || change.isCollapsed() ) {
             addAboutAssetConnectable();
             addConnectedAssetsPanel( );
             target.add( aboutAssetConnectableLabel );

@@ -79,6 +79,16 @@ public class MaterialAsset extends ModelEntity {
         this.fields = fields;
     }
 
+    public List<AssetField> getValuableFields() {
+        Set<AssetField> effectiveFields = new HashSet<AssetField>( getFields() );
+        if ( isActual() ) {
+            for ( ModelEntity modelEntity : getAllTypes() ) {
+                effectiveFields.addAll( ((MaterialAsset)modelEntity).getFields() );
+            }
+        }
+        return new ArrayList<AssetField>( effectiveFields );
+    }
+
     @Override
     public boolean isUndefined() {
         return super.isUndefined()
@@ -121,7 +131,16 @@ public class MaterialAsset extends ModelEntity {
         return new ArrayList<String>( groups );
     }
 
-    @SuppressWarnings( "unchecked" )
+    public List<String> getValuableGroups() {
+        Set<String> groups = new HashSet<String>();
+        for ( AssetField field : getValuableFields() ) {
+            groups.add( field.getGroup() );
+        }
+        return new ArrayList<String>( groups );
+    }
+
+
+    @SuppressWarnings("unchecked")
     public List<AssetField> getFieldsInGroup( final String group ) {
         return (List<AssetField>) CollectionUtils.select(
                 getFields(),
@@ -133,4 +152,15 @@ public class MaterialAsset extends ModelEntity {
                 } );
     }
 
+    @SuppressWarnings("unchecked")
+    public List<AssetField> getValuableFieldsInGroup( final String group ) {
+        return (List<AssetField>) CollectionUtils.select(
+                getValuableFields(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (AssetField) object ).getGroup().equals( group );
+                    }
+                } );
+    }
 }

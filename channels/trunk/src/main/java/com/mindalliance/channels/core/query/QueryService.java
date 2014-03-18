@@ -37,6 +37,7 @@ import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 
@@ -1399,12 +1400,21 @@ public interface QueryService {
     List<Flow> getAlternates( Flow flow );
 
     /**
-     * Instantiate a gaol from a serialization map.
+     * Instantiate a goal from a serialization map.
      *
      * @param map a map
      * @return a goal
      */
     Goal goalFromMap( Map<String, Object> map );
+
+    /**
+     * Instantiate an asset connection from a serialization map.
+     * Used to copy-paste.
+     *
+     * @param map a map
+     * @return an asset connection
+     */
+    AssetConnection assetConnectionFromMap( Map<String, Object> map );
 
     /**
      * Find the family relationship from an organization to another.

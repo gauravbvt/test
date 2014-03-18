@@ -437,7 +437,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of goals
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Goal> getMitigations() {
         return (List<Goal>) CollectionUtils.select( goals, new Predicate() {
             @Override
@@ -507,7 +507,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Iterator<Flow> sendsNamed( final String name ) {
         return new FilterIterator( sends(), new Predicate() {
             @Override
@@ -524,7 +524,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Iterator<Flow> receivesNamed( final String name ) {
         return new FilterIterator( receives(), new Predicate() {
             @Override
@@ -760,7 +760,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( receives() ), new Predicate() {
             @Override
@@ -775,7 +775,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getCapabilities() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( sends() ), new Predicate() {
             @Override
@@ -946,6 +946,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
             goalMaps.add( goal.toMap() );
         }
         state.put( "goals", goalMaps );
+        List<Map<String, Object>> assetConnectionMaps = new ArrayList<Map<String, Object>>();
+        for ( AssetConnection assetConnection : getAssetConnections().getAll() ) {
+            assetConnectionMaps.add( assetConnection.toMap() );
+        }
+        state.put( "assetConnections", assetConnectionMaps );
         if ( initiatedEvent != null )
             state.put( "initiatedEvent", initiatedEvent.getName() );
         if ( getActor() != null )
@@ -958,8 +963,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
             state.put( "jurisdiction", Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
         if ( location != null )
             state.put( "location", location.mapState() );
-        if ( !getAssetConnections().isEmpty() )
-            state.put( "assetConnections", getAssetConnections().copy() );
         return state;
     }
 
@@ -980,6 +983,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         setCategory( (Category) state.get( "category" ) );
         for ( Map<String, Object> goalMap : (List<Map<String, Object>>) state.get( "goals" ) )
             addGoal( modelService.goalFromMap( goalMap ) );
+        for ( Map<String,Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
+            addAssetConnection( communityService.getModelService().assetConnectionFromMap( assetConnectionMap ) );
+        }
         if ( state.get( "initiatedEvent" ) == null )
             setInitiatedEvent( null );
         else
@@ -1009,9 +1015,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
             setLocation( assignedLocation );
         } else
             setLocation( null );
-        if ( state.get( "assetConnections" ) != null )
-            setAssetConnections( (AssetConnections) state.get( "assetConnections" ) );
-
     }
 
 
@@ -1181,7 +1184,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
         allFlows.addAll( (List<Flow>) IteratorUtils.toList( receives() ) );
@@ -1230,7 +1233,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return !findDependentReceives( infoProduct, queryService ).isEmpty();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Flow> findDependentReceives( final InfoProduct infoProduct, final QueryService queryService ) {
         return (List<Flow>) CollectionUtils.select(
                 getAllSharingReceives(),
@@ -1248,7 +1251,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean dependsOnInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
         return !findDependentReceives( infoFormat, queryService ).isEmpty();
     }

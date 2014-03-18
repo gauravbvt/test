@@ -32,7 +32,7 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
 
 
     public MaterialAssetFieldsPanel( String id, IModel<MaterialAsset> assetModel ) {
-        super( id, assetModel);
+        super( id, assetModel );
         init();
     }
 
@@ -42,7 +42,7 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
         addOrReplace( groupsContainer );
         ListView<String> assetFieldListView = new ListView<String>(
                 "fieldGroups",
-                getMaterialAsset().getGroups()
+                getMaterialAsset().getValuableGroups()
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
@@ -66,16 +66,16 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
                 Label nameLabel = new Label( "name", wrapper.getName() );
                 item.add( nameLabel );
                 // value
-               TextField<String> valueField = new TextField<String>(
-                       "value",
-                       new PropertyModel<String>( wrapper, "value" )
-               );
+                TextField<String> valueField = new TextField<String>(
+                        "value",
+                        new PropertyModel<String>( wrapper, "value" )
+                );
                 valueField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        update( target, new Change( Change.Type.Updated, getMaterialAsset(), "fields") );
+                        update( target, new Change( Change.Type.Updated, getMaterialAsset(), "fields" ) );
                     }
-                });
+                } );
                 if ( !wrapper.getDescription().isEmpty() )
                     addInputHint( valueField, wrapper.getDescription() );
                 if ( wrapper.isRequired() )
@@ -87,10 +87,10 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
     }
 
     private List<AssetFieldWrapper> getAssetFieldWrappers( String group ) {
-        List<AssetFieldWrapper> wrappers = new ArrayList<AssetFieldWrapper>(  );
-        List<AssetField> fields = getMaterialAsset().getFieldsInGroup( group );
-        for ( int i=0; i< fields.size(); i++ ) {
-            AssetFieldWrapper wrapper = new AssetFieldWrapper( fields.get(i), i );
+        List<AssetFieldWrapper> wrappers = new ArrayList<AssetFieldWrapper>();
+        List<AssetField> fields = getMaterialAsset().getValuableFieldsInGroup( group );
+        for ( int i = 0; i < fields.size(); i++ ) {
+            AssetFieldWrapper wrapper = new AssetFieldWrapper( fields.get( i ), i );
             wrappers.add( wrapper );
         }
         return wrappers;
@@ -123,15 +123,27 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
         }
 
         public void setValue( String val ) {
-            doCommand(
-                   new UpdateModelObject(
-                           getUsername(),
-                           getMaterialAsset(),
-                           "fields["+index+"].value",
-                           val,
-                           UpdateObject.Action.Set
-                   )
-            );
+            if ( val == null ) {
+                doCommand(
+                        new UpdateModelObject(
+                                getUsername(),
+                                getMaterialAsset(),
+                                "fields",
+                                assetField,
+                                UpdateObject.Action.Remove
+                        )
+                );
+            } else {
+                doCommand(
+                        new UpdateModelObject(
+                                getUsername(),
+                                getMaterialAsset(),
+                                "fields[" + index + "].value",
+                                val,
+                                UpdateObject.Action.Set
+                        )
+                );
+            }
         }
     }
 

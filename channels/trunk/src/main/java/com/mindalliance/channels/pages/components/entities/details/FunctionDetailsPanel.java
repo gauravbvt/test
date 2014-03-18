@@ -18,6 +18,7 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.ConnectedAssetsPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -67,6 +68,11 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
     private DropDownChoice<Goal.Category> goalCategoryChoice;
     private WebMarkupContainer infoNeededContainer;
     private WebMarkupContainer infoAcquiredContainer;
+    /**
+     * Assets container.
+     */
+    private WebMarkupContainer assetsContainer;
+
 
     public FunctionDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -88,6 +94,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         addObjectives();
         addInfoNeeded();
         addInfoAcquired();
+        addAssets();
     }
 
     private void addObjectives() {
@@ -218,6 +225,18 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                 "infoAcquired"
         ) );
     }
+
+    private void addAssets() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( assetsContainer );
+        ConnectedAssetsPanel connectedAssetsPanel =
+                new ConnectedAssetsPanel(
+                        "assets",
+                        new PropertyModel<Function>( this, "function" ) );
+        assetsContainer.add( connectedAssetsPanel );
+    }
+
 
     public String getAddingRiskOrGain() {
         return addingRiskOrGain;

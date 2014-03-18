@@ -796,7 +796,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         assetsContainer.add( assetsLink );
         Label assetsLabel = new Label(
                 "assets-text",
-                StringUtils.capitalize( getPart().getAssetConnections().getLabel() ) );
+                StringUtils.capitalize( getPart().getAssetConnections().getLabel( ) ) );
         assetsContainer.add( assetsLabel );
     }
 

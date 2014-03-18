@@ -40,7 +40,6 @@ public class Organization extends AbstractUnicastChannelable
      */
     private List<Job> jobs = new ArrayList<Job>();
 
-    private AssetConnections assetConnections = new AssetConnections();
     /**
      * Whether roles must have associated actors, else issues.
      */
@@ -76,6 +75,9 @@ public class Organization extends AbstractUnicastChannelable
      * If placeholder, whether only one known organization can participate as it.
      */
     public boolean singleParticipation;
+
+    private AssetConnections assetConnections = new AssetConnections();
+
 
     /**
      * Name of unknown organization.

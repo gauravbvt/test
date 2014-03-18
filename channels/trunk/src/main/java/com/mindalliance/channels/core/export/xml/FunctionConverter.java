@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Objective;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -85,6 +86,13 @@ public class FunctionConverter extends EntityConverter {
             }
             writer.endNode();
         }
+        // Asset connections
+        for ( AssetConnection assetConnection : function.getAssetConnections().getAll() ) {
+            writer.startNode( "assetConnection" );
+            context.convertAnother( assetConnection );
+            writer.endNode();
+        }
+
     }
 
     @Override
@@ -149,7 +157,10 @@ public class FunctionConverter extends EntityConverter {
                 reader.moveUp();
             }
             function.addInfoAcquired( info );
-         }
+         } else if ( nodeName.equals( "assetConnection" ) ) {
+            AssetConnection assetConnection = (AssetConnection) context.convertAnother( function, AssetConnection.class );
+            function.addAssetConnection( assetConnection );
+        }
     }
 
 }

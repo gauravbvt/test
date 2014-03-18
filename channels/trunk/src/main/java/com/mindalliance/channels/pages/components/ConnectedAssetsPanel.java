@@ -47,7 +47,6 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
     private static final Logger LOG = LoggerFactory.getLogger( ConnectedAssetsPanel.class );
 
     private WebMarkupContainer assetConnectionsContainer;
-    private AjaxLink<String> addConnectionLink;
     private AssetConnection newAssetConnection;
 
     public ConnectedAssetsPanel( String id, IModel<? extends AssetConnectable> iModel ) {
@@ -62,6 +61,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private void reset() {
         newAssetConnection = new AssetConnection();
+        newAssetConnection.setType( AssetConnection.Type.Using );
     }
 
     private void addAssetConnectionsContainer() {
@@ -78,11 +78,11 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         ) {
             @Override
             protected void populateItem( ListItem<AssetConnectionWrapper> item ) {
+                item.setOutputMarkupId( true );
                 addConnection( item );
-                addAssetString( item );
+                addAssetPrefix( item );
                 addAsset( item );
                 addConnectionProperties( item );
-                addAddConnection( item );
                 addDeleteConnection( item );
             }
         };
@@ -111,7 +111,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         item.add( connectionChoice );
     }
 
-    private void addAssetString( ListItem<AssetConnectionWrapper> item ) {
+    private void addAssetPrefix( ListItem<AssetConnectionWrapper> item ) {
         AssetConnectionWrapper wrapper = item.getModelObject();
         MaterialAsset asset = wrapper.getAsset();
         String text = asset == null
@@ -125,14 +125,14 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<String> getTypeLabelsChoicesFor( ListItem<AssetConnectionWrapper> item ) {
-        return (List<String>)CollectionUtils.collect(
-                AssetConnection.getTypeLabelsChoicesFor( getAssetConnectable()),
-                        new Transformer() {
-                            @Override
-                            public Object transform( Object input ) {
-                                return StringUtils.capitalize( (String) input );
-                            }
-                        });
+        return (List<String>) CollectionUtils.collect(
+                AssetConnection.getTypeLabelsChoicesFor( getAssetConnectable() ),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return StringUtils.capitalize( (String) input );
+                    }
+                } );
     }
 
     private void addAsset( ListItem<AssetConnectionWrapper> item ) {
@@ -188,28 +188,6 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     }
 
-    private void addAddConnection( ListItem<AssetConnectionWrapper> item ) {
-        final AssetConnectionWrapper wrapper = item.getModelObject();
-        addConnectionLink = new AjaxLink<String>( "add" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                if ( wrapper.isCanBeAdded() ) {
-                    wrapper.add();
-                    reset();
-                    addAssetConnectionsContainer();
-                    target.add( assetConnectionsContainer );
-                    update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
-                } else {
-                    Change change = Change.message( "Please identify the asset." );
-                    update( target, change );
-                }
-            }
-        };
-        addConnectionLink.setOutputMarkupId( true );
-        makeVisible( addConnectionLink, wrapper.isMarkedForCreation() && isLockedByUser( getAssetConnectable() ) );
-        item.addOrReplace( addConnectionLink );
-    }
-
     private void addDeleteConnection( ListItem<AssetConnectionWrapper> item ) {
         final AssetConnectionWrapper wrapper = item.getModelObject();
         AjaxLink<String> addConnectionLink = new AjaxLink<String>( "delete" ) {
@@ -247,6 +225,16 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             AssetConnectionWrapper wrapper = (AssetConnectionWrapper) change.getSubject( getCommunityService() );
             if ( !wrapper.isMarkedForCreation() )
                 super.updateWith( target, change, updated );
+            else {
+                if ( wrapper.isCanBeAdded() ) {
+                    wrapper.add();
+                    reset();
+                    addAssetConnectionsContainer();
+                    target.add( assetConnectionsContainer );
+                    update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
+
+                }
+            }
         } else {
             super.updateWith( target, change, updated );
         }
@@ -291,7 +279,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
         public void setTypeLabel( String typeLabel ) {
             if ( isMarkedForCreation() ) {
-                getAssetConnection().setTypeLabel( typeLabel );
+                assetConnection.setTypeLabel( typeLabel );
             } else {
                 try {
                     doCommand( UpdateObject.makeCommand(
@@ -308,25 +296,17 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         }
 
         public MaterialAsset getAsset() {
-            MaterialAsset asset = assetConnection.getAsset();
-            return asset.isUnknown() ? null : asset;
+            if ( isMarkedForCreation() ) {
+                return null;
+            } else {
+                MaterialAsset asset = assetConnection.getAsset(  );
+                return asset.isUnknown() ? null : asset;
+            }
         }
 
-        public void setAsset( MaterialAsset materialAsset ) {
+        public void setAsset( MaterialAsset asset ) {
             if ( isMarkedForCreation() ) {
-                getAssetConnection().setAsset( materialAsset );
-            } else {
-                try {
-                    doCommand( UpdateObject.makeCommand(
-                            getUsername(),
-                            getAssetConnectable(),
-                            "assetConnections.all[" + index + "].asset",
-                            materialAsset,
-                            UpdateObject.Action.Set
-                    ) );
-                } catch ( CommandException e ) {
-                    LOG.warn( "Failed to update connected asset" );
-                }
+                getAssetConnection().setAsset( asset );
             }
         }
 
@@ -396,7 +376,8 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         }
 
         private boolean isCanBeAdded() {
-            return getAssetConnection().getType() != null && !getAssetConnection().getAsset().isUnknown();
+            return getAssetConnection().getAsset() != null
+                    && getAssetConnection().getType() != null;
         }
 
         public void delete() {

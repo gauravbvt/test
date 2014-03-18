@@ -202,6 +202,18 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
             return candidates;
         }
 
+        /*
+         *
+         *     @Override
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isUpdated() && change.isForProperty( "types" ) ) {
+            addTypesPanel();
+            target.add( typesPanel );
+            typesChanged( target );
+        }
+
+         */
+
         @Override
         public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
             if ( change.isForProperty( "asset" ) ) {
@@ -215,6 +227,10 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
                         )
                 );
                 refresh( target );
+            } else if ( change.isUpdated() && change.isForProperty( "types" ) ) {
+                addAssetFieldsPanel();
+                target.add( assetFieldsPanel );
+                super.updateWith( target, change, updated );
             }
             super.updateWith( target, change, updated );
         }

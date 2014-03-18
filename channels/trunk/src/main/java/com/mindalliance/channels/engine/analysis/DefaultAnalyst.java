@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
@@ -20,7 +21,6 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.Commitments;
@@ -653,7 +653,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     @Override
     public void commandDone( Commander commander, Command command, Change change ) {
         if ( !commander.isReplaying() && command.isTop() && !change.isNone() )
-            onAfterCommand( commander.getPlanCommunity() );
+            if ( command.triggersAfterCommand() )
+                onAfterCommand( commander.getPlanCommunity() );
     }
 
     @Override

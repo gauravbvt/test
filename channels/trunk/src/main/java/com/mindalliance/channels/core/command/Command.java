@@ -208,4 +208,10 @@ public interface Command extends JournalCommand {
      * @param name a string
      */
     void setUndoes( String name );
+
+    /**
+     * Whether execution of this command triggers after command execution processing.
+     * @return a boolean
+     */
+    boolean triggersAfterCommand();
 }

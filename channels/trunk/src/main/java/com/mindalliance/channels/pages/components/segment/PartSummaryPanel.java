@@ -174,7 +174,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         }
         if ( !part.getAssetConnections().isEmpty() ) {
             sb.append(" ")
-                    .append( StringUtils.capitalize( part.getAssetConnections().getLabel() ) )
+                    .append( StringUtils.capitalize( part.getAssetConnections().getLabel( ) ) )
                     .append(".");
         }
         if ( part.isProhibited() ) {

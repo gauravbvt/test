@@ -1657,8 +1657,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "canBypassIntermediate", isCanBypassIntermediate() );
         state.put( "receiptConfirmationRequested", isReceiptConfirmationRequested() );
         state.put( "infoProductTimeSensitive", isInfoProductTimeSensitive() );
-        if ( !getAssetConnections().isEmpty() )
-            state.put( "assetConnections", getAssetConnections().copy() );
+        List<Map<String, Object>> assetConnectionMaps = new ArrayList<Map<String, Object>>();
+        for ( AssetConnection assetConnection : getAssetConnections().getAll() ) {
+            assetConnectionMaps.add( assetConnection.toMap() );
+        }
+        state.put( "assetConnections", assetConnectionMaps );
         return state;
     }
 
@@ -1704,7 +1707,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( state.containsKey( "infoProductTimeSensitive" ) )
             setInfoProductTimeSensitive( (Boolean) state.get( "infoProductTimeSensitive" ) );
         if ( state.containsKey( "assetConnections") )
-            setAssetConnections( (AssetConnections) state.get("assetConnections") );
+            for ( Map<String,Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
+                addAssetConnection( communityService.getModelService().assetConnectionFromMap( assetConnectionMap ) );
+            }
     }
 
     public void setProductInfoFromName( AbstractModelObjectDao dao ) {
