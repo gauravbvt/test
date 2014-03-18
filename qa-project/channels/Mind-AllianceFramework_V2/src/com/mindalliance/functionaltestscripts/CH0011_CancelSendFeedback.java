@@ -221,7 +221,7 @@ public class CH0011_CancelSendFeedback extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CH0011_CancelSendFeedback=new File(path + "CH0011_CancelSendFeedback.xml");

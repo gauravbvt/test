@@ -213,7 +213,7 @@ public class ISR0016_ClickTemplateLinkOnIssueSummaryReportPage extends TestCase 
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File ISR0016_ClickTemplateLinkOnIssueSummaryReportPage=new File(path + "ISR0016_ClickTemplateLinkOnIssueSummaryReportPage.xml");

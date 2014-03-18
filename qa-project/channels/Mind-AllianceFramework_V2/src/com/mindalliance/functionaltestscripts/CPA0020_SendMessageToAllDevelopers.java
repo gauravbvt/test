@@ -242,7 +242,7 @@ public class CPA0020_SendMessageToAllDevelopers extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CPA0020_SendMessageToAllDevelopers=new File(path + "CPA0020_SendMessageToAllDevelopers.xml");

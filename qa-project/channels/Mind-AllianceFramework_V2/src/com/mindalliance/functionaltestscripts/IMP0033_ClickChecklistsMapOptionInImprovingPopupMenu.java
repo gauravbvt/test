@@ -221,7 +221,7 @@ public class IMP0033_ClickChecklistsMapOptionInImprovingPopupMenu extends TestCa
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File IMP0033_ClickChecklistsMapOptionInImprovingPopupMenu=new File(path + "IMP0033_ClickChecklistsMapOptionInImprovingPopupMenu.xml");

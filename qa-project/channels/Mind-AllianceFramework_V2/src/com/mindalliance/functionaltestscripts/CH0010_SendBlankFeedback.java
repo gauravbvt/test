@@ -220,7 +220,7 @@ public class CH0010_SendBlankFeedback extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CH0010_SendBlankFeedback=new File(path + "CH0010_SendBlankFeedback.xml");

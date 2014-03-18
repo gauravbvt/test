@@ -189,7 +189,7 @@ public class AMHP0001_ViewAboutMeTab extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File AMHP0001_ViewAboutMeTab=new File(path + "AMHP0001_ViewAboutMeTab.xml");

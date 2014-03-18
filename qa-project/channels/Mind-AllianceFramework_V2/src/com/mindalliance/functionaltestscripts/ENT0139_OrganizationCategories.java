@@ -258,7 +258,7 @@ public class ENT0139_OrganizationCategories extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File ENT0139_OrganizationCategories=new File(path + "ENT0139_OrganizationCategories.xml");

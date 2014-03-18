@@ -204,7 +204,7 @@ public class CT0003_ClickCollaborationPlanEditorLink extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CT0003_ClickCollaborationPlanEditorLink=new File(path + "CT0003_ClickCollaborationPlanEditorLink.xml");

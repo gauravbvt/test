@@ -221,7 +221,7 @@ public class TEMPACT0042_VerifyActionsPopupMenuPresentInSendsPanel extends TestC
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File TEMPACT0042_VerifyActionsPopupMenuPresentInSendsPanel=new File(path + "TEMPACT0042_VerifyActionsPopupMenuPresentInSendsPanel.xml");

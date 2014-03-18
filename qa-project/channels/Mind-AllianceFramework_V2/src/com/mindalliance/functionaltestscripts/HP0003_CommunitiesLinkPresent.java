@@ -198,7 +198,7 @@ public class HP0003_CommunitiesLinkPresent  extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File HP0003_CommunitiesLinkPresent=new File(path + "HP0003_CommunitiesLinkPresent.xml");

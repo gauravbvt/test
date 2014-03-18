@@ -205,7 +205,7 @@ public class ATT0001_VerifyAddAttachmentPanelIsPresentOnCollaborationTemplatePag
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File ATT0001_VerifyAddAttachmentPanelIsPresentOnCollaborationTemplatePage=new File(path + "ATT0001_VerifyAddAttachmentPanelIsPresentOnCollaborationTemplatePage.xml");

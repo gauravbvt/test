@@ -231,7 +231,7 @@ public class CA0034_DeleteOwnerName extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CA0034_DeleteOwnerName=new File(path + "CA0034_DeleteOwnerName.xml");

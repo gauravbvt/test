@@ -251,7 +251,7 @@ public class CA0033_UpdateOwnerName extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CA0033_UpdateOwnerName=new File(path + "CA0033_UpdateOwnerName.xml");

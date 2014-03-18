@@ -203,7 +203,7 @@ public class CT0005_ClickTemplateIssuesLink extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CT0005_ClickTemplateIssuesLink=new File(path + "CT0005_ClickTemplateIssuesLink.xml");

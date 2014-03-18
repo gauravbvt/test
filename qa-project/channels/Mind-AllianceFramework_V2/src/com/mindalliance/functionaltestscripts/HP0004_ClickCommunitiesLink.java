@@ -195,7 +195,7 @@ public class HP0004_ClickCommunitiesLink extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File HP0004_ClickCommunitiesLink=new File(path + "HP0004_ClickCommunitiesLink.xml");

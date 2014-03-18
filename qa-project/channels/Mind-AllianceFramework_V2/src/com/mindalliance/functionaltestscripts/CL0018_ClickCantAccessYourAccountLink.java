@@ -166,7 +166,7 @@ public class CL0018_ClickCantAccessYourAccountLink extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CL0018_ClickCantAccessYourAccountLink=new File(path + "CL0018_ClickCantAccessYourAccountLink.xml");

@@ -212,7 +212,7 @@ public class IMP0001_VerifyImprovingPoupupMenuIsPresent extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File IMP0001_VerifyImprovingPoupupMenuIsPresent=new File(path + "IMP0001_VerifyImprovingPoupupMenuIsPresent.xml");

@@ -221,7 +221,7 @@ public class SRCH0003_ClickIndexOptionFromSearchingPopupMenu extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File SRCH0003_ClickIndexOptionFromSearchingPopupMenu=new File(path + "SRCH0003_ClickIndexOptionFromSearchingPopupMenu.xml");

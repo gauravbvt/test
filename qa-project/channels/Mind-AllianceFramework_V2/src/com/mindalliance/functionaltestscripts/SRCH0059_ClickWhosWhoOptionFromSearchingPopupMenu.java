@@ -221,7 +221,7 @@ public class SRCH0059_ClickWhosWhoOptionFromSearchingPopupMenu extends TestCase 
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File SRCH0059_ClickWhosWhoOptionFromSearchingPopupMenu=new File(path + "SRCH0059_ClickWhosWhoOptionFromSearchingPopupMenu.xml");

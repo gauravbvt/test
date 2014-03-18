@@ -292,7 +292,7 @@ public class ENT0002_CreateAgentWithSpecialCharacters extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File ENT0002_CreateAgentWithSpecialCharacters=new File(path + "ENT0002_CreateAgentWithSpecialCharacters.xml");

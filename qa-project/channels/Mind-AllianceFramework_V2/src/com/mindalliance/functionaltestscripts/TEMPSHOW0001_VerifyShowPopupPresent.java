@@ -212,7 +212,7 @@ public class TEMPSHOW0001_VerifyShowPopupPresent extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File TEMPSHOW0001_VerifyShowPopupPresent=new File(path + "TEMPSHOW0001_VerifyShowPopupPresent.xml");

@@ -221,7 +221,7 @@ public class SRCH0056_ClickTaxonomiesOptionFromSearchingPopupMenu extends TestCa
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File SRCH0056_ClickTaxonomiesOptionFromSearchingPopupMenu=new File(path + "SRCH0056_ClickTaxonomiesOptionFromSearchingPopupMenu.xml");

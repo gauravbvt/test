@@ -203,7 +203,7 @@ public class UT0001_VerifyUsersTabPresentOnChannelsSettingsPage extends TestCase
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File UT0001_VerifyUsersTabPresentOnChannelsSettingsPage=new File(path + "UT0001_VerifyUsersTabPresentOnChannelsSettingsPage.xml");

@@ -204,7 +204,7 @@ public class CTT0001_VerifyCollaborationTemplatesTabPresent extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CTT0001_VerifyCollaborationTemplatesTabPresent=new File(path + "CTT0001_VerifyCollaborationTemplatesTabPresent.xml");

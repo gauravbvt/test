@@ -228,7 +228,7 @@ public class CA0030_CreateUserWithInvalidEmailID extends TestCase{
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File CA0030_CreateUserWithInvalidEmailID=new File(path + "CA0030_CreateUserWithInvalidEmailID.xml");

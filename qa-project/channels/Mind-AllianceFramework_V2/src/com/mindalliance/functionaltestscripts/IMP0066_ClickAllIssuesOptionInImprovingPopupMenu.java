@@ -221,7 +221,7 @@ public class IMP0066_ClickAllIssuesOptionInImprovingPopupMenu extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File IMP0066_ClickAllIssuesOptionInImprovingPopupMenu=new File(path + "IMP0066_ClickAllIssuesOptionInImprovingPopupMenu.xml");

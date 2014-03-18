@@ -212,7 +212,7 @@ public class LRN0001_VerifyLearningPopupMenuIsPresent extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File LRN0001_VerifyLearningPopupMenuIsPresent=new File(path + "LRN0001_VerifyLearningPopupMenuIsPresent.xml");

@@ -227,7 +227,7 @@ public class MSGS0009_SendMessageToAllDevelopers extends TestCase {
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File MSGS0009_SendMessageToAllDevelopers=new File(path + "MSGS0009_SendMessageToAllDevelopers.xml");

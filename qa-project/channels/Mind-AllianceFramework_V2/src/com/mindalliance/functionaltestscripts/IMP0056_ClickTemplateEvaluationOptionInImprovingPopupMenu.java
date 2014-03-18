@@ -213,7 +213,7 @@ public class IMP0056_ClickTemplateEvaluationOptionInImprovingPopupMenu extends T
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
-			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			String path= currentDir.getCanonicalPath().toString() + File.separator+"TestData"+File.separator;
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 			File IMP0056_ClickTemplateEvaluationOptionInImprovingPopupMenu=new File(path + "IMP0056_ClickTemplateEvaluationOptionInImprovingPopupMenu.xml");
