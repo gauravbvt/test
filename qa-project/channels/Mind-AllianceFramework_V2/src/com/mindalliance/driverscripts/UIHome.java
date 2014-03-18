@@ -570,7 +570,7 @@
 //			
 //			JList<String> jlist=new JList<String>(arrayOfTestCases);
 //			GlobalVariables.configuration.setList(jlist);				
-//			String folder=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport";
+//			String folder=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+File.separator+"Reports"+File.separator+"UIAutomationReport";
 //		
 ////			String folder="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport";
 //			File file1=new File(folder);
