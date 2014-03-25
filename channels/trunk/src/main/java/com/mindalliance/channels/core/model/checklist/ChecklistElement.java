@@ -21,11 +21,15 @@ public interface ChecklistElement extends Identifiable {
 
     boolean isOutcome();
 
+    boolean isAssetProvisioning();
+
     Step getStep();
 
     Condition getCondition();
 
     Outcome getOutcome();
+
+    AssetProvisioning getAssetProvisioning();
 
     String getContext();
 

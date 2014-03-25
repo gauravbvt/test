@@ -44,6 +44,11 @@ public class TaskFailedCondition extends Condition {
     }
 
     @Override
+    public boolean isAssetAvailableCondition() {
+        return false;
+    }
+
+    @Override
     public boolean matches( Outcome outcome ) {
         return false;
     }

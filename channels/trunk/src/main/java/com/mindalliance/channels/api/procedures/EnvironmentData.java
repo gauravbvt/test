@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.FunctionData;
 import com.mindalliance.channels.api.entities.InfoFormatData;
 import com.mindalliance.channels.api.entities.InfoProductData;
+import com.mindalliance.channels.api.entities.MaterialAssetData;
 import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
@@ -23,6 +24,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +46,7 @@ import java.util.Set;
  * Time: 3:43 PM
  */
 @XmlType(propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media",
-        "infoProducts", "formats", "functions"})
+        "infoProducts", "formats", "functions", "materialAssets"})
 public class EnvironmentData implements Serializable {
 
     /**
@@ -62,6 +64,7 @@ public class EnvironmentData implements Serializable {
     private List<InfoProductData> infoProducts;
     private List<InfoFormatData> infoFormats;
     private List<FunctionData> functions;
+    private List<MaterialAssetData> assets;
     private ChecklistsData protocols;
 
     public EnvironmentData() {
@@ -85,6 +88,7 @@ public class EnvironmentData implements Serializable {
             initInfoProducts( serverUrl, communityService );
             initInfoFormats( serverUrl, communityService );
             initFunctions( serverUrl, communityService );
+            initMaterialAssets( serverUrl, communityService );
         } catch ( NotFoundException e ) {
             throw new RuntimeException( e );
         }
@@ -172,6 +176,28 @@ public class EnvironmentData implements Serializable {
             }
         }
     }
+
+    private void initMaterialAssets( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        ModelService modelService = communityService.getModelService();
+        assets = new ArrayList<MaterialAssetData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allAssetIds() ) {
+            try {
+                MaterialAsset asset = modelService.find( MaterialAsset.class, id );
+                assets.add( new MaterialAssetData( serverUrl, asset, communityService ) );
+                added.add( id );
+                for ( ModelEntity category : asset.getAllTypes() ) {
+                    if ( !added.contains( category.getId() ) ) {
+                        assets.add( new MaterialAssetData( serverUrl, (Function) category, communityService ) );
+                        added.add( category.getId() );
+                    }
+                }
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Material asset not found at " + id );
+            }
+        }
+    }
+
 
 
     private void initInfoFormats( String serverUrl, CommunityService communityService ) throws NotFoundException {
@@ -340,6 +366,11 @@ public class EnvironmentData implements Serializable {
         return functions;
     }
 
+    @XmlElement(name = "asset")
+    public List<MaterialAssetData> getMaterialAssets() {
+        return assets;
+    }
+
     private Set<Long> allEventIds() {
         Set<Long> allIds = new HashSet<Long>();
             allIds.addAll( protocols.allEventsIds() );
@@ -399,4 +430,11 @@ public class EnvironmentData implements Serializable {
         allIds.addAll( protocols.allFunctionIds() );
         return allIds;
     }
+
+    private Set<Long> allAssetIds() {
+        Set<Long> allIds = new HashSet<Long>();
+        allIds.addAll( protocols.allAssetIds() );
+        return allIds;
+    }
+
 }

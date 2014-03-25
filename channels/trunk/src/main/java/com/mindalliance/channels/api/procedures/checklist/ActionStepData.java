@@ -16,8 +16,10 @@ import java.util.List;
  * Date: 4/1/13
  * Time: 9:25 PM
  */
-@XmlType( name = "actionStep", propOrder = {"label", "uid", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
+@XmlType( name = "actionStep", propOrder = {"label", "uid", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes", "assetProvisioning"} )
 public class ActionStepData extends AbstractStepData {
+
+    private AssetProvisioningData assetProvisioning;
 
     public ActionStepData() {
         // required
@@ -29,6 +31,10 @@ public class ActionStepData extends AbstractStepData {
                            CommunityService communityService,
                            ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
+        assetProvisioning = new AssetProvisioningData(
+                checklist,
+                ((ActionStep)step).getAssetProvisioning(),
+                communityService );
     }
 
     @Override
@@ -74,6 +80,11 @@ public class ActionStepData extends AbstractStepData {
     @XmlElement( name = "outcome" )
     public List<OutcomeData> getOutcomes() {
         return super.getOutcomes();
+    }
+
+    @XmlElement
+    public AssetProvisioningData getAssetProvisioning() {
+        return assetProvisioning;
     }
 
     public ActionStep getActionStep() {

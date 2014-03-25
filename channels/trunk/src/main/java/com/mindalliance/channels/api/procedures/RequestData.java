@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.AssetConnectionData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
@@ -29,7 +29,7 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"id", "information", "intent", "intentText", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
         "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
-        "consumingTask", "impactOnConsumingTask", "documentation"} )
+        "consumingTask", "impactOnConsumingTask", "assetConnections", "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     private List<CommunityCommitment> commitments;
@@ -69,6 +69,7 @@ public class RequestData extends AbstractFlowData {
         initContactEmployments( serverUrl, communityService, userInfo );
         initConsumingTask( serverUrl, communityService );
         initAssignmentData( serverUrl, communityService, new ChannelsUser( userInfo ) );
+        initAssetConnections();
         initOtherData( communityService );
     }
 
@@ -219,6 +220,12 @@ public class RequestData extends AbstractFlowData {
     @XmlElement
     public String getImpactOnConsumingTask() {
         return impactOnConsumingTask;
+    }
+
+    @XmlElement( name="assetConnection")
+    @Override
+    public List<AssetConnectionData> getAssetConnections() {
+        return super.getAssetConnections();    //Todo
     }
 
     @XmlElement

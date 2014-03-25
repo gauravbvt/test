@@ -346,4 +346,12 @@ public class ChecklistsData implements Serializable {
         }
         return ids;
     }
+
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        for ( ChecklistData checklistData : getChecklists() ) {
+            ids.addAll( checklistData.allAssetIds() );
+        }
+        return ids;
+    }
 }

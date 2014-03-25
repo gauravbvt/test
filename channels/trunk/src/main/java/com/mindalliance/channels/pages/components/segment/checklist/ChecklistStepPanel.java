@@ -78,6 +78,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         add( stepContainer );
         addStepLabel();
         addActionStepNameInput();
+        addActionStepAssetProvisioning();
         addStepInstructionsTextArea();
         addDeleteStep();
         addEditDoneButton();
@@ -172,10 +173,21 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
 
     private void addStepLabel() {
-        Label actLabel = new Label( "act", step.getLabel() );
+        String labelText = step.getLabel();
+        String provisioningText = "";
+        if ( step.isActionStep() ) {
+            provisioningText = ( (ActionStep) step ).getAssetProvisioningLabel(
+                    getChecklist(),
+                    getCommunityService() );
+        }
+        Label actLabel = new Label( "act", labelText );
         actLabel.add( new AttributeModifier( "class", stepCSSClasses( step ) ) );
         actLabel.setVisible( !edited || !step.isActionStep() );
         stepContainer.add( actLabel );
+        // provisioning label
+        Label provisionedLabel = new Label( "provisioned", provisioningText );
+        provisionedLabel.setVisible( !edited && !provisioningText.isEmpty() );
+        stepContainer.add( provisionedLabel);
         String instructions = step.isActionStep()
                 ? ( (ActionStep) step ).getInstructions()
                 : step.isCommunicationStep()
@@ -201,6 +213,20 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         } );
         addInputHint( actionStepInputField, "The action to be taken" );
         stepContainer.add( actionStepInputField );
+    }
+
+    private void addActionStepAssetProvisioning() {
+        if ( edited && step.isActionStep() ) {
+            AssetProvisioningPanel assetProvisioningPanel = new AssetProvisioningPanel(
+                    "assetProvisioning",
+                    getChecklist(),
+                    (ActionStep) step );
+            stepContainer.add( assetProvisioningPanel );
+        } else {
+            Label label = new Label( "assetProvisioning", "" );
+            makeVisible( label, false );
+            stepContainer.add( label );
+        }
     }
 
 

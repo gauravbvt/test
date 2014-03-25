@@ -7,7 +7,9 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.AssetProducedOutcome;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
@@ -75,6 +77,8 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     private static final String FOLLOW_UP_ICON = "step_follow_up";
     private static final String EVENT_OUTCOME_ICON = "event";
     private static final String CAPABILITY_CREATED_OUTCOME_ICON = "info_product";
+    private static final String ASSET_PRODUCED_OUTCOME_ICON = "asset";
+    private static final String ASSET_PROVISIONED_ICON = "asset_provisioned";
 
 
     private final Part part;
@@ -245,7 +249,12 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 sb.append( "INFO \"" )
                         .append( capability.getName() )
                         .append( "\" can now be shared" );
+            } else if ( outcome.isAssetProducedOutcome() ) {
+                AssetConnection assetConnection = ( (AssetProducedOutcome)outcome).getAssetConnection();
+                sb.append( assetConnection.getStepOutcomeLabel() );
             }
+        } else if ( cle.isAssetProvisioning() ) {
+            sb.append( cle.getAssetProvisioning().getShortLabel( ) );
         }
         return sanitize( sb.toString() );
     }
@@ -285,12 +294,12 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                                      ChecklistElementRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( edge.isWithOutcome() ) {
+            if ( edge.isWithOutcome() || edge.isWithAssetProvisioning() ) {
                 list.add( new DOTAttribute( "color", "gray" ) );
                 list.add( new DOTAttribute( "arrowhead", "none" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
-            } else {
+            }  else {
                 list.add( new DOTAttribute( "color", "#666666" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
@@ -355,7 +364,14 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         ? EVENT_OUTCOME_ICON
                         : outcome.isCapabilityCreatedOutcome()
                         ? CAPABILITY_CREATED_OUTCOME_ICON
-                        : getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part );
+                        : outcome.isAssetProducedOutcome()
+                        ? ASSET_PRODUCED_OUTCOME_ICON
+                        : outcome.isGoalAchievedOutcome()
+                        ? getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part )
+                        : null;
+            } else if ( vertex.isAssetProvisioning() ) {
+                iconName = ASSET_PROVISIONED_ICON;
+
             } else {
                 iconName = null;
             }

@@ -77,7 +77,6 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
                 ) ) {
                     enders.add( cle );
                 }
-
             }
         }
     }
@@ -111,7 +110,6 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
         out.print( asElementAttributes( attributes ) );
         out.println( "];" );
     }
-
 
     private void exportEnd( PrintWriter out ) {
         ChecklistFlowMetaProvider metaProvider = (ChecklistFlowMetaProvider) getMetaProvider();

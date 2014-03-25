@@ -609,6 +609,11 @@ public class Organization extends AbstractUnicastChannelable
         return assetConnections;
     }
 
+    @Override
+    public AssetConnection.Type getDefaultAssetConnectionType() {
+        return AssetConnection.Type.Stocking;
+    }
+
     public void addAssetConnection( AssetConnection assetConnection ) {
         assetConnections.add( assetConnection );
     }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.AssetConnectionData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.FunctionData;
 import com.mindalliance.channels.api.entities.PlaceData;
@@ -12,6 +13,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.ModelService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -32,7 +34,7 @@ import java.util.Set;
  * Time: 10:27 AM
  */
 @XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "location", "function", "instructions",
-        "teamContacts", "goals", "failureImpact", "documentation"})
+        "teamContacts", "goals", "failureImpact", "assetConnections", "documentation"})
 public class TaskData extends AbstractProcedureElementData {
 
     private FunctionData functionData;
@@ -42,6 +44,7 @@ public class TaskData extends AbstractProcedureElementData {
     private Level failureLevel;
     private Part part;
     private PlaceData placeData;
+    private List<AssetConnectionData> assetConnectionDataList;
     private DocumentationData documentation;
 
     public TaskData() {
@@ -60,6 +63,7 @@ public class TaskData extends AbstractProcedureElementData {
         initDocumentation( serverUrl );
         initOtherAssignments( communityService );
         initTeamContacts( serverUrl, communityService );
+        initAssetConnections( );
     }
 
 
@@ -110,6 +114,13 @@ public class TaskData extends AbstractProcedureElementData {
             placeData = location != null
                     ? new PlaceData( serverUrl, location, communityService )
                     : null;
+        }
+    }
+
+    private void initAssetConnections() {
+        assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
+        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+            assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
         }
     }
 
@@ -188,6 +199,11 @@ public class TaskData extends AbstractProcedureElementData {
         return documentation;
     }
 
+    @XmlElement( name = "assetConnection" )
+    public List<AssetConnectionData> getAssetConnections() {
+        return assetConnectionDataList;
+    }
+
     private List<CommunityAssignment> otherTeamAssignments() {
         return otherAssignments;
     }
@@ -262,6 +278,16 @@ public class TaskData extends AbstractProcedureElementData {
         Set<Long> ids = new HashSet<Long>();
         if ( functionData != null )
             ids.addAll( functionData.allInfoProductIds() );
+        return ids;
+    }
+
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( functionData != null )
+            ids.addAll( functionData.allAssetIds() );
+        for ( AssetConnectionData assetConnectionData : assetConnectionDataList ) {
+            ids.add( assetConnectionData.getAssetId() );
+        }
         return ids;
     }
 }

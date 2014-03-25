@@ -550,6 +550,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         .append( "\"" )
                         .append( " from " )
                         .append( getShortName( getSource(), false ) );
+                if ( !getAssetConnections().isEmpty() ) {
+                    sb.append( ", " )
+                            .append( getAssetConnections().getStepLabel() );
+                }
             }
         } else {
             sb.append( prerequisite ? "Sending " : "Send " )
@@ -559,6 +563,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     .append( "\"" )
                     .append( " to " )
                     .append( getShortName( getTarget(), false ) );
+            if ( !getAssetConnections().isEmpty() ) {
+                sb.append( ", " )
+                        .append( getAssetConnections().getStepLabel() );
+            }
             if ( isTerminatingToSource() ) {
                 if ( !prerequisite ) sb.append( " - and stop" );
             }
@@ -1933,6 +1941,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @Override
     public AssetConnections getAssetConnections() {
         return assetConnections;
+    }
+
+    @Override
+    public AssetConnection.Type getDefaultAssetConnectionType() {
+        return AssetConnection.Type.Demanding;
     }
 
     public void setAssetConnections( AssetConnections assetConnections ) {

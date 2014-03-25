@@ -17,6 +17,8 @@ public abstract class Outcome extends AbstractChecklistElement {
 
     public abstract boolean isGoalAchievedOutcome();
 
+    public abstract boolean isAssetProducedOutcome();
+
     @Override
     public Outcome getOutcome() {
         return this;

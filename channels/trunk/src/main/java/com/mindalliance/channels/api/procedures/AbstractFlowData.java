@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.AssetConnectionData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -15,6 +16,7 @@ import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.ModelService;
 
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private DocumentationData documentation;
     private List<MediumData> mediumDataList;
     private List<ChannelData> channelDataList;
+    private List<AssetConnectionData> assetConnectionDataList;
+
 
     private AssignmentData assignmentData;
 
@@ -78,6 +82,18 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 user
         );
     }
+
+    protected void initAssetConnections() {
+        assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
+        for ( AssetConnection assetConnection : getSharing().getAssetConnections().getAll() ) {
+            assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
+        }
+    }
+
+    public List<AssetConnectionData> getAssetConnections() {
+        return assetConnectionDataList;
+    }
+
 
     public AssignmentData getAssignmentData() {
         return assignmentData;
@@ -177,8 +193,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return new ArrayList<Long>( ids );
     }
 
+    public Set<Long> getAssetIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( AssetConnectionData assetConnectionData : assetConnectionDataList ) {
+            ids.add( assetConnectionData.getAssetId() );
+        }
+        return ids;
+    }
 
-    public List<MediumData> mediumDataList() {
+        public List<MediumData> mediumDataList() {
         return mediumDataList;
     }
 

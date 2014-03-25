@@ -75,6 +75,10 @@ public abstract class ConditionData implements Serializable {
         return new HashSet<Long>(  );
     }
 
+    public Set<Long> allAssetIds() {
+        return new HashSet<Long>(  );
+    }
+
 
     public boolean isLocalCondition() {
         return condition.isLocalCondition();
@@ -95,4 +99,7 @@ public abstract class ConditionData implements Serializable {
     public boolean isTaskFailedCondition() {
         return condition.isTaskFailedCondition();
     }
+
+    public boolean isAssetAvailableCondition() { return condition.isAssetAvailableCondition(); }
+
 }

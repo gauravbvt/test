@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.LocalCondition;
@@ -55,6 +56,13 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.startNode( "instructions" );
             writer.setValue( actionStep.getInstructions() );
             writer.endNode();
+            if ( actionStep.getAssetProvisioning() != null ) {
+                AssetProvisioning assetProvisioning = actionStep.getAssetProvisioning();
+                writer.startNode( "assetProvisioning" );
+                writer.addAttribute( "assetId", Long.toString( assetProvisioning.getAssetId() ) );
+                writer.addAttribute( "partId", Long.toString( assetProvisioning.getPartId() ) );
+                writer.endNode();
+            }
             writer.endNode();
         }
         for ( Condition condition : checklist.listEffectiveConditions() ) {
@@ -115,27 +123,33 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 String action = "";
                 String instructions = "";
                 String uid = "";
+                AssetProvisioning assetProvisioning = null;
                 if ( reader.hasMoreChildren() ) {
-                    while( reader.hasMoreChildren() ) {
+                    while ( reader.hasMoreChildren() ) {
                         reader.moveDown();
                         String name = reader.getNodeName();
-                        if ( name.equals( "uid") ) {
-                           uid = reader.getValue();
-                        } else if ( name.equals( "action") ) {
+                        if ( name.equals( "uid" ) ) {
+                            uid = reader.getValue();
+                        } else if ( name.equals( "action" ) ) {
                             action = reader.getValue();
                         } else if ( name.equals( "instructions" ) ) {
                             instructions = reader.getValue();
+                        } else if ( name.equals( "assetProvisioning" ) ) {
+                            long assetId = Long.parseLong( reader.getAttribute( "assetId" ) );
+                            long partId = Long.parseLong( reader.getAttribute( "partId" ) );
+                            assetProvisioning = new AssetProvisioning( assetId, partId );
                         }
                         reader.moveUp();
                     }
                 } else { // obsolete
-                   action = reader.getValue();
+                    action = reader.getValue();
                 }
-                ActionStep actionStep = new ActionStep(  );
+                ActionStep actionStep = new ActionStep();
                 actionStep.setUid( uid );
                 actionStep.setAction( action );
                 actionStep.setRequired( required );
                 actionStep.setInstructions( instructions );
+                actionStep.setAssetProvisioning( assetProvisioning );
                 checklist.addActionStep( actionStep );
             } else if ( nodeName.equals( "localCondition" ) ) {
                 LocalCondition localCondition = new LocalCondition( reader.getValue() );

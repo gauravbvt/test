@@ -165,6 +165,9 @@ public class ChecklistStepData implements Serializable {
         return getStepData().allInfoFormatIds();
     }
 
+    public Set<Long> allAssetIds() {
+        return getStepData().allAssetIds();
+    }
 
     private AbstractStepData getStepData() {
         AbstractStepData stepData = actionStep != null
@@ -202,4 +205,4 @@ public class ChecklistStepData implements Serializable {
         return getStepData().getStep();
     }
 
-}
+ }

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <b>And provide asset(s)...</b>
+    <table>
+        <tr>
+            <td>
+                <input wicket:id="onlyAvailable" type="checkbox"/>Only show available assets
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <input wicket:id="onlyNeeding" type="checkbox"/>Only show tasks needing the asset(s)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select wicket:id="asset">
+                    <option>a provisioned asset</option>
+                </select>
+            </td>
+            <td>to</td>
+            <td>
+                <select wicket:id="task">
+                    <option>a task demanding the asset</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
@@ -83,6 +85,9 @@ public abstract class AbstractStepData implements Serializable {
             return new NeedSatisfiedConditionData(condition, serverUrl, communityService, user );
         else if ( condition.isTaskFailedCondition() )
             return new TaskFailedConditionData(condition, serverUrl, communityService, user );
+        else if ( condition.isAssetAvailableCondition() ) {
+            return new AssetAvailableConditionData( condition, serverUrl, communityService, user );
+        }
         else
             throw new RuntimeException( "Unknown condition" );
     }
@@ -242,4 +247,23 @@ public abstract class AbstractStepData implements Serializable {
         return new HashSet<Long>(  );
     }
 
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        if ( isActionStep() ) {
+            ActionStep actionStep = (ActionStep)getStep();
+            AssetProvisioning assetProvisioning = actionStep.getAssetProvisioning();
+            if ( assetProvisioning != null )
+                ids.add( assetProvisioning.getAssetId() );
+        }
+        for (ConditionData conditionData : getIfConditions() ) {
+            ids.addAll( conditionData.allAssetIds() );
+        }
+        for (ConditionData conditionData : getUnlessConditions() ) {
+            ids.addAll( conditionData.allAssetIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allAssetIds() );
+        }
+        return ids;
+    }
 }

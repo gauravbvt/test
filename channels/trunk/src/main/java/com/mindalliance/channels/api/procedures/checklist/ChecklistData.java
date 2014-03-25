@@ -340,6 +340,18 @@ public class ChecklistData implements Serializable {
         return ids;
     }
 
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allAssetIds() );
+        }
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allAssetIds() );
+        }
+        return ids;
+    }
+
+
     public String getLabel() {
         return "I do task \"" + getTask().getLabel() + "\"";
     }

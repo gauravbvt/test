@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.AssetConnectionData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
@@ -32,7 +32,7 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"id", "information", "intent", "intentText", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
         "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
-        "consumingTask", "impactOnConsumingTask", "documentation"/*, "agreements"*/} )
+        "consumingTask", "impactOnConsumingTask", "assetConnections", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private List<CommunityCommitment> commitments;
@@ -72,8 +72,9 @@ public class NotificationData extends AbstractFlowData {
         initContactEmployments( serverUrl, communityService, userInfo );
         initConsumingTask( serverUrl, communityService );
         initAssignmentData( serverUrl, communityService, new ChannelsUser( userInfo ) );
+        initAssetConnections();
         initOtherData( communityService );
-    }
+     }
 
      private void initCommitments( CommunityService communityService ) {
         commitments = new ArrayList<CommunityCommitment>();
@@ -219,6 +220,12 @@ public class NotificationData extends AbstractFlowData {
     @XmlElement
     public TaskData getConsumingTask() {
         return consumingTaskData;
+    }
+
+    @XmlElement( name="assetConnection")
+    @Override
+    public List<AssetConnectionData> getAssetConnections() {
+        return super.getAssetConnections();    //Todo
     }
 
     @XmlElement

@@ -43,6 +43,11 @@ public class GoalAchievedOutcome extends Outcome {
     }
 
     @Override
+    public boolean isAssetProducedOutcome() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return goal.getStepOutcomeLabel();
     }

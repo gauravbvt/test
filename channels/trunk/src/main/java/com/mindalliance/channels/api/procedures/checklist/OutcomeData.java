@@ -20,7 +20,7 @@ public class OutcomeData implements Serializable {
     private Outcome outcome;
 
     public OutcomeData(  ) {
-        // requirede;
+        // required;
     }
 
     public OutcomeData( Outcome outcome,
@@ -73,6 +73,9 @@ public class OutcomeData implements Serializable {
         return new HashSet<Long>(  );
     }
 
+    public Set<Long> allAssetIds() {
+        return new HashSet<Long>();
+    }
 
 
     public boolean isGoalAchievedOutcome() {
@@ -86,4 +89,8 @@ public class OutcomeData implements Serializable {
     public boolean isCapabilityCreatedOutcome() {
         return outcome.isCapabilityCreatedOutcome();
     }
-}
+
+    public boolean isAssetProducedOutcome() {
+        return outcome.isAssetProducedOutcome();
+    }
+ }

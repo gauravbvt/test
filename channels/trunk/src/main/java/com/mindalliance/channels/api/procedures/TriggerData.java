@@ -339,6 +339,16 @@ public class TriggerData extends AbstractProcedureElementData {
         return ids;
     }
 
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().getAssetIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().getAssetIds() );
+        }
+        return ids;
+    }
 
 
     public boolean isOnRequestFromOther() {

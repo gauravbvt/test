@@ -335,7 +335,7 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
         private void initTable() {
             final List<IColumn<AssetConnectionWrapper>> columns = new ArrayList<IColumn<AssetConnectionWrapper>>();
             columns.add( makeFilterableLinkColumn(
-                    "Element",
+                    "Model element",
                     "assetConnectable",
                     "assetConnectable.label",
                     EMPTY,

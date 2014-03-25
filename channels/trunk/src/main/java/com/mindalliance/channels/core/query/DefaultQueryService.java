@@ -51,6 +51,8 @@ import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -3606,6 +3608,66 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         return new ArrayList<Actor>( actors );
+    }
+
+    @Override
+    public List<MaterialAsset> findAllAssetsAvailableTo( Part part ) {
+        Set<MaterialAsset> availableAssets = new HashSet<MaterialAsset>();
+        // produced
+        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+            if ( assetConnection.isProducing() ) {
+                availableAssets.add( assetConnection.getAsset() );
+            }
+        }
+        // provisioned
+        availableAssets.addAll( findAllAssetsProvisionedTo( part ) );
+        // stocked by organization assigned to task
+        for ( Assignment assignment : findAllAssignments( part, false ) ) {
+            Organization organization = assignment.getOrganization();
+            for ( AssetConnection assetConnection : organization.getAssetConnections().getAll() ) {
+                if ( assetConnection.isStocking() ) {
+                    availableAssets.add( assetConnection.getAsset() );
+                }
+            }
+        }
+        return new ArrayList<MaterialAsset>( availableAssets );
+    }
+
+    @Override
+    public List<MaterialAsset> findAllAssetsProvisionedTo( Part part ) {
+        Set<MaterialAsset> provisionedAssets = new HashSet<MaterialAsset>(  );
+        for ( Part otherPart : list( Part.class ) ) {
+            Checklist checklist = otherPart.getChecklist();
+            for ( AssetProvisioning assetProvisioning : checklist.findAssetProvisionings() ) {
+                if ( assetProvisioning.getPart( checklist ).equals( part ) ) {
+                    try {
+                        MaterialAsset providedAsset = find( MaterialAsset.class, assetProvisioning.getAssetId() );
+                        provisionedAssets.add( providedAsset );
+                    } catch (NotFoundException e) {
+                        LOG.warn( "Asset not found at " +  assetProvisioning.getAssetId() );
+                    }
+                }
+            }
+        }
+        return new ArrayList<MaterialAsset>( provisionedAssets );
+    }
+
+    @Override
+    public List<Part> findAllPartsVisibleTo( Part part ) {
+        List<Part> visibleParts = new ArrayList<Part>(  );
+        visibleParts.addAll( part.getSegment().listParts() );
+        for ( Flow flow : part.getAllSharingReceives() ) {
+            if ( flow.isExternal() ) {
+                visibleParts.add( (Part)flow.getSource() );
+            }
+        }
+        for ( Flow flow : part.getAllSharingSends() ) {
+            if ( flow.isExternal() ) {
+                visibleParts.add( (Part)flow.getTarget() );
+            }
+        }
+        visibleParts.remove( part );
+        return visibleParts;
     }
 
 }

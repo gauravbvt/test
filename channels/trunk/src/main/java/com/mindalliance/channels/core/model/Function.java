@@ -319,6 +319,11 @@ public class Function extends ModelEntity implements AssetConnectable {
         return assetConnections;
     }
 
+    @Override
+    public AssetConnection.Type getDefaultAssetConnectionType() {
+        return AssetConnection.Type.Using;
+    }
+
     public void addAssetConnection( AssetConnection assetConnection ) {
         assetConnections.add( assetConnection );
     }

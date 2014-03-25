@@ -61,7 +61,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private void reset() {
         newAssetConnection = new AssetConnection();
-        newAssetConnection.setType( AssetConnection.Type.Using );
+        newAssetConnection.setType( getAssetConnectable().getDefaultAssetConnectionType() );
     }
 
     private void addAssetConnectionsContainer() {

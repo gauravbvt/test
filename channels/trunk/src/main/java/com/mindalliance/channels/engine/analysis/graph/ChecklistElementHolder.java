@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.Outcome;
@@ -38,8 +39,18 @@ public class ChecklistElementHolder implements ChecklistElement {
     }
 
     @Override
+    public AssetProvisioning getAssetProvisioning() {
+        return checklistElement.getAssetProvisioning();
+    }
+
+    @Override
     public boolean isOutcome() {
         return checklistElement.isOutcome();
+    }
+
+    @Override
+    public boolean isAssetProvisioning() {
+        return checklistElement.isAssetProvisioning();
     }
 
     @Override

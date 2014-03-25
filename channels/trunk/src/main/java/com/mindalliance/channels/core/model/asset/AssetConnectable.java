@@ -59,4 +59,9 @@ public interface AssetConnectable extends Identifiable {
      */
     String getLabel();
 
+    /**
+     * Get default asset connection type.
+     * @return an asset connection type
+     */
+    AssetConnection.Type getDefaultAssetConnectionType();
 }

@@ -100,4 +100,8 @@ public class ChecklistElementRelationship implements Identifiable {
     public boolean isWithOutcome() {
         return toElement.isOutcome();
     }
+
+    public boolean isWithAssetProvisioning( ) {
+        return toElement.isAssetProvisioning();
+    }
 }

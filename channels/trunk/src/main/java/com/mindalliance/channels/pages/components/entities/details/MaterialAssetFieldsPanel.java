@@ -46,6 +46,7 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
+                item.setOutputMarkupId( true );
                 String group = item.getModelObject();
                 item.add( new Label( "groupName", group ) );
                 addListViewOfFieldsInGroup( group, item );
@@ -61,6 +62,7 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
         ) {
             @Override
             protected void populateItem( ListItem<AssetFieldWrapper> item ) {
+                item.setOutputMarkupId( true );
                 final AssetFieldWrapper wrapper = item.getModelObject();
                 // name
                 Label nameLabel = new Label( "name", wrapper.getName() );

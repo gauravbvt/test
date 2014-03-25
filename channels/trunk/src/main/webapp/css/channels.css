@@ -1192,7 +1192,7 @@ div.phases ul li a.phase-delete,
 div.types ul li a.type-delete,
 a.medium-delete,
 a.move-to-top,
-event-delete {
+.event-delete {
     font-size: 9px;
     text-transform: uppercase;
     font-weight: normal;
@@ -1216,7 +1216,7 @@ div.phases ul li a.phase-delete:hover,
 div.types ul li a.type-delete:hover,
 a.medium-delete:hover,
 a.move-to-top:hover,
-event-delete:hover{
+.event-delete:hover{
     color: #e8e8e8;
 }
 
@@ -4011,6 +4011,16 @@ ul.attach li.controls {
 
 .checklist-flow-icon {
     cursor: pointer;
+}
+
+.checklist .provisioned {
+    padding-left: 25px;
+}
+
+.checklist .provisioning {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    display: block;
 }
 
 /* Segment scenario */

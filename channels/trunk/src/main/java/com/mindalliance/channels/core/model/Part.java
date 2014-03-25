@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetConnections;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
@@ -142,6 +143,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     @Override
     public String getLabel() {
         return getTitle();
+    }
+
+    @Override
+    public AssetConnection.Type getDefaultAssetConnectionType() {
+        return AssetConnection.Type.Using;
     }
 
     @Override
@@ -437,7 +443,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of goals
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Goal> getMitigations() {
         return (List<Goal>) CollectionUtils.select( goals, new Predicate() {
             @Override
@@ -507,7 +513,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Iterator<Flow> sendsNamed( final String name ) {
         return new FilterIterator( sends(), new Predicate() {
             @Override
@@ -524,7 +530,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Iterator<Flow> receivesNamed( final String name ) {
         return new FilterIterator( receives(), new Predicate() {
             @Override
@@ -760,7 +766,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( receives() ), new Predicate() {
             @Override
@@ -775,7 +781,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getCapabilities() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( sends() ), new Predicate() {
             @Override
@@ -983,7 +989,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         setCategory( (Category) state.get( "category" ) );
         for ( Map<String, Object> goalMap : (List<Map<String, Object>>) state.get( "goals" ) )
             addGoal( modelService.goalFromMap( goalMap ) );
-        for ( Map<String,Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
+        for ( Map<String, Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
             addAssetConnection( communityService.getModelService().assetConnectionFromMap( assetConnectionMap ) );
         }
         if ( state.get( "initiatedEvent" ) == null )
@@ -1184,7 +1190,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
         allFlows.addAll( (List<Flow>) IteratorUtils.toList( receives() ) );
@@ -1233,7 +1239,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return !findDependentReceives( infoProduct, queryService ).isEmpty();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Flow> findDependentReceives( final InfoProduct infoProduct, final QueryService queryService ) {
         return (List<Flow>) CollectionUtils.select(
                 getAllSharingReceives(),
@@ -1251,7 +1257,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean dependsOnInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
         return !findDependentReceives( infoFormat, queryService ).isEmpty();
     }
@@ -1375,7 +1381,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                         InfoFormat format = ( (Channel) object ).getFormat();
                         return format == null || !format.narrowsOrEquals( infoFormat, locale );
                     }
-                } );
+                }
+        );
     }
 
     private boolean hasAlternativesForMedium( final TransmissionMedium transmissionMedium, final QueryService queryService ) {
@@ -1417,7 +1424,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                         TransmissionMedium medium = ( (Channel) object ).getMedium();
                         return medium == null || !medium.narrowsOrEquals( transmissionMedium, locale );
                     }
-                } );
+                }
+        );
     }
 
     public int countChecklistIssues( Analyst analyst, CommunityService communityService ) {
@@ -1528,6 +1536,64 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     public void addAssetConnection( AssetConnection assetConnection ) {
         assetConnections.add( assetConnection );
+    }
+
+    public List<MaterialAsset> findAllDemandedAssets() {
+        Set<MaterialAsset> demandedAssets = new HashSet<MaterialAsset>();
+        for ( Flow flow : getAllSharingReceives() ) {
+            if ( flow.isNotification() ) {
+                for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+                    if ( assetConnection.isDemanding() ) {
+                        demandedAssets.add( assetConnection.getAsset() );
+                    }
+                }
+            }
+        }
+        for ( Flow flow : getAllSharingSends() ) {
+            if ( flow.isAskedFor() ) {
+                for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+                    if ( assetConnection.isDemanding() ) {
+                        demandedAssets.add( assetConnection.getAsset() );
+                    }
+                }
+            }
+        }
+        return new ArrayList<MaterialAsset>( demandedAssets );
+    }
+
+    public boolean isAssetAvailable( final MaterialAsset demandedAsset, CommunityService communityService ) {
+        return CollectionUtils.exists(
+                communityService.getModelService().findAllAssetsAvailableTo( this ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (MaterialAsset) object ).narrowsOrEquals( demandedAsset );
+                    }
+                }
+        );
+    }
+
+    public boolean isAssetNeeded( final MaterialAsset asset, CommunityService communityService ) {
+        // if used of provisioned
+        return CollectionUtils.exists(
+                getAssetConnections().findAssetsUsed(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return asset.narrowsOrEquals( (MaterialAsset)object );
+                    }
+                }
+                )
+                ||
+                CollectionUtils.exists(
+                        getChecklist().findAllAssetsProvisioned( communityService ),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return asset.narrowsOrEquals( (MaterialAsset)object );
+                            }
+                        }
+                );
     }
 
     /**

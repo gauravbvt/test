@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.plan;
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.entities.EventData;
+import com.mindalliance.channels.api.entities.MaterialAssetData;
 import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
@@ -15,6 +16,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.ModelService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -37,7 +39,8 @@ import java.util.Map;
  * Time: 1:25 PM
  */
 @XmlRootElement(name = "modelScope", namespace = "http://mind-alliance.com/api/isp/v1/")
-@XmlType(propOrder = {"date", "identity", "phases", "places", "events", "roles", "organizations", "actors"})
+@XmlType(propOrder = {"date", "identity", "phases", "places", "events", "roles", "organizations",
+        "actors", "materialAssets"})
 public class ModelScopeData implements Serializable {
 
     private Map<Long, ModelObjectData> cache;
@@ -47,6 +50,7 @@ public class ModelScopeData implements Serializable {
     private List<RoleData> roles;
     private List<OrganizationData> orgs;
     private List<ActorData> actors;
+    private List<MaterialAssetData> assets;
     private ModelIdentifierData modelIdentifierData;
 
     public ModelScopeData() {
@@ -65,6 +69,7 @@ public class ModelScopeData implements Serializable {
         initEvents( serverUrl, communityService );
         initRoles( serverUrl, communityService );
         initOrgs( serverUrl, communityService );
+        initMaterialAssets( serverUrl, communityService );
         initActors( serverUrl, communityService );
     }
 
@@ -125,6 +130,15 @@ public class ModelScopeData implements Serializable {
         }
     }
 
+    private void initMaterialAssets( String serverUrl, CommunityService communityService ) {
+        ModelService modelService = communityService.getModelService();
+        assets = new ArrayList<MaterialAssetData>();
+        for ( MaterialAsset asset : modelService.list( MaterialAsset.class ) ) {
+            if ( !asset.isUnknown() && !asset.isUniversal() )
+                assets.add( cache( asset, new MaterialAssetData( serverUrl, asset, communityService ) ) );
+        }
+    }
+
     @XmlElement
     public String getDate() {
         return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() );
@@ -165,10 +179,18 @@ public class ModelScopeData implements Serializable {
         return orgs;
     }
 
-    @XmlElement(name = "agent")    // todo - change name to "actor"
+    @XmlElement(name = "agent")    // todo - change name to "actor"?
     public List<ActorData> getActors() {
         return actors;
     }
+
+    @XmlElement( name = "asset")
+    public List<MaterialAssetData> getMaterialAssets() {
+        return assets;
+    }
+
+    @XmlElement(name = "materialAsset")
+
 
     public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
         return (T) cache.get( moId );

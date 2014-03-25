@@ -70,6 +70,11 @@ public class LocalCondition extends Condition implements Mappable {
     }
 
     @Override
+    public boolean isAssetAvailableCondition() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return state;
     }

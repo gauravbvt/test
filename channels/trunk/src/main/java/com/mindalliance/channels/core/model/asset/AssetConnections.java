@@ -138,11 +138,6 @@ public class AssetConnections implements Serializable {
                     sb.append( ", and " );
                 List<String> typeStrings = findConnectionTypesLabelsFor( asset );
                 sb.append( ChannelsUtils.listToString( typeStrings, " and " ) )
-                    /*.append( asset.isType()
-                            ? " any kind of "
-                            : ChannelsUtils.startsWithVowel( asset.getName() )
-                            ? " an "
-                            : " a " )*/
                         .append( " " )
                         .append( asset.getName() );
 
@@ -150,6 +145,25 @@ public class AssetConnections implements Serializable {
         }
         return sb.toString();
     }
+
+    public String getStepLabel() {
+        StringBuilder sb = new StringBuilder();
+        List<MaterialAsset> assets = findAllMaterialAssets( );
+        if ( !assets.isEmpty() ) {
+            Collections.sort( assets );
+            for ( MaterialAsset asset : assets ) {
+                if ( sb.length() > 0 )
+                    sb.append( ", and " );
+                List<String> typeStrings = findConnectionTypesStepLabelsFor( asset );
+                sb.append( ChannelsUtils.listToString( typeStrings, " and " ) )
+                        .append( " " )
+                        .append( asset.getName() );
+
+            }
+        }
+        return sb.toString();
+    }
+
 
     private List<MaterialAsset> findAllMaterialAssets(  ) {
         Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
@@ -170,6 +184,19 @@ public class AssetConnections implements Serializable {
         Collections.sort( result );
         return result;
     }
+
+    private List<String> findConnectionTypesStepLabelsFor( MaterialAsset materialAsset ) {
+        Set<String> typeLabels = new HashSet<String>();
+        for ( AssetConnection assetConnection : getAll() ) {
+            if ( assetConnection.getAsset().equals( materialAsset ) ) {
+                typeLabels.add( assetConnection.getDetailedTypeStepLabel() );
+            }
+        }
+        List<String> result = new ArrayList<String>( typeLabels );
+        Collections.sort( result );
+        return result;
+    }
+
 
     @Override
     public String toString() {
@@ -212,4 +239,4 @@ public class AssetConnections implements Serializable {
         return copy;
     }
 
-}
+ }

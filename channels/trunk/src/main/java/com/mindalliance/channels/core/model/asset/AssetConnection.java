@@ -84,6 +84,23 @@ public class AssetConnection implements Mappable {
                 : "?";
     }
 
+    public static String getStepLabelFor( Type type ) {
+        return type == null
+                ? ""
+                : type == Type.Demanding
+                ? "requesting"
+                : type == Type.Producing
+                ? "producing"
+                : type == Type.Provisioning
+                ? "providing"
+                : type == Type.Stocking
+                ? "stocking"
+                : type == Type.Using
+                ? "using"
+                : "?";
+    }
+
+
     public static List<String> getTypeLabelsChoicesFor( AssetConnectable connectable ) {
         List<String> choices = new ArrayList<String>();
         if ( connectable.isCanBeAssetDemand() )
@@ -169,6 +186,11 @@ public class AssetConnection implements Mappable {
         return getType() == null ? null : getLabelFor( getType() );
     }
 
+    public String getTypeStepLabel() {
+        return getType() == null ? null : getStepLabelFor( getType() );
+    }
+
+
     public String getDetailedTypeLabel() {
         if ( type == Type.Using ) {
             return isConsuming() && isCritical()
@@ -182,6 +204,47 @@ public class AssetConnection implements Mappable {
             return getTypeLabel();
         }
     }
+
+    public String getDetailedTypeStepLabel() {
+        if ( type == Type.Using ) {
+            return isConsuming() && isCritical()
+                    ? "requiring as well as consuming"
+                    : isConsuming()
+                    ? "consuming"
+                    : isCritical()
+                    ? "requiring"
+                    : getTypeStepLabel();
+        } else {
+            return getTypeStepLabel();
+        }
+    }
+
+    public String getStepConditionLabel() {
+        if ( type == Type.Using ) {
+            StringBuilder sb = new StringBuilder(  );
+            boolean isAssetType = getAsset().isType();
+            sb.append( isAssetType ? "Assets of type \"" : "Asset \"" )
+                    .append( getAsset().getLabel() )
+                    .append( isAssetType ? "\" are available" : "\" is available" );
+            return sb.toString();
+        } else {
+            throw new RuntimeException( "Unsupported step condition" );
+        }
+    }
+
+
+
+    public String getStepOutcomeLabel() {
+        if ( type == Type.Producing ) {
+            StringBuilder sb = new StringBuilder(  );
+            sb.append( getAsset().getLabel() )
+                    .append( " produced" );
+            return sb.toString();
+        } else {
+            throw new RuntimeException( "Unsupported step outcome" );
+        }
+    }
+
 
     public void setTypeLabel( String typeLabel ) {
         type = Type.fromLabel( typeLabel );

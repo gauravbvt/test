@@ -23,6 +23,8 @@ public abstract class Condition extends AbstractChecklistElement {
 
     public abstract boolean isTaskFailedCondition();
 
+    public abstract boolean isAssetAvailableCondition();
+
     @Override
     public boolean isCondition() {
         return true;

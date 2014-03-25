@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -187,4 +188,13 @@ public class AgencyData implements Serializable {
         return documentationData;
     }
 
+    public Set<Long> allAssetIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( Organization organization : agency.getPlanOrganizations() ) {
+            for ( AssetConnection assetConnection : organization.getAssetConnections().getAll() ) {
+                ids.add( assetConnection.getAsset().getId() );
+            }
+        }
+        return ids;
+    }
 }

@@ -1736,4 +1736,25 @@ public interface QueryService {
      * @return a list of actors
      */
     List<Actor> findAllActorsEmployedBy( Organization organization );
+
+    /**
+     * Find all assets that are available to a task.
+     * @param part a part
+     * @return a list of material assets
+     */
+    List<MaterialAsset> findAllAssetsAvailableTo( Part part );
+
+    /**
+     * Find all assets that are provisioned to a given task
+     * @param part a part
+     * @return a list of material assets
+     */
+    List<MaterialAsset> findAllAssetsProvisionedTo( Part part );
+
+    /**
+     * Find all parts visible to a given part that use or demand a given asset.
+     * @param part a part
+     * @return a list of parts
+     */
+    List<Part> findAllPartsVisibleTo( Part part );
 }

@@ -50,6 +50,11 @@ public class EventTimingCondition extends Condition {
     }
 
     @Override
+    public boolean isAssetAvailableCondition() {
+        return false;
+    }
+
+    @Override
     public boolean matches( Outcome outcome ) {
         if ( outcome.isEventTimingOutcome() ) {
             EventTimingOutcome eventTimingOutcome = (EventTimingOutcome)outcome;
