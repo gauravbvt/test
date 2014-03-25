@@ -49,8 +49,8 @@ public class ChecklistElementHolder implements ChecklistElement {
     }
 
     @Override
-    public boolean isAssetProvisioning() {
-        return checklistElement.isAssetProvisioning();
+    public boolean isAssetProvisioned() {
+        return checklistElement.isAssetProvisioned();
     }
 
     @Override

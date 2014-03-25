@@ -7,31 +7,34 @@
         lang="en">
 <body>
 <wicket:panel>
-    <b>And provide asset(s)...</b>
-    <table>
-        <tr>
-            <td>
-                <input wicket:id="onlyAvailable" type="checkbox"/>Only show available assets
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <input wicket:id="onlyNeeding" type="checkbox"/>Only show tasks needing the asset(s)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select wicket:id="asset">
-                    <option>a provisioned asset</option>
-                </select>
-            </td>
-            <td>to</td>
-            <td>
-                <select wicket:id="task">
-                    <option>a task demanding the asset</option>
-                </select>
-            </td>
-        </tr>
-    </table>
+    <b><input wicket:id="providesAsset" type="checkbox"/> And provide asset(s)...</b>
+
+    <div wicket:id="assetProvision" class="assetProvision">
+        <table>
+            <tr>
+                <td>
+                    <input wicket:id="onlyAvailable" type="checkbox"/>Only show available assets
+                </td>
+                <td>&nbsp;</td>
+                <td>
+                    <input wicket:id="onlyNeeding" type="checkbox"/>Only show tasks needing the asset(s)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select wicket:id="asset">
+                        <option>a provisioned asset</option>
+                    </select>
+                </td>
+                <td>to</td>
+                <td>
+                    <select wicket:id="task">
+                        <option>a task demanding the asset</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
 </wicket:panel>
 </body>
 </html>

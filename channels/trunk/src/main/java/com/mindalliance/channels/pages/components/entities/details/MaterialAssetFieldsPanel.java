@@ -136,13 +136,14 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
                         )
                 );
             } else {
+                assetField.setValue( val );
                 doCommand(
                         new UpdateModelObject(
                                 getUsername(),
                                 getMaterialAsset(),
-                                "fields[" + index + "].value",
-                                val,
-                                UpdateObject.Action.Set
+                                "fields",
+                                assetField,
+                                UpdateObject.Action.AddUnique
                         )
                 );
             }

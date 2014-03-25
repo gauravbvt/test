@@ -102,6 +102,6 @@ public class ChecklistElementRelationship implements Identifiable {
     }
 
     public boolean isWithAssetProvisioning( ) {
-        return toElement.isAssetProvisioning();
+        return toElement.isAssetProvisioned();
     }
 }

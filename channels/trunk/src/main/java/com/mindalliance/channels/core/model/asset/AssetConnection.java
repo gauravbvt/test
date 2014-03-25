@@ -127,6 +127,10 @@ public class AssetConnection implements Mappable {
             this.type = type;
     }
 
+    public boolean isOfType( Type type ) {
+        return getType() == type;
+    }
+
     public MaterialAsset getAsset() {
         return asset;
     }
@@ -220,12 +224,10 @@ public class AssetConnection implements Mappable {
     }
 
     public String getStepConditionLabel() {
-        if ( type == Type.Using ) {
+        if ( type == Type.Using || type == Type.Producing ) {
             StringBuilder sb = new StringBuilder(  );
-            boolean isAssetType = getAsset().isType();
-            sb.append( isAssetType ? "Assets of type \"" : "Asset \"" )
-                    .append( getAsset().getLabel() )
-                    .append( isAssetType ? "\" are available" : "\" is available" );
+            sb.append( getAsset().getLabel() )
+                    .append( " is available" );
             return sb.toString();
         } else {
             throw new RuntimeException( "Unsupported step condition" );
@@ -238,7 +240,7 @@ public class AssetConnection implements Mappable {
         if ( type == Type.Producing ) {
             StringBuilder sb = new StringBuilder(  );
             sb.append( getAsset().getLabel() )
-                    .append( " produced" );
+                    .append( " is produced" );
             return sb.toString();
         } else {
             throw new RuntimeException( "Unsupported step outcome" );

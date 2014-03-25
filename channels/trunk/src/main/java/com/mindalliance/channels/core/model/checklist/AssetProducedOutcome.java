@@ -18,7 +18,7 @@ public class AssetProducedOutcome extends Outcome {
     private AssetConnection assetConnection;
 
     public AssetProducedOutcome( AssetConnection assetConnection ) {
-        assert assetConnection.getType() == AssetConnection.Type.Producing;
+        assert assetConnection.isProducing();
         this.assetConnection = assetConnection;
     }
 

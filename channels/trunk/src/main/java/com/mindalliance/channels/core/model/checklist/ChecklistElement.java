@@ -21,7 +21,7 @@ public interface ChecklistElement extends Identifiable {
 
     boolean isOutcome();
 
-    boolean isAssetProvisioning();
+    boolean isAssetProvisioned();
 
     Step getStep();
 

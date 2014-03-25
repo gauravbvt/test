@@ -65,7 +65,7 @@ public class AssetProvisioning extends AbstractChecklistElement {
     }
 
     @Override
-    public boolean isAssetProvisioning() {
+    public boolean isAssetProvisioned() {
         return true;
     }
 

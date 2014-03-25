@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.asset.AssetField;
@@ -66,6 +67,12 @@ public class MaterialAssetData extends ModelEntityData {
     @XmlElement
     public String getKind() {
         return super.getKind();
+    }
+
+    @Override
+    @XmlElement
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     @XmlElement( name="dependencyId" )

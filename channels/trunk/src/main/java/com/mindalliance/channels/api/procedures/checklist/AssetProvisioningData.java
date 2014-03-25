@@ -36,7 +36,7 @@ public class AssetProvisioningData implements Serializable {
     }
 
     @XmlElement
-    Long getAssetId() {
+    public Long getAssetId() {
         return assetProvisioning.getAssetId();
     }
 

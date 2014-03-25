@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.PropertyModel;
@@ -39,6 +40,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
     private Checklist checklist;
     private ActionStep actionStep;
 
+    private boolean providesAsset = false;
     private boolean showOnlyAvailable = true;
     private boolean showOnlyNeeding = true;
 
@@ -47,6 +49,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
     private AjaxCheckBox onlyNeedingCheckBox;
     private DropDownChoice<MaterialAsset> assetsChoice;
     private DropDownChoice<Part> tasksChoice;
+    private WebMarkupContainer assetProvisionContainer;
 
     public AssetProvisioningPanel( String id, Checklist checklist, ActionStep actionStep ) {
         super( id );
@@ -57,6 +60,30 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
 
     private void init() {
         reset();
+        addProvidesAsset();
+        addAssetProvision();
+    }
+
+    private void addProvidesAsset() {
+        AjaxCheckBox providesAssetCheckBox = new AjaxCheckBox(
+                "providesAsset",
+                new PropertyModel<Boolean>( this, "providesAsset" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addAssetProvision();
+                target.add( assetProvisionContainer );
+                if ( !isProvidesAsset() )
+                    update( target, new Change( Change.Type.Updated, getPart(), "checklist") );
+            }
+        };
+        add( providesAssetCheckBox );
+    }
+
+    private void addAssetProvision() {
+        assetProvisionContainer = new WebMarkupContainer( "assetProvision" );
+        assetProvisionContainer.setOutputMarkupId( true );
+        makeVisible( assetProvisionContainer, isProvidesAsset() );
+        addOrReplace( assetProvisionContainer );
         addShowOnlyAvailable();
         addShowOnlyNeeding();
         addAssetChoice();
@@ -66,8 +93,10 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
     private void reset() {
         if ( actionStep.getAssetProvisioning() == null ) {
             assetProvisioning = new AssetProvisioning(  );
+            providesAsset = false;
         } else {
             assetProvisioning = new AssetProvisioning( actionStep.getAssetProvisioning() );
+            providesAsset = true;
         }
     }
 
@@ -82,7 +111,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
                 target.add( assetsChoice );
             }
         };
-        add( onlyAvailableCheckBox );
+        assetProvisionContainer.add( onlyAvailableCheckBox );
     }
 
     private void addShowOnlyNeeding() {
@@ -97,7 +126,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             }
         };
         onlyNeedingCheckBox.setOutputMarkupId( true );
-        addOrReplace( onlyNeedingCheckBox );
+        assetProvisionContainer.addOrReplace( onlyNeedingCheckBox );
     }
 
     private void addAssetChoice() {
@@ -130,7 +159,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             }
         } );
         assetsChoice.setOutputMarkupId( true );
-        addOrReplace( assetsChoice );
+        assetProvisionContainer.addOrReplace( assetsChoice );
     }
 
     public List<MaterialAsset> getCandidateAssets() {
@@ -179,7 +208,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             }
         } );
         tasksChoice.setOutputMarkupId( true );
-        addOrReplace( tasksChoice );
+        assetProvisionContainer.addOrReplace( tasksChoice );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -214,6 +243,27 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             }
         });
         return candidates;
+    }
+
+    public boolean isProvidesAsset() {
+        return providesAsset;
+    }
+
+    public void setProvidesAsset( boolean val ) {
+        this.providesAsset = val;
+        assetProvisioning = new AssetProvisioning(  );
+        if ( !providesAsset ) {
+            doCommand(
+                    new UpdateSegmentObject(
+                            getUsername(),
+                            getPart(),
+                            "checklist.actionSteps[" + getStepIndex() + "].assetProvisioning",
+                            null,
+                            UpdateObject.Action.Set
+                    )
+            );
+
+        }
     }
 
     public boolean isShowOnlyAvailable() {

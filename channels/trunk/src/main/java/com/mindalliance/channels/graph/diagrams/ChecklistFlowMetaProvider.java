@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.AssetAvailableCondition;
 import com.mindalliance.channels.core.model.checklist.AssetProducedOutcome;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -163,7 +164,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     private String getIconLabelSeparated( ChecklistElement cle ) {
         String prefix = getLabelPrefix( cle );
         String postfix = ChannelsUtils.split( getLabelPostfix( cle ), "|", 4, LINE_WRAP_SIZE );
-        return prefix + (prefix.isEmpty() ? "" : "|" ) + postfix;
+        return prefix + ( prefix.isEmpty() ? "" : "|" ) + postfix;
     }
 
     private String getLabelPrefix( ChecklistElement cle ) {
@@ -176,9 +177,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         ? "SEND"
                         : commStep.isAnswer()
                         ? "ANSWER WITH"
-                        : "ASK FOR");
+                        : "ASK FOR" );
                 Flow.Intent intent = commStep.getSharing().getIntent();
-                       sb.append( intent == null ? " INFO" : (" " + intent.getLabel().toUpperCase() ) );
+                sb.append( intent == null ? " INFO" : ( " " + intent.getLabel().toUpperCase() ) );
             } else if ( step.isReceiptConfirmation() ) {
                 sb.append( "CONFIRM RECEIPT OF" );
             } else if ( step.isSubTaskStep() ) {
@@ -207,7 +208,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                 ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
                                 : "notification of "
                                 : "request for "
-                        )
+                )
                         .append( sharing.getName() );
             } else if ( step.isSubTaskStep() ) {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
@@ -230,7 +231,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
             } else if ( condition.isTaskFailedCondition() ) {
                 sb.append( "the task failed" );
-            } else { //EventTiming condition
+            } else if ( condition.isAssetAvailableCondition() ) {
+                sb.append( ( (AssetAvailableCondition) condition ).getLabel() );
+            } else if ( condition.isEventTimingCondition() ) {
                 sb.append( ( (EventTimingCondition) condition ).getEventTiming().getLabel() );
             }
         } else if ( cle.isOutcome() ) {
@@ -239,7 +242,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 EventTiming eventTiming = ( (EventTimingOutcome) outcome ).getEventTiming();
                 Event event = eventTiming.getEvent();
                 sb.append( event.getLabel() );
-                sb.append( eventTiming.isConcurrent() ? " is caused" : " is terminated");
+                sb.append( eventTiming.isConcurrent() ? " is caused" : " is terminated" );
             } else if ( outcome.isGoalAchievedOutcome() ) {
                 Goal goal = ( (GoalAchievedOutcome) outcome ).getGoal();
                 sb.append( goal.getLabel() )
@@ -250,11 +253,11 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( capability.getName() )
                         .append( "\" can now be shared" );
             } else if ( outcome.isAssetProducedOutcome() ) {
-                AssetConnection assetConnection = ( (AssetProducedOutcome)outcome).getAssetConnection();
+                AssetConnection assetConnection = ( (AssetProducedOutcome) outcome ).getAssetConnection();
                 sb.append( assetConnection.getStepOutcomeLabel() );
             }
-        } else if ( cle.isAssetProvisioning() ) {
-            sb.append( cle.getAssetProvisioning().getShortLabel( ) );
+        } else if ( cle.isAssetProvisioned() ) {
+            sb.append( cle.getAssetProvisioning().getShortLabel() );
         }
         return sanitize( sb.toString() );
     }
@@ -299,7 +302,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 list.add( new DOTAttribute( "arrowhead", "none" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
-            }  else {
+            } else {
                 list.add( new DOTAttribute( "color", "#666666" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
                 list.add( new DOTAttribute( "weight", "2.0" ) );
@@ -341,12 +344,12 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 if ( step.isActionStep() ) {
                     iconName = ACTION_ICON;
                 } else if ( step.isCommunicationStep() ) {
-                    CommunicationStep communicationStep = (CommunicationStep)step;
+                    CommunicationStep communicationStep = (CommunicationStep) step;
                     iconName = communicationStep.isNotification()
                             ? NOTIFICATION_ICON
                             : communicationStep.isAnswer()
-                                ? ANSWER_ICON
-                                : REQUEST_ICON;
+                            ? ANSWER_ICON
+                            : REQUEST_ICON;
                 } else if ( step.isReceiptConfirmation() ) {
                     iconName = RECEIPT_CONFIRMATION_ICON;
                 } else {
@@ -369,7 +372,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         : outcome.isGoalAchievedOutcome()
                         ? getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part )
                         : null;
-            } else if ( vertex.isAssetProvisioning() ) {
+            } else if ( vertex.isAssetProvisioned() ) {
                 iconName = ASSET_PROVISIONED_ICON;
 
             } else {

@@ -1531,7 +1531,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public void setAssetConnections( AssetConnections assetConnections ) {
-        this.assetConnections = assetConnections;
+        this.assetConnections = assetConnections == null
+        ? new AssetConnections()
+        : assetConnections;
     }
 
     public void addAssetConnection( AssetConnection assetConnection ) {

@@ -59,7 +59,7 @@ public class AssetConnections implements Serializable {
     private List<MaterialAsset> findAll( AssetConnection.Type type ) {
         List<MaterialAsset> materialAssets = new ArrayList<MaterialAsset>();
         for ( AssetConnection assetConnection : getAll() ) {
-            if ( assetConnection.getType() == type ) {
+            if ( assetConnection.isOfType( type ) ) {
                 MaterialAsset asset = assetConnection.getAsset(  );
                 if ( !asset.isUnknown() )
                     materialAssets.add( asset );
@@ -97,7 +97,7 @@ public class AssetConnections implements Serializable {
                     @Override
                     public boolean evaluate( Object object ) {
                         AssetConnection assetConnection = (AssetConnection) object;
-                        return assetConnection.getType() == type
+                        return assetConnection.isOfType( type )
                                 && assetConnection.getAsset().equals( asset)
                                 && assetConnection.hasProperty( name );
                     }

@@ -47,7 +47,7 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     }
 
     @Override
-    public boolean isAssetProvisioning() {
+    public boolean isAssetProvisioned() {
         return false;  // DEFAULT
     }
 

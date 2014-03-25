@@ -18,7 +18,8 @@ public class AssetAvailableCondition extends Condition {
     private AssetConnection assetConnection;
 
     public AssetAvailableCondition( AssetConnection assetConnection ) {
-        assert assetConnection.getType() == AssetConnection.Type.Using;
+        assert assetConnection.isUsing()
+                || assetConnection.isProducing();
         this.assetConnection = assetConnection;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 4/1/13
  * Time: 9:25 PM
  */
-@XmlType( name = "actionStep", propOrder = {"label", "uid", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes", "assetProvisioning"} )
+@XmlType(name = "actionStep", propOrder = {"label", "uid", "action", "instructions", "ifConditions", "unlessConditions", "prerequisites", "outcomes", "assetProvisioning"})
 public class ActionStepData extends AbstractStepData {
 
     private AssetProvisioningData assetProvisioning;
@@ -31,10 +31,11 @@ public class ActionStepData extends AbstractStepData {
                            CommunityService communityService,
                            ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
-        assetProvisioning = new AssetProvisioningData(
-                checklist,
-                ((ActionStep)step).getAssetProvisioning(),
-                communityService );
+        if ( ( (ActionStep) step ).getAssetProvisioning() != null )
+            assetProvisioning = new AssetProvisioningData(
+                    checklist,
+                    ( (ActionStep) step ).getAssetProvisioning(),
+                    communityService );
     }
 
     @Override
@@ -59,25 +60,25 @@ public class ActionStepData extends AbstractStepData {
     }
 
     @Override
-    @XmlElement( name = "if" )
+    @XmlElement(name = "if")
     public List<ConditionData> getIfConditions() {
         return super.getIfConditions();
     }
 
     @Override
-    @XmlElement( name = "after" )
+    @XmlElement(name = "after")
     public List<Integer> getPrerequisites() {
         return super.getPrerequisites();
     }
 
     @Override
-    @XmlElement( name = "unless" )
+    @XmlElement(name = "unless")
     public List<ConditionData> getUnlessConditions() {
         return super.getUnlessConditions();
     }
 
     @Override
-    @XmlElement( name = "outcome" )
+    @XmlElement(name = "outcome")
     public List<OutcomeData> getOutcomes() {
         return super.getOutcomes();
     }
@@ -88,6 +89,6 @@ public class ActionStepData extends AbstractStepData {
     }
 
     public ActionStep getActionStep() {
-        return (ActionStep)getStep();
+        return (ActionStep) getStep();
     }
 }

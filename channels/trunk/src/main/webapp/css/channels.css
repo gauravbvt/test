@@ -4023,6 +4023,11 @@ ul.attach li.controls {
     display: block;
 }
 
+.checklist .provisioning .assetProvision {
+    padding: 5px;
+    background-color: #e8e8e8;
+}
+
 /* Segment scenario */
 
 .scenario th {

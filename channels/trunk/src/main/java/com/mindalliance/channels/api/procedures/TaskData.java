@@ -51,26 +51,31 @@ public class TaskData extends AbstractProcedureElementData {
         // required
     }
 
-    public TaskData(
-            String serverUrl,
-            CommunityAssignment assignment,
-            CommunityService communityService,
-            ChannelsUser user ) {
+    public TaskData( String serverUrl,
+                     CommunityAssignment assignment,
+                     CommunityService communityService,
+                     ChannelsUser user ) {
         super( communityService, assignment, user );
+        part = assignment.getPart();
         initFunction( serverUrl, communityService );
         initData( communityService.getModelService() );
         initLocation( serverUrl, communityService );
         initDocumentation( serverUrl );
         initOtherAssignments( communityService );
         initTeamContacts( serverUrl, communityService );
-        initAssetConnections( );
+        initAssetConnections();
     }
 
 
-    public TaskData( String serverUrl, CommunityService communityService, Part part, ChannelsUser user ) {
+    public TaskData( String serverUrl,
+                     CommunityService communityService,
+                     Part part,
+                     ChannelsUser user ) {
         super( communityService, null, user );
+        assert part != null;
         this.part = part;
         initData( communityService.getModelService() );
+        initAssetConnections();
     }
 
     private void initData( ModelService modelService ) {
@@ -118,9 +123,9 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private void initAssetConnections() {
-        assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
+        assetConnectionDataList = new ArrayList<AssetConnectionData>();
         for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
-            assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
+            assetConnectionDataList.add( new AssetConnectionData( assetConnection ) );
         }
     }
 
@@ -199,7 +204,7 @@ public class TaskData extends AbstractProcedureElementData {
         return documentation;
     }
 
-    @XmlElement( name = "assetConnection" )
+    @XmlElement(name = "assetConnection")
     public List<AssetConnectionData> getAssetConnections() {
         return assetConnectionDataList;
     }
