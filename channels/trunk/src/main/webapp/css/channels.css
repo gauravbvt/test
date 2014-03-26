@@ -1189,7 +1189,7 @@ div.types ul li a {
 }
 
 div.phases ul li a.phase-delete,
-div.types ul li a.type-delete,
+a.type-delete,
 a.medium-delete,
 a.move-to-top,
 .event-delete {
@@ -1213,7 +1213,7 @@ a.move-to-top {
 */
 
 div.phases ul li a.phase-delete:hover,
-div.types ul li a.type-delete:hover,
+a.type-delete:hover,
 a.medium-delete:hover,
 a.move-to-top:hover,
 .event-delete:hover{
@@ -4109,6 +4109,10 @@ div.newAssetField {
 
 .required:after {
     content: " (required)";
+}
+
+.required-field:before {
+    content: "*";
 }
 
 

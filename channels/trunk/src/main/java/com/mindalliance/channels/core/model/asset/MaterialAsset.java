@@ -80,13 +80,29 @@ public class MaterialAsset extends ModelEntity {
     }
 
     public List<AssetField> getValuableFields() {
-        Set<AssetField> effectiveFields = new HashSet<AssetField>( getFields() );
+        Set<AssetField> effectiveFields = new HashSet<AssetField>( getValuedFields() );
         if ( isActual() ) {
             for ( ModelEntity modelEntity : getAllTypes() ) {
-                effectiveFields.addAll( ((MaterialAsset)modelEntity).getFields() );
+                for ( AssetField emptyField : ( (MaterialAsset) modelEntity ).getFields() ) {
+                    effectiveFields.add( new AssetField( emptyField ) );
+                }
             }
         }
         return new ArrayList<AssetField>( effectiveFields );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<AssetField> getValuedFields() {
+        return (List<AssetField>) CollectionUtils.select(
+                getFields(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        String value = ( (AssetField) object ).getValue();
+                        return value != null && !value.isEmpty();
+                    }
+                }
+        );
     }
 
     @Override
@@ -106,7 +122,8 @@ public class MaterialAsset extends ModelEntity {
                     public boolean evaluate( Object object ) {
                         return ModelObject.areIdentical( (MaterialAsset) object, mo );
                     }
-                } );
+                }
+        );
     }
 
     public void addDependency( MaterialAsset asset ) {
@@ -149,7 +166,8 @@ public class MaterialAsset extends ModelEntity {
                     public boolean evaluate( Object object ) {
                         return ( (AssetField) object ).getGroup().equals( group );
                     }
-                } );
+                }
+        );
     }
 
     @SuppressWarnings("unchecked")
@@ -161,6 +179,26 @@ public class MaterialAsset extends ModelEntity {
                     public boolean evaluate( Object object ) {
                         return ( (AssetField) object ).getGroup().equals( group );
                     }
-                } );
+                }
+        );
+    }
+
+    public List<MaterialAsset> allDependencies() {
+        return safeAllDependencies( new HashSet<MaterialAsset>() );
+    }
+
+    private List<MaterialAsset> safeAllDependencies( HashSet<MaterialAsset> visited ) {
+        if ( visited.contains( this ) ) {
+            return new ArrayList<MaterialAsset>();
+        } else {
+            visited.add( this );
+            Set<MaterialAsset> results = new HashSet<MaterialAsset>();
+            List<MaterialAsset> dependencies = getDependencies();
+            results.addAll( dependencies );
+            for ( MaterialAsset dependency : dependencies ) {
+                results.addAll( dependency.safeAllDependencies( visited ) );
+            }
+            return new ArrayList<MaterialAsset>( results );
+        }
     }
 }

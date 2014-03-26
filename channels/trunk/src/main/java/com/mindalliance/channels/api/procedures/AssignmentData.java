@@ -100,7 +100,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
     @WebMethod( exclude = true )
-    public Set<Long> allEventIds() {
+    public Set<Long> allEventIds() { // todo - why never called (others as well)?
         Set<Long> ids = new HashSet<Long>();
         Event initiatedEvent = getAssignment().getPart().getInitiatedEvent();
         if ( initiatedEvent != null )

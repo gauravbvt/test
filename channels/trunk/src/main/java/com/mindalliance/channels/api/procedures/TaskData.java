@@ -66,7 +66,6 @@ public class TaskData extends AbstractProcedureElementData {
         initAssetConnections();
     }
 
-
     public TaskData( String serverUrl,
                      CommunityService communityService,
                      Part part,

@@ -1578,7 +1578,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     public boolean isAssetNeeded( final MaterialAsset asset, CommunityService communityService ) {
         // if used of provisioned
         return CollectionUtils.exists(
-                getAssetConnections().findAssetsUsed(),
+                getAssetConnections().findAllAssetsUsed(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

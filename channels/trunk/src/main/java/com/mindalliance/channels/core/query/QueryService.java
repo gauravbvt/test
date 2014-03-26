@@ -38,6 +38,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 
@@ -1757,4 +1758,12 @@ public interface QueryService {
      * @return a list of parts
      */
     List<Part> findAllPartsVisibleTo( Part part );
+
+    /**
+     * List all actual material assets that give a value to the given field of a given material asset.
+     * @param materialAsset a material asset
+     * @param field an asset field
+     * @return a list of material assets
+     */
+    List<MaterialAsset> findAllUsersOfAssetField( MaterialAsset materialAsset, AssetField field );
 }

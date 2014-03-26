@@ -66,6 +66,10 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
                 final AssetFieldWrapper wrapper = item.getModelObject();
                 // name
                 Label nameLabel = new Label( "name", wrapper.getName() );
+                if ( wrapper.isRequired() ) {
+                    addTipTitle( nameLabel, "Required" );
+                    nameLabel.add( new AttributeModifier( "class", "required-field" ) );
+                }
                 item.add( nameLabel );
                 // value
                 TextField<String> valueField = new TextField<String>(
@@ -80,8 +84,6 @@ public class MaterialAssetFieldsPanel extends AbstractCommandablePanel {
                 } );
                 if ( !wrapper.getDescription().isEmpty() )
                     addInputHint( valueField, wrapper.getDescription() );
-                if ( wrapper.isRequired() )
-                    valueField.add( new AttributeModifier( "class", "required" ) );
                 item.add( valueField );
             }
         };

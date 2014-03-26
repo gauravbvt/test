@@ -14,7 +14,10 @@
                         <span wicket:id="name">field name</span> <!-- class = "required" when required-->
                     </td>
                     <td width="250px">
-                        <a wicket:id="delete" href="#"><img src="images/delete.png" alt="Delete"/></a>
+                        <a class="type-delete" wicket:id="delete" href="#">
+                            Delete
+                        </a>
+                        <span wicket:id="usage">In use</span>
                     </td>
                 </tr>
                     </table>
@@ -25,7 +28,7 @@
         <input wicket:id="name" type="text" class="small"/>
         in group <input wicket:id="group" type="text" class="small"/>
         with hint <input wicket:id="description" type="text" class="medium"/>
-        <a wicket:id="add" href="#" class="button">Add</a>
+        <a wicket:id="add" href="#" class="type-delete">Add</a>
     </div>
 </wicket:panel>
 </body>

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment.checklist;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
@@ -35,8 +36,8 @@ import java.util.List;
  */
 public class AssetProvisioningPanel extends AbstractCommandablePanel {
 
-    private static final int MAX_TASK_NAME_LENGTH = 60;
-    private static final int MAX_ASSET_NAME_LENGTH = 40;
+    private static final int MAX_TASK_NAME_LENGTH = 80;
+    private static final int MAX_ASSET_NAME_LENGTH = 30;
     private Checklist checklist;
     private ActionStep actionStep;
 
@@ -48,7 +49,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
 
     private AjaxCheckBox onlyNeedingCheckBox;
     private DropDownChoice<MaterialAsset> assetsChoice;
-    private DropDownChoice<Part> tasksChoice;
+    private DropDownChoice<Flow> assetDemandsChoice;
     private WebMarkupContainer assetProvisionContainer;
 
     public AssetProvisioningPanel( String id, Checklist checklist, ActionStep actionStep ) {
@@ -73,7 +74,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
                 addAssetProvision();
                 target.add( assetProvisionContainer );
                 if ( !isProvidesAsset() )
-                    update( target, new Change( Change.Type.Updated, getPart(), "checklist") );
+                    update( target, new Change( Change.Type.Updated, getPart(), "checklist" ) );
             }
         };
         add( providesAssetCheckBox );
@@ -92,7 +93,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
 
     private void reset() {
         if ( actionStep.getAssetProvisioning() == null ) {
-            assetProvisioning = new AssetProvisioning(  );
+            assetProvisioning = new AssetProvisioning();
             providesAsset = false;
         } else {
             assetProvisioning = new AssetProvisioning( actionStep.getAssetProvisioning() );
@@ -122,7 +123,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProvisionedTaskChoice();
-                target.add( tasksChoice );
+                target.add( assetDemandsChoice );
             }
         };
         onlyNeedingCheckBox.setOutputMarkupId( true );
@@ -151,7 +152,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( showOnlyNeeding ) {
                     addProvisionedTaskChoice();
-                    target.add( tasksChoice );
+                    target.add( assetDemandsChoice );
                 }
                 if ( assetProvisioning.isDefined() ) {
                     update( target, new Change( Change.Type.Updated, getPart(), "checklist" ) );
@@ -163,86 +164,127 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
     }
 
     public List<MaterialAsset> getCandidateAssets() {
-        List<MaterialAsset> candidateAssets = new ArrayList<MaterialAsset>(  );
+        List<MaterialAsset> candidateAssets = new ArrayList<MaterialAsset>();
         if ( showOnlyAvailable ) {
             candidateAssets = new ArrayList<MaterialAsset>( getQueryService().findAllAssetsAvailableTo( getPart() ) );
         } else {
             candidateAssets = new ArrayList<MaterialAsset>( getQueryService()
                     .listKnownEntities( MaterialAsset.class, true, false ) );
         }
-        if ( getProvisionedAsset() != null && ! candidateAssets.contains( getProvisionedAsset() ) ) {
-            candidateAssets.add( getProvisionedAsset() );
+        MaterialAsset provisionedAsset = getProvisionedAsset();
+        if ( provisionedAsset != null && !candidateAssets.contains( provisionedAsset ) ) {
+            candidateAssets.add( provisionedAsset );
         }
         Collections.sort( candidateAssets, new Comparator<MaterialAsset>() {
             @Override
             public int compare( MaterialAsset ma1, MaterialAsset ma2 ) {
                 return ma1.getName().compareTo( ma2.getName() );
             }
-        });
+        } );
         return candidateAssets;
     }
 
     private void addProvisionedTaskChoice() {
-        tasksChoice = new DropDownChoice<Part>(
-                "task",
-                new PropertyModel<Part>( this, "provisionedPart" ),
-                new PropertyModel<List<Part>>( this, "candidateParts" ),
-                new IChoiceRenderer<Part>() {
+        assetDemandsChoice = new DropDownChoice<Flow>(
+                "demand",
+                new PropertyModel<Flow>( this, "assetDemand" ),
+                new PropertyModel<List<Flow>>( this, "candidateAssetDemands" ),
+                new IChoiceRenderer<Flow>() {
                     @Override
-                    public Object getDisplayValue( Part taskOption ) {
-                        return StringUtils.abbreviate( taskOption.getTitle(), MAX_TASK_NAME_LENGTH );
+                    public Object getDisplayValue( Flow demandFlow ) {
+                        return StringUtils.abbreviate( makeDemandLabel( demandFlow ), MAX_TASK_NAME_LENGTH );
                     }
 
                     @Override
-                    public String getIdValue( Part object, int index ) {
+                    public String getIdValue( Flow object, int index ) {
                         return Integer.toString( index );
                     }
                 }
         );
-        tasksChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        assetDemandsChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                if ( assetProvisioning.isDefined( ) ) {
+                if ( assetProvisioning.isDefined() ) {
                     update( target, new Change( Change.Type.Updated, getPart(), "checklist" ) );
                 }
             }
         } );
-        tasksChoice.setOutputMarkupId( true );
-        assetProvisionContainer.addOrReplace( tasksChoice );
+        assetDemandsChoice.setOutputMarkupId( true );
+        assetProvisionContainer.addOrReplace( assetDemandsChoice );
     }
 
-    @SuppressWarnings( "unchecked" )
-    public List<Part> getCandidateParts() {
-        List<Part> candidates = new ArrayList<Part>(  );
-        List<Part> visibleParts = getQueryService().findAllPartsVisibleTo( getPart() );
-        Part provisionedPart = getProvisionedPart();
+    @SuppressWarnings("unchecked")
+    public List<Flow> getCandidateAssetDemands() {
+        List<Flow> candidates = new ArrayList<Flow>();
+        List<Flow> sharingFlows = getIncomingCommunications();
+        Flow assetDemand = getAssetDemand();
         if ( showOnlyNeeding ) {
-            if ( getProvisionedAsset() != null ) {
-                candidates.addAll( (List<Part>) CollectionUtils.select(
-                        visibleParts,
+            final MaterialAsset provisionedAsset = getProvisionedAsset();
+            if ( provisionedAsset != null ) {
+                candidates.addAll( (List<Flow>) CollectionUtils.select(
+                        sharingFlows,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ( (Part) object ).isAssetNeeded( getProvisionedAsset(), getCommunityService() );
+                                return ( (Flow) object ).isDemandsAsset( provisionedAsset );
                             }
                         }
                 ) );
             }
         } else {
-            candidates.addAll( visibleParts );
+            candidates.addAll( sharingFlows );
         }
-        if ( provisionedPart != null && !candidates.contains( provisionedPart ) ) {
-            candidates.add( provisionedPart );
+        if ( assetDemand != null && !candidates.contains( assetDemand ) ) {
+            candidates.add( assetDemand );
         }
         Collections.sort(
                 candidates,
-                new Comparator<Part>() {
-            @Override
-            public int compare( Part part1, Part part2 ) {
-                return part1.getTitle().compareTo( part2.getTitle() );
-            }
-        });
+                new Comparator<Flow>() {
+                    @Override
+                    public int compare( Flow flow1, Flow flow2 ) {
+                        return makeDemandLabel( flow1 ).compareTo( makeDemandLabel( flow2 ) );
+                    }
+                }
+        );
         return candidates;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Flow> getIncomingCommunications() {
+        List<Flow> incoming = new ArrayList<Flow>();
+        incoming.addAll( (List<Flow>) CollectionUtils.select(
+                getPart().getAllSharingReceives(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Flow) object ).isNotification();
+                    }
+                }
+        ) );
+        incoming.addAll( (List<Flow>) CollectionUtils.select(
+                getPart().getAllSharingSends(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Flow) object ).isAskedFor();
+                    }
+                }
+        ) );
+        return incoming;
+    }
+
+    private String makeDemandLabel( Flow sharing ) {
+        Part provisionedPart = sharing.isNotification()
+                ? (Part) sharing.getSource() // where the incoming notification came from
+                : (Part) sharing.getTarget(); // where the incoming request came from
+        StringBuilder sb = new StringBuilder();
+        sb.append( provisionedPart.getTitle() );
+        if ( !sharing.getRestrictions().isEmpty() ) {
+            sb.append( " (" )
+                    .append( sharing.getRestrictionString( true ) )
+                    .append( ")" );
+        }
+        return sb.toString();
     }
 
     public boolean isProvidesAsset() {
@@ -251,7 +293,7 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
 
     public void setProvidesAsset( boolean val ) {
         this.providesAsset = val;
-        assetProvisioning = new AssetProvisioning(  );
+        assetProvisioning = new AssetProvisioning();
         if ( !providesAsset ) {
             doCommand(
                     new UpdateSegmentObject(
@@ -283,7 +325,9 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
     }
 
     public MaterialAsset getProvisionedAsset() {
-        return assetProvisioning.getAsset( getCommunityService() );
+        return assetProvisioning.getAssetId() > 0
+                ? assetProvisioning.getAsset( getCommunityService() )
+                : null;
     }
 
     public void setProvisionedAsset( MaterialAsset provisionedAsset ) {
@@ -295,21 +339,21 @@ public class AssetProvisioningPanel extends AbstractCommandablePanel {
         return checklist.getPart();
     }
 
-    public Part getProvisionedPart() {
-        return assetProvisioning.getPart( checklist );
+    public Flow getAssetDemand() {
+        return assetProvisioning.getFlow( checklist );
     }
 
-    public void setProvisionedPart( Part provisionedPart ) {
-        assetProvisioning.setPartId( provisionedPart.getId() );
-        updateAssetProvisioning(  );
+    public void setAssetDemand( Flow assetDemand ) {
+        assetProvisioning.setFlowId( assetDemand.getId() );
+        updateAssetProvisioning();
     }
 
     private int getStepIndex() {
         return checklist.getActionSteps().indexOf( actionStep );
     }
 
-    private void updateAssetProvisioning(  ) {
-        if ( assetProvisioning.isDefined( ) && assetProvisioning.isValid( checklist, getCommunityService() ) ) {
+    private void updateAssetProvisioning() {
+        if ( assetProvisioning.isDefined() && assetProvisioning.isValid( checklist, getCommunityService() ) ) {
             doCommand(
                     new UpdateSegmentObject(
                             getUsername(),

@@ -5,7 +5,10 @@ import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -104,11 +107,33 @@ public class MaterialAssetFieldDefinitionsPanel extends AbstractCommandablePanel
                         update( target, new Change( Change.Type.Updated, getMaterialAsset(), "fields") );
                     }
                 };
-                makeVisible( deleteLink, isLockedByUser( getMaterialAsset() ) );
+                List<MaterialAsset> fieldUsers = getCommunityService().getModelService()
+                        .findAllUsersOfAssetField( getMaterialAsset(), field );
+                makeVisible( deleteLink, isLockedByUser( getMaterialAsset() ) && fieldUsers.isEmpty() );
                 item.add( deleteLink );
+                // in use
+                Label inUseLabel = new Label("usage", "Used");
+                addTipTitle( inUseLabel, "Used by " + listFieldUserNames( fieldUsers ) );
+                makeVisible( inUseLabel, !fieldUsers.isEmpty() );
+                item.add( inUseLabel );
             }
         };
         item.add( fieldsListView );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private String listFieldUserNames( List<MaterialAsset> fieldUsers ) {
+        List<String> assetNames = (List<String>)CollectionUtils.collect(
+                fieldUsers,
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ((MaterialAsset)input).getName();
+                    }
+                }
+        );
+        Collections.sort( assetNames );
+        return ChannelsUtils.listToString( assetNames, " and " );
     }
 
     private void addNewField() {

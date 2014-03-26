@@ -21,6 +21,14 @@ public class AssetField implements Serializable {
     public AssetField() {
     }
 
+    public AssetField( AssetField assetField ) {
+        name = assetField.getName();
+        description = assetField.getDescription();
+        group = assetField.getGroup();
+        required = assetField.isRequired();
+        value = assetField.getValue();
+    }
+
     public AssetField( String name ) {
         this.name = name;
     }

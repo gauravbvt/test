@@ -50,6 +50,7 @@ import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -3639,7 +3640,7 @@ public abstract class DefaultQueryService implements QueryService {
         for ( Part otherPart : list( Part.class ) ) {
             Checklist checklist = otherPart.getChecklist();
             for ( AssetProvisioning assetProvisioning : checklist.findAssetProvisionings() ) {
-                if ( assetProvisioning.getPart( checklist ).equals( part ) ) {
+                if ( assetProvisioning.getProvisionedPart( checklist ).equals( part ) ) {
                     try {
                         MaterialAsset providedAsset = find( MaterialAsset.class, assetProvisioning.getAssetId() );
                         provisionedAssets.add( providedAsset );
@@ -3668,6 +3669,22 @@ public abstract class DefaultQueryService implements QueryService {
         }
         visibleParts.remove( part );
         return visibleParts;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<MaterialAsset> findAllUsersOfAssetField( final MaterialAsset materialAsset, final AssetField field ) {
+        return (List<MaterialAsset>) CollectionUtils.select(
+                listActualEntities( MaterialAsset.class, true ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        MaterialAsset candidate = (MaterialAsset)object;
+                        return candidate.narrowsOrEquals( materialAsset )
+                                && candidate.getValuedFields().contains( field );
+                    }
+                }
+        );
     }
 
 }

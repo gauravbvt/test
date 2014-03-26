@@ -69,4 +69,5 @@ abstract public class AbstractProcedureElementData  implements Serializable {
         return getAssignment().getPart().getTask();
     }
 
+
 }

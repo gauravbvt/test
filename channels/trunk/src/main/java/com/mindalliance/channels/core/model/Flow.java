@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetConnections;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -1842,6 +1843,19 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean isConnected() {
         return getSource() != null && getTarget() != null;
+    }
+
+    public boolean isDemandsAsset( final MaterialAsset asset ) {
+        return CollectionUtils.exists(
+                getAssetConnections().getAll(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        AssetConnection assetConnection = (AssetConnection)object;
+                        return assetConnection.isDemanding() && asset.narrowsOrEquals( assetConnection.getAsset() );
+                    }
+                }
+        );
     }
 
     /**

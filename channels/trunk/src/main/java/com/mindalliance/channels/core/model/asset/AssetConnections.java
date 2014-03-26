@@ -76,8 +76,14 @@ public class AssetConnections implements Serializable {
         return findAll( AssetConnection.Type.Provisioning );
     }
 
-    public List<MaterialAsset> findAssetsUsed(  ) {
-        return findAll( AssetConnection.Type.Using );
+    public List<MaterialAsset> findAllAssetsUsed() {
+        Set<MaterialAsset> allUsedAssets = new HashSet<MaterialAsset>(  );
+        List<MaterialAsset> directlyUsedAssets = findAll( AssetConnection.Type.Using );
+        allUsedAssets.addAll( directlyUsedAssets );
+        for ( MaterialAsset directlyUsedAsset : directlyUsedAssets ) {
+            allUsedAssets.addAll( directlyUsedAsset.allDependencies() );
+        }
+        return new ArrayList<MaterialAsset>( allUsedAssets );
     }
 
     public List<MaterialAsset> findAssetsStocked(  ) {

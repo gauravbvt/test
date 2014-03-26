@@ -621,8 +621,17 @@ public class Checklist implements Serializable, Mappable {
         List<AssetAvailableCondition> assetAvailableConditions = new ArrayList<AssetAvailableCondition>();
         for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
             if ( assetConnection.isUsing()
-                    || assetConnection.isProducing() )
+                    || assetConnection.isProducing() ) {
                 assetAvailableConditions.add( new AssetAvailableCondition( assetConnection ) );
+            }
+            // add conditional availability of dependencies
+            if ( assetConnection.isUsing() ) {
+                for ( MaterialAsset dependency : assetConnection.getAsset().getDependencies() ) {
+                    assetAvailableConditions.add(
+                            new AssetAvailableCondition(
+                                    new AssetConnection( AssetConnection.Type.Using, dependency ) ) );
+                }
+            }
         }
         return assetAvailableConditions;
     }

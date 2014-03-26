@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
@@ -26,7 +26,7 @@ public class AssetProvisioning extends AbstractChecklistElement {
     public static final String REF_PREFIX = "asset_provided|";
 
     private long assetId = 0;
-    private long partId = 0;
+    private long flowId; // id of flow demanding the material asset
     private String label = "";
     private String shortLabel = "";
 
@@ -35,33 +35,33 @@ public class AssetProvisioning extends AbstractChecklistElement {
 
     public AssetProvisioning( AssetProvisioning assetProvisioning ) {
         assetId = assetProvisioning.getAssetId();
-        partId = assetProvisioning.getPartId();
+        flowId = assetProvisioning.getFlowId();
     }
 
-    public AssetProvisioning( MaterialAsset assetProvisioned, Part provisionedPart ) {
+    public AssetProvisioning( MaterialAsset assetProvisioned, Flow demandingFlow ) {
         assetId = assetProvisioned.getId();
-        partId = provisionedPart.getId();
+        flowId = demandingFlow.getId();
     }
 
-    public AssetProvisioning( long assetId, long partId ) {
+    public AssetProvisioning( long assetId, long flowId ) {
         this.assetId = assetId;
-        this.partId = partId;
+        this.flowId = flowId;
     }
 
     public long getAssetId() {
         return assetId;
     }
 
-    public long getPartId() {
-        return partId;
+    public long getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId( long flowId ) {
+        this.flowId = flowId;
     }
 
     public void setAssetId( long assetId ) {
         this.assetId = assetId;
-    }
-
-    public void setPartId( long partId ) {
-        this.partId = partId;
     }
 
     @Override
@@ -75,11 +75,12 @@ public class AssetProvisioning extends AbstractChecklistElement {
     }
 
     public boolean isValid( Checklist checklist, CommunityService communityService ) {
-        return isPartValid( checklist ) && isAssetValid( communityService );
+        return isFlowValid( checklist ) && isAssetValid( communityService );
     }
 
-    private boolean isPartValid( Checklist checklist ) {
-        return getPart( checklist ) != null;
+    private boolean isFlowValid( Checklist checklist ) {
+        Flow flow = getFlow( checklist );
+        return flow != null && flow.isSharing( );
     }
 
     private boolean isAssetValid( CommunityService communityService ) {
@@ -95,10 +96,10 @@ public class AssetProvisioning extends AbstractChecklistElement {
         }
     }
 
-    public Part getPart( Checklist checklist ) {
-        Node node = checklist.getPart().getSegment().getNode( partId );
-        return node != null
-                ? (Part) node
+    public Flow getFlow( Checklist checklist ) {
+        Flow flow = checklist.getPart().getSegment().getFlow( flowId );
+        return flow != null
+                ? flow
                 : null;
     }
 
@@ -113,17 +114,38 @@ public class AssetProvisioning extends AbstractChecklistElement {
 
     public String makeLabel( Checklist checklist, CommunityService communityService ) {
         MaterialAsset asset = getAsset( communityService );
-        Part part = getPart( checklist );
-        if ( asset != null && part != null ) {
-            label= "Provide \""
-                    + asset.getName()
-                    + "\" to \""
-                    + part.getTitle() + "\"";
+        Part provisionedPart = getProvisionedPart( checklist );
+        Flow flow = getFlow( checklist );
+        if ( asset != null && provisionedPart != null && flow != null ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "Deliver \"" )
+                    .append( asset.getName() )
+                    .append( "\" to \"" )
+                    .append( provisionedPart.getTitle() )
+                    .append( "\"" );
+            if ( !flow.getRestrictions().isEmpty() )
+                    sb.append( " (" )
+                    .append( flow.getRestrictionString( true ) )
+                    .append( ")" );
+            label = sb.toString();
             shortLabel = "Provide " + asset.getName();
         } else {
             label = "?";
         }
         return label;
+    }
+
+    public Part getProvisionedPart( Checklist checklist ) {
+        if ( isFlowValid( checklist ) ) {
+            Flow flow = getFlow( checklist );
+            if ( flow.isAskedFor() ) {
+                return (Part) flow.getTarget();
+            } else {
+                return (Part) flow.getSource();
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -142,7 +164,7 @@ public class AssetProvisioning extends AbstractChecklistElement {
     public boolean equals( Object object ) {
         if ( object instanceof AssetProvisioning ) {
             AssetProvisioning other = (AssetProvisioning) object;
-            return assetId == other.getAssetId() && partId == other.getPartId();
+            return assetId == other.getAssetId() && flowId == other.getFlowId();
         } else {
             return false;
         }
@@ -152,17 +174,17 @@ public class AssetProvisioning extends AbstractChecklistElement {
     public int hashCode() {
         int hash = 0;
         hash = hash + 31 * new Long( assetId ).hashCode();
-        hash = hash + 31 * new Long( partId ).hashCode();
+        hash = hash + 31 * new Long( flowId ).hashCode();
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Asset " + assetId + " provisioned to task " + partId;
+        return "Asset " + assetId + " provisioned in response to flow " + flowId;
     }
 
     public boolean isDefined() {
-        return assetId > 0 && partId > 0;
+        return assetId > 0 && flowId > 0;
     }
 
 }

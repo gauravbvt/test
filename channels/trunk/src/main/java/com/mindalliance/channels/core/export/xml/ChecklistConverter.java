@@ -60,7 +60,7 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 AssetProvisioning assetProvisioning = actionStep.getAssetProvisioning();
                 writer.startNode( "assetProvisioning" );
                 writer.addAttribute( "assetId", Long.toString( assetProvisioning.getAssetId() ) );
-                writer.addAttribute( "partId", Long.toString( assetProvisioning.getPartId() ) );
+                writer.addAttribute( "flowId", Long.toString( assetProvisioning.getFlowId() ) );
                 writer.endNode();
             }
             writer.endNode();
@@ -136,8 +136,8 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                             instructions = reader.getValue();
                         } else if ( name.equals( "assetProvisioning" ) ) {
                             long assetId = Long.parseLong( reader.getAttribute( "assetId" ) );
-                            long partId = Long.parseLong( reader.getAttribute( "partId" ) );
-                            assetProvisioning = new AssetProvisioning( assetId, partId );
+                            long flowId = Long.parseLong( reader.getAttribute( "flowId" ) );
+                            assetProvisioning = new AssetProvisioning( assetId, flowId );
                         }
                         reader.moveUp();
                     }
