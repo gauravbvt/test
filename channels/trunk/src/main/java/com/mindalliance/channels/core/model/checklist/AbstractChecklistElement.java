@@ -47,11 +47,6 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     }
 
     @Override
-    public boolean isAssetProvisioned() {
-        return false;  // DEFAULT
-    }
-
-    @Override
     public Step getStep() {
         return null; // DEFAULT
     }
@@ -63,11 +58,6 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
 
     @Override
     public Outcome getOutcome() {
-        return null;
-    }
-
-    @Override
-    public AssetProvisioning getAssetProvisioning() {
         return null;
     }
 

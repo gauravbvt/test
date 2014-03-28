@@ -1667,7 +1667,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "receiptConfirmationRequested", isReceiptConfirmationRequested() );
         state.put( "infoProductTimeSensitive", isInfoProductTimeSensitive() );
         List<Map<String, Object>> assetConnectionMaps = new ArrayList<Map<String, Object>>();
-        for ( AssetConnection assetConnection : getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : getAssetConnections() ) {
             assetConnectionMaps.add( assetConnection.toMap() );
         }
         state.put( "assetConnections", assetConnectionMaps );
@@ -1751,8 +1751,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isNeed();
     }
 
-    public boolean canSetAssets( boolean isSend ) {
-        return isSend && isNotification() || !isSend && isAskedFor();
+    public boolean canSetAssets(  ) {
+        return isSharing();
     }
 
     @Override
@@ -1858,6 +1858,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
+    public boolean isSuppliesAsset( final MaterialAsset asset ) {
+        return CollectionUtils.exists(
+                getAssetConnections().getAll(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        AssetConnection assetConnection = (AssetConnection)object;
+                        return assetConnection.isProvisioning() && asset.narrowsOrEquals( assetConnection.getAsset() );
+                    }
+                }
+        );
+
+    }
+
     /**
      * The significance of a flow.
      */
@@ -1944,7 +1958,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     @Override
     public boolean isCanProvisionAssets() {
-        return false;
+        return true;
     }
 
     @Override

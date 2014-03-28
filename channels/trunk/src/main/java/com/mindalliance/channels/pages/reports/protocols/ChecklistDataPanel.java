@@ -7,6 +7,7 @@ import com.mindalliance.channels.api.procedures.GoalData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Step;
@@ -14,6 +15,7 @@ import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.diagrams.ChecklistFlowDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -51,19 +53,20 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     public ChecklistDataPanel( String id,
                                ChecklistData checklistData,
                                ProtocolsFinder finder,
-                               boolean allExpanded ) {
+                               boolean allExpanded,
+                               CommunityService communityService ) {
         super( id, finder );
         this.checklistData = checklistData;
         this.allExpanded = allExpanded;
-        init();
+        init( communityService );
     }
 
-    private void init() {
+    private void init( CommunityService communityService ) {
         add( makeAnchor( "anchor", checklistData.getAnchor() ) );
         addFeedbackPanel();
         addTaskName();
         addFailureImpact();
-        addTaskDetails();
+        addTaskDetails( communityService );
         addDocumentation();
         addSteps();
         addChecklistFlowDiagram();
@@ -89,7 +92,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
     // TASK DETAILS
 
-    private void addTaskDetails() {
+    private void addTaskDetails( CommunityService communityService ) {
         taskDetailsContainer = new WebMarkupContainer( "task" );
         add( taskDetailsContainer );
         taskDetailsContainer.add( makeAttributeContainer( "instructions", getTask().getInstructions() ) );
@@ -97,6 +100,19 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         addLocation();
         addGoals();
         addTeammates();
+        addAssets();
+    }
+
+    private void addAssets() {
+        WebMarkupContainer assetsContainer = new WebMarkupContainer( "assets" );
+        assetsContainer.add( new Label("summary",  StringUtils.capitalize( getTask().getAssetConnectionsSummary() ) ) );
+        AssetsProvisionedDataPanel assetsProvisionedDataPanel = new AssetsProvisionedDataPanel(
+                "provisioning",
+                checklistData.getAssetsProvisioned(),
+                getFinder() );
+        assetsProvisionedDataPanel.setVisible( !checklistData.getAssetsProvisioned().isEmpty() );
+        assetsContainer.add( assetsProvisionedDataPanel );
+        taskDetailsContainer.add( assetsContainer );
     }
 
     private void addFailureImpact() {
@@ -168,6 +184,58 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         };
         teamContainer.add( contactsListView );
     }
+
+/*
+    private void addAssetSuppliers( CommunityService communityService ) {
+        final Map<MaterialAsset, List<ContactData>> assetProvisionings = mapAssetSuppliers( communityService );
+        WebMarkupContainer suppliersContainer = new WebMarkupContainer( "suppliers" );
+        suppliersContainer.setVisible( !assetProvisionings.isEmpty() );
+        taskDetailsContainer.add( suppliersContainer );
+        // Suppliers label
+        Label supplierLabel = new Label(
+                "suppliersLabel",
+                assetProvisionings.size() > 1 ? "My asset suppliers" : "My asset supplier" );
+        suppliersContainer.add( supplierLabel );
+        List<MaterialAsset> assetsSupplied = new ArrayList<MaterialAsset>( assetProvisionings.keySet() );
+        Collections.sort( assetsSupplied, new Comparator<MaterialAsset>() {
+            @Override
+            public int compare( MaterialAsset ma1, MaterialAsset ma2 ) {
+                return ma1.getName().compareTo( ma2.getName() );
+            }
+        });
+        ListView<MaterialAsset> assetsSuppliedListView = new ListView<MaterialAsset>(
+                "assetsSupplied",
+                assetsSupplied
+        ) {
+            @Override
+            protected void populateItem( ListItem<MaterialAsset> item ) {
+                MaterialAsset assetSupplied = item.getModelObject();
+                item.add( new Label( "asset", assetSupplied.getName() ) );
+                item.add( makeSupplierContactsListView( assetProvisionings.get( assetSupplied ) , item ));
+            }
+        };
+        suppliersContainer.add( assetsSuppliedListView );
+    }
+
+    private Map<MaterialAsset, List<ContactData>> mapAssetSuppliers( CommunityService communityService ) {
+        Map<MaterialAsset, List<ContactData>> map = new HashMap<MaterialAsset, List<ContactData>>(  );
+//todo
+       return map;
+    }
+
+    private ListView<ContactData> makeSupplierContactsListView( List<ContactData> contacts,
+                                                                ListItem<MaterialAsset> item ) {
+        return new ListView<ContactData>(
+                "supplierContacts",
+                new ArrayList<ContactData>( contacts )
+        ) {
+            @Override
+            protected void populateItem( ListItem<ContactData> item ) {
+                item.add( new ContactLinkPanel( "supplierContact", item.getModelObject(), getFinder() ) );
+            }
+        };
+    }
+*/
 
 
     private TaskData getTask() {

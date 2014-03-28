@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
 import com.mindalliance.channels.core.model.checklist.AssetAvailableCondition;
 import com.mindalliance.channels.core.model.checklist.AssetProducedOutcome;
+import com.mindalliance.channels.core.model.checklist.AssetProvisionedOutcome;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
@@ -255,9 +256,10 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             } else if ( outcome.isAssetProducedOutcome() ) {
                 AssetConnection assetConnection = ( (AssetProducedOutcome) outcome ).getAssetConnection();
                 sb.append( assetConnection.getStepOutcomeLabel() );
+            }  else if ( outcome.isAssetProvisionedOutcome() ) {
+                AssetConnection assetConnection = ( (AssetProvisionedOutcome) outcome ).getAssetConnection();
+                sb.append( assetConnection.getStepOutcomeLabel() );
             }
-        } else if ( cle.isAssetProvisioned() ) {
-            sb.append( cle.getAssetProvisioning().getShortLabel() );
         }
         return sanitize( sb.toString() );
     }
@@ -297,7 +299,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                                      ChecklistElementRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            if ( edge.isWithOutcome() || edge.isWithAssetProvisioning() ) {
+            if ( edge.isWithOutcome() ) {
                 list.add( new DOTAttribute( "color", "gray" ) );
                 list.add( new DOTAttribute( "arrowhead", "none" ) );
                 list.add( new DOTAttribute( "len", "1.5" ) );
@@ -371,10 +373,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         ? ASSET_PRODUCED_OUTCOME_ICON
                         : outcome.isGoalAchievedOutcome()
                         ? getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part )
+                        : outcome.isAssetProvisionedOutcome()
+                        ? ASSET_PROVISIONED_ICON
                         : null;
-            } else if ( vertex.isAssetProvisioned() ) {
-                iconName = ASSET_PROVISIONED_ICON;
-
             } else {
                 iconName = null;
             }

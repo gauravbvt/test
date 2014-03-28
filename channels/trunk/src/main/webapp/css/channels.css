@@ -3308,6 +3308,7 @@ body.support div.cancelSend input:hover {
 
 a.more,
 a.less,
+a.remove,
 a.window {
     border: 1px solid #C7C8CA;
     color: #666666;
@@ -3317,10 +3318,14 @@ a.window {
     text-transform: uppercase;
 }
 
-a.more:hover, a.less:hover,
+a.more:hover, a.less:hover, a.remove:hover,
 a.window:hover {
     border: 1px solid #999999;
     color: #333333;
+}
+
+a.remove {
+    float:right;
 }
 
 .to-be-deleted {
@@ -4013,19 +4018,9 @@ ul.attach li.controls {
     cursor: pointer;
 }
 
-.checklist .provisioned {
+.checklist .assetConnections {
     padding-left: 25px;
-}
-
-.checklist .provisioning {
-    margin-top: 10px;
-    margin-bottom: 15px;
     display: block;
-}
-
-.checklist .provisioning .assetProvision {
-    padding: 5px;
-    background-color: #e8e8e8;
 }
 
 /* Segment scenario */
@@ -4113,6 +4108,10 @@ div.newAssetField {
 
 .required-field:before {
     content: "*";
+}
+
+.assetConnection {
+    margin-bottom: 5px;
 }
 
 

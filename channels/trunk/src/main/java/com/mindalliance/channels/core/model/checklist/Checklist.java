@@ -2,7 +2,6 @@ package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.command.MappedList;
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
@@ -23,7 +22,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -95,6 +93,7 @@ public class Checklist implements Serializable, Mappable {
         outcomes.addAll( listGoalAchievedOutcomes() );
         outcomes.addAll( listCapabilityCreatedOutcomes() );
         outcomes.addAll( listAssetProducedOutcomes() );
+        outcomes.addAll( listAssetProvisionedOutcomes() );
         for ( Outcome outcome : outcomes ) {
             outcome.setId( outcomes.indexOf( outcome ) );
         }
@@ -452,6 +451,8 @@ public class Checklist implements Serializable, Mappable {
                 ? findAssetProducedOutcome( outcomeRef )
                 : CapabilityCreatedOutcome.isCapabilityCreatedOutcomeRef( outcomeRef )
                 ? findCapabilityCreatedOutcome( outcomeRef )
+                : AssetProvisionedOutcome.isAssetProvisionedOutcomeRef( outcomeRef )
+                ? findAssetProvisionedOutcome( outcomeRef )
                 : null; // should never happen
     }
 
@@ -552,6 +553,20 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
+    @SuppressWarnings( "unchecked" )
+    private Outcome findAssetProvisionedOutcome( final String outcomeRef ) {
+        return (Outcome) CollectionUtils.find(
+                listAssetProvisionedOutcomes(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (AssetProvisionedOutcome) object ).getRef().equals( outcomeRef );
+                    }
+                }
+        );
+    }
+
+
 
     @SuppressWarnings( "unchecked" )
     private Outcome findGoalAchievedOutcome( final String outcomeRef ) {
@@ -619,7 +634,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<AssetAvailableCondition> listAssetAvailableConditions() {
         List<AssetAvailableCondition> assetAvailableConditions = new ArrayList<AssetAvailableCondition>();
-        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             if ( assetConnection.isUsing()
                     || assetConnection.isProducing() ) {
                 assetAvailableConditions.add( new AssetAvailableCondition( assetConnection ) );
@@ -638,13 +653,21 @@ public class Checklist implements Serializable, Mappable {
 
     public List<AssetProducedOutcome> listAssetProducedOutcomes() {
         List<AssetProducedOutcome> assetProducedOutcomes = new ArrayList<AssetProducedOutcome>();
-        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             if ( assetConnection.getType() == AssetConnection.Type.Producing )
                 assetProducedOutcomes.add( new AssetProducedOutcome( assetConnection ) );
         }
         return assetProducedOutcomes;
     }
 
+    public List<AssetProvisionedOutcome> listAssetProvisionedOutcomes() {
+        List<AssetProvisionedOutcome> assetProvisionedOutcomes = new ArrayList<AssetProvisionedOutcome>();
+        for ( AssetConnection assetConnection : part.getAllFlowAssetConnections() ) {
+            if ( assetConnection.getType() == AssetConnection.Type.Provisioning )
+                assetProvisionedOutcomes.add( new AssetProvisionedOutcome( assetConnection ) );
+        }
+        return assetProvisionedOutcomes;
+    }
 
     public List<EventTimingOutcome> listEventTimingOutcomes() {
         List<EventTimingOutcome> eventTimingOutcomes = new ArrayList<EventTimingOutcome>();
@@ -966,26 +989,6 @@ public class Checklist implements Serializable, Mappable {
                 || hasGuards( step, false )
                 || hasPrerequisites( step )
                 || hasOutcomes( step );
-    }
-
-    public List<AssetProvisioning> findAssetProvisionings() {
-        List<AssetProvisioning> assetProvisionings = new ArrayList<AssetProvisioning>(  );
-        for ( ActionStep actionStep : this.getActionSteps()) {
-            if ( actionStep.getAssetProvisioning() != null ) {
-                assetProvisionings.add( actionStep.getAssetProvisioning() );
-            }
-        }
-        return assetProvisionings;
-    }
-
-    public List<MaterialAsset> findAllAssetsProvisioned( CommunityService communityService ) {
-        Set<MaterialAsset> assets = new HashSet<MaterialAsset>(  );
-        for ( AssetProvisioning assetProvisioning : findAssetProvisionings() ) {
-            MaterialAsset asset = assetProvisioning.getAsset( communityService );
-            if ( asset != null )
-                assets.add( asset );
-        }
-        return new ArrayList<MaterialAsset>( assets );
     }
 
     public int getIndexOfStep( Step step ) {

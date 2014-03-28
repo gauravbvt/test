@@ -33,7 +33,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "location", "function", "instructions",
+@XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "location", "function", "assetConnectionsSummary", "instructions",
         "teamContacts", "goals", "failureImpact", "assetConnections", "documentation"})
 public class TaskData extends AbstractProcedureElementData {
 
@@ -45,6 +45,7 @@ public class TaskData extends AbstractProcedureElementData {
     private Part part;
     private PlaceData placeData;
     private List<AssetConnectionData> assetConnectionDataList;
+    private String assetConnectionsSummary;
     private DocumentationData documentation;
 
     public TaskData() {
@@ -78,6 +79,7 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private void initData( ModelService modelService ) {
+        assetConnectionsSummary = getPart().getAssetConnections().getFirstPersonLabel();
         failureLevel = modelService.computePartPriority( getPart() );
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
@@ -123,7 +125,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     private void initAssetConnections() {
         assetConnectionDataList = new ArrayList<AssetConnectionData>();
-        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             assetConnectionDataList.add( new AssetConnectionData( assetConnection ) );
         }
     }
@@ -158,6 +160,11 @@ public class TaskData extends AbstractProcedureElementData {
                     ? new SubjectData( subject )
                     : null;
         }
+    }
+
+    @XmlElement
+    public String getAssetConnectionsSummary() {
+        return assetConnectionsSummary;
     }
 
     @XmlElement

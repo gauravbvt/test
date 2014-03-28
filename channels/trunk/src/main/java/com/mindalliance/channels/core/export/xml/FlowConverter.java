@@ -161,7 +161,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.setValue( Boolean.toString( flow.isInfoProductTimeSensitive() ) );
         writer.endNode();
         // Asset connections
-        for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : flow.getAssetConnections() ) {
             writer.startNode( "assetConnection" );
             context.convertAnother( assetConnection );
             writer.endNode();

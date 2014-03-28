@@ -28,12 +28,12 @@ import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.ConnectedAssetsPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -292,7 +292,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addTimingFields();
         addGoalsLink();
         addGoals();
-        addAssets();
+        addAssetConnections();
         addIssuesPanel();
         addAttachments();
         adjustFields();
@@ -782,22 +782,15 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         } );
     }
 
-    private void addAssets() {
+    private void addAssetConnections() {
         assetsContainer = new WebMarkupContainer( "assetsContainer" );
         assetsContainer.setOutputMarkupId( true );
         makeVisible( assetsContainer, !isShowSimpleForm() );
         add( assetsContainer );
-        AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, getPart(), AssetConnectable.ASSETS ) );
-            }
-        };
-        assetsContainer.add( assetsLink );
-        Label assetsLabel = new Label(
-                "assets-text",
-                StringUtils.capitalize( getPart().getAssetConnections().getLabel( ) ) );
-        assetsContainer.add( assetsLabel );
+        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
+                "assetConnections",
+                new PropertyModel<AssetConnectable>( this, "part" ) );
+        assetsContainer.add( connectedAssetsPanel );
     }
 
     private void addGoalsLink() {

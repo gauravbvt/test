@@ -497,7 +497,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ChecklistData> item ) {
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
             }
         };
         ongoingContainer.add( ongoingChecklistsListView );
@@ -610,7 +610,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
             }
         };
     }
@@ -627,7 +627,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( makeTriggerDataPanel( "trigger", triggerData ) );
                 ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded ) );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
             }
         };
     }

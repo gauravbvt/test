@@ -161,15 +161,15 @@ public class ProtocolsFinder implements Serializable {
     }
 
     private void addTo(
-            Map<String, Map<String,Map<ContactData, Map<TriggerData, List<ChecklistData>>>>> map,
+            Map<String, Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>> map,
             String communicationContext,
             String info,
             ContactData contactData,
             TriggerData triggerData,
             ChecklistData checklistData ) {
-        Map<String,Map<ContactData, Map<TriggerData, List<ChecklistData>>>> infoTriggers = map.get( communicationContext );
+        Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> infoTriggers = map.get( communicationContext );
         if ( infoTriggers == null ) {
-            infoTriggers = new HashMap<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>(  );
+            infoTriggers = new HashMap<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>();
             map.put( communicationContext, infoTriggers );
         }
         Map<ContactData, Map<TriggerData, List<ChecklistData>>> contactTriggers = infoTriggers.get( info );
@@ -257,7 +257,8 @@ public class ProtocolsFinder implements Serializable {
                                                 .equalsIgnoreCase( letter );
                                     }
                                 }
-                        ) );
+                        )
+                );
                 contacts.addAll(
                         CollectionUtils.select(
                                 getAllContactsIn( onRequestsInContextForInfoByContact ),
@@ -268,7 +269,8 @@ public class ProtocolsFinder implements Serializable {
                                                 .equalsIgnoreCase( letter );
                                     }
                                 }
-                        ) );
+                        )
+                );
                 List<ContactData> sortedList = new ArrayList<ContactData>( contacts );
                 Collections.sort( sortedList, new Comparator<ContactData>() {
                     @Override
@@ -327,7 +329,7 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<TriggerData, List<ChecklistData>> getTriggeringNotificationsFrom( String communicationContext, String info, ContactData contactData ) {
         Map<ContactData, Map<TriggerData, List<ChecklistData>>> contactTriggers =
-                onNotificationsInContextWithInfoByContact.get( communicationContext ).get(info);
+                onNotificationsInContextWithInfoByContact.get( communicationContext ).get( info );
         if ( contactTriggers != null )
             return retrieveTriggeredProcedures( contactTriggers, contactData );
         else
@@ -336,7 +338,7 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<TriggerData, List<ChecklistData>> getTriggeringRequestsFrom( String communicationContext, String info, ContactData contactData ) {
         Map<ContactData, Map<TriggerData, List<ChecklistData>>> contactTriggers =
-                onRequestsInContextForInfoByContact.get( communicationContext ).get(info);
+                onRequestsInContextForInfoByContact.get( communicationContext ).get( info );
         if ( contactTriggers != null )
             return retrieveTriggeredProcedures( contactTriggers, contactData );
         else
@@ -360,7 +362,7 @@ public class ProtocolsFinder implements Serializable {
         return sortedNames;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<ContactData> getContactsInAgencyNamed( final String agencyName ) {
         Set<ContactData> contacts = new HashSet<ContactData>();
         for ( ContactData contactData : rolodex ) {
@@ -381,7 +383,8 @@ public class ProtocolsFinder implements Serializable {
                     public int compare( ContactData c1, ContactData c2 ) {
                         return c1.getNormalizedContactName().compareTo( c2.getNormalizedContactName() );
                     }
-                } );
+                }
+        );
     }
 
 
@@ -408,11 +411,11 @@ public class ProtocolsFinder implements Serializable {
     }
 
     public Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> getRequestsInContext( String communicationContext ) {
-        return onRequestsInContextForInfoByContact.get(communicationContext);
+        return onRequestsInContextForInfoByContact.get( communicationContext );
     }
 
     public Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> getNotificationsInContext( String communicationContext ) {
-        return onNotificationsInContextWithInfoByContact.get(communicationContext);
+        return onNotificationsInContextWithInfoByContact.get( communicationContext );
     }
 
 }

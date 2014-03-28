@@ -80,7 +80,7 @@ public class NotificationStepData extends CommunicationStepData {
     }
 
     @Override
-    @XmlElement( name = "outcome" )
+    @XmlElement(name = "outcome")
     public List<OutcomeData> getOutcomes() {
         return super.getOutcomes();
     }

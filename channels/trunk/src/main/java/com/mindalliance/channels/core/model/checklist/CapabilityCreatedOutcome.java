@@ -54,6 +54,11 @@ public class CapabilityCreatedOutcome extends Outcome {
     }
 
     @Override
+    public boolean isAssetProvisionedOutcome() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return getInfoCapability().getStepOutcomeLabel();
     }

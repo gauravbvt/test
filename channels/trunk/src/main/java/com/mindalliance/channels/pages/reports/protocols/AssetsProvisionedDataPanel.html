@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
+</head>
+<body>
+<wicket:panel>
+    <div wicket:id="incoming">
+        <span wicket:id="assets"> <!-- repeated -->
+            I am supplied with <span wicket:id="asset">asset name </span> by
+            <div wicket:id="contacts">
+                <div wicket:id="contact">[contact link panel]</div>  <!-- repeated -->
+            </div>
+        </span>
+    </div>
+    <div wicket:id="outgoing">
+        <span wicket:id="assets"> <!-- repeated -->
+            I supply <span wicket:id="asset">asset name</span> to
+            <div wicket:id="contacts">
+                <div wicket:id="contact">[contact link panel]</div>  <!-- repeated -->
+            </div>
+        </span>
+    </div>
+</wicket:panel>
+</body>
+</html>

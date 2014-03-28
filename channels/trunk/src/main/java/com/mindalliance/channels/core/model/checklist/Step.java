@@ -36,4 +36,8 @@ public abstract class Step  extends AbstractChecklistElement {
     public Step getStep() {
         return this;
     }
+
+    public String getAssetConnectionsLabel( Checklist checklist ) {
+        return ""; // DEFAULT
+    }
 }

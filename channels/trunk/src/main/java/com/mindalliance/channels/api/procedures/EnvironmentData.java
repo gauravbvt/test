@@ -188,7 +188,7 @@ public class EnvironmentData implements Serializable {
                 added.add( id );
                 for ( ModelEntity category : asset.getAllTypes() ) {
                     if ( !added.contains( category.getId() ) ) {
-                        assets.add( new MaterialAssetData( serverUrl, (Function) category, communityService ) );
+                        assets.add( new MaterialAssetData( serverUrl, (MaterialAsset) category, communityService ) );
                         added.add( category.getId() );
                     }
                 }

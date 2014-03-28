@@ -152,22 +152,22 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
         if ( assetConnectionWrappers == null ) {
             assetConnectionWrappers = new ArrayList<AssetConnectionWrapper>();
             for ( Part part : getQueryService().list( Part.class ) ) {
-                for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : part.getAssetConnections() ) {
                     assetConnectionWrappers.add( new AssetConnectionWrapper( part, assetConnection ) );
                 }
             }
             for ( Flow flow : getQueryService().list( Flow.class ) ) {
-                for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : flow.getAssetConnections() ) {
                     assetConnectionWrappers.add( new AssetConnectionWrapper( flow, assetConnection ) );
                 }
             }
             for ( Organization org : getQueryService().listActualEntities( Organization.class ) ) {
-                for ( AssetConnection assetConnection : org.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : org.getAssetConnections() ) {
                     assetConnectionWrappers.add( new AssetConnectionWrapper( org, assetConnection ) );
                 }
             }
             for ( Function function : getQueryService().listTypeEntities( Function.class ) ) {
-                for ( AssetConnection assetConnection : function.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : function.getAssetConnections() ) {
                     assetConnectionWrappers.add( new AssetConnectionWrapper( function, assetConnection ) );
                 }
             }

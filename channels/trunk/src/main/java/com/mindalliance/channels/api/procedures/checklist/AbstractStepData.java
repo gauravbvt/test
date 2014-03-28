@@ -107,6 +107,10 @@ public abstract class AbstractStepData implements Serializable {
             return new EventTimingOutcomeData( outcome, serverUrl, communityService, user );
         } else if ( outcome.isCapabilityCreatedOutcome() ) {
             return new CapabilityCreatedOutcomeData( outcome, serverUrl, communityService, user );
+        } else if ( outcome.isAssetProducedOutcome() ) {
+            return new AssetProducedOutcomeData( outcome, serverUrl, communityService, user );
+        } else if ( outcome.isAssetProvisionedOutcome() ) {
+            return new AssetProvisionedOutcomeData( outcome, serverUrl, communityService, user );
         } else
             throw new RuntimeException( "Unknown outcome" );
     }

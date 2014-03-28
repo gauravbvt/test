@@ -117,7 +117,7 @@ public class OrganizationConverter extends EntityConverter {
             writer.endNode();
         }
         // Asset connections
-        for ( AssetConnection assetConnection : org.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : org.getAssetConnections() ) {
             writer.startNode( "assetConnection" );
             context.convertAnother( assetConnection );
             writer.endNode();

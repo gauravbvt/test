@@ -24,12 +24,14 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.ModelPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.ConnectedAssetsPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
@@ -324,7 +326,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addFlowDescription();
         addCanBypassIntermediate();
         addReceiptConfirmationRequested();
-        addAssets();
+        addAssetConnections();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
         issuesPanel = new IssuesPanel(
                 "issues",
@@ -992,20 +994,22 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         receiptConfirmationRequestedContainer.add( receiptConfirmationRequestedCheckBox );
     }
 
-    private void addAssets() {
+    private void addAssetConnections() {
         assetsContainer = new WebMarkupContainer( "assetsContainer" );
         assetsContainer.setOutputMarkupId( true );
-        makeVisible( assetsContainer, getFlow().canSetAssets( isSend() ) &&  !isShowSimpleForm( ) );
+        makeVisible( assetsContainer, getFlow().canSetAssets( ) &&  !isShowSimpleForm( ) );
         add( assetsContainer );
-        AjaxLink assetsLink = new AjaxLink( "assets-link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, getFlow(), AssetConnectable.ASSETS ) );
-            }
-        };
-        assetsContainer.add( assetsLink );
-        Label assetsLabel = new Label( "assets-text", getFlow().getAssetConnections().getLabel( ) );
-        assetsContainer.add( assetsLabel );
+        List<AssetConnection.Type> excluded = new ArrayList<AssetConnection.Type>(  );
+        if ( isSend() && getFlow().isNotification() || !isSend() && getFlow().isAskedFor() ) {
+            excluded.add( AssetConnection.Type.Provisioning ); // can only demand
+        } else if ( isSend() && getFlow().isAskedFor() || !isSend() && getFlow().isNotification() ) {
+            excluded.add( AssetConnection.Type.Demanding ); // can only provision
+        }
+        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
+                "assetConnections",
+                new PropertyModel<AssetConnectable>( this, "flow" ),
+                excluded );
+        assetsContainer.add( connectedAssetsPanel );
     }
 
     /**

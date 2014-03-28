@@ -52,8 +52,6 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
-import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
-import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -3615,7 +3613,7 @@ public abstract class DefaultQueryService implements QueryService {
     public List<MaterialAsset> findAllAssetsAvailableTo( Part part ) {
         Set<MaterialAsset> availableAssets = new HashSet<MaterialAsset>();
         // produced
-        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             if ( assetConnection.isProducing() ) {
                 availableAssets.add( assetConnection.getAsset() );
             }
@@ -3625,7 +3623,7 @@ public abstract class DefaultQueryService implements QueryService {
         // stocked by organization assigned to task
         for ( Assignment assignment : findAllAssignments( part, false ) ) {
             Organization organization = assignment.getOrganization();
-            for ( AssetConnection assetConnection : organization.getAssetConnections().getAll() ) {
+            for ( AssetConnection assetConnection : organization.getAssetConnections() ) {
                 if ( assetConnection.isStocking() ) {
                     availableAssets.add( assetConnection.getAsset() );
                 }
@@ -3637,17 +3635,14 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<MaterialAsset> findAllAssetsProvisionedTo( Part part ) {
         Set<MaterialAsset> provisionedAssets = new HashSet<MaterialAsset>(  );
-        for ( Part otherPart : list( Part.class ) ) {
-            Checklist checklist = otherPart.getChecklist();
-            for ( AssetProvisioning assetProvisioning : checklist.findAssetProvisionings() ) {
-                if ( assetProvisioning.getProvisionedPart( checklist ).equals( part ) ) {
-                    try {
-                        MaterialAsset providedAsset = find( MaterialAsset.class, assetProvisioning.getAssetId() );
-                        provisionedAssets.add( providedAsset );
-                    } catch (NotFoundException e) {
-                        LOG.warn( "Asset not found at " +  assetProvisioning.getAssetId() );
-                    }
-                }
+        for ( Flow flow : part.getAllSharingSends() ) {
+            if ( flow.isNotification() ) { // as return from initiating notification
+                provisionedAssets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
+            }
+        }
+        for ( Flow flow : part.getAllSharingReceives() ) {
+            if ( flow.isAskedFor() ) { // as return from initiating request
+                provisionedAssets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
             }
         }
         return new ArrayList<MaterialAsset>( provisionedAssets );

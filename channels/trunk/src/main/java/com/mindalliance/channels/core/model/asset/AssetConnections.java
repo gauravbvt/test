@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model.asset;
 
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +22,7 @@ import java.util.Set;
  * Date: 3/10/14
  * Time: 1:40 PM
  */
-public class AssetConnections implements Serializable {
+public class AssetConnections implements Iterable<AssetConnection>, Serializable {
 
     private List<AssetConnection> assetConnections = new ArrayList<AssetConnection>();
 
@@ -56,11 +58,11 @@ public class AssetConnections implements Serializable {
         return false;
     }
 
-    private List<MaterialAsset> findAll( AssetConnection.Type type ) {
+    private List<MaterialAsset> findAllAssets( AssetConnection.Type type ) {
         List<MaterialAsset> materialAssets = new ArrayList<MaterialAsset>();
-        for ( AssetConnection assetConnection : getAll() ) {
+        for ( AssetConnection assetConnection : this ) {
             if ( assetConnection.isOfType( type ) ) {
-                MaterialAsset asset = assetConnection.getAsset(  );
+                MaterialAsset asset = assetConnection.getAsset();
                 if ( !asset.isUnknown() )
                     materialAssets.add( asset );
             }
@@ -68,30 +70,8 @@ public class AssetConnections implements Serializable {
         return materialAssets;
     }
 
-    public List<MaterialAsset> findAssetsProduced(  ) {
-        return findAll( AssetConnection.Type.Producing );
-    }
-
-    public List<MaterialAsset> findAssetsProvisioned(  ) {
-        return findAll( AssetConnection.Type.Provisioning );
-    }
-
-    public List<MaterialAsset> findAllAssetsUsed() {
-        Set<MaterialAsset> allUsedAssets = new HashSet<MaterialAsset>(  );
-        List<MaterialAsset> directlyUsedAssets = findAll( AssetConnection.Type.Using );
-        allUsedAssets.addAll( directlyUsedAssets );
-        for ( MaterialAsset directlyUsedAsset : directlyUsedAssets ) {
-            allUsedAssets.addAll( directlyUsedAsset.allDependencies() );
-        }
-        return new ArrayList<MaterialAsset>( allUsedAssets );
-    }
-
-    public List<MaterialAsset> findAssetsStocked(  ) {
-        return findAll( AssetConnection.Type.Stocking );
-    }
-
-    public List<MaterialAsset> findAssetsDemanded( ) {
-        return findAll( AssetConnection.Type.Demanding );
+    public List<MaterialAsset> findAssetsProvisioned() {
+        return findAllAssets( AssetConnection.Type.Provisioning );
     }
 
     public boolean hasConnectionProperty( final AssetConnection.Type type,
@@ -104,7 +84,7 @@ public class AssetConnections implements Serializable {
                     public boolean evaluate( Object object ) {
                         AssetConnection assetConnection = (AssetConnection) object;
                         return assetConnection.isOfType( type )
-                                && assetConnection.getAsset().equals( asset)
+                                && assetConnection.getAsset().equals( asset )
                                 && assetConnection.hasProperty( name );
                     }
                 }
@@ -117,7 +97,7 @@ public class AssetConnections implements Serializable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return( (AssetConnection) object ).getAsset().equals( mo );
+                        return ( (AssetConnection) object ).getAsset().equals( mo );
                     }
                 }
         );
@@ -132,9 +112,9 @@ public class AssetConnections implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public String getLabel(  ) {
+    public String getLabel() {
         StringBuilder sb = new StringBuilder();
-        List<MaterialAsset> assets = findAllMaterialAssets( );
+        List<MaterialAsset> assets = findAllMaterialAssets();
         if ( assets.isEmpty() ) {
             sb.append( "None" );
         } else {
@@ -152,9 +132,34 @@ public class AssetConnections implements Serializable {
         return sb.toString();
     }
 
+
+    public String getFirstPersonLabel() {
+        StringBuilder sb = new StringBuilder();
+        List<MaterialAsset> assets = findAllMaterialAssets();
+        if ( assets.isEmpty() ) {
+            sb.append( "None" );
+        } else {
+            Collections.sort( assets );
+            for ( MaterialAsset asset : assets ) {
+                if ( sb.length() > 0 )
+                    sb.append( ", and " );
+                List<String> typeStrings = findFirstPersonConnectionTypesLabelsFor( asset );
+                sb.append( ChannelsUtils.listToString( typeStrings, " and " ) )
+                        .append( " " )
+                        .append( ChannelsUtils.startsWithVowel( asset.getName() )
+                                        ? "an "
+                                        : "a "
+                        )
+                        .append( asset.getName() );
+
+            }
+        }
+        return sb.toString();
+    }
+
     public String getStepLabel() {
         StringBuilder sb = new StringBuilder();
-        List<MaterialAsset> assets = findAllMaterialAssets( );
+        List<MaterialAsset> assets = findAllMaterialAssets();
         if ( !assets.isEmpty() ) {
             Collections.sort( assets );
             for ( MaterialAsset asset : assets ) {
@@ -171,17 +176,17 @@ public class AssetConnections implements Serializable {
     }
 
 
-    private List<MaterialAsset> findAllMaterialAssets(  ) {
+    private List<MaterialAsset> findAllMaterialAssets() {
         Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
-        for ( AssetConnection assetConnection : getAll() ) {
-            assets.add( assetConnection.getAsset(  ) );
+        for ( AssetConnection assetConnection : this ) {
+            assets.add( assetConnection.getAsset() );
         }
         return new ArrayList<MaterialAsset>( assets );
     }
 
     private List<String> findConnectionTypesLabelsFor( MaterialAsset materialAsset ) {
         Set<String> typeLabels = new HashSet<String>();
-        for ( AssetConnection assetConnection : getAll() ) {
+        for ( AssetConnection assetConnection : this ) {
             if ( assetConnection.getAsset().equals( materialAsset ) ) {
                 typeLabels.add( assetConnection.getDetailedTypeLabel() );
             }
@@ -191,9 +196,22 @@ public class AssetConnections implements Serializable {
         return result;
     }
 
+    private List<String> findFirstPersonConnectionTypesLabelsFor( MaterialAsset materialAsset ) {
+        Set<String> typeLabels = new HashSet<String>();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.getAsset().equals( materialAsset ) ) {
+                typeLabels.add( assetConnection.getFirstPersonTypeLabel() );
+            }
+        }
+        List<String> result = new ArrayList<String>( typeLabels );
+        Collections.sort( result );
+        return result;
+    }
+
+
     private List<String> findConnectionTypesStepLabelsFor( MaterialAsset materialAsset ) {
         Set<String> typeLabels = new HashSet<String>();
-        for ( AssetConnection assetConnection : getAll() ) {
+        for ( AssetConnection assetConnection : this ) {
             if ( assetConnection.getAsset().equals( materialAsset ) ) {
                 typeLabels.add( assetConnection.getDetailedTypeStepLabel() );
             }
@@ -207,7 +225,7 @@ public class AssetConnections implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for ( AssetConnection assetConnection : getAll() ) {
+        for ( AssetConnection assetConnection : this ) {
             if ( sb.length() > 0 )
                 sb.append( ", " );
             sb.append( assetConnection.toString() );
@@ -217,14 +235,14 @@ public class AssetConnections implements Serializable {
         return sb.toString();
     }
 
-    @SuppressWarnings( "unchecked" )
-    public List<MaterialAsset> getAllAssets(  ) {
+    @SuppressWarnings("unchecked")
+    public List<MaterialAsset> getAllAssets() {
         return (List<MaterialAsset>) CollectionUtils.collect(
                 getAll(),
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return ( (AssetConnection) input ).getAsset(  );
+                        return ( (AssetConnection) input ).getAsset();
                     }
                 }
         );
@@ -236,7 +254,7 @@ public class AssetConnections implements Serializable {
 
     public AssetConnections copy() {
         AssetConnections copy = new AssetConnections();
-        for ( AssetConnection assetConnection : getAll() ) {
+        for ( AssetConnection assetConnection : this ) {
             AssetConnection assetConnectionCopy = new AssetConnection();
             assetConnectionCopy.setType( assetConnection.getType() );
             assetConnectionCopy.setAsset( assetConnection.getAsset() );
@@ -245,4 +263,79 @@ public class AssetConnections implements Serializable {
         return copy;
     }
 
- }
+    public AssetConnections visibleTo( Flow flow, boolean isSend ) {
+        AssetConnections connections = new AssetConnections();
+        for ( AssetConnection connection : this ) {
+            if ( isSend && flow.isNotification() || !isSend && flow.isAskedFor() ) { //demands only
+                if ( connection.isDemanding() ) {
+                    connections.add( connection );
+                }
+            } else if ( !isSend && flow.isNotification() || isSend && flow.isAskedFor() ) { // provisioning only
+                if ( connection.isProvisioning() ) {
+                    connections.add( connection );
+                }
+            }
+        }
+        return connections;
+    }
+
+    // ITERABLE
+
+
+    @Override
+    public Iterator<AssetConnection> iterator() {
+        return getAll().iterator();
+    }
+
+    public AssetConnections provisioning() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isProvisioning() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+    public AssetConnections producing() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isProducing() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+    public AssetConnections demanding() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isDemanding() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+    public AssetConnections using() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isUsing() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+    public AssetConnections stocking() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isStocking() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+
+}

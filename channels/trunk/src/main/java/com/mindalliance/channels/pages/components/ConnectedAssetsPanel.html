@@ -7,41 +7,23 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table>
-        <tr>
-            <td>
-                <table class="data-table" wicket:id="assetConnectionsContainer">
-                     <tr wicket:id="assetConnections">
-                         <td>
-                             <select wicket:id="connection">
-                                 <option>Uses</option>
-                                 <option>Produces</option>
-                             </select>
-                             <span wicket:id="assetString">assets of type</span>
-                         </td>
-                         <td><span wicket:id="asset">[entity reference panel or link]</span> </td>
-                         <td>
-                             <table wicket:id="usageProperties">
-                                 <tr>
-                                     <td>
-                                         <input wicket:id="consumes" type="checkbox"/> consumes it
-                                     </td>
-                                 </tr>
-                                 <tr>
-                                     <td>
-                                         <input wicket:id="critical" type="checkbox"/> critical
-                                     </td>
-                                 </tr>
-                             </table>
-                         </td>
-                         <td>
-                             <a wicket:id="delete" href="#"><img src="images/delete.png" alt="delete"/></a>
-                         </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-     </table>
+    <div wicket:id="assetConnectionsContainer">
+        <ol>
+            <li wicket:id="assetConnections" class="assetConnection">
+                <select wicket:id="connection">
+                    <option>Uses</option>
+                    <option>Produces</option>
+                </select>
+                <span wicket:id="asset">[entity reference panel or link]</span>
+                             <span wicket:id="usageProperties">
+                                 <input wicket:id="critical" type="checkbox"/> is critical
+                                 <input wicket:id="consumes" type="checkbox"/> consumes it
+                             </span>
+
+                <a wicket:id="delete" class="remove" href="#">Remove</a>
+            </li>
+        </ol>
+    </div>
 </wicket:panel>
 </body>
 </html>

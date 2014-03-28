@@ -78,7 +78,6 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         add( stepContainer );
         addStepLabel();
         addActionStepNameInput();
-        addActionStepAssetProvisioning();
         addStepInstructionsTextArea();
         addDeleteStep();
         addEditDoneButton();
@@ -174,20 +173,15 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
     private void addStepLabel() {
         String labelText = step.getLabel();
-        String provisioningText = "";
-        if ( step.isActionStep() ) {
-            provisioningText = ( (ActionStep) step ).getAssetProvisioningLabel(
-                    getChecklist(),
-                    getCommunityService() );
-        }
+        String assetConnectionsText = step.getAssetConnectionsLabel( getChecklist() );
         Label actLabel = new Label( "act", labelText );
         actLabel.add( new AttributeModifier( "class", stepCSSClasses( step ) ) );
         actLabel.setVisible( !edited || !step.isActionStep() );
         stepContainer.add( actLabel );
-        // provisioning label
-        Label provisionedLabel = new Label( "provisioned", provisioningText );
-        provisionedLabel.setVisible( !edited && !provisioningText.isEmpty() );
-        stepContainer.add( provisionedLabel);
+        // asset connection label
+        Label assetConnectionsLabel = new Label( "assetConnections", assetConnectionsText + "." );
+        assetConnectionsLabel.setVisible( !edited && !assetConnectionsText.isEmpty() );
+        stepContainer.add( assetConnectionsLabel );
         String instructions = step.isActionStep()
                 ? ( (ActionStep) step ).getInstructions()
                 : step.isCommunicationStep()
@@ -214,21 +208,6 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addInputHint( actionStepInputField, "The action to be taken" );
         stepContainer.add( actionStepInputField );
     }
-
-    private void addActionStepAssetProvisioning() {
-        if ( edited && step.isActionStep() ) {
-            AssetProvisioningPanel assetProvisioningPanel = new AssetProvisioningPanel(
-                    "assetProvisioning",
-                    getChecklist(),
-                    (ActionStep) step );
-            stepContainer.add( assetProvisioningPanel );
-        } else {
-            Label label = new Label( "assetProvisioning", "" );
-            makeVisible( label, false );
-            stepContainer.add( label );
-        }
-    }
-
 
     private void addStepInstructionsTextArea() {
         TextArea<String> instructionsTextArea = new TextArea<String>(
@@ -408,7 +387,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         ifsContainer.add( addIfContainer );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<StepGuard> getIfGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().listEffectiveStepGuardsFor( step, true ),
@@ -479,7 +458,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         unlessesContainer.add( addUnlessContainer );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<StepGuard> getUnlessGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().listEffectiveStepGuardsFor( step, false ),
@@ -573,7 +552,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addAfterContainer.add( prereqStepChoice );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Step> getPrerequisiteChoices() {
         List<Step> choices = getChecklist().listEffectiveSteps();
         choices.remove( step );
@@ -717,7 +696,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<StepOutcome> getStepOutcomes() {
         return getChecklist().listEffectiveStepOutcomesFor( step );
     }

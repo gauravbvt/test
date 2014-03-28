@@ -85,7 +85,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     protected void initAssetConnections() {
         assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
-        for ( AssetConnection assetConnection : getSharing().getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : getSharing().getAssetConnections() ) {
             assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
         }
     }

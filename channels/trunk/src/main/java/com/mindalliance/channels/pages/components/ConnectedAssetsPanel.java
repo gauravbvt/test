@@ -19,7 +19,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -30,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,6 +48,15 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer assetConnectionsContainer;
     private AssetConnection newAssetConnection;
+    private List<AssetConnection.Type> excludedConnectionTypes = new ArrayList<AssetConnection.Type>(  );
+
+    public ConnectedAssetsPanel( String id,
+                                 IModel<? extends AssetConnectable> iModel,
+                                 List<AssetConnection.Type> excludedConnectionTypes ) {
+        super( id, iModel );
+        this.excludedConnectionTypes = excludedConnectionTypes;
+        init();
+    }
 
     public ConnectedAssetsPanel( String id, IModel<? extends AssetConnectable> iModel ) {
         super( id, iModel );
@@ -61,7 +70,16 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private void reset() {
         newAssetConnection = new AssetConnection();
-        newAssetConnection.setType( getAssetConnectable().getDefaultAssetConnectionType() );
+        newAssetConnection.setType( getDefaultAssetConnectionType( getAssetConnectable() ) );
+    }
+
+    private AssetConnection.Type getDefaultAssetConnectionType( AssetConnectable assetConnectable ) {
+        List<AssetConnection.Type> typeChoices = getTypeChoicesFor( assetConnectable );
+        if ( typeChoices.size() == 1 ) {
+            return typeChoices.get( 0 );
+        } else {
+            return assetConnectable.getDefaultAssetConnectionType();
+        }
     }
 
     private void addAssetConnectionsContainer() {
@@ -80,7 +98,6 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             protected void populateItem( ListItem<AssetConnectionWrapper> item ) {
                 item.setOutputMarkupId( true );
                 addConnection( item );
-                addAssetPrefix( item );
                 addAsset( item );
                 addConnectionProperties( item );
                 addDeleteConnection( item );
@@ -111,28 +128,24 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         item.add( connectionChoice );
     }
 
-    private void addAssetPrefix( ListItem<AssetConnectionWrapper> item ) {
-        AssetConnectionWrapper wrapper = item.getModelObject();
-        MaterialAsset asset = wrapper.getAsset();
-        String text = asset == null
-                ? "asset(s)"
-                : asset.isType()
-                ? "assets of type"
-                : "asset";
-        Label label = new Label( "assetString", text );
-        item.add( label );
-    }
-
     @SuppressWarnings( "unchecked" )
     private List<String> getTypeLabelsChoicesFor( ListItem<AssetConnectionWrapper> item ) {
-        return (List<String>) CollectionUtils.collect(
-                AssetConnection.getTypeLabelsChoicesFor( getAssetConnectable() ),
+        List<String> choices = (List<String>) CollectionUtils.collect(
+                getTypeChoicesFor( getAssetConnectable() ),
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return StringUtils.capitalize( (String) input );
+                        return StringUtils.capitalize( AssetConnection.getLabelFor((AssetConnection.Type) input) );
                     }
                 } );
+        Collections.sort( choices );
+        return choices;
+    }
+
+    private List<AssetConnection.Type> getTypeChoicesFor( AssetConnectable assetConnectable ) {
+        List<AssetConnection.Type> choices = new ArrayList<AssetConnection.Type>( AssetConnection.getTypeChoicesFor( getAssetConnectable() ) );
+        choices.removeAll( excludedConnectionTypes );
+        return choices;
     }
 
     private void addAsset( ListItem<AssetConnectionWrapper> item ) {
@@ -160,7 +173,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         AssetConnectionWrapper wrapper = item.getModelObject();
         WebMarkupContainer usagePropertiesContainer = new WebMarkupContainer( "usageProperties" );
         item.add( usagePropertiesContainer );
-        makeVisible( usagePropertiesContainer, wrapper.hasUsageProperties() );
+        makeVisible( usagePropertiesContainer, !wrapper.isMarkedForCreation() && wrapper.hasUsageProperties() );
         // consumes?
         AjaxCheckBox consumesCheckBox = new AjaxCheckBox(
                 "consumes",
@@ -208,7 +221,9 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         List<AssetConnectionWrapper> wrappers = new ArrayList<AssetConnectionWrapper>();
         List<AssetConnection> allConnections = getAssetConnectable().getAssetConnections().getAll();
         for ( int i = 0; i < allConnections.size(); i++ ) {
-            wrappers.add( new AssetConnectionWrapper( allConnections.get( i ), i ) );
+            AssetConnection connection = allConnections.get( i );
+            if ( !excludedConnectionTypes.contains( connection.getType() ))
+                wrappers.add( new AssetConnectionWrapper( connection, i ) );
         }
         if ( isLockedByUser( getAssetConnectable() ) )
             wrappers.add( new AssetConnectionWrapper() );
@@ -367,7 +382,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
                             getAssetConnectable(),
                             "assetConnections.all",
                             assetConnection,
-                            UpdateObject.Action.Add
+                            UpdateObject.Action.AddUnique
                     ) );
                 } catch ( CommandException e ) {
                     LOG.warn( "Failed to add connected asset" );

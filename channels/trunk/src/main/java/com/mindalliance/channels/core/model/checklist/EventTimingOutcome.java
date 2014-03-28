@@ -49,6 +49,11 @@ public class EventTimingOutcome extends Outcome {
     }
 
     @Override
+    public boolean isAssetProvisionedOutcome() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return getEventTiming().getStepOutcomeLabel();
     }

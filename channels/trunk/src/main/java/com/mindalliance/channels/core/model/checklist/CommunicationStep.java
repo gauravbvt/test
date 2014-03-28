@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.model.Flow;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -80,17 +81,6 @@ public class CommunicationStep extends Step {
         return stepRef.startsWith( REF_PREFIX );
     }
 
-    @Override
-    public int hashCode() {
-        return sharing.hashCode();
-    }
-
-    @Override
-    public boolean equals( Object object ) {
-        return object instanceof CommunicationStep
-                && sharing.equals( ( (CommunicationStep) object ).getSharing() );
-    }
-
     public boolean isNotification() {
         return sharing.isNotification();
     }
@@ -108,8 +98,29 @@ public class CommunicationStep extends Step {
     }
 
     @Override
+    public String getAssetConnectionsLabel( Checklist checklist ) {
+        if ( answer )
+            return super.getAssetConnectionsLabel( checklist );
+        else
+            return StringUtils.capitalize(
+                    sharing.getAssetConnections().visibleTo( sharing, isNotification() ).getStepLabel() );
+    }
+
+    @Override
+    public int hashCode() {
+        return sharing.hashCode();
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        return object instanceof CommunicationStep
+                && sharing.equals( ( (CommunicationStep) object ).getSharing() );
+    }
+
+    @Override
     public String toString() {
         return this.getClass().getSimpleName() + ": " + getLabel();
     }
+
 
 }

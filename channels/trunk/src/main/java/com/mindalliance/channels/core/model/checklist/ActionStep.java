@@ -1,11 +1,13 @@
 package com.mindalliance.channels.core.model.checklist;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Mappable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,7 +31,6 @@ public class ActionStep extends Step implements Mappable {
     private String action = "";
     private boolean required = true;
     private String instructions;
-    private AssetProvisioning assetProvisioning;
 
     public ActionStep() {
         setUid( UUID.randomUUID().toString() );
@@ -70,32 +71,6 @@ public class ActionStep extends Step implements Mappable {
         this.instructions = instructions;
     }
 
-
-    public AssetProvisioning getAssetProvisioning() {
-        return assetProvisioning;
-    }
-
-    public void setAssetProvisioning( AssetProvisioning assetProvisioning ) {
-        this.assetProvisioning = assetProvisioning;
-    }
-
-    public AssetProvisioning getEffectiveAssetProvisioning( Checklist checklist, CommunityService communityService ) {
-        if ( assetProvisioning != null ) {
-            return assetProvisioning.isValid( checklist, communityService )
-                    ? assetProvisioning
-                    : null;
-        } else {
-            return null;
-        }
-    }
-
-    public String getAssetProvisioningLabel( Checklist checklist, CommunityService communityService ) {
-        if ( assetProvisioning == null || !assetProvisioning.isValid( checklist, communityService  ) ) {
-            return "";
-        } else {
-            return assetProvisioning.getLabel( checklist, communityService );
-        }
-    }
 
     public String getRef() {
         assert !uid.isEmpty();
@@ -157,8 +132,6 @@ public class ActionStep extends Step implements Mappable {
         if ( required ) hash = hash + 31;
         hash = hash + 31 * uid.hashCode();
         hash = hash + 31 * action.hashCode();
-        if ( assetProvisioning != null )
-            hash = hash + 31 * assetProvisioning.hashCode();
         return hash;
     }
 
@@ -167,8 +140,7 @@ public class ActionStep extends Step implements Mappable {
         return object instanceof ActionStep
                 && uid.equals( ( (ActionStep) object ).getUid() )
                 && required == ( (ActionStep) object ).isRequired()
-                && action.equals( ( (ActionStep) object ).getAction() )
-                && ChannelsUtils.areEqualOrNull( assetProvisioning, ( (ActionStep) object ).getAssetProvisioning() );
+                && action.equals( ( (ActionStep) object ).getAction() );
     }
 
     @Override
@@ -177,4 +149,22 @@ public class ActionStep extends Step implements Mappable {
     }
 
 
+    @Override
+    public String getAssetConnectionsLabel( Checklist checklist ) {
+        List<String> provisionedAssets = new ArrayList<String>();
+        for ( Outcome outcome : checklist.listOutcomesFor( this ) ) {
+            if ( outcome.isAssetProvisionedOutcome() ) {
+                provisionedAssets.add( ( (AssetProvisionedOutcome) outcome ).getProvisionedAsset().getName() );
+            }
+        }
+        if ( provisionedAssets.isEmpty() ) {
+            return "";
+        } else {
+            Collections.sort( provisionedAssets );
+            StringBuilder sb = new StringBuilder();
+            sb.append( "Deliver " );
+            sb.append( ChannelsUtils.listToString( provisionedAssets, " and " ) );
+            return sb.toString();
+        }
+    }
 }

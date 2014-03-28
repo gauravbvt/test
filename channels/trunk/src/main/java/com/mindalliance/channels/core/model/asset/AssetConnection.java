@@ -25,7 +25,7 @@ public class AssetConnection implements Mappable {
 
     private static final String DEMANDING_LABEL = "requests";
     private static final String PRODUCING_LABEL = "produces";
-    private static final String PROVISIONING_LABEL = "provisions";
+    private static final String PROVISIONING_LABEL = "causes delivery of";
     private static final String STOCKING_LABEL = "stocks";
     private static final String USING_LABEL = "uses";
 
@@ -99,6 +99,22 @@ public class AssetConnection implements Mappable {
                 ? "using"
                 : "?";
     }
+
+    public static List<Type> getTypeChoicesFor( AssetConnectable connectable ) {
+        List<Type> choices = new ArrayList<Type>();
+        if ( connectable.isCanBeAssetDemand() )
+            choices.add(  Type.Demanding  );
+        if ( connectable.isCanProduceAssets() )
+            choices.add( Type.Producing );
+        if ( connectable.isCanProvisionAssets() )
+            choices.add( Type.Provisioning );
+        if ( connectable.isCanStockAssets() )
+            choices.add( Type.Stocking );
+        if ( connectable.isCanUseAssets() )
+            choices.add( Type.Using );
+        return choices;
+    }
+
 
 
     public static List<String> getTypeLabelsChoicesFor( AssetConnectable connectable ) {
@@ -209,6 +225,30 @@ public class AssetConnection implements Mappable {
         }
     }
 
+    public String getFirstPersonTypeLabel() {
+        if ( type == Type.Using ) {
+            return isConsuming() && isCritical()
+                    ? "I require as well as consume"
+                    : isConsuming()
+                    ? "I consume"
+                    : isCritical()
+                    ? "I require"
+                    : getTypeLabel();
+        } else {
+            return type == Type.Demanding
+                    ? "I need"
+                    : type == Type.Producing
+                    ? "I produce"
+                    : type == Type.Provisioning
+                    ? "I supply"
+                    : type == Type.Stocking
+                    ? "I hold in stock"
+                    : "?";
+
+        }
+    }
+
+
     public String getDetailedTypeStepLabel() {
         if ( type == Type.Using ) {
             return isConsuming() && isCritical()
@@ -241,6 +281,11 @@ public class AssetConnection implements Mappable {
             StringBuilder sb = new StringBuilder(  );
             sb.append( getAsset().getLabel() )
                     .append( " is produced" );
+            return sb.toString();
+        } else if ( type == Type.Provisioning ) {
+            StringBuilder sb = new StringBuilder(  );
+            sb.append( getAsset().getLabel() )
+                    .append( " is delivered" );
             return sb.toString();
         } else {
             throw new RuntimeException( "Unsupported step outcome" );

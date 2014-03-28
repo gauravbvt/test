@@ -168,7 +168,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Asset connections
-        for ( AssetConnection assetConnection : part.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             writer.startNode( "assetConnection" );
             context.convertAnother( assetConnection );
             writer.endNode();

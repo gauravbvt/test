@@ -61,7 +61,7 @@ public class FunctionData extends ModelEntityData {
 
     private void initAssetConnections() {
         assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
-        for ( AssetConnection assetConnection : function.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : function.getAssetConnections() ) {
             assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
         }
     }

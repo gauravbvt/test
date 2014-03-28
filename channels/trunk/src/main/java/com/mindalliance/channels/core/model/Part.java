@@ -953,7 +953,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
         state.put( "goals", goalMaps );
         List<Map<String, Object>> assetConnectionMaps = new ArrayList<Map<String, Object>>();
-        for ( AssetConnection assetConnection : getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : getAssetConnections() ) {
             assetConnectionMaps.add( assetConnection.toMap() );
         }
         state.put( "assetConnections", assetConnectionMaps );
@@ -1517,7 +1517,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     @Override
     public boolean isCanProvisionAssets() {
-        return true;
+        return false;
     }
 
     @Override
@@ -1544,7 +1544,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         Set<MaterialAsset> demandedAssets = new HashSet<MaterialAsset>();
         for ( Flow flow : getAllSharingReceives() ) {
             if ( flow.isNotification() ) {
-                for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : flow.getAssetConnections() ) {
                     if ( assetConnection.isDemanding() ) {
                         demandedAssets.add( assetConnection.getAsset() );
                     }
@@ -1553,7 +1553,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
         for ( Flow flow : getAllSharingSends() ) {
             if ( flow.isAskedFor() ) {
-                for ( AssetConnection assetConnection : flow.getAssetConnections().getAll() ) {
+                for ( AssetConnection assetConnection : flow.getAssetConnections() ) {
                     if ( assetConnection.isDemanding() ) {
                         demandedAssets.add( assetConnection.getAsset() );
                     }
@@ -1575,28 +1575,17 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         );
     }
 
-    public boolean isAssetNeeded( final MaterialAsset asset, CommunityService communityService ) {
-        // if used of provisioned
-        return CollectionUtils.exists(
-                getAssetConnections().findAllAssetsUsed(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return asset.narrowsOrEquals( (MaterialAsset)object );
-                    }
-                }
-                )
-                ||
-                CollectionUtils.exists(
-                        getChecklist().findAllAssetsProvisioned( communityService ),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return asset.narrowsOrEquals( (MaterialAsset)object );
-                            }
-                        }
-                );
+    public List<AssetConnection> getAllFlowAssetConnections() {
+        Set<AssetConnection> flowAssetConnections = new HashSet<AssetConnection>(  );
+        for ( Flow sharing : getAllSharingReceives() ) {
+            flowAssetConnections.addAll( sharing.getAssetConnections().getAll() );
+        }
+        for ( Flow sharing : getAllSharingSends() ) {
+            flowAssetConnections.addAll( sharing.getAssetConnections().getAll() );
+        }
+        return new ArrayList<AssetConnection>( flowAssetConnections );
     }
+
 
     /**
      * Category of tasks.

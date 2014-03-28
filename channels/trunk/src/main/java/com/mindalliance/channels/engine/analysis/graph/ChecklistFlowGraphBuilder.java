@@ -2,8 +2,6 @@ package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.checklist.ActionStep;
-import com.mindalliance.channels.core.model.checklist.AssetProvisioning;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
@@ -69,15 +67,6 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
             List<Step> priors = checklist.listStepsJustBefore( toStep );
             List<Condition> stepConditions = checklist.listConditionsFor( toStep );
             List<Outcome> stepOutcomes = checklist.listOutcomesFor( toStep );
-            // Asset provisioning
-            AssetProvisioning stepAssetProvisioning = null;
-            if ( toStep.isActionStep() ) {
-                ActionStep actionStep = (ActionStep) toStep;
-                AssetProvisioning assetProvisioning = actionStep.getAssetProvisioning();
-                if ( assetProvisioning != null && assetProvisioning.isValid( checklist, communityService ) ) {
-                    stepAssetProvisioning = assetProvisioning;
-                }
-            }
             // add step-step flow edges, condition-flow edges, flow-condition edges, and in-flow condition vertices
             ChecklistElementHolder toStepHolder = new ChecklistElementHolder( toStep, steps.indexOf( toStep ) );
             for ( Step fromStep : priors ) {
@@ -121,15 +110,6 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                             outcomeHolder,
                             new ChecklistElementRelationship( toStepHolder, outcomeHolder, checklist )
                     );
-            }
-            if ( stepAssetProvisioning != null ) {
-                stepAssetProvisioning.getAssetProvisioning().makeLabel( checklist, communityService ); // make sure it has a label
-                ChecklistElementHolder assetProvisioningHolder = new ChecklistElementHolder( stepAssetProvisioning, 0 );
-                digraph.addVertex( assetProvisioningHolder );
-                digraph.addEdge(
-                        toStepHolder,
-                        assetProvisioningHolder,
-                        new ChecklistElementRelationship( toStepHolder, assetProvisioningHolder, checklist ) );
             }
 
         }

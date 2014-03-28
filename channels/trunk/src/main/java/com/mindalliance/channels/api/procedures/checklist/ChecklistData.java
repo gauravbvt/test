@@ -33,7 +33,7 @@ import java.util.Set;
  * Time: 3:11 PM
  */
 @XmlType( propOrder = {"confirmed", "anchor", "agentName", "actorId", "employerName",
-        "triggers", "assignmentData", "steps"} )
+        "triggers", "assignmentData", "steps", "assetsProvisioned"} )
 public class ChecklistData implements Serializable {
 
     private Checklist checklist;
@@ -54,6 +54,8 @@ public class ChecklistData implements Serializable {
      * All steps.
      */
     private List<ChecklistStepData> steps;
+
+    private AssetsProvisionedData assetsProvisioned;
 
     public ChecklistData() {
         // required
@@ -78,14 +80,23 @@ public class ChecklistData implements Serializable {
                 assignment,
                 benefitingCommitments,
                 committingCommitments,
-                communityService, user );
+                communityService,
+                user );
         checklist = assignment.getPart().getEffectiveChecklist();
         sortedSteps = checklist.listEffectiveSteps();
         checklist.sort( sortedSteps );
         initEmployer( serverUrl, communityService );
         initTriggers( serverUrl, communityService );
         initSteps( serverUrl, communityService, user );
+        assetsProvisioned = new AssetsProvisionedData(
+                serverUrl,
+                assignment,
+                benefitingCommitments,
+                committingCommitments,
+                communityService,
+                user );
     }
+
 
     private void initEmployer( String serverUrl, CommunityService communityService ) {
         employer = new AgencyData( serverUrl, assignment.getAgency(), communityService );
@@ -198,6 +209,11 @@ public class ChecklistData implements Serializable {
     @XmlElement( name = "step" )
     public List<ChecklistStepData> getSteps() {
         return steps;
+    }
+
+    @XmlElement
+    public AssetsProvisionedData getAssetsProvisioned() {
+        return assetsProvisioned;
     }
 
     public Checklist checklist() {
@@ -348,6 +364,7 @@ public class ChecklistData implements Serializable {
         for ( ChecklistStepData step : getSteps() ) {
             ids.addAll( step.allAssetIds() );
         }
+        ids.addAll( assetsProvisioned.allAssetIds() );
         return ids;
     }
 
@@ -376,6 +393,7 @@ public class ChecklistData implements Serializable {
         for ( ChecklistStepData stepData : getSteps() ) {
             allContacts.addAll( stepData.allContacts() );
         }
+        allContacts.addAll( assetsProvisioned.allContacts() );
         return allContacts;
     }
 
@@ -532,4 +550,5 @@ public class ChecklistData implements Serializable {
     public boolean getConfirmed() {
         return checklist().isConfirmed();
     }
+
 }

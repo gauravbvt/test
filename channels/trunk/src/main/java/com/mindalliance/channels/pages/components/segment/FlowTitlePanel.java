@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +50,8 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
             addTipTitle(
                     conceptualImage,
                     new Model<String>( "Can not be realized: "
-                            + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) ) );
+                            + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) )
+            );
         }
         add( conceptualImage );
 
@@ -139,7 +141,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private String getPost() {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         Node node = flow.getTarget();
         if ( isSend ) {
             sb.append( node.isConnector() ? flow.getRestrictionString( isSend ) : "" );
@@ -160,9 +162,10 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                                 ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) ) );
             }
         }
-        if ( flow.canSetAssets( isSend ) && !flow.getAssetConnections().isEmpty() ) {
-            sb.append(". ")
-                    .append( StringUtils.capitalize( flow.getAssetConnections().getLabel( ) ) );
+        AssetConnections visibleAssetConnections = flow.getAssetConnections().visibleTo( flow, isSend );
+        if ( flow.canSetAssets() && !visibleAssetConnections.isEmpty() ) {
+            sb.append( ". " )
+                    .append( StringUtils.capitalize( visibleAssetConnections.getLabel() ) );
         }
         return sb.toString();
     }

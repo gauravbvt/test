@@ -53,7 +53,7 @@ public class OrganizationData extends ModelEntityData {
 
     private void initAssetConnections() {
         assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
-        for ( AssetConnection assetConnection : getOrganization().getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : getOrganization().getAssetConnections() ) {
             assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
         }
     }

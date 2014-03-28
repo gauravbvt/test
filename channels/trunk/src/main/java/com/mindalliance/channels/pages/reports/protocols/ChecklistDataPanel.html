@@ -17,18 +17,26 @@
         <span wicket:id="feedback">[User feedback panel</span>
 
     </h4>
-	<div wicket:id="failureImpactContainer" class="failure-impact-container">
-		<label>Failure Impact</label>
-	    <div class="failure-impact" wicket:id="failureImpact">Failure to carry out this task could have
-	        <span wicket:id="severity">extreme</span>
-	        consequences
-	    </div>
-	</div>
+
+    <div wicket:id="failureImpactContainer" class="failure-impact-container">
+        <label>Failure Impact</label>
+
+        <div class="failure-impact" wicket:id="failureImpact">Failure to carry out this task could have
+            <span wicket:id="severity">extreme</span>
+            consequences
+        </div>
+    </div>
     <div wicket:id="task">
         <div class="instructions" wicket:id="instructions">
             <label>Instructions</label>
 
             <div wicket:id="value">some instructions</div>
+        </div>
+        <div class="instructions" wicket:id="assets">
+            <label>Assets</label>
+
+            <div wicket:id="summary">asset connections summary</div>
+            <span wicket:id="provisioning">[asset provisioning panel]</span>
         </div>
         <div class="category" wicket:id="category">
             <label>Category</label>
@@ -52,11 +60,11 @@
             <label wicket:id="teammatesLabel">My teammates are</label>
 
             <div wicket:id="teammateContacts">  <!--repeated -->
-                <div wicket:id="teammateContact">[contact data panel]</div>
+                <div wicket:id="teammateContact">[contact link panel]</div>
             </div>
             <!--repeated -->
         </div>
-        <div class="documentation" wicket:id="documentation">
+         <div class="documentation" wicket:id="documentation">
             [documentation panel]
         </div>
 
@@ -64,14 +72,15 @@
 
     <div class="checklist" wicket:id="checklist">
         <h4 class="checklist-title">
-        	My checklist
+            My checklist
             <span wicket:id="feedback">[User feedback panel</span>
             <a wicket:id="checklistFlowLink" href="#" class="checklist-flowmap">
                 <span wicket:id="showHideFlow">+ Show diagram</span>
             </a>
         </h4>
+
         <div class="checklist-flow" wicket:id="checklistFlow">
-            <span wicket:id="flowDiagram"> [checklist flow panel]</span>  <!-- class set by code -->
+            <span wicket:id="flowDiagram"> [checklist flow panel]</span> <!-- class set by code -->
         </div>
         <div class="checklist-steps" wicket:id="steps"> <!--repeated -->
             <span wicket:id="step">[checklist step data panel]</span>

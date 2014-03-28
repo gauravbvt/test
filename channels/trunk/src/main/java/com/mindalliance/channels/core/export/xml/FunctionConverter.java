@@ -87,7 +87,7 @@ public class FunctionConverter extends EntityConverter {
             writer.endNode();
         }
         // Asset connections
-        for ( AssetConnection assetConnection : function.getAssetConnections().getAll() ) {
+        for ( AssetConnection assetConnection : function.getAssetConnections() ) {
             writer.startNode( "assetConnection" );
             context.convertAnother( assetConnection );
             writer.endNode();

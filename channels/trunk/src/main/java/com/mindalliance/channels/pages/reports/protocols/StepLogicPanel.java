@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
 import com.mindalliance.channels.core.model.checklist.StepOutcome;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,12 +78,13 @@ public class StepLogicPanel extends AbstractDataPanel {
                 final StepGuard stepGuard = item.getModelObject();
                 Condition condition = getChecklist().deRefCondition( stepGuard.getConditionRef() );
                 String conditionString = condition == null ? "UNDEFINED" : condition.getLabel();
-                Label label = new Label( "if", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
+ //               Label label = new Label( "if", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
+                Label label = new Label( "if", conditionString );
                 item.add( label );
-                if ( conditionString.length() > MAX_SIZE ) {
+  /*              if ( conditionString.length() > MAX_SIZE ) {
                     addTipTitle( label, conditionString );
                 }
-
+*/
             }
         };
         ifListView.setOutputMarkupId( true );
@@ -110,11 +110,12 @@ public class StepLogicPanel extends AbstractDataPanel {
                 final StepGuard stepGuard = item.getModelObject();
                 Condition condition = getChecklist().deRefCondition( stepGuard.getConditionRef() );
                 String conditionString = condition == null ? "UNDEFINED" : condition.getLabel();
-                Label label = new Label( "unless", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
+//                Label label = new Label( "unless", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
+                Label label = new Label( "unless", conditionString );
                 item.add( label );
-                if ( conditionString.length() > MAX_SIZE ) {
+           /*     if ( conditionString.length() > MAX_SIZE ) {
                     addTipTitle( label, conditionString );
-                }
+                }*/
             }
         };
         unlessListView.setOutputMarkupId( true );
@@ -141,11 +142,12 @@ public class StepLogicPanel extends AbstractDataPanel {
                 final StepOrder stepOrder = item.getModelObject();
                 Step prerequisite = getChecklist().derefStep( stepOrder.getPrerequisiteStepRef() );
                 String label = prerequisite.getPrerequisiteLabel();
-                Label stepLabel = new Label( "after", StringUtils.abbreviate( label, MAX_SIZE ) );
-                if ( label.length() > MAX_SIZE ) {
+ //               Label stepLabel = new Label( "after", StringUtils.abbreviate( label, MAX_SIZE ) );
+                Label stepLabel = new Label( "after", label );
+ /*               if ( label.length() > MAX_SIZE ) {
                     addTipTitle( stepLabel, label );
                 }
-                item.add( stepLabel );
+*/                item.add( stepLabel );
             }
         };
         aftersContainer.add( prerequisiteListView );
@@ -169,12 +171,13 @@ public class StepLogicPanel extends AbstractDataPanel {
                 final StepOutcome stepOutcome = item.getModelObject();
                 Outcome outcome = getChecklist().deRefOutcome( stepOutcome.getOutcomeRef() );
                 String outcomeString = outcome == null ? "UNDEFINED" : outcome.getLabel();
-                Label label = new Label( "outcome", StringUtils.abbreviate( outcomeString, MAX_SIZE ) );
+//                Label label = new Label( "outcome", StringUtils.abbreviate( outcomeString, MAX_SIZE ) );
+                Label label = new Label( "outcome", outcomeString );
                 item.add( label );
-                if ( outcomeString.length() > MAX_SIZE ) {
+ /*               if ( outcomeString.length() > MAX_SIZE ) {
                     addTipTitle( label, outcomeString );
                 }
-            }
+*/            }
         };
         outcomeListView.setOutputMarkupId( true );
         outcomeListView.setVisible( !stepOutcomes.isEmpty() );
