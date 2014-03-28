@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -633,7 +634,7 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public List<AssetAvailableCondition> listAssetAvailableConditions() {
-        List<AssetAvailableCondition> assetAvailableConditions = new ArrayList<AssetAvailableCondition>();
+        Set<AssetAvailableCondition> assetAvailableConditions = new HashSet<AssetAvailableCondition>();
         for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             if ( assetConnection.isUsing()
                     || assetConnection.isProducing() ) {
@@ -647,8 +648,12 @@ public class Checklist implements Serializable, Mappable {
                                     new AssetConnection( AssetConnection.Type.Using, dependency ) ) );
                 }
             }
+         }
+        // if the task provides the asset
+        for( AssetConnection assetConnection : part.findAllProvisionAssetConnections() ) {
+            assetAvailableConditions.add( new AssetAvailableCondition( assetConnection ));
         }
-        return assetAvailableConditions;
+        return new ArrayList<AssetAvailableCondition>( assetAvailableConditions );
     }
 
     public List<AssetProducedOutcome> listAssetProducedOutcomes() {
@@ -662,8 +667,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<AssetProvisionedOutcome> listAssetProvisionedOutcomes() {
         List<AssetProvisionedOutcome> assetProvisionedOutcomes = new ArrayList<AssetProvisionedOutcome>();
-        for ( AssetConnection assetConnection : part.getAllFlowAssetConnections() ) {
-            if ( assetConnection.getType() == AssetConnection.Type.Provisioning )
+        for ( AssetConnection assetConnection : part.findAllProvisionAssetConnections() ) {
                 assetProvisionedOutcomes.add( new AssetProvisionedOutcome( assetConnection ) );
         }
         return assetProvisionedOutcomes;

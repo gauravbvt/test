@@ -1,10 +1,12 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.AssetConnectionData;
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -19,12 +21,14 @@ import java.util.List;
  * Date: 12/8/11
  * Time: 2:29 PM
  */
-@XmlType(propOrder = {"name", "id", "description", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"})
+@XmlType(propOrder = {"name", "id", "description", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "assetConnections", "documentation"})
 public class MediumData extends ModelEntityData {
 
     private ActorData actorData;
     private List<MediumData> delegates;
     private PlaceData reach;
+    private List<AssetConnectionData> assetConnectionDataList;
+
 
     public MediumData() {
         // required
@@ -46,6 +50,14 @@ public class MediumData extends ModelEntityData {
         reach = getMedium().getReach() == null
                 ? null
                 : new PlaceData( getServerUrl(), communityService.resolveLocation( getMedium().getReach() ), communityService );
+        initAssetConnections( );
+    }
+
+    private void initAssetConnections() {
+        assetConnectionDataList = new ArrayList<AssetConnectionData>(  );
+        for ( AssetConnection assetConnection : getMedium().getAssetConnections() ) {
+            assetConnectionDataList.add( new AssetConnectionData( assetConnection ));
+        }
     }
 
     @Override
@@ -107,6 +119,12 @@ public class MediumData extends ModelEntityData {
     public List<MediumData> getDelegatesTo() {
         return delegates;
     }
+
+    @XmlElement( name = "assetConnection" )
+    public List<AssetConnectionData> getAssetConnections() {
+        return assetConnectionDataList;
+    }
+
 
     @XmlElement
     @Override

@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -22,9 +23,10 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
@@ -207,7 +209,8 @@ public class CommunityServiceImpl implements CommunityService {
                     public boolean evaluate( Object object ) {
                         return ( (Agency) object ).getName().equals( name );
                     }
-                } );
+                }
+        );
         if ( !nonCircular ) return false;
         // placeholder parent test
         Agency agency = getParticipationManager().findAgencyNamed( name, this );
@@ -291,7 +294,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<String> getCommunityPlannerUsernames() {
         return (List<String>) CollectionUtils.collect(
                 getCommunityPlanners(),
@@ -310,7 +313,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends Identifiable> List<T> listKnownIdentifiables( Class<T> clazz ) {
         List<T> results = new ArrayList<T>();
         if ( clazz.isAssignableFrom( ModelObject.class ) ) {
@@ -512,7 +515,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     private void removeObsoleteIssueDetectionWaivers() {
-        List<IssueDetectionWaiver> obsoleteWaivers = new ArrayList<IssueDetectionWaiver>(  );
+        List<IssueDetectionWaiver> obsoleteWaivers = new ArrayList<IssueDetectionWaiver>();
         List<Identifiable> knownIdentifiables = listKnownIdentifiables( Identifiable.class );
         for ( final IssueDetectionWaiver issueDetectionWaiver : planCommunity.getIssueDetectionWaivers() ) {
             boolean matched = CollectionUtils.exists(
@@ -520,9 +523,10 @@ public class CommunityServiceImpl implements CommunityService {
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return issueDetectionWaiver.matches( (Identifiable)object );
+                            return issueDetectionWaiver.matches( (Identifiable) object );
                         }
-                    });
+                    }
+            );
             if ( !matched )
                 obsoleteWaivers.add( issueDetectionWaiver );
         }
@@ -550,7 +554,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Issue> listUserIssues( final ModelObject modelObject ) {
         return (List<Issue>) CollectionUtils.select(
                 list( UserIssue.class ),
@@ -645,11 +649,12 @@ public class CommunityServiceImpl implements CommunityService {
                     public boolean evaluate( Object object ) {
                         return ( (Agent) object ).getActor().equals( custodian );
                     }
-                } );
+                }
+        );
     }
 
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
     public CommunityCommitments findAllBypassCommitments( final Flow flow ) {
         assert flow.isSharing();
@@ -784,6 +789,66 @@ public class CommunityServiceImpl implements CommunityService {
 
     private Place getCommunityLocale() {
         return getPlanCommunity().getLocale( this );
+    }
+
+    @Override
+    public List<CommunityAssignment> resolveForwarding( CommunityAssignment communityAssignment,
+                                                        AssetConnection connection,
+                                                        boolean assetIncoming ) {
+        assert connection.isForwarding();
+        return safeResolveForwarding(
+                communityAssignment,
+                connection,
+                assetIncoming,
+                new HashSet<CommunityAssignment>() );
+    }
+
+    private List<CommunityAssignment> safeResolveForwarding( CommunityAssignment communityAssignment,
+                                                             AssetConnection assetConnection,
+                                                             boolean assetIncoming,
+                                                             Set<CommunityAssignment> visited ) {
+        List<CommunityAssignment> answer = new ArrayList<CommunityAssignment>(  );
+        if ( !visited.contains( communityAssignment ) ) {
+            MaterialAsset asset = assetConnection.getAsset();
+            Set<CommunityAssignment> forwardees = new HashSet<CommunityAssignment>();
+            visited.add( communityAssignment );
+            CommunityCommitments allCommitments = getAllCommitments( false );
+            // benefiting and demanding the asset, perhaps forwarding
+            CommunityCommitments benefitingCommitments = allCommitments
+                    .benefiting( communityAssignment )
+                    .demanding( asset );
+            for ( CommunityCommitment benefitingCommitment : benefitingCommitments ) {
+                Flow sharing = benefitingCommitment.getSharing();
+                if ( assetIncoming && sharing.isAskedFor() || !assetIncoming && sharing.isNotification() ) {
+                    CommunityAssignment assignment = benefitingCommitment.getCommitter();
+                    AssetConnection connection = sharing.getAssetConnections().about( asset ).forwarding().first();
+                    if ( connection == null ) {
+                        forwardees.add( assignment );
+                    } else {
+                        forwardees.addAll( safeResolveForwarding( assignment, connection, assetIncoming, visited ) );
+                    }
+                }
+            }
+            // committing and demanding the asset, perhaps forwarding
+            CommunityCommitments committingCommitments = allCommitments
+                    .committing( communityAssignment )
+                    .demanding( asset );
+            for ( CommunityCommitment committingCommitment : committingCommitments ) {
+                Flow sharing = committingCommitment.getSharing();
+                if ( assetIncoming && sharing.isNotification() || !assetIncoming && sharing.isAskedFor() ) {
+                    CommunityAssignment assignment = committingCommitment.getBeneficiary();
+                    AssetConnection connection = sharing.getAssetConnections().about( asset ).forwarding().first();
+                    if ( connection == null ) {
+                        forwardees.add( assignment );
+                    } else {
+                        forwardees.addAll( safeResolveForwarding( assignment, connection, assetIncoming, visited ) );
+                    }
+                }
+            }
+            // If can't find forwardees, return none.
+            answer.addAll( forwardees );
+        }
+        return answer;
     }
 
 

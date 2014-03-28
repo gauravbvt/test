@@ -22,6 +22,7 @@ public class AssetConnection implements Mappable {
 
     public static final String CONSUMING = "consuming";
     public static final String CRITICAL = "critical";
+    public static final String FORWARDING = "forwarding";
 
     private static final String DEMANDING_LABEL = "requests";
     private static final String PRODUCING_LABEL = "produces";
@@ -103,7 +104,7 @@ public class AssetConnection implements Mappable {
     public static List<Type> getTypeChoicesFor( AssetConnectable connectable ) {
         List<Type> choices = new ArrayList<Type>();
         if ( connectable.isCanBeAssetDemand() )
-            choices.add(  Type.Demanding  );
+            choices.add( Type.Demanding );
         if ( connectable.isCanProduceAssets() )
             choices.add( Type.Producing );
         if ( connectable.isCanProvisionAssets() )
@@ -114,7 +115,6 @@ public class AssetConnection implements Mappable {
             choices.add( Type.Using );
         return choices;
     }
-
 
 
     public static List<String> getTypeLabelsChoicesFor( AssetConnectable connectable ) {
@@ -220,9 +220,12 @@ public class AssetConnection implements Mappable {
                     : isCritical()
                     ? "requires"
                     : getTypeLabel();
-        } else {
+        } else if ( type == Type.Demanding ) {
+            return isForwarding()
+                    ? "forwards request for"
+                    : getTypeLabel();
+        } else
             return getTypeLabel();
-        }
     }
 
     public String getFirstPersonTypeLabel() {
@@ -233,11 +236,13 @@ public class AssetConnection implements Mappable {
                     ? "I consume"
                     : isCritical()
                     ? "I require"
-                    : getTypeLabel();
+                    : "I use";
+        } else if ( type == Type.Demanding ) {
+            return isForwarding()
+                    ? "I forward the need for"
+                    : "I need";
         } else {
-            return type == Type.Demanding
-                    ? "I need"
-                    : type == Type.Producing
+            return type == Type.Producing
                     ? "I produce"
                     : type == Type.Provisioning
                     ? "I supply"
@@ -258,14 +263,18 @@ public class AssetConnection implements Mappable {
                     : isCritical()
                     ? "requiring"
                     : getTypeStepLabel();
+        } else if ( type == Type.Demanding ) {
+            return isForwarding()
+                    ? "forwarding request for"
+                    : getTypeStepLabel();
         } else {
             return getTypeStepLabel();
         }
     }
 
     public String getStepConditionLabel() {
-        if ( type == Type.Using || type == Type.Producing ) {
-            StringBuilder sb = new StringBuilder(  );
+        if ( type == Type.Using || type == Type.Producing || type == Type.Provisioning ) {
+            StringBuilder sb = new StringBuilder();
             sb.append( getAsset().getLabel() )
                     .append( " is available" );
             return sb.toString();
@@ -275,15 +284,14 @@ public class AssetConnection implements Mappable {
     }
 
 
-
     public String getStepOutcomeLabel() {
         if ( type == Type.Producing ) {
-            StringBuilder sb = new StringBuilder(  );
+            StringBuilder sb = new StringBuilder();
             sb.append( getAsset().getLabel() )
                     .append( " is produced" );
             return sb.toString();
         } else if ( type == Type.Provisioning ) {
-            StringBuilder sb = new StringBuilder(  );
+            StringBuilder sb = new StringBuilder();
             sb.append( getAsset().getLabel() )
                     .append( " is delivered" );
             return sb.toString();
@@ -298,6 +306,7 @@ public class AssetConnection implements Mappable {
     }
 
     public void setConsuming( boolean val ) {
+        assert type == Type.Using;
         if ( val )
             setProperty( CONSUMING, "true" );
         else
@@ -309,6 +318,7 @@ public class AssetConnection implements Mappable {
     }
 
     public void setCritical( boolean val ) {
+        assert type == Type.Using;
         if ( val )
             setProperty( CRITICAL, "true" );
         else
@@ -319,7 +329,20 @@ public class AssetConnection implements Mappable {
         return hasProperty( CRITICAL );
     }
 
-    public String getLabel( ) {
+    public void setForwarding( boolean val ) {
+        assert type == Type.Demanding;
+        if ( val )
+            setProperty( FORWARDING, "true" );
+        else
+            removeProperty( FORWARDING );
+    }
+
+    public boolean isForwarding() {
+        return hasProperty( FORWARDING );
+    }
+
+
+    public String getLabel() {
         StringBuilder sb = new StringBuilder();
         if ( asset.isType() ) {
             sb.append( " assets of type \"" );
@@ -338,9 +361,10 @@ public class AssetConnection implements Mappable {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put( "type", type.name() );
-        map.put( "asset",  Arrays.asList( getAsset().getName(), getAsset().isType() ) );
+        map.put( "asset", Arrays.asList( getAsset().getName(), getAsset().isType() ) );
         map.put( "critical", isCritical() );
         map.put( "consuming", isConsuming() );
+        map.put( "forwarding", isForwarding() );
         return map;
     }
 

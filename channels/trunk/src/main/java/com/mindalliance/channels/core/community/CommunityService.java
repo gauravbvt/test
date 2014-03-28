@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
@@ -16,6 +17,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
@@ -240,4 +242,14 @@ public interface CommunityService {
      */
     String makePlanCommunityParticipationUrl();
 
- }
+    /**
+     * Follow the forwarding tree and collect al nodes.
+     * @param communityAssignment the assignment to start from
+     * @param connection the connection that applied
+     * @param assetIncoming whether the asset is being received (incoming) or delivered
+     * @return a list oc community assignments
+     */
+    List<CommunityAssignment> resolveForwarding( CommunityAssignment communityAssignment,
+                                                 AssetConnection connection,
+                                                 boolean assetIncoming );
+}

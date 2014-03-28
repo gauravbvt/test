@@ -45,6 +45,9 @@ public class Function extends ModelEntity implements AssetConnectable {
      */
     private List<Objective> objectives = new ArrayList<Objective>();
 
+    /**
+     * Asset connections for this function.
+     */
     private AssetConnections assetConnections = new AssetConnections();
 
 

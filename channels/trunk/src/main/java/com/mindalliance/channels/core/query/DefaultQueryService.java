@@ -3167,6 +3167,7 @@ public abstract class DefaultQueryService implements QueryService {
         assetConnection.setAsset( retrieveEntity( MaterialAsset.class, map, "asset" ) );
         assetConnection.setConsuming( (Boolean) map.get( "consuming" ) );
         assetConnection.setCritical( (Boolean) map.get( "critical" ) );
+        assetConnection.setForwarding( (Boolean)map.get( "forwarding" ) );
         return assetConnection;
     }
 

@@ -337,5 +337,33 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
         return result;
     }
 
+    public AssetConnections about( MaterialAsset materialAsset ) {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( materialAsset.narrowsOrEquals( assetConnection.getAsset() ) ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
 
+    public AssetConnections forwarding() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isForwarding() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+    public void addAll( List<AssetConnection> assetConnectionList ) {
+        for ( AssetConnection assetConnection : assetConnectionList ) {
+            add( assetConnection );
+        }
+    }
+
+    public AssetConnection first() {
+          return isEmpty() ? null : getAll().get( 0 );
+    }
 }

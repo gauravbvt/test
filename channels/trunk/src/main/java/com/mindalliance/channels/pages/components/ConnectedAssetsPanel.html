@@ -15,9 +15,11 @@
                     <option>Produces</option>
                 </select>
                 <span wicket:id="asset">[entity reference panel or link]</span>
-                             <span wicket:id="usageProperties">
-                                 <input wicket:id="critical" type="checkbox"/> is critical
-                                 <input wicket:id="consumes" type="checkbox"/> consumes it
+                             <span wicket:id="properties">
+                                 <span wicket:id="criticalContainer"><input wicket:id="critical" type="checkbox"/> is critical</span>
+                                 <span wicket:id="consumesContainer"><input wicket:id="consumes" type="checkbox"/> consumes it</span>
+                                 <span wicket:id="forwardingContainer"> <input wicket:id="forwarding" type="checkbox"/> forwarding</span>
+
                              </span>
 
                 <a wicket:id="delete" class="remove" href="#">Remove</a>

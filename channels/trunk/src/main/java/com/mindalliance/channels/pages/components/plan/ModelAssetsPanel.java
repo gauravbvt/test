@@ -318,6 +318,9 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
                     sb.append( " and " );
                 sb.append( "consumes" );
             }
+            if ( assetConnection.isForwarding() ) {
+                sb.append( "forwarded" );
+            }
             return StringUtils.capitalize( sb.toString() );
         }
     }

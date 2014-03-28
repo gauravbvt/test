@@ -10,7 +10,10 @@ import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -26,7 +29,7 @@ public class AssetProvisionedData implements Serializable {
     private List<ContactData> contacts;
     private String label;
     private AssetConnection assetConnection;
-    private CommunityEmployment contactEmployment;
+    private List<CommunityEmployment> contactEmployments;
     private boolean assetIncoming;
 
     public AssetProvisionedData() {
@@ -35,12 +38,12 @@ public class AssetProvisionedData implements Serializable {
 
     public AssetProvisionedData( String serverUrl,
                                  AssetConnection assetConnection,
-                                 CommunityEmployment communityEmployment,
+                                 List<CommunityEmployment> communityEmployments,
                                  boolean assetIncoming,
                                  CommunityService communityService,
                                  ChannelsUser user ) {
         this.assetConnection = assetConnection;
-        contactEmployment = communityEmployment;
+        contactEmployments = communityEmployments;
         this.assetIncoming = assetIncoming;
         initData( serverUrl, communityService, user );
     }
@@ -48,10 +51,15 @@ public class AssetProvisionedData implements Serializable {
     private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         asset = assetConnection.getAsset();
         label = (assetIncoming ? "Obtaining " : "Supplying ") + asset.getName();
-        contacts = ContactData.findContactsFromEmployment(
-                serverUrl,
-                contactEmployment,
-                communityService );
+        Set<ContactData> allContacts = new HashSet<ContactData>(  );
+        for ( CommunityEmployment contactEmployment : contactEmployments ) {
+            List<ContactData> employmentContacts = ContactData.findContactsFromEmployment(
+                    serverUrl,
+                    contactEmployment,
+                    communityService );
+            allContacts.addAll( employmentContacts );
+        }
+        contacts = new ArrayList<ContactData>( allContacts );
     }
 
     @XmlElement

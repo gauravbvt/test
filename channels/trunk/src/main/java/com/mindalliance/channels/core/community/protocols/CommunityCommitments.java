@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -195,6 +196,17 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         }
         return result;
     }
+
+    public CommunityCommitments demanding( MaterialAsset asset ) {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment communityCommitment : this ) {
+            if ( !communityCommitment.getSharing().getAssetConnections().demanding().about( asset ).isEmpty() ) {
+                result.add( communityCommitment );
+            }
+        }
+        return result;
+    }
+
 
 
 

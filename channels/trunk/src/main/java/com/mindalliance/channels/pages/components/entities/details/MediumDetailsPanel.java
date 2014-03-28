@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
+import com.mindalliance.channels.pages.components.ConnectedAssetsPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -76,7 +77,10 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
      */
     private CheckBox synchronousCheckBox;
     private CheckBox forContactInfoCheckBox;
-
+    /**
+     * Assets container.
+     */
+    private WebMarkupContainer assetsContainer;
 
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
@@ -108,6 +112,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         addSecurity();
         addQualificationLink();
         addQualificationField();
+        addAssets();
         adjustFields();
     }
 
@@ -279,7 +284,20 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
         return candidateNames;
     }
 
-    private TransmissionMedium getMedium() {
+    private void addAssets() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( assetsContainer );
+        ConnectedAssetsPanel connectedAssetsPanel =
+                new ConnectedAssetsPanel(
+                        "assets",
+                        new PropertyModel<TransmissionMedium>( this, "medium" ) );
+        assetsContainer.add( connectedAssetsPanel );
+    }
+
+
+
+    public TransmissionMedium getMedium() {
         return (TransmissionMedium) getEntity();
     }
 

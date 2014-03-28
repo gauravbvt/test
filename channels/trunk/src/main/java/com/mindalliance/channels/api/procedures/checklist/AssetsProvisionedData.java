@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Asset received from or sent in context of a checklist.
+ * Asset received from or sent in context of a checklist of a task with commitments.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -54,40 +55,64 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
     private void initData( String serverUrl,
                            CommunityService communityService,
                            ChannelsUser user ) {
-        assetProvisionedDataList = new ArrayList<AssetProvisionedData>(  );
+        assetProvisionedDataList = new ArrayList<AssetProvisionedData>();
         for ( CommunityCommitment benefitingCommitment : benefitingCommitments ) {
             Flow sharing = benefitingCommitment.getSharing();
             for ( AssetConnection connection : sharing.getAssetConnections().provisioning() ) {
+                boolean assetsIncoming = sharing.isAskedFor();
                 AssetProvisionedData assetProvisionedData = new AssetProvisionedData(
                         serverUrl,
                         connection,
-                        sharing.isAskedFor()
-                         ? benefitingCommitment.getBeneficiary().getCommunityEmployment()
-                        : benefitingCommitment.getCommitter().getCommunityEmployment(),
-                        sharing.isAskedFor(), // assets out if receiving notification, in if receiving reply (sending request)
+                        resolveContact( connection, assetsIncoming, benefitingCommitment, true, communityService ),
+                        assetsIncoming, // assets out if receiving notification, in if receiving reply (sending request)
                         communityService,
                         user
                 );
-                assetProvisionedDataList.add( assetProvisionedData );
+                if ( !assetProvisionedData.getContacts().isEmpty() )
+                    assetProvisionedDataList.add( assetProvisionedData );
             }
         }
         for ( CommunityCommitment committingCommitment : committingCommitments ) {
             Flow sharing = committingCommitment.getSharing();
-                for ( AssetConnection connection : sharing.getAssetConnections().provisioning() ) {
-                    AssetProvisionedData assetProvisionedData = new AssetProvisionedData(
-                            serverUrl,
-                            connection,
-                            sharing.isNotification()
-                                    ? committingCommitment.getBeneficiary().getCommunityEmployment()
-                                    : committingCommitment.getCommitter().getCommunityEmployment(),
-                            sharing.isNotification(), // assets in if sending notification, out if sending reply (receiving request)
-                            communityService,
-                            user
-                    );
+            for ( AssetConnection connection : sharing.getAssetConnections().provisioning() ) {
+                boolean assetsIncoming = sharing.isNotification();
+                AssetProvisionedData assetProvisionedData = new AssetProvisionedData(
+                        serverUrl,
+                        connection,
+                        resolveContact( connection, assetsIncoming, committingCommitment, false, communityService ),
+                        assetsIncoming, // assets in if sending notification, out if sending reply (receiving request)
+                        communityService,
+                        user
+                );
+                if ( !assetProvisionedData.getContacts().isEmpty() )
                     assetProvisionedDataList.add( assetProvisionedData );
+                assetProvisionedDataList.add( assetProvisionedData );
             }
         }
+    }
 
+    // The contact is the other party in the commitment.
+    // If the task is context is benefiting from the commitment, then the other party is the committer.
+    // If the task in context is committing, then the other party is the beneficiary.
+    private List<CommunityEmployment> resolveContact( AssetConnection connection,
+                                                boolean assetIncoming,
+                                                CommunityCommitment commitment,
+                                                boolean benefiting,
+                                                CommunityService communityService ) {
+        CommunityAssignment communityAssignment = benefiting
+                ? commitment.getCommitter()
+                : commitment.getBeneficiary();
+        List<CommunityEmployment> communityEmployments = new ArrayList<CommunityEmployment>(  );
+        if ( !connection.isForwarding() ) {
+            communityEmployments.add( communityAssignment.getCommunityEmployment() );
+        } else {
+            List<CommunityAssignment> assignments = communityService
+                    .resolveForwarding( communityAssignment, connection, assetIncoming ); // can return nothing if no demand is being forwarded
+            for ( CommunityAssignment assignment : assignments ) {
+                communityEmployments.add( assignment.getCommunityEmployment() );
+            }
+        }
+        return communityEmployments;
     }
 
     @XmlElement( name = "assetProvisioning" )

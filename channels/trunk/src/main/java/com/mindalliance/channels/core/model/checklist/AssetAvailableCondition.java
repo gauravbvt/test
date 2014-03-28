@@ -19,7 +19,8 @@ public class AssetAvailableCondition extends Condition {
 
     public AssetAvailableCondition( AssetConnection assetConnection ) {
         assert assetConnection.isUsing()
-                || assetConnection.isProducing();
+                || assetConnection.isProducing()
+                || assetConnection.isProvisioning();
         this.assetConnection = assetConnection;
     }
 

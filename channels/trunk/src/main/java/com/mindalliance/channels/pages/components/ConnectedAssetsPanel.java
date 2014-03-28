@@ -48,7 +48,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer assetConnectionsContainer;
     private AssetConnection newAssetConnection;
-    private List<AssetConnection.Type> excludedConnectionTypes = new ArrayList<AssetConnection.Type>(  );
+    private List<AssetConnection.Type> excludedConnectionTypes = new ArrayList<AssetConnection.Type>();
 
     public ConnectedAssetsPanel( String id,
                                  IModel<? extends AssetConnectable> iModel,
@@ -135,9 +135,10 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return StringUtils.capitalize( AssetConnection.getLabelFor((AssetConnection.Type) input) );
+                        return StringUtils.capitalize( AssetConnection.getLabelFor( (AssetConnection.Type) input ) );
                     }
-                } );
+                }
+        );
         Collections.sort( choices );
         return choices;
     }
@@ -171,10 +172,18 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
 
     private void addConnectionProperties( ListItem<AssetConnectionWrapper> item ) {
         AssetConnectionWrapper wrapper = item.getModelObject();
-        WebMarkupContainer usagePropertiesContainer = new WebMarkupContainer( "usageProperties" );
-        item.add( usagePropertiesContainer );
-        makeVisible( usagePropertiesContainer, !wrapper.isMarkedForCreation() && wrapper.hasUsageProperties() );
-        // consumes?
+        WebMarkupContainer propertiesContainer = new WebMarkupContainer( "properties" );
+        item.add( propertiesContainer );
+        makeVisible( propertiesContainer, !wrapper.isMarkedForCreation() && wrapper.hasUsageProperties() );
+        addConsumes( propertiesContainer, wrapper );
+        addCritical( propertiesContainer, wrapper );
+        addForwarding( propertiesContainer, wrapper );
+    }
+
+    private void addConsumes( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
+        WebMarkupContainer consumesContainer = new WebMarkupContainer( "consumesContainer" );
+        makeVisible( consumesContainer, wrapper.getType() == AssetConnection.Type.Using );
+        propertiesContainer.add( consumesContainer );
         AjaxCheckBox consumesCheckBox = new AjaxCheckBox(
                 "consumes",
                 new PropertyModel<Boolean>( wrapper, "consumes" )
@@ -185,8 +194,13 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             }
         };
         consumesCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
-        usagePropertiesContainer.add( consumesCheckBox );
-        // Critical?
+        consumesContainer.add( consumesCheckBox );
+    }
+
+    private void addCritical( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
+        WebMarkupContainer criticalContainer = new WebMarkupContainer( "criticalContainer" );
+        makeVisible( criticalContainer, wrapper.getType() == AssetConnection.Type.Using );
+        propertiesContainer.add( criticalContainer );
         AjaxCheckBox criticalCheckBox = new AjaxCheckBox(
                 "critical",
                 new PropertyModel<Boolean>( wrapper, "critical" )
@@ -197,8 +211,24 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             }
         };
         criticalCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
-        usagePropertiesContainer.add( criticalCheckBox );
+        criticalContainer.add( criticalCheckBox );
+    }
 
+    private void addForwarding( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
+        WebMarkupContainer forwardingContainer = new WebMarkupContainer( "forwardingContainer" );
+        makeVisible( forwardingContainer, wrapper.getType() == AssetConnection.Type.Demanding );
+        propertiesContainer.add( forwardingContainer );
+        AjaxCheckBox forwardingCheckBox = new AjaxCheckBox(
+                "forwarding",
+                new PropertyModel<Boolean>( wrapper, "forwarding" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
+            }
+        };
+        forwardingCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
+        forwardingContainer.add( forwardingCheckBox );
     }
 
     private void addDeleteConnection( ListItem<AssetConnectionWrapper> item ) {
@@ -222,7 +252,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         List<AssetConnection> allConnections = getAssetConnectable().getAssetConnections().getAll();
         for ( int i = 0; i < allConnections.size(); i++ ) {
             AssetConnection connection = allConnections.get( i );
-            if ( !excludedConnectionTypes.contains( connection.getType() ))
+            if ( !excludedConnectionTypes.contains( connection.getType() ) )
                 wrappers.add( new AssetConnectionWrapper( connection, i ) );
         }
         if ( isLockedByUser( getAssetConnectable() ) )
@@ -314,7 +344,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             if ( isMarkedForCreation() ) {
                 return null;
             } else {
-                MaterialAsset asset = assetConnection.getAsset(  );
+                MaterialAsset asset = assetConnection.getAsset();
                 return asset.isUnknown() ? null : asset;
             }
         }
@@ -369,9 +399,32 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
             }
         }
 
+        public boolean isForwarding() {
+            return getAssetConnection().hasProperty( AssetConnection.FORWARDING );
+        }
+
+        public void setForwarding( boolean val ) {
+            if ( isMarkedForCreation() ) {
+                getAssetConnection().setForwarding( val );
+            } else {
+                try {
+                    doCommand( UpdateObject.makeCommand(
+                            getUsername(),
+                            getAssetConnectable(),
+                            "assetConnections.all[" + index + "].forwarding",
+                            val,
+                            UpdateObject.Action.Set
+                    ) );
+                } catch ( CommandException e ) {
+                    LOG.warn( "Failed to update connected asset forwarding property" );
+                }
+            }
+        }
+
 
         public boolean hasUsageProperties() {
-            return getType() != null && getType() == AssetConnection.Type.Using;
+            return getType() != null
+                    && getType() == AssetConnection.Type.Using || getType() == AssetConnection.Type.Demanding;
         }
 
         public void add() {

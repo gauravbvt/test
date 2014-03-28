@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import org.apache.commons.collections.CollectionUtils;
@@ -25,7 +28,7 @@ import java.util.regex.PatternSyntaxException;
  * Date: Nov 25, 2009
  * Time: 2:56:10 PM
  */
-public class TransmissionMedium extends ModelEntity {
+public class TransmissionMedium extends ModelEntity implements AssetConnectable {
 
     /**
      * Class logger.
@@ -87,6 +90,12 @@ public class TransmissionMedium extends ModelEntity {
      * List of security classifications satisfied by this medium for the transmission of classified info.
      */
     private List<Classification> security = new ArrayList<Classification>();
+
+    /**
+     * Asset connections for this medium.
+     */
+    private AssetConnections assetConnections = new AssetConnections();
+
 
     public TransmissionMedium() {
         setType();
@@ -624,6 +633,48 @@ public class TransmissionMedium extends ModelEntity {
                             }
                         }
                 ) );
+    }
+
+    // AssetConnectable
+
+
+    @Override
+    public boolean isCanStockAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanProduceAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanUseAssets() {
+        return true;
+    }
+
+    @Override
+    public boolean isCanProvisionAssets() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanBeAssetDemand() {
+        return false;
+    }
+
+    @Override
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
+    }
+
+    @Override
+    public AssetConnection.Type getDefaultAssetConnectionType() {
+        return AssetConnection.Type.Using;
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        assetConnections.add( assetConnection );
     }
 
     public enum Cast {

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -96,6 +97,13 @@ public class TransmissionMediumConverter extends EntityConverter {
         writer.startNode( "forContactInfo" );
         writer.setValue( Boolean.toString( medium.isForContactInfo() ) );
         writer.endNode();
+        // Asset connections
+        for ( AssetConnection assetConnection : medium.getAssetConnections() ) {
+            writer.startNode( "assetConnection" );
+            context.convertAnother( assetConnection );
+            writer.endNode();
+        }
+
     }
 
     /**
@@ -148,6 +156,9 @@ public class TransmissionMediumConverter extends EntityConverter {
             medium.setSynchronous( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals(  "forContactInfo" )) {
             medium.setForContactInfo( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "assetConnection" ) ) {
+            AssetConnection assetConnection = (AssetConnection) context.convertAnother( medium, AssetConnection.class );
+            medium.addAssetConnection( assetConnection );
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }
