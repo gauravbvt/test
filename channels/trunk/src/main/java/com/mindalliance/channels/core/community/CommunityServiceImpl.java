@@ -793,26 +793,26 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public List<CommunityAssignment> resolveForwarding( CommunityAssignment communityAssignment,
-                                                        AssetConnection connection,
-                                                        boolean assetIncoming ) {
-        assert connection.isForwarding();
+                                                        MaterialAsset asset,
+                                                        boolean assetIncoming,
+                                                        CommunityCommitments allCommitments ) {
         return safeResolveForwarding(
                 communityAssignment,
-                connection,
+                asset,
                 assetIncoming,
+                allCommitments, // to others
                 new HashSet<CommunityAssignment>() );
     }
 
     private List<CommunityAssignment> safeResolveForwarding( CommunityAssignment communityAssignment,
-                                                             AssetConnection assetConnection,
+                                                             MaterialAsset asset,
                                                              boolean assetIncoming,
+                                                             CommunityCommitments allCommitments,
                                                              Set<CommunityAssignment> visited ) {
         List<CommunityAssignment> answer = new ArrayList<CommunityAssignment>(  );
         if ( !visited.contains( communityAssignment ) ) {
-            MaterialAsset asset = assetConnection.getAsset();
             Set<CommunityAssignment> forwardees = new HashSet<CommunityAssignment>();
             visited.add( communityAssignment );
-            CommunityCommitments allCommitments = getAllCommitments( false );
             // benefiting and demanding the asset, perhaps forwarding
             CommunityCommitments benefitingCommitments = allCommitments
                     .benefiting( communityAssignment )
@@ -825,7 +825,7 @@ public class CommunityServiceImpl implements CommunityService {
                     if ( connection == null ) {
                         forwardees.add( assignment );
                     } else {
-                        forwardees.addAll( safeResolveForwarding( assignment, connection, assetIncoming, visited ) );
+                        forwardees.addAll( safeResolveForwarding( assignment, asset, assetIncoming, allCommitments, visited ) );
                     }
                 }
             }
@@ -841,7 +841,7 @@ public class CommunityServiceImpl implements CommunityService {
                     if ( connection == null ) {
                         forwardees.add( assignment );
                     } else {
-                        forwardees.addAll( safeResolveForwarding( assignment, connection, assetIncoming, visited ) );
+                        forwardees.addAll( safeResolveForwarding( assignment, asset, assetIncoming, allCommitments, visited ) );
                     }
                 }
             }

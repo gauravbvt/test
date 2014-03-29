@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,6 @@ public class AssetConnection implements Mappable {
                     : null;
         }
 
-
     }
 
     private MaterialAsset asset;
@@ -63,6 +63,11 @@ public class AssetConnection implements Mappable {
 
     public AssetConnection() {
     }
+
+    public AssetConnection( AssetConnection assetConnection ) {
+        this( assetConnection.getType(), assetConnection.getAsset() );
+    }
+
 
     public AssetConnection( Type type, MaterialAsset asset ) {
         this.type = type;
@@ -115,6 +120,20 @@ public class AssetConnection implements Mappable {
             choices.add( Type.Using );
         return choices;
     }
+
+    public static void sortOnTypes( List<AssetConnection> assetConnectionList ) {
+        Collections.sort( assetConnectionList, new Comparator<AssetConnection>() {
+            @Override
+            public int compare( AssetConnection ac1, AssetConnection ac2 ) {
+                return ac1.getType().ordinal() < ac2.getType().ordinal()
+                        ? -1
+                        : ac1.getType().ordinal() > ac2.getType().ordinal()
+                        ? 1
+                        : 0;
+            }
+        });
+    }
+
 
 
     public static List<String> getTypeLabelsChoicesFor( AssetConnectable connectable ) {
@@ -209,7 +228,6 @@ public class AssetConnection implements Mappable {
     public String getTypeStepLabel() {
         return getType() == null ? null : getStepLabelFor( getType() );
     }
-
 
     public String getDetailedTypeLabel() {
         if ( type == Type.Using ) {

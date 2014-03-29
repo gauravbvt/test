@@ -162,10 +162,10 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                                 ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) ) );
             }
         }
-        AssetConnections visibleAssetConnections = flow.getAssetConnections().visibleTo( flow, isSend );
-        if ( flow.canSetAssets() && !visibleAssetConnections.isEmpty() ) {
+        AssetConnections assetConnections = flow.getAssetConnections()/*.visibleTo( flow, isSend )*/;
+        if ( flow.canSetAssets() && !assetConnections.isEmpty() ) {
             sb.append( ". " )
-                    .append( StringUtils.capitalize( visibleAssetConnections.getLabel() ) );
+                    .append( StringUtils.capitalize( assetConnections.getLabel() ) );
         }
         return sb.toString();
     }

@@ -51,6 +51,7 @@ import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -458,6 +459,7 @@ public class XmlStreamer implements ImportExportFactory {
             for ( String restriction : restrictions ) {
                 externalFlow.addRestriction( Flow.Restriction.valueOf( restriction ) );
             }
+            externalFlow.setAssetConnections( new AssetConnections( conSpec.getAssetConnections() ) );
             externalFlow.setReceiptConfirmationRequested( conSpec.isReceiptConfirmationRequested() );
             externalFlow.setCanBypassIntermediate( conSpec.isCanBypassIntermediate() );
             getModelDao().disconnect( localInnerFlow );
@@ -479,6 +481,7 @@ public class XmlStreamer implements ImportExportFactory {
             external.setRestrictions( new ArrayList<Flow.Restriction>( inner.getRestrictions() ) );
             external.setCanBypassIntermediate( inner.isCanBypassIntermediate() );
             external.setReceiptConfirmationRequested( inner.isReceiptConfirmationRequested() );
+            external.setAssetConnections( new AssetConnections( inner.getAssetConnections() ) );
         }
 
         @SuppressWarnings("unchecked")

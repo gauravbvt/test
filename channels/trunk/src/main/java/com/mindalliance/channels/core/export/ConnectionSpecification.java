@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.export;
 
+import com.mindalliance.channels.core.model.asset.AssetConnections;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,10 @@ public class ConnectionSpecification implements Serializable {
      * Whether an intermediate can be bypassed.
      */
     private boolean canBypassIntermediate;
+    /**
+     * Asset connections.
+     */
+    private AssetConnections assetConnections;
 
     public ConnectionSpecification() {
     }
@@ -118,5 +124,13 @@ public class ConnectionSpecification implements Serializable {
 
     public void setCanBypassIntermediate( boolean canBypassIntermediate ) {
         this.canBypassIntermediate = canBypassIntermediate;
+    }
+
+    public void setAssetConnections( AssetConnections assetConnections ) {
+        this.assetConnections = assetConnections;
+    }
+
+    public AssetConnections getAssetConnections() {
+        return assetConnections;
     }
 }

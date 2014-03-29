@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -69,9 +70,9 @@ public class FlowConverter extends AbstractChannelsConverter {
         Flow flow = (Flow) object;
         Segment currentSegment = (Segment) context.get( "segment" );
         if ( flow.isInternal() ) {
-            writeFlowNodes( (InternalFlow) flow, writer, currentSegment );
+            writeFlowNodes( (InternalFlow) flow, writer, currentSegment, context );
         } else {
-            writeFlowNodes( (ExternalFlow) flow, writer, currentSegment );
+            writeFlowNodes( (ExternalFlow) flow, writer, currentSegment, context );
         }
         exportDetectionWaivers( flow, writer );
         exportAttachments( flow, writer );
@@ -170,40 +171,45 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private void writeFlowNodes( InternalFlow flow,
                                  HierarchicalStreamWriter writer,
-                                 Segment currentSegment ) {
+                                 Segment currentSegment,
+                                 MarshallingContext context ) {
         writer.startNode( "source" );
-        writeNode( flow.getSource(), writer, currentSegment, flow );
+        writeNode( flow.getSource(), writer, currentSegment, flow, context );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.getTarget(), writer, currentSegment, flow );
+        writeNode( flow.getTarget(), writer, currentSegment, flow, context );
         writer.endNode();
     }
 
     private void writeFlowNodes( ExternalFlow flow,
                                  HierarchicalStreamWriter writer,
-                                 Segment currentSegment ) {
+                                 Segment currentSegment,
+                                 MarshallingContext context ) {
         writer.startNode( "source" );
         writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ),
                 writer,
                 currentSegment,
-                flow );
+                flow,
+                context );
         writer.endNode();
         writer.startNode( "target" );
         writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(),
                 writer,
                 currentSegment,
-                flow );
+                flow,
+                context );
         writer.endNode();
     }
 
     private void writeNode( Node node,
                             HierarchicalStreamWriter writer,
                             Segment currentSegment,
-                            Flow flow ) {
+                            Flow flow,
+                            MarshallingContext context ) {
         if ( node.isPart() ) {
             writePart( (Part) node, writer );
         } else {
-            writeConnector( (Connector) node, writer, currentSegment, flow );
+            writeConnector( (Connector) node, writer, currentSegment, flow, context );
         }
     }
 
@@ -216,7 +222,8 @@ public class FlowConverter extends AbstractChannelsConverter {
     private void writeConnector( Connector connector,
                                  HierarchicalStreamWriter writer,
                                  Segment currentSegment,
-                                 Flow flow ) {
+                                 Flow flow,
+                                 MarshallingContext context ) {
         writer.startNode( "connector" );
         writer.addAttribute( "id", "" + connector.getId() );
         // Connector is in other segment -- an external flow
@@ -235,6 +242,12 @@ public class FlowConverter extends AbstractChannelsConverter {
             for ( Flow.Restriction restriction : innerFlow.getRestrictions() ) {
                 writer.startNode( "restriction" );
                 writer.setValue( restriction.name() );
+                writer.endNode();
+            }
+            // Asset connections
+            for ( AssetConnection assetConnection : innerFlow.getAssetConnections() ) {
+                writer.startNode( "assetConnection" );
+                context.convertAnother( assetConnection );
                 writer.endNode();
             }
             writer.endNode();
@@ -260,11 +273,11 @@ public class FlowConverter extends AbstractChannelsConverter {
         Long flowId = Long.parseLong( reader.getAttribute( "id" ) );
         reader.moveDown();
         assert reader.getNodeName().equals( "source" );
-        Node source = resolveNode( reader, segment, true, flowId, importingPlan );
+        Node source = resolveNode( reader, segment, true, flowId, importingPlan, context );
         reader.moveUp();
         reader.moveDown();
         assert reader.getNodeName().equals( "target" );
-        Node target = resolveNode( reader, segment, false, flowId, importingPlan );
+        Node target = resolveNode( reader, segment, false, flowId, importingPlan, context );
         reader.moveUp();
         boolean preserveFlowId = importingPlan && !( isProxy( target ) || isProxy( source ) );
         Flow flow = makeFlow( source, target, flowName, flowId, preserveFlowId );
@@ -339,7 +352,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "assetConnection" ) ) {
                 AssetConnection assetConnection = (AssetConnection) context.convertAnother( flow, AssetConnection.class );
                 flow.addAssetConnection( assetConnection );
-            }  else {
+            } else {
                 LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
@@ -364,7 +377,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                               Segment segment,
                               boolean isSource,
                               Long flowId,
-                              boolean importingPlan ) {
+                              boolean importingPlan,
+                              UnmarshallingContext context ) {
         Node node;
         reader.moveDown();
         String nodeName = reader.getNodeName();
@@ -372,7 +386,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             node = resolvePart( reader, segment );
         } else {
             assert nodeName.equals( "connector" );
-            node = resolveConnector( reader, segment, isSource, flowId, importingPlan );
+            node = resolveConnector( reader, segment, isSource, flowId, importingPlan, context );
         }
         reader.moveUp();
         return node;
@@ -381,7 +395,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Part resolvePart( HierarchicalStreamReader reader,
                               Segment segment ) {
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-         // When importing a segment (vs reloading a plan), ids are re-assigned
+        // When importing a segment (vs reloading a plan), ids are re-assigned
         return (Part) segment.getNode( idMap.get( id ) );
     }
 
@@ -389,7 +403,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                                         Segment segment,
                                         boolean isSource,
                                         Long flowId,
-                                        boolean importingPlan ) {
+                                        boolean importingPlan,
+                                        UnmarshallingContext context ) {
         Connector connector;
         String externalSegmentName = reader.getAttribute( "segment" );
         if ( importingPlan && externalSegmentName == null ) {
@@ -402,7 +417,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         if ( externalSegmentName != null ) {
             // Connector is in other segment
-            registerAsProxy( connector, reader, isSource, externalSegmentName, flowId );
+            registerAsProxy( connector, reader, isSource, externalSegmentName, flowId, context );
         }
         return connector;
     }
@@ -411,7 +426,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                                   HierarchicalStreamReader reader,
                                   boolean isSource,
                                   String externalSegmentName,
-                                  Long flowId ) {
+                                  Long flowId,
+                                  UnmarshallingContext context ) {
         String externalSegmentDescription = "";
         String flowName = null;
         String roleName = null;
@@ -420,6 +436,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         String taskDescription = "";
         String partId = null;
         List<String> restrictions = new ArrayList<String>();
+        AssetConnections assetConnections = new AssetConnections();
         boolean receiptConfirmationRequested = false;
         boolean canBypassIntermediate = false;
         while ( reader.hasMoreChildren() ) {
@@ -442,6 +459,10 @@ public class FlowConverter extends AbstractChannelsConverter {
                         String subNodeName = reader.getNodeName();
                         if ( subNodeName.equals( "restriction" ) ) {
                             restrictions.add( reader.getValue() );
+                        } else if ( subNodeName.equals( "assetConnection" ) ) {
+                            AssetConnection assetConnection = (AssetConnection) context
+                                    .convertAnother( connector, AssetConnection.class );
+                            assetConnections.add( assetConnection );
                         }
                         reader.moveUp();
                     }
@@ -475,6 +496,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         }
         conSpec.setReceiptConfirmationRequested( receiptConfirmationRequested );
         conSpec.setCanBypassIntermediate( canBypassIntermediate );
+        conSpec.setAssetConnections( assetConnections );
         addConnectionSpec( connector, conSpec );
     }
 

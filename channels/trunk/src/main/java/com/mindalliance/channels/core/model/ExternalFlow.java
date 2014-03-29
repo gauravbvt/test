@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.AssetConnections;
+
 import java.util.List;
 
 /**
@@ -259,6 +262,31 @@ public class ExternalFlow extends Flow {
             super.setAskedFor( askedFor );
         else
             getConnectorFlow().setAskedFor( askedFor );
+    }
+
+    public void setAssetConnections( AssetConnections assetConnections ) {
+        if ( getConnectorFlow() == null ) {
+            super.setAssetConnections( assetConnections );
+        } else {
+            getConnectorFlow().setAssetConnections( assetConnections );
+        }
+    }
+
+    public AssetConnections getAssetConnections() {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            return super.getAssetConnections( );
+        else
+            return flow.getAssetConnections( );
+    }
+
+    public void addAssetConnection( AssetConnection assetConnection ) {
+        if ( getConnectorFlow() == null ) {
+            super.addAssetConnection( assetConnection );
+        } else {
+            getConnectorFlow().addAssetConnection( assetConnection );
+        }
+
     }
 
     @Override

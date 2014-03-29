@@ -29,6 +29,12 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
     public AssetConnections() {
     }
 
+    public AssetConnections( AssetConnections assetConnections ) {
+        for ( AssetConnection assetConnection : assetConnections ) {
+            add( new AssetConnection( assetConnection ) );
+        }
+    }
+
     public List<AssetConnection> getAll() {
         return assetConnections == null ? new ArrayList<AssetConnection>() : assetConnections;
     }
@@ -185,8 +191,11 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
     }
 
     private List<String> findConnectionTypesLabelsFor( MaterialAsset materialAsset ) {
+        List<AssetConnection> assetConnectionList
+                = new ArrayList<AssetConnection>( this.about( materialAsset ).getAll()) ;
+        AssetConnection.sortOnTypes( assetConnectionList );
         Set<String> typeLabels = new HashSet<String>();
-        for ( AssetConnection assetConnection : this ) {
+        for ( AssetConnection assetConnection : assetConnectionList ) {
             if ( assetConnection.getAsset().equals( materialAsset ) ) {
                 typeLabels.add( assetConnection.getDetailedTypeLabel() );
             }
@@ -197,8 +206,11 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
     }
 
     private List<String> findFirstPersonConnectionTypesLabelsFor( MaterialAsset materialAsset ) {
+        List<AssetConnection> assetConnectionList
+                = new ArrayList<AssetConnection>( this.about( materialAsset ).getAll()) ;
+        AssetConnection.sortOnTypes( assetConnectionList );
         Set<String> typeLabels = new HashSet<String>();
-        for ( AssetConnection assetConnection : this ) {
+        for ( AssetConnection assetConnection : assetConnectionList ) {
             if ( assetConnection.getAsset().equals( materialAsset ) ) {
                 typeLabels.add( assetConnection.getFirstPersonTypeLabel() );
             }
@@ -210,8 +222,11 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
 
 
     private List<String> findConnectionTypesStepLabelsFor( MaterialAsset materialAsset ) {
+        List<AssetConnection> assetConnectionList
+                = new ArrayList<AssetConnection>( this.about( materialAsset ).getAll()) ;
+        AssetConnection.sortOnTypes( assetConnectionList );
         Set<String> typeLabels = new HashSet<String>();
-        for ( AssetConnection assetConnection : this ) {
+        for ( AssetConnection assetConnection : assetConnectionList ) {
             if ( assetConnection.getAsset().equals( materialAsset ) ) {
                 typeLabels.add( assetConnection.getDetailedTypeStepLabel() );
             }
@@ -220,7 +235,6 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
         Collections.sort( result );
         return result;
     }
-
 
     @Override
     public String toString() {
@@ -365,5 +379,9 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
 
     public AssetConnection first() {
           return isEmpty() ? null : getAll().get( 0 );
+    }
+
+    public boolean forwardsRequestFor( MaterialAsset asset ) {
+        return !this.about( asset ).demanding().forwarding().isEmpty();
     }
 }

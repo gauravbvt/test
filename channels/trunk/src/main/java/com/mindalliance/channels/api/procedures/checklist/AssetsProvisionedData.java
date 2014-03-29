@@ -103,11 +103,15 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
                 ? commitment.getCommitter()
                 : commitment.getBeneficiary();
         List<CommunityEmployment> communityEmployments = new ArrayList<CommunityEmployment>(  );
-        if ( !connection.isForwarding() ) {
+        if ( !commitment.getSharing().getAssetConnections().forwardsRequestFor( connection.getAsset() ) ) {
             communityEmployments.add( communityAssignment.getCommunityEmployment() );
         } else {
             List<CommunityAssignment> assignments = communityService
-                    .resolveForwarding( communityAssignment, connection, assetIncoming ); // can return nothing if no demand is being forwarded
+                    .resolveForwarding(
+                            communityAssignment,
+                            connection.getAsset(),
+                            assetIncoming,
+                            communityService.getAllCommitments( false ) ); // can return nothing if no demand is being forwarded
             for ( CommunityAssignment assignment : assignments ) {
                 communityEmployments.add( assignment.getCommunityEmployment() );
             }

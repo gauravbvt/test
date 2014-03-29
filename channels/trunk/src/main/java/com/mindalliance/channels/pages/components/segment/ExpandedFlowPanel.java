@@ -24,7 +24,6 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.asset.AssetConnectable;
-import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -999,16 +998,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         assetsContainer.setOutputMarkupId( true );
         makeVisible( assetsContainer, getFlow().canSetAssets( ) &&  !isShowSimpleForm( ) );
         add( assetsContainer );
-        List<AssetConnection.Type> excluded = new ArrayList<AssetConnection.Type>(  );
+ /*       List<AssetConnection.Type> excluded = new ArrayList<AssetConnection.Type>(  );
         if ( isSend() && getFlow().isNotification() || !isSend() && getFlow().isAskedFor() ) {
             excluded.add( AssetConnection.Type.Provisioning ); // can only demand
         } else if ( isSend() && getFlow().isAskedFor() || !isSend() && getFlow().isNotification() ) {
             excluded.add( AssetConnection.Type.Demanding ); // can only provision
         }
-        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
+*/        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
                 "assetConnections",
-                new PropertyModel<AssetConnectable>( this, "flow" ),
-                excluded );
+                new PropertyModel<AssetConnectable>( this, "flow" ) );
         assetsContainer.add( connectedAssetsPanel );
     }
 

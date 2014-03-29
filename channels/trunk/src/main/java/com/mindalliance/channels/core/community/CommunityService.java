@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
@@ -245,11 +245,13 @@ public interface CommunityService {
     /**
      * Follow the forwarding tree and collect al nodes.
      * @param communityAssignment the assignment to start from
-     * @param connection the connection that applied
+     * @param asset the asset the request for which may be forwarded
      * @param assetIncoming whether the asset is being received (incoming) or delivered
+     * @param allCommitments all commitments
      * @return a list oc community assignments
      */
     List<CommunityAssignment> resolveForwarding( CommunityAssignment communityAssignment,
-                                                 AssetConnection connection,
-                                                 boolean assetIncoming );
+                                                 MaterialAsset asset,
+                                                 boolean assetIncoming,
+                                                 CommunityCommitments allCommitments );
 }

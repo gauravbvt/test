@@ -105,7 +105,7 @@ public class ContactData implements Serializable {
             List<UserParticipation> participations = getParticipations(
                     agent,
                     communityService );
-            if ( participations.isEmpty() || !agent.isSingularParticipation() ) {
+            if ( participations.isEmpty() /*|| !agent.isSingularParticipation() */) {
                 contactList.add( new ContactData(
                         serverUrl,
                         employment,
