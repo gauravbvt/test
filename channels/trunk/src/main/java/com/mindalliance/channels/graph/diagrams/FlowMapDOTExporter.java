@@ -76,7 +76,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private final Map<EventTiming, Set<Part>> contextInitiators = new HashMap<EventTiming, Set<Part>>();
 
-    private final Set<AssetSupplyRelationship> assetSupplyRelationships = new HashSet<AssetSupplyRelationship>(  );
+    private final Set<AssetSupplyRelationship> assetSupplyRelationships = new HashSet<AssetSupplyRelationship>();
 
     public FlowMapDOTExporter( MetaProvider<Node, Flow> metaProvider ) {
         super( metaProvider );
@@ -110,7 +110,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 parts.add( part );
             }
         }
-        if ( ((FlowMapMetaProvider)getMetaProvider()).isShowingAssets() ) {
+        if ( ( (FlowMapMetaProvider) getMetaProvider() ).isShowingAssets() ) {
             findAndProcessAssetSupplyRelationships( communityService, g );
         }
     }
@@ -483,8 +483,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         Set<String> drawn = new HashSet<String>();
         for ( Flow sharing : segment.getAllSharingFlows() ) {
             if ( !sharing.getAssetConnections().demanding().isEmpty() ) {
-                String label = "Requests " + sharing.getAssetConnections().getAssetListLabel();
-                List<DOTAttribute> attributes = getAssetEdgeAttributes( label );
+                String label = "Requests " + sharing.getAssetConnections().getRequestedAssetListLabel();
+                List<DOTAttribute> attributes = getAssetRequestEdgeAttributes( label, sharing );
                 Part demander = sharing.isAskedFor()
                         ? (Part) sharing.getTarget()
                         : (Part) sharing.getSource();
@@ -511,24 +511,24 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     @SuppressWarnings( "unchecked" )
-    private void exportAssetSupplying( PrintWriter out, Graph<Node,Flow>g, CommunityService communityService ) {
+    private void exportAssetSupplying( PrintWriter out, Graph<Node, Flow> g, CommunityService communityService ) {
         Set<String> drawn = new HashSet<String>();
         for ( AssetSupplyRelationship rel : assetSupplyRelationships ) {
             Part supplier = rel.getSupplier( communityService );
             Part supplied = rel.getSupplied( communityService );
-            List<String> assetNames = (List<String>)CollectionUtils.collect(
+            List<String> assetNames = (List<String>) CollectionUtils.collect(
                     rel.getAssets(),
                     new Transformer() {
                         @Override
                         public Object transform( Object input ) {
-                            return((MaterialAsset)input).getName();
+                            return ( (MaterialAsset) input ).getName();
                         }
                     }
             );
             Collections.sort( assetNames );
             String label = "Supplies " + ChannelsUtils.listToString( assetNames, " and " );
-            List<DOTAttribute> attributes = getAssetEdgeAttributes( label );
-            if ( isVisible( supplier) && isVisible( supplied ) ) {
+            List<DOTAttribute> attributes = getAssetSupplyEdgeAttributes( label );
+            if ( isVisible( supplier ) && isVisible( supplied ) ) {
                 String starterId = getVertexID( supplier );
                 String enderId = getVertexID( supplied );
                 String s = getIndent()
@@ -586,11 +586,35 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         return list;
     }
 
+    private List<DOTAttribute> getAssetRequestEdgeAttributes( String label, Flow sharing ) {
+        List<DOTAttribute> list = getAssetEdgeAttributes( label );
+        list.add( new DOTAttribute( "arrowhead",  "onormal") );
+        String tooltip;
+        if ( isSimplified() ) {
+             tooltip = sanitize( label );
+            list.add( new DOTAttribute( "tooltip", tooltip ) );
+        } else {
+             tooltip = sanitize( "Asset requested via " + (sharing.isNotification() ? "notification " : "query ") + sharing.getName() );
+        }
+        list.add( new DOTAttribute( "tooltip", tooltip ) );
+        return list;
+    }
+
+    private List<DOTAttribute> getAssetSupplyEdgeAttributes( String label ) {
+        List<DOTAttribute> list = getAssetEdgeAttributes( label );
+        list.add( new DOTAttribute( "arrowhead",  "normal") );
+        if ( isSimplified() ) {
+            String tooltip = sanitize( label );
+            list.add( new DOTAttribute( "tooltip", tooltip ) );
+        }
+        return list;
+    }
+
+
     private List<DOTAttribute> getAssetEdgeAttributes( String label ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "steelblue" ) );
         list.add( new DOTAttribute( "arrowsize", "1.0" ) );
-        list.add( new DOTAttribute( "arrowhead", "open" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
@@ -602,11 +626,6 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                     label,
                     AbstractMetaProvider.LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
             list.add( new DOTAttribute( "label", sanitize( edgeLabel ) ) );
-        }
-        String tooltip;
-        if ( isSimplified() ) {
-            tooltip = sanitize( label );
-            list.add( new DOTAttribute( "tooltip", tooltip ) );
         }
         return list;
     }

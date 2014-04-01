@@ -484,7 +484,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         String qualifyingIconPath = getImageDirectory().getFile().getAbsolutePath() + qualifyingIconUrl;
         BufferedImage qualifyingIcon = ImageIO.read( new File( qualifyingIconPath ) );
         int posX = x == 0 ? 0 : iconImage.getWidth() - qualifyingIcon.getWidth();
-        int posY = y == 0 ? 0 : iconImage.getHeight() - qualifyingIcon.getHeight();
+        int posY = y == 0 ? 0 : ICON_HEIGHTS[0] - qualifyingIcon.getHeight();
         graphics.drawImage( qualifyingIcon, posX, posY, null );
         String qualified_name = iconName + qualifier;
         ImageIO.write( iconImage, "png", new File( iconName + qualifier + ".png" ) );

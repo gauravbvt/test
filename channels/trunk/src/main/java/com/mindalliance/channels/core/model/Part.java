@@ -841,6 +841,33 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return sharingReceives;
     }
 
+    public List<Flow> getAllNonInitiatedSharingFlows() {
+        List<Flow> flows = new ArrayList<Flow>(  );
+        for ( Flow flow : getAllSharingReceives() ) {
+            if ( flow.isNotification() )
+                flows.add( flow );
+        }
+        for ( Flow flow : getAllSharingSends() ) {
+            if ( flow.isAskedFor() )
+                flows.add( flow );
+        }
+        return flows;
+    }
+
+    public List<Flow> getAllInitiatedSharingFlows() {
+        List<Flow> flows = new ArrayList<Flow>(  );
+        for ( Flow flow : getAllSharingReceives() ) {
+            if ( flow.isAskedFor() )
+                flows.add( flow );
+        }
+        for ( Flow flow : getAllSharingSends() ) {
+            if ( flow.isNotification() )
+                flows.add( flow );
+        }
+        return flows;
+    }
+
+
     /**
      * Get the maximum severity of risks mitigated. Null if none.
      *
@@ -1598,7 +1625,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
         return assetConnections;
     }
-
 
     /**
      * Category of tasks.

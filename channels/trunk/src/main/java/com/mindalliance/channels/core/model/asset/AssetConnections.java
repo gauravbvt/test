@@ -139,7 +139,7 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
     }
 
     @SuppressWarnings( "unchecked" )
-    public String getAssetListLabel() {
+    public String getRequestedAssetListLabel() {
         List<MaterialAsset> assets = findAllMaterialAssets();
         Collections.sort( assets );
         List<String> assetNames = (List<String>)CollectionUtils.collect(
@@ -147,11 +147,16 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return ((MaterialAsset)input).getName();
+                        MaterialAsset asset = (MaterialAsset)input;
+                        return asset.getName() + (isRequestForwardedFor( asset ) ? " (forwarded)" : "");
                     }
                 }
         );
         return ChannelsUtils.listToString( assetNames, " and " );
+    }
+
+    public boolean isRequestForwardedFor( MaterialAsset materialAsset ) {
+        return !forwarding().about( materialAsset ).isEmpty();
     }
 
 

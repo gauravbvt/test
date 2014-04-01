@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
@@ -186,7 +186,18 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
             iconName = imagingService.findIconName( communityService, modelObject );
-            return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+            iconName = iconName + ( numLines > 0 ? numLines : "" );
+            if ( modelObject instanceof AssetConnectable ) {
+                AssetConnectable assetConnectable = (AssetConnectable)modelObject;
+                if ( !assetConnectable.getAssetConnections().using().isEmpty() ) {
+                    iconName = iconName + "_uses";
+                }
+                if ( !assetConnectable.getAssetConnections().stocking().isEmpty()
+                        || !assetConnectable.getAssetConnections().producing().isEmpty() ) {
+                    iconName = iconName + "_produces";
+                }
+            }
+            return iconName + ".png";
         }
     }
 

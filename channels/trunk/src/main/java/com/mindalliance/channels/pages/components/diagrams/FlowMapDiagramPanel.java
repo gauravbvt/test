@@ -263,7 +263,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             Change change = new Change( Change.Type.Selected, flow );
             String props = isShowingGoals() ? "showGoals" : "";
             props += isShowingConnectors() ? " showConnectors" : "";
-            props += isShowingAssets() ? "" : " showAssets";
+            props += isShowingAssets() ? " showAssets" : "";
             props += isHidingNoop() ? " hideNoop" : "";
             props += isSimplified() ? " simplify" : "";
             props += isTopBottom() ? "" : " leftRight";

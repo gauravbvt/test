@@ -365,7 +365,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Integer countReferences( final ModelObject mo ) {
         int count = 0;
         Iterator classes = ModelObject.referencingClasses().iterator();
@@ -454,26 +454,26 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
         return getDao().listKnownEntities( clazz );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, Boolean mustBeReferenced ) {
         return getDao().listActualEntities( clazz, mustBeReferenced );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
         return getDao().listActualEntities( clazz );
     }
 
 
     @Override
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
         final Place locale = getPlanLocale();
         return getDao().listEntitiesNarrowingOrEqualTo( entity, locale );
@@ -504,7 +504,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         List<T> domain;
         if ( Part.class.isAssignableFrom( clazz ) ) {
@@ -518,7 +518,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return getDao().listReferencedEntities( clazz );
     }
@@ -534,7 +534,7 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
         return getDao().listTypeEntities( clazz );
     }
@@ -545,7 +545,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Boolean isReferenced( final ModelObject mo ) {
         if ( getCollaborationModel().references( mo ) )
             return true;
@@ -605,11 +605,12 @@ public abstract class DefaultQueryService implements QueryService {
     public Boolean isReferenced( final Classification classification ) {
         boolean hasReference = CollectionUtils.exists(
                 listActualEntities( Actor.class ), new Predicate() {
-            @Override
-            public boolean evaluate( Object object ) {
-                return ( (Actor) object ).getClearances().contains( classification );
-            }
-        } );
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Actor) object ).getClearances().contains( classification );
+                    }
+                }
+        );
         hasReference = hasReference || CollectionUtils.exists(
                 findAllFlows(),
                 new Predicate() {
@@ -638,7 +639,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public List<Actor> findAllActualActors( ResourceSpec resourceSpec ) {
         Place locale = getPlanLocale();
         Set<Actor> actors = new HashSet<Actor>();
@@ -697,8 +698,10 @@ public abstract class DefaultQueryService implements QueryService {
                                         partOrg,
                                         new Job( Actor.UNKNOWN,
                                                 part.getRoleOrUnknown(),
-                                                part.getJurisdiction() ) ),
-                                part );
+                                                part.getJurisdiction() )
+                                ),
+                                part
+                        );
                         if ( !isProhibited( assignment, parts ) )
                             result.add( assignment );
 
@@ -711,8 +714,10 @@ public abstract class DefaultQueryService implements QueryService {
                                                     actualOrg,
                                                     new Job( Actor.UNKNOWN,
                                                             part.getRoleOrUnknown(),
-                                                            part.getJurisdiction() ) ),
-                                            part );
+                                                            part.getJurisdiction() )
+                                            ),
+                                            part
+                                    );
                                     if ( !isProhibited( assignment, parts ) )
                                         result.add( assignment );
                                 }
@@ -724,8 +729,10 @@ public abstract class DefaultQueryService implements QueryService {
                                             partOrg,
                                             new Job( Actor.UNKNOWN,
                                                     part.getRoleOrUnknown(),
-                                                    part.getJurisdiction() ) ),
-                                    part );
+                                                    part.getJurisdiction() )
+                                    ),
+                                    part
+                            );
                             if ( !isProhibited( assignment, parts ) )
                                 result.add( assignment );
                         }
@@ -795,25 +802,29 @@ public abstract class DefaultQueryService implements QueryService {
             addUniqueChannels( channels, spec.getActor().getEffectiveChannels() );
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( null, spec.getRole(),
-                            spec.getOrganization(), spec.getJurisdiction() ) ) );
+                            spec.getOrganization(), spec.getJurisdiction() )
+            ) );
         }
 
         if ( spec.getJurisdiction() != null )
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( spec.getActor(), spec.getRole(),
-                            spec.getOrganization(), null ) ) );
+                            spec.getOrganization(), null )
+            ) );
 
         if ( spec.getRole() != null )
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( spec.getActor(), null,
-                            spec.getOrganization(), spec.getJurisdiction() ) ) );
+                            spec.getOrganization(), spec.getJurisdiction() )
+            ) );
 
         Organization organization = spec.getOrganization();
         if ( organization != null ) {
             addUniqueChannels( channels, organization.getEffectiveChannels() );
             addUniqueChannels( channels, findAllChannelsFor(
                     new ResourceSpec( spec.getActor(), spec.getRole(),
-                            null, spec.getJurisdiction() ) ) );
+                            null, spec.getJurisdiction() )
+            ) );
         }
 
         return toSortedList( channels );
@@ -916,7 +927,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Commitment> findAllBypassCommitments( final Flow flow ) {
         assert flow.isSharing();
         Set<Commitment> commitments = new HashSet<Commitment>();
@@ -1127,7 +1138,7 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<Hierarchical>( descendants );
     }
 
-    private  boolean hasAncestor(
+    private boolean hasAncestor(
             Hierarchical hierarchical, final Hierarchical other, final Set<Hierarchical> visited ) {
 
         if ( visited.contains( hierarchical ) )
@@ -1191,11 +1202,12 @@ public abstract class DefaultQueryService implements QueryService {
         for ( final Flow candidate : candidates ) {
             boolean covered = CollectionUtils.exists(
                     disseminations, new Predicate() {
-                @Override
-                public boolean evaluate( Object object ) {
-                    return ( (Dissemination) object ).getFlow().equals( candidate );
-                }
-            } );
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Dissemination) object ).getFlow().equals( candidate );
+                        }
+                    }
+            );
             if ( !covered && !candidate.isProhibited() ) {
                 Part disseminationPart = (Part) ( showTargets
                         ? candidate.getTarget()
@@ -1397,7 +1409,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Employment> findAllEmploymentsForActor( final Actor actor ) {
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
@@ -1413,7 +1425,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Employment> findAllEmploymentsForRole( final Role role ) {
         final Place locale = getPlanLocale();
         return (List<Employment>) CollectionUtils.select(
@@ -1466,7 +1478,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelEntity> findAllEntitiesIn( Place place ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( place ),
@@ -1474,7 +1486,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( phase ),
@@ -1482,7 +1494,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelEntity> findAllEntitiesIn( TransmissionMedium medium ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( medium ),
@@ -1490,7 +1502,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelEntity> findAllEntitiesIn( MaterialAsset asset ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( asset ),
@@ -1569,7 +1581,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agreement> findAllImpliedAgreementsOf(
             Organization organization,
             Assignments assignments,
@@ -1586,14 +1598,15 @@ public abstract class DefaultQueryService implements QueryService {
                     final Agreement agreement = Agreement.from( commitment );
                     if ( agreement != null ) {
                         encompassed.addAll( (List<Agreement>) CollectionUtils.select(
-                                agreements,
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        return encompasses( agreement,
-                                                (Agreement) object );
-                                    }
-                                } )
+                                        agreements,
+                                        new Predicate() {
+                                            @Override
+                                            public boolean evaluate( Object object ) {
+                                                return encompasses( agreement,
+                                                        (Agreement) object );
+                                            }
+                                        }
+                                )
                         );
                         agreements.add( agreement );
                     }
@@ -1753,7 +1766,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelObject> findAllModelObjectsIn( Phase phase ) {
         List<ModelObject> inPhase = new ArrayList<ModelObject>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1777,7 +1790,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
         final Place locale = getPlanLocale();
         return (List<? extends ModelEntity>) CollectionUtils.select(
@@ -1886,7 +1899,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Flow> findAllFlowsInvolving( ModelEntity modelEntity ) {
-        List<Flow> flows = new ArrayList<Flow>(  );
+        List<Flow> flows = new ArrayList<Flow>();
         for ( Flow flow : findAllFlows() ) {
             if ( flow.references( modelEntity ) )
                 flows.add( flow );
@@ -1907,7 +1920,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
                 userDao.getDevelopers( getCollaborationModel().getUri() ),
@@ -1953,7 +1966,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelObject> List<T> findAllReferencing( final ModelObject referenced, final Class<T> clazz ) {
         List<T> referencers = new ArrayList<T>();
         if ( CollaborationModel.class.isAssignableFrom( clazz ) ) {
@@ -2071,7 +2084,7 @@ public abstract class DefaultQueryService implements QueryService {
                 && isEOIsCoveredBy( need.getEffectiveEois(), send.getEffectiveEois() );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private static boolean isEOIsCoveredBy( List<ElementOfInformation> coveredEois, final List<ElementOfInformation> coveringEois ) {
         if ( coveredEois.isEmpty() ) {
             return true;
@@ -2091,9 +2104,11 @@ public abstract class DefaultQueryService implements QueryService {
                                                     String coveringEOI = ( (ElementOfInformation) object ).getContent();
                                                     return Matcher.same( coveredEOI, coveringEOI );
                                                 }
-                                            } );
+                                            }
+                                    );
                                 }
-                            } );
+                            }
+                    );
             return uncoveredEOIs.isEmpty();
         }
     }
@@ -2129,7 +2144,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Segment> findAllSegmentsForPhase( final Phase phase ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
@@ -2267,7 +2282,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
@@ -2328,7 +2343,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeAlternatesFail ) {
         // Find all downstream important flows, avoiding circularity
         List<Flow> importantFlows = findImportantFlowsFrom( part, new HashSet<Part>(), assumeAlternatesFail );
@@ -2367,7 +2382,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private static List<Flow> keepEssentialFlows( final List<Flow> importantFlows ) {
         List<Flow> nonEssentialFlows = (List<Flow>) CollectionUtils.select(
                 importantFlows,
@@ -2674,7 +2689,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Segment> findSegmentsRespondingTo( final Event event ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
@@ -2717,7 +2732,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<ModelEntity> findTaskedEntities(
             Segment segment,
             Class entityClass,
@@ -2735,7 +2750,8 @@ public abstract class DefaultQueryService implements QueryService {
                         return !entity.isUnknown()
                                 && entity.getKind().equals( kind );
                     }
-                } );
+                }
+        );
     }
 
     @Override
@@ -3015,7 +3031,7 @@ public abstract class DefaultQueryService implements QueryService {
         if ( part.getRole() != null ) {
             if ( !label.isEmpty() )
                 label += sep;
-             if ( !label.isEmpty() )
+            if ( !label.isEmpty() )
                 label += "as ";
             label += part.getRole().getName();
         }
@@ -3040,7 +3056,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     /**
      * Get extended title for the part.
-
+     *
      * @param part a part
      * @return a string
      */
@@ -3081,7 +3097,7 @@ public abstract class DefaultQueryService implements QueryService {
         String label = "";
         if ( part.getActor() != null ) {
             label += part.getActor().getName();
-        } else  {
+        } else {
             if ( part.getRole() != null ) {
                 if ( !label.isEmpty() )
                     label += sep;
@@ -3113,7 +3129,7 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Actor getKnownActualActor( Part part ) {
         List<Actor> knownActors = (List<Actor>) CollectionUtils.collect( findAllAssignments( part, false ),
                 new Transformer() {
@@ -3122,7 +3138,8 @@ public abstract class DefaultQueryService implements QueryService {
                         Assignment assignment = (Assignment) input;
                         return assignment.getActor();
                     }
-                } );
+                }
+        );
 
         return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
     }
@@ -3168,7 +3185,7 @@ public abstract class DefaultQueryService implements QueryService {
         assetConnection.setAsset( retrieveEntity( MaterialAsset.class, map, "asset" ) );
         assetConnection.setConsuming( (Boolean) map.get( "consuming" ) );
         assetConnection.setCritical( (Boolean) map.get( "critical" ) );
-        assetConnection.setForwarding( (Boolean)map.get( "forwarding" ) );
+        assetConnection.setForwarding( (Boolean) map.get( "forwarding" ) );
         return assetConnection;
     }
 
@@ -3197,9 +3214,11 @@ public abstract class DefaultQueryService implements QueryService {
                                         String otherEoi = ( (ElementOfInformation) object ).getContent();
                                         return Matcher.same( eoi, otherEoi );
                                     }
-                                } );
+                                }
+                        );
                     }
-                } );
+                }
+        );
     }
 
     @Override
@@ -3511,7 +3530,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
     public List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
         Set<Organization> allEmployers = new HashSet<Organization>();
@@ -3594,7 +3613,7 @@ public abstract class DefaultQueryService implements QueryService {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Part)object).isInitiatiorOfEvent( event );
+                        return ( (Part) object ).isInitiatiorOfEvent( event );
                     }
                 }
         );
@@ -3602,7 +3621,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Actor> findAllActorsEmployedBy( Organization organization ) {
-        Set<Actor> actors = new HashSet<Actor>(  );
+        Set<Actor> actors = new HashSet<Actor>();
         for ( Organization org : organization.selfAndAncestors() ) {
             for ( Employment employment : findAllEmploymentsIn( org ) ) {
                 actors.add( employment.getActor() );
@@ -3636,7 +3655,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<MaterialAsset> findAllAssetsProvisionedTo( Part part ) {
-        Set<MaterialAsset> provisionedAssets = new HashSet<MaterialAsset>(  );
+        Set<MaterialAsset> provisionedAssets = new HashSet<MaterialAsset>();
         for ( Flow flow : part.getAllSharingSends() ) {
             if ( flow.isNotification() ) { // as return from initiating notification
                 provisionedAssets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
@@ -3652,16 +3671,16 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Part> findAllPartsVisibleTo( Part part ) {
-        List<Part> visibleParts = new ArrayList<Part>(  );
+        List<Part> visibleParts = new ArrayList<Part>();
         visibleParts.addAll( part.getSegment().listParts() );
         for ( Flow flow : part.getAllSharingReceives() ) {
             if ( flow.isExternal() ) {
-                visibleParts.add( (Part)flow.getSource() );
+                visibleParts.add( (Part) flow.getSource() );
             }
         }
         for ( Flow flow : part.getAllSharingSends() ) {
             if ( flow.isExternal() ) {
-                visibleParts.add( (Part)flow.getTarget() );
+                visibleParts.add( (Part) flow.getTarget() );
             }
         }
         visibleParts.remove( part );
@@ -3669,14 +3688,14 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<MaterialAsset> findAllUsersOfAssetField( final MaterialAsset materialAsset, final AssetField field ) {
         return (List<MaterialAsset>) CollectionUtils.select(
                 listActualEntities( MaterialAsset.class, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        MaterialAsset candidate = (MaterialAsset)object;
+                        MaterialAsset candidate = (MaterialAsset) object;
                         return candidate.narrowsOrEquals( materialAsset )
                                 && candidate.getValuedFields().contains( field );
                     }
@@ -3686,10 +3705,10 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships() {
-        List<AssetSupplyRelationship<Part>> results = new ArrayList<AssetSupplyRelationship<Part>>(  );
-        for ( Part supplier : list( Part.class) ) {
-            for ( MaterialAsset asset : supplier.getAssetConnections().findAssetsProvisioned() ) {
-                for( Part supplied : safeFindAllSupplied( supplier, asset, new HashSet<Part>() ) ) {
+        List<AssetSupplyRelationship<Part>> results = new ArrayList<AssetSupplyRelationship<Part>>();
+        for ( Part supplier : list( Part.class ) ) {
+            for ( MaterialAsset asset : findAssetsProvisionedBy( supplier ) ) {
+                for ( Part supplied : safeFindAllSupplied( supplier, asset, false, new HashSet<Part>() ) ) {
                     AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, supplied );
                     if ( !results.contains( rel ) ) {
                         results.add( rel );
@@ -3702,56 +3721,68 @@ public abstract class DefaultQueryService implements QueryService {
         return results;
     }
 
+    private List<MaterialAsset> findAssetsProvisionedBy( Part part ) {
+        Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
+        for ( Flow flow : part.getAllNonInitiatedSharingFlows() ) {
+            assets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
+        }
+        return new ArrayList<MaterialAsset>( assets );
+    }
+
     @SuppressWarnings( "unchecked" )
-    private List<Part> safeFindAllSupplied( Part part, final MaterialAsset asset, Set<Part> visited) {
-        List<Part> answer = new ArrayList<Part>(  );
+    private List<Part> safeFindAllSupplied( Part part, final MaterialAsset asset, final boolean forwarded, Set<Part> visited ) {
+        List<Part> answer = new ArrayList<Part>();
         if ( !visited.contains( part ) ) {
-            Set<Part> forwardees = new HashSet<Part>();
+            Set<Part> suppliedParts = new HashSet<Part>();
             visited.add( part );
             // received and demanding the asset, perhaps forwarding
-            List<Flow> receivedRequestingFlows = (List<Flow>)CollectionUtils.select(
+            List<Flow> receivedProvisioningFlows = (List<Flow>) CollectionUtils.select(
                     part.getAllSharingReceives(),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            Flow flow = (Flow)object;
-                            return flow.isNotification() && !flow.getAssetConnections().demanding().about(asset).isEmpty();
+                            Flow flow = (Flow) object;
+                            return flow.isNotification()
+                                    && ( forwarded
+                                    ? !flow.getAssetConnections().demanding().about( asset ).isEmpty()
+                                    : !flow.getAssetConnections().provisioning().about( asset ).isEmpty() );
                         }
                     }
-
             );
-            for ( Flow receivedRequestingFlow : receivedRequestingFlows ) {
-                    Part requestingPart = (Part)receivedRequestingFlow.getSource();
-                    boolean forwarding = !receivedRequestingFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
-                    if ( !forwarding ) {
-                        forwardees.add( requestingPart );
-                    } else {
-                        forwardees.addAll( safeFindAllSupplied( requestingPart, asset, visited ) );
-                    }
+            for ( Flow receivedProvisioningFlow : receivedProvisioningFlows ) {
+                Part suppliedPart = (Part) receivedProvisioningFlow.getSource(); // notifying part
+                boolean forwarding = !receivedProvisioningFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+                if ( !forwarding ) {
+                    suppliedParts.add( suppliedPart );
+                } else {
+                    suppliedParts.addAll( safeFindAllSupplied( suppliedPart, asset, true, visited ) );
+                }
             }
             // sent and demanding the asset, perhaps forwarding
-            List<Flow> sentRequestingFlows = (List<Flow>)CollectionUtils.select(
+            List<Flow> sentProvisioningFlows = (List<Flow>) CollectionUtils.select(
                     part.getAllSharingSends(),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            Flow flow = (Flow)object;
-                            return flow.isAskedFor() && !flow.getAssetConnections().demanding().about(asset).isEmpty();
+                            Flow flow = (Flow) object;
+                            return flow.isAskedFor()
+                                    && ( forwarded
+                                    ? !flow.getAssetConnections().demanding().about( asset ).isEmpty()
+                                    : !flow.getAssetConnections().provisioning().about( asset ).isEmpty() );
                         }
                     }
-
             );
-            for ( Flow sentRequestingFlow : sentRequestingFlows ) {
-                Part requestingPart = (Part)sentRequestingFlow.getTarget();
-                boolean forwarding = !sentRequestingFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+            for ( Flow sentProvisioningFlow : sentProvisioningFlows ) {
+                Part requestingPart = (Part) sentProvisioningFlow.getTarget(); // replied-to part
+                boolean forwarding = !sentProvisioningFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
                 if ( !forwarding ) {
-                    forwardees.add( requestingPart );
+                    suppliedParts.add( requestingPart );
                 } else {
-                    forwardees.addAll( safeFindAllSupplied( requestingPart, asset, visited ) );
+                    suppliedParts.addAll( safeFindAllSupplied( requestingPart, asset, true, visited ) );
                 }
             }
-            // If can't find forwardees, return none.
-            answer.addAll( forwardees );
+            // If can't find supplied part, return none.
+            answer.addAll( suppliedParts );
         }
         return answer;
     }
