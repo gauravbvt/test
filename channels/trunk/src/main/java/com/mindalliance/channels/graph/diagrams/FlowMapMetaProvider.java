@@ -39,12 +39,12 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                 CommunityService communityService ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, false, communityService );
+        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false, false, false, communityService );
     }
 
     public FlowMapMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                 boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
-                                CommunityService communityService ) {
+                                boolean showingAssets, CommunityService communityService ) {
         super( modelObject,
                 outputFormat,
                 imageDirectory,
@@ -53,6 +53,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 showingConnectors,
                 hidingNoop,
                 simplified,
+                showingAssets,
                 communityService );
     }
 

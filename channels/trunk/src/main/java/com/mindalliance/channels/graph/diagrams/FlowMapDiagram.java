@@ -42,6 +42,10 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
      * Whether to show goals.
      */
     private boolean showingGoals;
+    /**
+     * Whether to show assets.
+     */
+    private boolean showingAssets;
 
     /**
      * Whether to show connectors.
@@ -58,16 +62,18 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
     private boolean simplified;
 
     public FlowMapDiagram( Segment segment, Node selectedNode, Flow selectedFlow, double[] diagramSize, String orientation ) {
-        this( segment, selectedNode, selectedFlow, diagramSize, orientation, false, false, false, false );
+        this( segment, selectedNode, selectedFlow, diagramSize, orientation, false, false, false, false, false );
     }
 
     public FlowMapDiagram( Segment segment, Node selectedNode, Flow selectedFlow, double[] diagramSize, String orientation,
-                           boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified ) {
+                           boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
+                           boolean showingAssets) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.selectedNode = selectedNode;
         this.selectedFlow = selectedFlow;
         this.showingGoals = showingGoals;
+        this.showingAssets = showingAssets;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
         this.simplified = simplified;
@@ -96,6 +102,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
                 showingConnectors,
                 hidingNoop,
                 simplified,
+                showingAssets,
                 communityService );
         metaProvider.setGraphProperties( ( (DirectedMultiGraphWithProperties) graph ).getProperties() );
         if ( diagramSize != null )

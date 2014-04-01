@@ -420,6 +420,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
+                props += isShowingAssets() ? " showAssets" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
                 props += isTopBottom() ? "" : " leftRight";
@@ -757,6 +758,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         if ( property != null ) {
             setShowingGoals( property.contains( "showGoals" ) );
             setShowingConnectors( property.contains( "showConnectors" ) );
+            setShowingAssets( property.contains( "showAssets" ) );
             setHidingNoop( property.contains( "hideNoop" ) );
             setSimplified( property.contains( "simplify" ) );
             setTopBottom( !property.contains( "leftRight" ) );

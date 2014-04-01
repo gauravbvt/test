@@ -41,6 +41,7 @@ import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetField;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
+import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 
 import java.util.Date;
 import java.util.List;
@@ -1766,4 +1767,10 @@ public interface QueryService {
      * @return a list of material assets
      */
     List<MaterialAsset> findAllUsersOfAssetField( MaterialAsset materialAsset, AssetField field );
+
+    /**
+     * Find all asset provisioning relationships in the model.
+     * @return a list of asset supply relationships.
+     */
+    List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships();
 }

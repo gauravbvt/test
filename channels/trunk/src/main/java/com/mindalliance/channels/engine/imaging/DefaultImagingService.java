@@ -213,7 +213,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 size[1] = image.getHeight();
             }
         } catch ( IOException e ) {
-            LOG.warn( "No such image " + imagePath + "/" + imageName);
+            LOG.warn( "No such image " + imagePath + "/" + imageName );
         }
         return size;
     }
@@ -303,7 +303,6 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         }
         return true;
     }
-
 
     private boolean squarifyModelObjectImage( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
@@ -406,7 +405,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 String encodedPath = relPath.replaceAll(
                         File.separatorChar == '\\'
                                 ? "\\\\" :
-                                File.separator, SEPARATOR );
+                                File.separator, SEPARATOR
+                );
 
                 return "icons" + File.separator + encodedPath;
             }
@@ -456,11 +456,40 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         Graphics2D graphics = (Graphics2D) icon.getGraphics();
         graphics.drawImage( resized, 0, 0, resized.getWidth(), resized.getHeight(), null );
         ImageIO.write( icon, "png", new File( extended + number + ".png" ) );
-        String negatedIconUrl = getImageDirectory().getFile().getAbsolutePath() + NEGATED_ICON_URL;
-        BufferedImage negatedIcon = ImageIO.read( new File( negatedIconUrl ) );
-        graphics.drawImage( negatedIcon, 0, 0, null );
-        ImageIO.write( icon, "png", new File( extended + number + NEGATED + ".png" ) );
+        createQualifiedIcons( extended + number );
         graphics.dispose();
+    }
+
+    // Negated before uses before produces
+    private void createQualifiedIcons( String iconFileName ) throws IOException {
+        String negated_name = createQualifiedIcon( NEGATED, iconFileName, NEGATED_ICON_URL, 0, 0 );
+        String uses_name = createQualifiedIcon( USES, iconFileName, USES_ICON_URL, 1, 0 );
+        createQualifiedIcon( PRODUCES, iconFileName, PRODUCES_ICON_URL, 1, 1 );
+        String negated_uses_name = createQualifiedIcon( USES, negated_name, USES_ICON_URL, 1, 0 );
+        createQualifiedIcon( PRODUCES, negated_name, PRODUCES_ICON_URL, 1, 1 );
+        createQualifiedIcon( PRODUCES, uses_name, PRODUCES_ICON_URL, 1, 1 );
+        createQualifiedIcon( PRODUCES, negated_uses_name, PRODUCES_ICON_URL, 1, 1 );
+    }
+
+    private String createQualifiedIcon( String qualifier,
+                                        String iconName,
+                                        String qualifyingIconUrl,
+                                        int x,// 0 = left, 1 = right
+                                        int y // = top, 1 = bottom
+    ) throws IOException {
+        String iconFilePath = iconName + ".png";
+        BufferedImage iconImage = ImageIO.read( new File( iconFilePath ) );
+        iconImage.createGraphics();
+        Graphics2D graphics = (Graphics2D) iconImage.getGraphics();
+        String qualifyingIconPath = getImageDirectory().getFile().getAbsolutePath() + qualifyingIconUrl;
+        BufferedImage qualifyingIcon = ImageIO.read( new File( qualifyingIconPath ) );
+        int posX = x == 0 ? 0 : iconImage.getWidth() - qualifyingIcon.getWidth();
+        int posY = y == 0 ? 0 : iconImage.getHeight() - qualifyingIcon.getHeight();
+        graphics.drawImage( qualifyingIcon, posX, posY, null );
+        String qualified_name = iconName + qualifier;
+        ImageIO.write( iconImage, "png", new File( iconName + qualifier + ".png" ) );
+        graphics.dispose();
+        return qualified_name;
     }
 
     private static BufferedImage resize( BufferedImage image, int width, int height ) {

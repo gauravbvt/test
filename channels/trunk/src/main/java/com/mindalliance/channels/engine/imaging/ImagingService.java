@@ -26,9 +26,28 @@ public interface ImagingService {
      */
     String NEGATED = "_negated";
     /**
+     * Last file name part before extension denoting assets used if present.
+     */
+    String USES = "_uses";
+
+    /**
+     * Last file name part before extension denoting assets produced if present.
+     */
+    String PRODUCES = "_produces";
+
+    /**
      * URL of negated icon.
      */
     String NEGATED_ICON_URL = "/conceptual.png";
+    /**
+     * URL of uses assets icon.
+     */
+    String USES_ICON_URL = "/uses.png";
+    /**
+     * URL of uses icon.
+     */
+    String PRODUCES_ICON_URL = "/produces.png";
+
 
     public static final String SEPARATOR = "---";
 

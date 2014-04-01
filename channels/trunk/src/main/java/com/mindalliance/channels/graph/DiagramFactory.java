@@ -85,11 +85,13 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param showingGoals      whether to show goals
      * @param showingConnectors whether to show connectors
      * @param hidingNoop        whether to hide non-operation tasks and flows
-     * @param simplified        whether to show s simplified flow map
+     * @param simplified        whether to show a simplified flow map
+     * @param showingAssets     whether to show assets
      * @return a flow map diagram
      */
     Diagram newFlowMapDiagram( Segment segment, Node node, Flow flow, double[] diagramSize, String orientation,
-                               boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified );
+                               boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
+                               boolean showingAssets );
 
     /**
      * Instantiates a plan map diagram.
@@ -172,6 +174,7 @@ public interface DiagramFactory<Vertex, Edge> {
 
     /**
      * Get user icon directory.
+     *
      * @return a resource
      */
     Resource getUserIconDirectory();
@@ -249,7 +252,7 @@ public interface DiagramFactory<Vertex, Edge> {
     /**
      * Instantiates a command chains diagram.
      *
-     * @param agent        an agent
+     * @param agent       an agent
      * @param diagramSize an array of doubles
      * @param orientation a string
      * @param algo        the rendering algorithm

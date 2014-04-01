@@ -39,6 +39,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private boolean showingGoals;
     /**
+     * Whether to show assets.
+     */
+    private boolean showingAssets;
+    /**
      * Whether to show connectors.
      */
     private boolean showingConnectors;
@@ -59,7 +63,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 IModel<Segment> segmentModel,
                                 IModel<Part> partModel,
                                 Settings settings ) {
-        this( id, segmentModel, partModel, settings, false, false, false, false );
+        this( id, segmentModel, partModel, settings, false, false, false, false, false );
     }
 
     public FlowMapDiagramPanel( String id,
@@ -69,15 +73,17 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                                 boolean showingGoals,
                                 boolean showingConnectors,
                                 boolean hidingNoop,
-                                boolean simplified ) {
+                                boolean simplified,
+                                boolean showingAssets ) {
         super( id, settings );
         this.segmentModel = segmentModel;
         this.partModel = partModel;
         this.showingGoals = showingGoals;
+        this.showingAssets = showingAssets;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
         this.simplified = simplified;
-        init();
+         init();
     }
 
     public Flow getFlow() {
@@ -100,7 +106,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      * {@inheritDoc}
      */
     @Override
-    protected Diagram makeDiagram( ) {
+    protected Diagram makeDiagram() {
         return getDiagramFactory().newFlowMapDiagram(
                 getSegment(),
                 getPart(),
@@ -110,7 +116,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 showingGoals,
                 showingConnectors,
                 hidingNoop,
-                simplified );
+                simplified,
+                showingAssets );
     }
 
     /**
@@ -150,6 +157,10 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( "&showingGoals=" );
             sb.append( showingGoals );
         }
+        if ( showingAssets ) {
+            sb.append( "&showingAssets=" );
+            sb.append( showingAssets );
+        }
         if ( showingConnectors ) {
             sb.append( "&showingConnectors=" );
             sb.append( showingConnectors );
@@ -163,7 +174,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             sb.append( simplified );
         }
 
-        sb.append( "&");
+        sb.append( "&" );
         sb.append( TICKET_PARM );
         sb.append( '=' );
         sb.append( getTicket() );
@@ -187,7 +198,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
-            Map<String,String> extras,
+            Map<String, String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -207,7 +218,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
-            Map<String,String> extras,
+            Map<String, String> extras,
             AjaxRequestTarget target ) {
         try {
             Segment segment = getQueryService().find( Segment.class, Long.valueOf( graphId ) );
@@ -217,6 +228,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 Change change = new Change( Change.Type.Selected, part );
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
+                props += isShowingAssets() ? " showAssets" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
                 props += isTopBottom() ? "" : " leftRight";
@@ -242,15 +254,16 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
             String domIdentifier,
             int scrollTop,
             int scrollLeft,
-            Map<String,String> extras,
+            Map<String, String> extras,
             AjaxRequestTarget target ) {
-        long id =  Long.valueOf( edgeId );
+        long id = Long.valueOf( edgeId );
         try {
             Flow flow = getQueryService().find( Flow.class, id );
             String js = scroll( domIdentifier, scrollTop, scrollLeft );
             Change change = new Change( Change.Type.Selected, flow );
             String props = isShowingGoals() ? "showGoals" : "";
             props += isShowingConnectors() ? " showConnectors" : "";
+            props += isShowingAssets() ? "" : " showAssets";
             props += isHidingNoop() ? " hideNoop" : "";
             props += isSimplified() ? " simplify" : "";
             props += isTopBottom() ? "" : " leftRight";
@@ -293,5 +306,8 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
         return simplified;
     }
 
+    public boolean isShowingAssets() {
+        return showingAssets;
+    }
 }
 

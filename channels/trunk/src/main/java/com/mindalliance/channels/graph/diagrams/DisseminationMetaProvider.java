@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Transformation;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.Doctor;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -38,7 +37,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
 
     public DisseminationMetaProvider( SegmentObject segmentObject, String outputFormat, Resource imageDirectory,
                                       Analyst analyst, CommunityService communityService ) {
-        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, false, communityService );
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, false, false, communityService );
     }
 
     @Override

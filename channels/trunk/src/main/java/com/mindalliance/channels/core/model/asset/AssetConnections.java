@@ -138,6 +138,22 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
         return sb.toString();
     }
 
+    @SuppressWarnings( "unchecked" )
+    public String getAssetListLabel() {
+        List<MaterialAsset> assets = findAllMaterialAssets();
+        Collections.sort( assets );
+        List<String> assetNames = (List<String>)CollectionUtils.collect(
+                assets,
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ((MaterialAsset)input).getName();
+                    }
+                }
+        );
+        return ChannelsUtils.listToString( assetNames, " and " );
+    }
+
 
     public String getFirstPersonLabel() {
         StringBuilder sb = new StringBuilder();

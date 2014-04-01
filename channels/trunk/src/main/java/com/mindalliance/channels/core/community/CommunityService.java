@@ -254,4 +254,5 @@ public interface CommunityService {
                                                  MaterialAsset asset,
                                                  boolean assetIncoming,
                                                  CommunityCommitments allCommitments );
-}
+
+ }

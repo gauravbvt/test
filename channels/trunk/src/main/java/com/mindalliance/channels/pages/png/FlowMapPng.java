@@ -47,6 +47,8 @@ public class FlowMapPng extends DiagramPng {
         }
         boolean showingGoals = parameters.getNamedKeys().contains( "showingGoals" )
                 && parameters.get( "showingGoals" ).toBoolean();
+        boolean showingAssets = parameters.getNamedKeys().contains( "showingAssets" )
+                && parameters.get( "showingAssets" ).toBoolean();
         boolean showingConnectors = parameters.getNamedKeys().contains( "showingConnectors" )
                 && parameters.get( "showingConnectors" ).toBoolean();
         boolean hidingNoop = parameters.getNamedKeys().contains( "hidingNoop" )
@@ -62,7 +64,8 @@ public class FlowMapPng extends DiagramPng {
                 showingGoals,
                 showingConnectors,
                 hidingNoop,
-                simplifying );
+                simplifying,
+                showingAssets );
     }
 
 }

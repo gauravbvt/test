@@ -60,6 +60,10 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
      * Whether to simplify the flow map.
      */
     private boolean simplified = false;
+    /**
+     * Whether to show asset connections.
+     */
+    private boolean showingAssets = false;
 
     /**
      * Width, height dimension contraints on the flow diagram.
@@ -141,6 +145,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         this.topBottom = topBottom;
     }
 
+    public boolean isShowingAssets() {
+        return showingAssets;
+    }
+
+    public void setShowingAssets( boolean showingAssets ) {
+        this.showingAssets = showingAssets;
+    }
+
     public void setFlow( Flow flow ) {
         this.flow = flow;
     }
@@ -160,7 +172,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
     protected void addFlowDiagram() {
         double[] dim = flowDiagramDim[0] <= 0.0 || flowDiagramDim[1] <= 0.0 ? null : flowDiagramDim;
-        Settings settings = new Settings( getFlowMapDomId(), getOrientation() , dim, true, true );
+        Settings settings = new Settings( getFlowMapDomId(), getOrientation(), dim, true, true );
 
         flowMapDiagramPanel =
                 new FlowMapDiagramPanel( "flow-map",
@@ -170,7 +182,8 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                         showingGoals,
                         showingConnectors,
                         hidingNoop,
-                        simplified );
+                        simplified,
+                        showingAssets );
         flowMapDiagramPanel.setFlow( findExpandedFlow() );
         flowMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( flowMapDiagramPanel );
@@ -197,6 +210,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         addOrReplace( controlsContainer );
         addReduceToFitControl();
         addShowGoalsControl();
+        addShowAssetsControl();
         addShowConnectorsControl();
         addHideConceptualControl();
         addOrientationControl();
@@ -235,11 +249,13 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( hidingNoop
                         ? "images/hide_noop_on.png"
-                        : "images/hide_noop.png" ) ) );
+                        : "images/hide_noop.png" )
+        ) );
         addTipTitle( icon,
                 new Model<String>( hidingNoop
-                ? "Show all"
-                : "Hide not realizable" ) );
+                        ? "Show all"
+                        : "Hide not realizable" )
+        );
         hideNoop.add( icon );
     }
 
@@ -262,12 +278,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( showingConnectors
                         ? "images/show_connectors_on.png"
-                        : "images/show_connectors.png" ) ) );
+                        : "images/show_connectors.png" )
+        ) );
         addTipTitle(
                 icon,
                 new Model<String>( showingConnectors
                         ? "Hide  info needs and capabilities"
-                        : "Show info needs and capabilities" ) );
+                        : "Show info needs and capabilities" )
+        );
         showConnectors.add( icon );
     }
 
@@ -290,12 +308,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( topBottom
                         ? "images/left_right.png"
-                        : "images/top_bottom.png" ) ) );
+                        : "images/top_bottom.png" )
+        ) );
         addTipTitle(
                 icon,
                 new Model<String>( topBottom
                         ? "Display left to right"
-                        : "Display top to bottom" ) );
+                        : "Display top to bottom" )
+        );
         orientationControl.add( icon );
     }
 
@@ -319,14 +339,47 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( showingGoals
                         ? "images/show_goals_on.png"
-                        : "images/show_goals.png" ) ) );
+                        : "images/show_goals.png" )
+        ) );
         addTipTitle(
                 icon,
                 new Model<String>( showingGoals
                         ? "Hide goals"
-                        : "Show goals" ) );
-         showGoals.add( icon );
+                        : "Show goals" )
+        );
+        showGoals.add( icon );
     }
+
+    private void addShowAssetsControl() {
+        WebMarkupContainer showAssets = new WebMarkupContainer( "showAssets" );
+        showAssets.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingAssets = !showingAssets;
+                addFlowDiagram();
+                target.add( flowMapDiagramPanel );
+                addFlowMapViewingControls();
+                target.add( controlsContainer );
+            }
+        } );
+        controlsContainer.add( showAssets );
+        // icon
+        WebMarkupContainer icon = new WebMarkupContainer( "show_assets_icon" );
+        icon.add( new AttributeModifier(
+                "src",
+                new Model<String>( showingAssets
+                        ? "images/show_assets_on.png"
+                        : "images/show_assets.png" )
+        ) );
+        addTipTitle(
+                icon,
+                new Model<String>( showingAssets
+                        ? "Hide assets"
+                        : "Show assets" )
+        );
+        showAssets.add( icon );
+    }
+
 
     private void addReduceToFitControl() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
@@ -356,7 +409,8 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( resizedToFit
                         ? "images/fit_on.png"
-                        : "images/fit.png" ) ) );
+                        : "images/fit.png" )
+        ) );
         addTipTitle( icon, new Model<String>( resizedToFit
                 ? "Show flow map at normal size"
                 : "Reduce flow map to fit" ) );
@@ -369,7 +423,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         simplifyFlowMap.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                setSimplified( !isSimplified());
+                setSimplified( !isSimplified() );
                 addFlowDiagram();
                 target.add( flowMapDiagramPanel );
                 addFlowMapViewingControls();
@@ -383,12 +437,14 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "src",
                 new Model<String>( isSimplified()
                         ? "images/simplify_on.png"
-                        : "images/simplify.png" ) ) );
+                        : "images/simplify.png" )
+        ) );
         addTipTitle(
                 icon,
                 new Model<String>( isSimplified()
                         ? "Show unsimplified"
-                        : "Show simplified" ) );
+                        : "Show simplified" )
+        );
         simplifyFlowMap.add( icon );
     }
 

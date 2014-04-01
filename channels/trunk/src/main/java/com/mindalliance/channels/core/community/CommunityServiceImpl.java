@@ -804,7 +804,7 @@ public class CommunityServiceImpl implements CommunityService {
                 new HashSet<CommunityAssignment>() );
     }
 
-    private List<CommunityAssignment> safeResolveForwarding( CommunityAssignment communityAssignment,
+     private List<CommunityAssignment> safeResolveForwarding( CommunityAssignment communityAssignment,
                                                              MaterialAsset asset,
                                                              boolean assetIncoming,
                                                              CommunityCommitments allCommitments,
@@ -850,6 +850,5 @@ public class CommunityServiceImpl implements CommunityService {
         }
         return answer;
     }
-
 
 }

@@ -944,8 +944,10 @@ public final class ModelPage extends AbstractChannelsWebPage {
             boolean hideNoop;
             boolean simplify;
             boolean topBottom;
+            boolean showAssets;
             String props = change.getProperty();
             showGoals = props != null && props.contains( "showGoals" );
+            showAssets = props != null && props.contains( "showAssets" );
             showConnectors = props != null && props.contains( "showConnectors" );
             hideNoop = props != null && props.contains( "hideNoop" );
             simplify = props != null && props.contains( "simplify" );
@@ -959,6 +961,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
                     hideNoop,
                     simplify,
                     topBottom,
+                    showAssets,
                     getExpansions() );
         } else {
             maximizedFlowPanel = new Label( "maximized-flow" );

@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -119,6 +118,10 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
      * Whether to show goals.
      */
     private boolean showingGoals;
+    /**
+     * Whether to show assets.
+     */
+    private boolean showingAssets;
 
     /**
      * Whether to show connectors.
@@ -131,10 +134,11 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     protected AbstractFlowMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
                                         boolean showingGoals, boolean showingConnectors, boolean hidingNoop, boolean simplified,
-                                        CommunityService communityService ) {
+                                        boolean showingAssets, CommunityService communityService ) {
         super( outputFormat, imageDirectory, analyst, communityService );
         this.context = modelObject;
         this.showingGoals = showingGoals;
+        this.showingAssets = showingAssets;
         this.showingConnectors = showingConnectors;
         this.hidingNoop = hidingNoop;
         this.simplified = simplified;
@@ -142,6 +146,10 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     public boolean isShowingGoals() {
         return showingGoals;
+    }
+
+    public boolean isShowingAssets() {
+        return showingAssets;
     }
 
     public boolean isShowingConnectors() {
@@ -220,6 +228,8 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     protected String getIcon( CommunityService communityService, ImagingService imagingService, Node node ) {
         String imagesDirName;
         String negated = "";
+        String uses = "";
+        String produces = "";
         try {
             imagesDirName = getImageDirectory().getFile().getAbsolutePath();
         } catch ( IOException e ) {
@@ -250,6 +260,14 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                 negated = !isSimplified() && getAnalyst().isEffectivelyConceptualInPlan( getCommunityService(), part ) // todo - this has failed with NullPointerException on timed update - why?
                         ? ImagingService.NEGATED
                         : "";
+                if ( isShowingAssets() ) {
+                    uses = !part.getAssetConnections().using().isEmpty()
+                        ? ImagingService.USES
+                        : "";
+                    produces = !part.getAssetConnections().producing().isEmpty()
+                            ? ImagingService.PRODUCES
+                            : "";
+                }
                 iconName = imagingService.findIconName(
                         communityService,
                         part,
@@ -257,7 +275,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                         simplified );
             }
         }
-        String name = iconName + ( numLines > 0 ? numLines : "" ) + negated + ".png";
+        String name = iconName + ( numLines > 0 ? numLines : "" ) + negated + uses + produces + ".png"; // order of negated, uses, produces matters
         if ( !new File( name ).canRead() ) {
             LOG.warn( "Icon file not found " + name );
         }

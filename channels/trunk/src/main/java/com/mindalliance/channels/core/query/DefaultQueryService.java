@@ -57,6 +57,7 @@ import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.db.services.users.UserRecordService;
+import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -3681,6 +3682,78 @@ public abstract class DefaultQueryService implements QueryService {
                     }
                 }
         );
+    }
+
+    @Override
+    public List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships() {
+        List<AssetSupplyRelationship<Part>> results = new ArrayList<AssetSupplyRelationship<Part>>(  );
+        for ( Part supplier : list( Part.class) ) {
+            for ( MaterialAsset asset : supplier.getAssetConnections().findAssetsProvisioned() ) {
+                for( Part supplied : safeFindAllSupplied( supplier, asset, new HashSet<Part>() ) ) {
+                    AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, supplied );
+                    if ( !results.contains( rel ) ) {
+                        results.add( rel );
+                    }
+                    int index = results.indexOf( rel );
+                    results.get( index ).addAsset( asset );
+                }
+            }
+        }
+        return results;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Part> safeFindAllSupplied( Part part, final MaterialAsset asset, Set<Part> visited) {
+        List<Part> answer = new ArrayList<Part>(  );
+        if ( !visited.contains( part ) ) {
+            Set<Part> forwardees = new HashSet<Part>();
+            visited.add( part );
+            // received and demanding the asset, perhaps forwarding
+            List<Flow> receivedRequestingFlows = (List<Flow>)CollectionUtils.select(
+                    part.getAllSharingReceives(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow flow = (Flow)object;
+                            return flow.isNotification() && !flow.getAssetConnections().demanding().about(asset).isEmpty();
+                        }
+                    }
+
+            );
+            for ( Flow receivedRequestingFlow : receivedRequestingFlows ) {
+                    Part requestingPart = (Part)receivedRequestingFlow.getSource();
+                    boolean forwarding = !receivedRequestingFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+                    if ( !forwarding ) {
+                        forwardees.add( requestingPart );
+                    } else {
+                        forwardees.addAll( safeFindAllSupplied( requestingPart, asset, visited ) );
+                    }
+            }
+            // sent and demanding the asset, perhaps forwarding
+            List<Flow> sentRequestingFlows = (List<Flow>)CollectionUtils.select(
+                    part.getAllSharingSends(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow flow = (Flow)object;
+                            return flow.isAskedFor() && !flow.getAssetConnections().demanding().about(asset).isEmpty();
+                        }
+                    }
+
+            );
+            for ( Flow sentRequestingFlow : sentRequestingFlows ) {
+                Part requestingPart = (Part)sentRequestingFlow.getTarget();
+                boolean forwarding = !sentRequestingFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+                if ( !forwarding ) {
+                    forwardees.add( requestingPart );
+                } else {
+                    forwardees.addAll( safeFindAllSupplied( requestingPart, asset, visited ) );
+                }
+            }
+            // If can't find forwardees, return none.
+            answer.addAll( forwardees );
+        }
+        return answer;
     }
 
 }

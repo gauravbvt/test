@@ -29,9 +29,11 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
             boolean hidingNoop,
             boolean simplified,
             boolean topBottom,
+            boolean showingAssets,
             Set<Long> expansions ) {
         super( id, segmentModel, partModel, expansions );
         setShowingGoals( showingGoals );
+        setShowingAssets( showingAssets );
         setShowingConnectors( showingConnectors );
         setHidingNoop( hidingNoop );
         setSimplified( simplified );
@@ -63,6 +65,7 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 String props = isShowingGoals() ? "showGoals" : "";
                 props += isShowingConnectors() ? " showConnectors" : "";
+                props += isShowingAssets() ? " showAssets" : "";
                 props += isHidingNoop() ? " hideNoop" : "";
                 props += isSimplified() ? " simplify" : "";
                 props += isTopBottom() ? "" : " leftRight";
