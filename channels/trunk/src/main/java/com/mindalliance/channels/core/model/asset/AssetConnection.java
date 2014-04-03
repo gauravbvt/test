@@ -362,6 +362,7 @@ public class AssetConnection implements Mappable {
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
+        sb.append( type.name() );
         if ( asset.isType() ) {
             sb.append( " assets of type \"" );
         } else {

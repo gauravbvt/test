@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Objective;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -87,8 +88,38 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
                     issues.add( issue );
                 }
             }
+            // asset connections
+            for ( AssetConnection assetConnection : function.getEffectiveAssetConnections() ) {
+                if ( !part.getAssetConnections().implies( assetConnection ) ) {
+                    Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
+                    issue.setDescription( "Task \""
+                            + part.getTask()
+                            + "\" does not specify \""
+                            + assetConnection.getDetailedTypeLabel()
+                            + "\" as required by the function it implements." );
+                    issue.setRemediation( makeAssetConnectionRemediation( part, function, assetConnection ) );
+                    issue.setSeverity( Level.High );
+                    issues.add( issue );
+                }
+            }
         }
         return issues;
+    }
+
+    private String makeAssetConnectionRemediation( Part part, Function function, AssetConnection assetConnection ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Make sure task \"" )
+                .append( part.getTask() )
+                .append( "\" specifies \"" )
+                .append( assetConnection.getDetailedTypeLabel() )
+                .append( "\"" );
+        sb.append( "\nor do not have the task implement function \"")
+                .append( function.getName() )
+                .append( "\nor remove \"")
+                .append( assetConnection.getDetailedTypeLabel() )
+                .append( "\" from the definition of the function (or the category it inherits it from)");
+        sb.append( "." );
+        return sb.toString();
     }
 
     private String makeInfoNeedRemediation( Part part, Information info ) {
@@ -98,20 +129,20 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
                 .append( "\" has an info need named \"" )
                 .append( info.getName() );
         if ( info.getInfoProduct() != null ) {
-            sb.append(" specified by info product \"")
+            sb.append( " specified by info product \"" )
                     .append( info.getInfoProduct().getName() )
-                    .append( "\"");
+                    .append( "\"" );
             if ( !info.getEois().isEmpty() ) {
-                sb.append( " and ");
+                sb.append( " and " );
             }
         }
         if ( !info.getEois().isEmpty() ) {
-        sb.append( "\" with elements " )
-                .append( ChannelsUtils.listToString( info.getLocalEoiNames(), ",'", " and " ) )
-                .append( "\nor an equivalent \"receive\" flow named \"" )
-                .append( info.getName() );
+            sb.append( "\" with elements " )
+                    .append( ChannelsUtils.listToString( info.getLocalEoiNames(), ",'", " and " ) )
+                    .append( "\nor an equivalent \"receive\" flow named \"" )
+                    .append( info.getName() );
         }
-        sb.append(".");
+        sb.append( "." );
         return sb.toString();
     }
 
@@ -122,11 +153,11 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
                 .append( "\" has an info capability named \"" )
                 .append( info.getName() );
         if ( info.getInfoProduct() != null ) {
-            sb.append(" specified by info product \"")
+            sb.append( " specified by info product \"" )
                     .append( info.getInfoProduct().getName() )
-                    .append( "\"");
+                    .append( "\"" );
             if ( !info.getEois().isEmpty() ) {
-                sb.append( " and ");
+                sb.append( " and " );
             }
         }
         if ( !info.getEois().isEmpty() ) {
@@ -135,7 +166,7 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
                     .append( "\nor an equivalent \"send\" flow named \"" )
                     .append( info.getName() );
         }
-        sb.append(".");
+        sb.append( "." );
         return sb.toString();
     }
 

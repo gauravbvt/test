@@ -1,8 +1,14 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.query.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +25,12 @@ import java.util.Set;
  */
 public class AssetSupplyRelationship<T extends Part> extends Relationship {
 
-    private Set<MaterialAsset> assets = new HashSet<MaterialAsset>(  );
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AssetSupplyRelationship.class );
+
+    private Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
 
     public AssetSupplyRelationship() {
     }
@@ -28,17 +39,31 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
         super( supplier, supplied );
     }
 
-    public Part getSupplier( CommunityService communityService) {
-        return (Part)getFromIdentifiable( communityService );
+    @SuppressWarnings( "unchecked" )
+    public Part getSupplier( QueryService queryService ) {
+        try {
+            // TODO - Should be find( Identifiable.class,...)
+            return (T) queryService.find( ModelObject.class, getFromIdentifiable() );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "From-identifiable not found", e );
+            return null;
+        }
     }
 
-    public Part getSupplied( CommunityService communityService) {
-        return (Part)getToIdentifiable( communityService );
+    @SuppressWarnings( "unchecked" )
+    public Part getSupplied( QueryService queryService ) {
+        try {
+            // TODO - Should be find( Identifiable.class,...)
+            return (T) queryService.find( ModelObject.class, getToIdentifiable() );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "To-identifiable not found", e );
+            return null;
+        }
     }
 
 
     public List<MaterialAsset> getAssets() {
-        return new ArrayList<MaterialAsset>(assets);
+        return new ArrayList<MaterialAsset>( assets );
     }
 
     public void addAsset( MaterialAsset asset ) {
@@ -48,5 +73,17 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
     @Override
     public String getUid() {
         return Long.toString( getId() );
+    }
+
+    public boolean isAssetSupplied( final MaterialAsset asset ) {
+        return CollectionUtils.exists(
+                getAssets(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (MaterialAsset) object ).narrowsOrEquals( asset );
+                    }
+                }
+        );
     }
 }

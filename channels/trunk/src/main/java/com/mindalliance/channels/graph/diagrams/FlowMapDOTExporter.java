@@ -118,8 +118,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void findAndProcessAssetSupplyRelationships( CommunityService communityService, Graph<Node, Flow> g ) {
         List<AssetSupplyRelationship<Part>> allRelationships = communityService.getModelService().findAllAssetSupplyRelationships();
         for ( AssetSupplyRelationship rel : allRelationships ) {
-            Part supplier = rel.getSupplier( communityService );
-            Part supplied = rel.getSupplied( communityService );
+            Part supplier = rel.getSupplier( communityService.getModelService() );
+            Part supplied = rel.getSupplied( communityService.getModelService() );
             Set<Node> nodeSet = g.vertexSet();
             if ( nodeSet.contains( supplier ) || nodeSet.contains( supplied ) ) {
                 assetSupplyRelationships.add( rel );
@@ -514,8 +514,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportAssetSupplying( PrintWriter out, Graph<Node, Flow> g, CommunityService communityService ) {
         Set<String> drawn = new HashSet<String>();
         for ( AssetSupplyRelationship rel : assetSupplyRelationships ) {
-            Part supplier = rel.getSupplier( communityService );
-            Part supplied = rel.getSupplied( communityService );
+            Part supplier = rel.getSupplier( communityService.getModelService() );
+            Part supplied = rel.getSupplied( communityService.getModelService() );
             List<String> assetNames = (List<String>) CollectionUtils.collect(
                     rel.getAssets(),
                     new Transformer() {
@@ -594,7 +594,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
              tooltip = sanitize( label );
             list.add( new DOTAttribute( "tooltip", tooltip ) );
         } else {
-             tooltip = sanitize( "Asset requested via " + (sharing.isNotification() ? "notification " : "query ") + sharing.getName() );
+             tooltip = sanitize( "Asset requested via " + (sharing.isNotification() ? "notification\" " : "query\" ") + sharing.getName() + "\"");
         }
         list.add( new DOTAttribute( "tooltip", tooltip ) );
         return list;

@@ -608,7 +608,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
     }
 
     /**
-     * Transitively find all implicit types, avoiding circularities.
+     * Transitively find all implicit types, bottom-up, avoiding circularities.
      *
      * @return a list of model entities
      */

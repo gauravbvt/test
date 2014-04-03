@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Need satisfaction, capability creation, caused event, achieved goal not mapped to a step in the task's checklist.
+ * Need satisfaction, capability creation, caused event, achieved goal, asset-related conditions and outcomes not mapped to a step in the task's checklist.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -45,6 +45,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
         // conditions from context
         List<Condition> contextConditions = new ArrayList<Condition>(  );
         contextConditions.addAll( checklist.listNeedSatisfiedConditions() );
+        contextConditions.addAll( checklist.listAssetAvailableConditions() );
         for ( final Condition condition : contextConditions ) {
             if ( !CollectionUtils.exists(
                     checklist.listAllEffectiveStepGuards(),
@@ -67,6 +68,8 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
         contextOutcomes.addAll( checklist.listEventTimingOutcomes() );
         contextOutcomes.addAll( checklist.listGoalAchievedOutcomes() );
         contextOutcomes.addAll( checklist.listCapabilityCreatedOutcomes() );
+        contextOutcomes.addAll( checklist.listAssetProducedOutcomes() );
+        contextOutcomes.addAll( checklist.listAssetProvisionedOutcomes() );
         for ( final Outcome outcome : contextOutcomes ) {
             if ( !CollectionUtils.exists(
                     checklist.getStepOutcomes(),

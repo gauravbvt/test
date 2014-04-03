@@ -360,6 +360,13 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.EntityNotInvolvedAgainstExpectation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UnresolvedProblemFeedback"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowInformationShouldBeInfoProduct"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetNeededIsUnavailable"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetDependencyNotAvailable"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetNeededButNotRequested"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequestNotReceivedYetForwarded"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequestedButNotNeeded"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetIsCriticalYetHasInsufficientSuppliers"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetProducedByMiscategorizedPart"/>
             </list>
         </property>
     </bean>

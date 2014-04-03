@@ -1634,8 +1634,8 @@ public interface QueryService {
     /**
      * Get simplified title for the part.
      *
-     * @param sep  separator string
-     * @param part a part
+     * @param sep           separator string
+     * @param part          a part
      * @param maxLineLength max line line length for task name in title
      * @return a string
      */
@@ -1741,35 +1741,44 @@ public interface QueryService {
 
     /**
      * Find all assets that are available to a task.
+     *
      * @param part a part
+     * @param allAssetSupplyRelationships all known asset supply relationships
      * @return a list of material assets
      */
-    List<MaterialAsset> findAllAssetsAvailableTo( Part part );
+    List<MaterialAsset> findAllAssetsAvailableTo( Part part,
+                                                  List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships);
 
     /**
      * Find all assets that are provisioned to a given task
+     *
      * @param part a part
+     * @param allAssetSupplyRelationships all known asset supply relationships
      * @return a list of material assets
      */
-    List<MaterialAsset> findAllAssetsProvisionedTo( Part part );
+    List<MaterialAsset> findAllAssetsProvisionedTo( Part part
+            , List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships );
 
     /**
      * Find all parts visible to a given part that use or demand a given asset.
-     * @param part a part
+     *
+     * @param part                        a part
      * @return a list of parts
      */
     List<Part> findAllPartsVisibleTo( Part part );
 
     /**
      * List all actual material assets that give a value to the given field of a given material asset.
+     *
      * @param materialAsset a material asset
-     * @param field an asset field
+     * @param field         an asset field
      * @return a list of material assets
      */
     List<MaterialAsset> findAllUsersOfAssetField( MaterialAsset materialAsset, AssetField field );
 
     /**
      * Find all asset provisioning relationships in the model.
+     *
      * @return a list of asset supply relationships.
      */
     List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships();

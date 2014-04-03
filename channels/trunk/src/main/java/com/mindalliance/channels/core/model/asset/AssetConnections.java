@@ -10,6 +10,7 @@ import org.apache.commons.collections.Transformer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -140,10 +141,15 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
 
     @SuppressWarnings( "unchecked" )
     public String getRequestedAssetListLabel() {
-        List<MaterialAsset> assets = findAllMaterialAssets();
-        Collections.sort( assets );
+        List<MaterialAsset> demandedAssets = demanding().getAllAssets();
+        Collections.sort( demandedAssets, new Comparator<MaterialAsset>() {
+            @Override
+            public int compare( MaterialAsset ma1, MaterialAsset ma2 ) {
+                return ma1.getName().compareTo( ma2.getName() );
+            }
+        } );
         List<String> assetNames = (List<String>)CollectionUtils.collect(
-                assets,
+                demandedAssets,
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
@@ -392,6 +398,28 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
         return result;
     }
 
+    public AssetConnections critical() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( assetConnection.isCritical() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+
+    public AssetConnections notForwarding() {
+        AssetConnections result = new AssetConnections();
+        for ( AssetConnection assetConnection : this ) {
+            if ( !assetConnection.isForwarding() ) {
+                result.add( assetConnection );
+            }
+        }
+        return result;
+    }
+
+
     public void addAll( List<AssetConnection> assetConnectionList ) {
         for ( AssetConnection assetConnection : assetConnectionList ) {
             add( assetConnection );
@@ -404,5 +432,19 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
 
     public boolean forwardsRequestFor( MaterialAsset asset ) {
         return !this.about( asset ).demanding().forwarding().isEmpty();
+    }
+
+    public boolean implies( final AssetConnection other ) {
+        return CollectionUtils.exists(
+                getAll(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        AssetConnection assetConnection = (AssetConnection)object;
+                        return assetConnection.getType() == other.getType()
+                                && other.getAsset().narrowsOrEquals( assetConnection.getAsset() );
+                    }
+                }
+        );
     }
 }

@@ -3631,7 +3631,8 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<MaterialAsset> findAllAssetsAvailableTo( Part part ) {
+    public List<MaterialAsset> findAllAssetsAvailableTo( Part part,
+                                                         List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
         Set<MaterialAsset> availableAssets = new HashSet<MaterialAsset>();
         // produced
         for ( AssetConnection assetConnection : part.getAssetConnections() ) {
@@ -3640,7 +3641,7 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         // provisioned
-        availableAssets.addAll( findAllAssetsProvisionedTo( part ) );
+        availableAssets.addAll( findAllAssetsProvisionedTo( part, allAssetSupplyRelationships ) );
         // stocked by organization assigned to task
         for ( Assignment assignment : findAllAssignments( part, false ) ) {
             Organization organization = assignment.getOrganization();
@@ -3654,19 +3655,23 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<MaterialAsset> findAllAssetsProvisionedTo( Part part ) {
-        Set<MaterialAsset> provisionedAssets = new HashSet<MaterialAsset>();
-        for ( Flow flow : part.getAllSharingSends() ) {
-            if ( flow.isNotification() ) { // as return from initiating notification
-                provisionedAssets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
-            }
+    @SuppressWarnings( "unchecked" )
+    public List<MaterialAsset> findAllAssetsProvisionedTo( final Part part,
+                                                           List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
+        List<AssetSupplyRelationship<Part>> supplyRels =
+                (List<AssetSupplyRelationship<Part>>)CollectionUtils.select(
+                        allAssetSupplyRelationships,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ((AssetSupplyRelationship<Part>)object).getSupplied( DefaultQueryService.this ).equals( part );
+                            }
+                        });
+        Set<MaterialAsset> suppliedAssets = new HashSet<MaterialAsset>(  );
+        for ( AssetSupplyRelationship<Part> supplyRel : supplyRels ) {
+            suppliedAssets.addAll( supplyRel.getAssets() );
         }
-        for ( Flow flow : part.getAllSharingReceives() ) {
-            if ( flow.isAskedFor() ) { // as return from initiating request
-                provisionedAssets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
-            }
-        }
-        return new ArrayList<MaterialAsset>( provisionedAssets );
+        return new ArrayList<MaterialAsset>( suppliedAssets );
     }
 
     @Override

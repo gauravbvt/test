@@ -1592,7 +1592,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     public boolean isAssetAvailable( final MaterialAsset demandedAsset, CommunityService communityService ) {
         return CollectionUtils.exists(
-                communityService.getModelService().findAllAssetsAvailableTo( this ),
+                communityService.getModelService().findAllAssetsAvailableTo(
+                        this,
+                        communityService.getModelService().findAllAssetSupplyRelationships() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -1625,6 +1627,45 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
         return assetConnections;
     }
+
+    public AssetConnections getNonInitiatedAssetConnections() {
+        AssetConnections nonInitiatedConnections = new AssetConnections(  );
+        for ( Flow flow : getAllNonInitiatedSharingFlows() ) {
+            nonInitiatedConnections.addAll( flow.getAssetConnections().getAll() );
+        }
+        return nonInitiatedConnections;
+    }
+
+    public AssetConnections getInitiatedAssetConnections() {
+        AssetConnections initiatedConnections = new AssetConnections(  );
+        for ( Flow flow : getAllInitiatedSharingFlows() ) {
+            initiatedConnections.addAll( flow.getAssetConnections().getAll() );
+        }
+        return initiatedConnections;
+    }
+
+    public List<MaterialAsset> findNeededAssets() {
+        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
+        assetsNeeded.addAll( getAssetConnections().using().getAllAssets() );
+        assetsNeeded.addAll( getNonInitiatedAssetConnections().provisioning().getAllAssets() ); // provisioning to other parts
+        List<MaterialAsset> assetsProduced = getAssetConnections().producing().getAllAssets();
+        List<MaterialAsset> assetsReallyNeeded = new ArrayList<MaterialAsset>(  );
+        for ( final MaterialAsset assetNeeded : assetsNeeded ) {
+            boolean produced = CollectionUtils.exists(
+                    assetsProduced,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ((MaterialAsset)object).narrowsOrEquals( assetNeeded );
+                        }
+                    }
+            );
+            if ( !produced )
+                assetsReallyNeeded.add( assetNeeded );
+        }
+        return assetsReallyNeeded;
+    }
+
 
     /**
      * Category of tasks.

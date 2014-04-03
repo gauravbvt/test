@@ -331,4 +331,12 @@ public class Function extends ModelEntity implements AssetConnectable {
         assetConnections.add( assetConnection );
     }
 
+    public AssetConnections getEffectiveAssetConnections() {
+        AssetConnections effectiveAssetConnections = new AssetConnections(  );
+        effectiveAssetConnections.addAll( getAssetConnections().getAll() );
+        for ( ModelEntity type : getAllImplicitTypes() ) {
+            effectiveAssetConnections.addAll( ((Function)type).getAssetConnections().getAll() );
+        }
+        return effectiveAssetConnections;
+    }
 }
