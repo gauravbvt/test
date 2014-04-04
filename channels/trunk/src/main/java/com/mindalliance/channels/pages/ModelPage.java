@@ -53,6 +53,7 @@ import com.mindalliance.channels.pages.components.plan.floating.ModelInvolvement
 import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelVersionsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.SupplyChainsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.TaskMoverFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.menus.LearningMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.ModelActionsMenuPanel;
@@ -299,6 +300,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
     private Component allSegmentsPanel;
     private Component allClassificationsPanel;
     private Component protocolsMapPanel;
+    private Component supplyChainsPanel;
     private Component planEvaluationPanel;
     private Component taskMoverPanel;
     private Component allIssuesPanel;
@@ -624,6 +626,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
         // improving
         addTaskMoverPanel();
         addProtocolsMapPanel();
+        addSupplyChainsPanel();
         addModelEvaluationPanel();
         addAllIssuesPanel();
         addModelVersionsPanel();
@@ -1151,6 +1154,20 @@ public final class ModelPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( protocolsMapPanel );
     }
+
+    private void addSupplyChainsPanel() {
+        if ( !getExpansions().contains( Channels.SUPPLY_CHAINS ) ) {
+            supplyChainsPanel = new Label( "supplyChains", "" );
+            supplyChainsPanel.setOutputMarkupId( true );
+            makeVisible( supplyChainsPanel, false );
+        } else {
+            supplyChainsPanel = new SupplyChainsFloatingPanel(
+                    "supplyChains",
+                    new Model<CollaborationModel>( getCollaborationModel() ) );
+        }
+        form.addOrReplace( supplyChainsPanel );
+    }
+
 
     private void addModelEvaluationPanel() {
         if ( !getExpansions().contains( Channels.MODEL_EVALUATION ) ) {
@@ -2271,6 +2288,8 @@ public final class ModelPage extends AbstractChannelsWebPage {
             refreshTaskMoverPanel( target, change, updated );
         } else if ( change.getId() == Channels.CHECKLISTS_MAP ) {
             refreshProtocolsMapPanel( target, change, updated );
+        } else if ( change.getId() == Channels.SUPPLY_CHAINS ) {
+            refreshSupplyChainsPanel( target, change, updated );
         } else if ( change.getId() == Channels.MODEL_EVALUATION ) {
             refreshPlanEvaluationPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_ISSUES ) {
@@ -2465,6 +2484,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
         refreshAllClassificationsPanel( target, change, updated );
         refreshTaskMoverPanel( target, change, updated );
         refreshProtocolsMapPanel( target, change, updated );
+        refreshSupplyChainsPanel( target, change, updated );
         refreshPlanEvaluationPanel( target, change, updated );
         refreshAllIssuesPanel( target, change, updated );
         refreshAllChecklistsPanel( target, change, updated );
@@ -2783,6 +2803,20 @@ public final class ModelPage extends AbstractChannelsWebPage {
                     updated );
         }
     }
+
+    private void refreshSupplyChainsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( id == Channels.SUPPLY_CHAINS
+                && change.isDisplay() ) {
+            addSupplyChainsPanel();
+            target.add( supplyChainsPanel );
+        } else if ( supplyChainsPanel instanceof SupplyChainsFloatingPanel ) {
+            ( (SupplyChainsFloatingPanel) supplyChainsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
 
     private void refreshPlanEvaluationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();

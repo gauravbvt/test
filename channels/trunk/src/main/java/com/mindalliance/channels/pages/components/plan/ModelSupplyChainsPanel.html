@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div>
+        <div class="filters">
+            Show supply chains for <select wicket:id="assetScope">
+            <option>All material assets</option>
+            <option>asset A</option>
+            <option>asset B</option>
+        </select>
+            and summarize by
+            <select wicket:id="summarizeChoice">
+                <option>type of organization</option>
+                <option>organization</option>
+                <option>role</option>
+            </select>
+        </div>
+        <div class="supplyChains" wicket:id="supplyChainsDiagram">
+            [supply chains diagram panel]
+        </div>
+        <div class="zoom">
+            <span wicket:id="fit">Reduce to fit</span>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

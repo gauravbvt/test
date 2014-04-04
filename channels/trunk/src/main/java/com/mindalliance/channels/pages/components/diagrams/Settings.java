@@ -26,7 +26,10 @@ public class Settings implements Serializable {
     }
 
     public Settings(
-            String domIdentifier, String orientation, double[] size, boolean usingAjax,
+            String domIdentifier,
+            String orientation,
+            double[] size,
+            boolean usingAjax,
             boolean usingMap ) {
 
         this.domIdentifier = domIdentifier;

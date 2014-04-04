@@ -170,6 +170,27 @@ public abstract class DefaultQueryService implements QueryService {
         }
     }
 
+    @Override
+    public boolean allowsCommitment( final Assignment committer,
+                                     final Assignment beneficiary,
+                                     final Place locale,
+                                     Collection<Restriction> restrictions ) {
+        if ( restrictions.isEmpty() ) {
+            return true;
+        } else {
+            return !CollectionUtils.exists(
+                    restrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return !allowsCommitment( committer, beneficiary, locale, (Flow.Restriction) object );
+                        }
+                    }
+            );
+        }
+    }
+
+
     private boolean allowsCommitment( Assignment committer,
                                       Assignment beneficiary,
                                       Place locale,
@@ -3713,6 +3734,14 @@ public abstract class DefaultQueryService implements QueryService {
         List<AssetSupplyRelationship<Part>> results = new ArrayList<AssetSupplyRelationship<Part>>();
         for ( Part supplier : list( Part.class ) ) {
             for ( MaterialAsset asset : findAssetsProvisionedBy( supplier ) ) {
+                findAssetSupplyRelationships(
+                        supplier,
+                        asset,
+                        supplier,
+                        new HashSet<Restriction>(),
+                        results,
+                        new HashSet<Part>());
+                /*
                 for ( Part supplied : safeFindAllSupplied( supplier, asset, false, new HashSet<Part>() ) ) {
                     AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, supplied );
                     if ( !results.contains( rel ) ) {
@@ -3720,7 +3749,7 @@ public abstract class DefaultQueryService implements QueryService {
                     }
                     int index = results.indexOf( rel );
                     results.get( index ).addAsset( asset );
-                }
+                }*/
             }
         }
         return results;
@@ -3733,6 +3762,64 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return new ArrayList<MaterialAsset>( assets );
     }
+
+    @SuppressWarnings( "unchecked" )
+    private void findAssetSupplyRelationships( final Part part,
+                                               final MaterialAsset asset,
+                                               final Part supplier,
+                                               Set<Restriction> restrictions,
+                                               List<AssetSupplyRelationship<Part>> results,
+                                               HashSet<Part> visited ) {
+
+        if ( !visited.contains( part ) ) {
+            visited.add( part );
+            List<Flow> supplyFlows = (List<Flow>) CollectionUtils.select(
+                    part.getAllNonInitiatedSharingFlows(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Flow flow = (Flow) object;
+                            return !part.equals( supplier ) // already down the forwarding chain
+                                    ? !flow.getAssetConnections().demanding().about( asset ).isEmpty() // asset demanded
+                                    : !flow.getAssetConnections().provisioning().about( asset ).isEmpty(); // asset provisioned
+                        }
+                    }
+            );
+            for ( Flow supplyFlow : supplyFlows ) {
+                Part suppliedPart = supplyFlow.isNotification()
+                        ? (Part) supplyFlow.getSource()
+                        : (Part) supplyFlow.getTarget();
+                boolean forwarding = !supplyFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+                Set<Restriction> combinedRestrictions = new HashSet<Restriction>( restrictions );
+                combinedRestrictions.addAll( supplyFlow.getRestrictions() );
+                if ( !forwarding ) {
+                    addSupplyRelationship(
+                            supplier,
+                            suppliedPart,
+                            combinedRestrictions,
+                            asset,
+                            results );
+                } else {
+                    findAssetSupplyRelationships( suppliedPart, asset, supplier, combinedRestrictions, results, visited );
+                }
+            }
+        }
+    }
+
+    private void addSupplyRelationship( Part supplier,
+                                        Part suppliedPart,
+                                        Set<Restriction> restrictions,
+                                        MaterialAsset asset,
+                                        List<AssetSupplyRelationship<Part>> results ) {
+        AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, suppliedPart, restrictions );
+        if ( !results.contains( rel ) ) {
+            results.add( rel );
+        }
+        int index = results.indexOf( rel );
+        results.get( index ).addAsset( asset );
+    }
+
+/*
 
     @SuppressWarnings( "unchecked" )
     private List<Part> safeFindAllSupplied( Part part, final MaterialAsset asset, final boolean forwarded, Set<Part> visited ) {
@@ -3791,6 +3878,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return answer;
     }
+*/
 
 }
 

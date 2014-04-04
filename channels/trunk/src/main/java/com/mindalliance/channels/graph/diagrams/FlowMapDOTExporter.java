@@ -117,7 +117,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void findAndProcessAssetSupplyRelationships( CommunityService communityService, Graph<Node, Flow> g ) {
         List<AssetSupplyRelationship<Part>> allRelationships = communityService.getModelService().findAllAssetSupplyRelationships();
-        for ( AssetSupplyRelationship rel : allRelationships ) {
+        for ( AssetSupplyRelationship<Part> rel : allRelationships ) {
             Part supplier = rel.getSupplier( communityService.getModelService() );
             Part supplied = rel.getSupplied( communityService.getModelService() );
             Set<Node> nodeSet = g.vertexSet();
@@ -513,7 +513,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     @SuppressWarnings( "unchecked" )
     private void exportAssetSupplying( PrintWriter out, Graph<Node, Flow> g, CommunityService communityService ) {
         Set<String> drawn = new HashSet<String>();
-        for ( AssetSupplyRelationship rel : assetSupplyRelationships ) {
+        for ( AssetSupplyRelationship<Part> rel : assetSupplyRelationships ) {
+            Set<Flow.Restriction> restrictions = rel.getRestrictions();
             Part supplier = rel.getSupplier( communityService.getModelService() );
             Part supplied = rel.getSupplied( communityService.getModelService() );
             List<String> assetNames = (List<String>) CollectionUtils.collect(
@@ -527,7 +528,14 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             );
             Collections.sort( assetNames );
             String label = "Supplies " + ChannelsUtils.listToString( assetNames, " and " );
+            if ( !rel.getRestrictions().isEmpty() ) {
+                label += "*";
+            }
             List<DOTAttribute> attributes = getAssetSupplyEdgeAttributes( label );
+            if ( !restrictions.isEmpty() ) {
+                String restrictionsString = "Only if " + ChannelsUtils.listToString( rel.getRestrictionLabels( ), ", ", " and " );
+                attributes.add( new DOTAttribute( "labeltooltip", restrictionsString) );
+            }
             if ( isVisible( supplier ) && isVisible( supplied ) ) {
                 String starterId = getVertexID( supplier );
                 String enderId = getVertexID( supplied );
@@ -614,7 +622,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private List<DOTAttribute> getAssetEdgeAttributes( String label ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "steelblue" ) );
-        list.add( new DOTAttribute( "arrowsize", "1.0" ) );
+        list.add( new DOTAttribute( "arrowsize", "0.75" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );

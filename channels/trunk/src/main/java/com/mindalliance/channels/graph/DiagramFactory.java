@@ -19,6 +19,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
@@ -260,4 +261,17 @@ public interface DiagramFactory<Vertex, Edge> {
      */
     Diagram newCommandChainsDiagram( Agent agent, double[] diagramSize, String orientation, String algo );
 
+    /**
+     * Instantiates a supply chains diagram
+     * @param materialAsset a material asset being focused on
+     * @param diagramSize an array of doubles
+     * @param orientation a string
+     * @return a supply chains diagram
+     */
+    Diagram newSupplyChainsDiagram( MaterialAsset materialAsset,
+                                    boolean summarizeByOrgType,
+                                    boolean summarizeByOrg,
+                                    boolean summarizeByRole,
+                                    double[] diagramSize,
+                                    String orientation );
 }

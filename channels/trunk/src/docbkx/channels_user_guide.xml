@@ -10229,6 +10229,26 @@
                     <entry><para>Yes</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Task categorized other than operational produces assets</para></entry>
+
+                    <entry><para>Low</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Categorize the task as "operations"</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove the current categorization</para>
+                        </listitem>
+                    </itemizedlist></entry>
+                    <listitem>
+                        <para>or have another task produce the asset.</para>
+                    </listitem>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>
@@ -11084,13 +11104,123 @@
 
                     <entry><itemizedlist>
                         <listitem>
-                            <para>Involve the entity in a task or flow, or remove the expectation.</para>
+                            <para>Involve the entity in a task or flow</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove the expectation.</para>
                         </listitem>
                     </itemizedlist></entry>
 
                     <entry><para>No</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Needed asset is not available</para></entry>
+
+                    <entry><para>Depends on impacted tasks if asset is critical else medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task produce asset</para>
+                        </listitem>
+                        <listitem>
+                            <para>or have the task request that the asset be supplied</para>
+                        </listitem>
+                    </itemizedlist></entry>
+                    <listitem>
+                        <para>or have the organization of agents assigned to the task stock the asset.</para>
+                    </listitem>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Asset used while another it depends on is unavailable</para></entry>
+
+                    <entry><para>Depends on impacted tasks if asset is critical else medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task produce the asset depended on</para>
+                        </listitem>
+                        <listitem>
+                            <para>or have the task request that the asset be supplied</para>
+                        </listitem>
+                    </itemizedlist></entry>
+                    <listitem>
+                        <para>or have the organization of agents assigned to the task stock the asset.</para>
+                    </listitem>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Too few suppliers for critical asset</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make used asset not critical to the task</para>
+                        </listitem>
+                        <listitem>
+                            <para>or add another task with different agents assigned to it that supplies the asset.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Needed asset is not requested</para></entry>
+
+                    <entry><para>Depends on impacted tasks if asset is critical, else medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task request asset</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove the need for the asset (by either not using it or not supplying it).</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Asset requested yet not needed</para></entry>
+
+                    <entry><para>Low</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task use or supply asset</para>
+                        </listitem>
+                        <listitem>
+                            <para> or remove the task's request for it.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Non-existent request for an asset is forwarded</para></entry>
+
+                    <entry><para>Low</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task receive a request for asset</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove the request forwarding for the asset.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
 
             </tbody>
           </tgroup>

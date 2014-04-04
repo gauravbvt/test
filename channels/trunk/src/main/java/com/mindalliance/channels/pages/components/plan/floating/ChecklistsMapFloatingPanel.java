@@ -21,8 +21,8 @@ public class ChecklistsMapFloatingPanel extends AbstractFloatingCommandablePanel
 
     private ModelChecklistsMapPanel checklistsMapPanel;
 
-    public ChecklistsMapFloatingPanel( String id, IModel<CollaborationModel> planModel ) {
-        super( id, planModel );
+    public ChecklistsMapFloatingPanel( String id, IModel<CollaborationModel> collaborationModel ) {
+        super( id, collaborationModel );
         init();
     }
 

@@ -34,6 +34,7 @@ public class ModelImprovingMenuPanel extends MenuPanel {
         menuItems.add( collapsible( Channels.ALL_CHECKLISTS, "Hide all checklists", "All checklists" ) );
         if ( isPlanner() ) menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
         menuItems.add( collapsible( Channels.CHECKLISTS_MAP, "Hide checklists map", "Checklists map" ) );
+        menuItems.add( collapsible( Channels.SUPPLY_CHAINS, "Hide supply chains", "Supply chains" ) );
         menuItems.add( collapsible( Channels.MODEL_EVALUATION, "Hide model evaluation", "Model evaluation" ) );
         menuItems.add( collapsible( Channels.ALL_ISSUES, "Hide all issues", "All issues" ) );
         menuItems.add( collapsible( Channels.MODEL_VERSIONS, "Hide model versions", "Model versions" ) );

@@ -1448,11 +1448,11 @@ span.note {
     font-size: 10px;
 }
 
-div.picture, div.procedureMap, div.typology {
+div.picture, div.procedureMap, div.supplyChains, div.typology {
     background: white;
 }
 
-div.picture img, div.procedureMap img, div.typology img {
+div.picture img, div.procedureMap img, div.supplyChains img, div.typology img {
     border: none;
 }
 
@@ -1883,7 +1883,7 @@ div.aspect h3 {
     padding: 5px 0;
 }
 
-div.aspect div.picture, div.aspect div.procedureMap {
+div.aspect div.picture, div.aspect div.procedureMap, div.aspect div.supplyChains {
     overflow: auto;
 }
 
@@ -2138,7 +2138,7 @@ td.late span {
 
 /* ----- Floating Panels - Flowmaps ----- */
 
-.aspect div.picture, .aspect div.procedureMap, .aspect div.typology {
+.aspect div.picture, .aspect div.procedureMap, .aspect div.supplyChains, .aspect div.typology {
     background: #ffffff;
     border-top: 5px solid #E8E8E8;
     border-right: 5px solid #E8E8E8;

@@ -29,6 +29,7 @@ import com.mindalliance.channels.pages.png.ModelMapPng;
 import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
+import com.mindalliance.channels.pages.png.SupplyChainsPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
@@ -93,6 +94,7 @@ public class Channels extends WebApplication
     public static final long ALL_CHECKLISTS = -18;
     public static final long ALL_GOALS = -19;
     public static final long GALLERY_ID = -20;
+    public static final long SUPPLY_CHAINS = -21;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;
@@ -337,6 +339,13 @@ public class Channels extends WebApplication
         ) );
         mountResource( "procedures.png", new PngReference(
                 ProceduresPng.class,
+                getUserDao(),
+                getModelManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "supplyChains.png", new PngReference(
+                SupplyChainsPng.class,
                 getUserDao(),
                 getModelManager(),
                 getCommunityServiceFactory(),

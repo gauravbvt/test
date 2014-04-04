@@ -19,6 +19,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -34,6 +35,7 @@ import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.ModelMapDiagram;
 import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
+import com.mindalliance.channels.graph.diagrams.SupplyChainsDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -234,5 +236,21 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     public Diagram newCommandChainsDiagram( Agent agent, double[] diagramSize, String orientation, String algo ) {
         LOG.debug( "Making command chains diagram" );
         return new CommandChainsDiagram( agent, diagramSize, orientation, algo );
+    }
+
+    @Override
+    public Diagram newSupplyChainsDiagram( MaterialAsset materialAsset,
+                                           boolean summarizeByOrgType,
+                                           boolean summarizeByOrg,
+                                           boolean summarizeByRole,
+                                           double[] diagramSize,
+                                           String orientation ) {
+        LOG.debug( "Making supply chains diagram");
+        return new SupplyChainsDiagram(
+                materialAsset,
+                summarizeByOrgType,
+                summarizeByOrg,
+                summarizeByRole,
+                diagramSize, orientation );
     }
 }

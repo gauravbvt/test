@@ -1,12 +1,13 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ import java.util.Set;
  * Date: 3/31/14
  * Time: 2:04 PM
  */
-public class AssetSupplyRelationship<T extends Part> extends Relationship {
+public class AssetSupplyRelationship<T extends ModelObject> extends Relationship {
 
     /**
      * Class logger.
@@ -32,6 +33,8 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
 
     private Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
 
+    private Set<Flow.Restriction> restrictions = new HashSet<Flow.Restriction>(  );
+
     public AssetSupplyRelationship() {
     }
 
@@ -39,8 +42,14 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
         super( supplier, supplied );
     }
 
+    public AssetSupplyRelationship( T supplier, T supplied, Set<Flow.Restriction> restrictions ) {
+        super( supplier, supplied );
+        this.restrictions = new HashSet<Flow.Restriction>( restrictions );
+    }
+
+
     @SuppressWarnings( "unchecked" )
-    public Part getSupplier( QueryService queryService ) {
+    public T getSupplier( QueryService queryService ) {
         try {
             // TODO - Should be find( Identifiable.class,...)
             return (T) queryService.find( ModelObject.class, getFromIdentifiable() );
@@ -51,7 +60,7 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
     }
 
     @SuppressWarnings( "unchecked" )
-    public Part getSupplied( QueryService queryService ) {
+    public T getSupplied( QueryService queryService ) {
         try {
             // TODO - Should be find( Identifiable.class,...)
             return (T) queryService.find( ModelObject.class, getToIdentifiable() );
@@ -70,6 +79,14 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
         assets.add( asset );
     }
 
+    public void addRestriction( Flow.Restriction restriction ) {
+        restrictions.add( restriction );
+    }
+
+    public Set<Flow.Restriction> getRestrictions() {
+        return restrictions;
+    }
+
     @Override
     public String getUid() {
         return Long.toString( getId() );
@@ -86,4 +103,36 @@ public class AssetSupplyRelationship<T extends Part> extends Relationship {
                 }
         );
     }
+
+    @Override
+    public boolean equals( Object obj ) {
+        return super.equals( obj )
+                && CollectionUtils.isEqualCollection( restrictions, ( (AssetSupplyRelationship<T>) obj ).getRestrictions() );
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        int subHash = 0;
+        for ( Flow.Restriction restriction : getRestrictions() ) {
+            subHash = subHash + restriction.hashCode(); // order does not matter
+        }
+        hash = hash + 31 * subHash;
+        return hash;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<String> getRestrictionLabels(  ) {
+        return (List<String>) CollectionUtils.collect(
+                getRestrictions(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (Flow.Restriction) input ).getLabel( true );
+                    }
+                }
+        );
+
+    }
+
 }

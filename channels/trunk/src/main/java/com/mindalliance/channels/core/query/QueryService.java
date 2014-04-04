@@ -43,6 +43,7 @@ import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -1587,6 +1588,11 @@ public interface QueryService {
 
     boolean allowsCommitment(
             Assignment committer, Assignment beneficiary, Place locale, Flow flow );
+
+    boolean allowsCommitment( final Assignment committer,
+                              final Assignment beneficiary,
+                              final Place locale,
+                              Collection<Flow.Restriction> restrictions );
 
     /**
      * Find all parts that initiate an event timing.

@@ -58,6 +58,6 @@ public class AssetRequestNotReceivedYetForwarded extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Non-existent asset request is forwarded";
+        return "Non-existent request for an asset is forwarded";
     }
 }
