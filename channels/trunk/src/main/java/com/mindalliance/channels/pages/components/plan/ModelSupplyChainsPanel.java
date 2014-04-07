@@ -9,6 +9,7 @@ import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.diagrams.SupplyChainsDiagramPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -57,6 +58,9 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
 
     private boolean summarizeByRole = false;
 
+    private boolean showingOrphans;
+    private boolean showingAvailability;
+
     /**
      * Width, height dimension constraints on the plan map diagram.
      * In inches.
@@ -82,6 +86,8 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
     private void init() {
         addAssetScopeChoice();
         addSummarizeChoice();
+        addShowOrphans();
+        addShowAvailability();
         addSupplyListsDiagramPanel();
         addSizing();
     }
@@ -156,6 +162,33 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
         addOrReplace( summarizeChoice );
     }
 
+    private void addShowOrphans() {
+        AjaxCheckBox showOrphansCheckBox = new AjaxCheckBox(
+                "showOrphans",
+                new PropertyModel<Boolean>( this, "showingOrphans" )) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addSupplyListsDiagramPanel();
+                target.add( supplyChainsDiagramPanel );
+            }
+        };
+        showOrphansCheckBox.setOutputMarkupId( true );
+        addOrReplace( showOrphansCheckBox);
+    }
+
+    private void addShowAvailability() {
+        AjaxCheckBox showAvailabilityCheckBox = new AjaxCheckBox(
+                "showAvailability",
+                new PropertyModel<Boolean>( this, "showingAvailability" )) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addSupplyListsDiagramPanel();
+                target.add( supplyChainsDiagramPanel );
+            }
+        };
+        showAvailabilityCheckBox.setOutputMarkupId( true );
+        addOrReplace( showAvailabilityCheckBox);
+    }
 
     private void addSupplyListsDiagramPanel() {
         Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0
@@ -168,6 +201,8 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
                 isSummarizeByOrgType(),
                 isSummarizeByOrg(),
                 isSummarizeByRole(),
+                isShowingOrphans(),
+                isShowingAvailability(),
                 settings
         );
         addOrReplace( supplyChainsDiagramPanel );
@@ -249,6 +284,21 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
         }
     }
 
+    public boolean isShowingOrphans() {
+        return showingOrphans;
+    }
+
+    public void setShowingOrphans( boolean showingOrphans ) {
+        this.showingOrphans = showingOrphans;
+    }
+
+    public boolean isShowingAvailability() {
+        return showingAvailability;
+    }
+
+    public void setShowingAvailability( boolean showingAvailability ) {
+        this.showingAvailability = showingAvailability;
+    }
 
     private void addSizing() {
         sizingLabel = new org.apache.wicket.markup.html.basic.Label(

@@ -29,6 +29,8 @@ public class SupplyChainsPng extends DiagramPng {
 
     public static final String ASSET_PARM = "asset";
     public static final String NONE = "NONE";
+    public static final String ORPHANS = "orphans";
+    public static final String AVAILABILITY = "availability";
 
     @Override
     protected Diagram makeDiagram( double[] diagramSize,
@@ -40,6 +42,8 @@ public class SupplyChainsPng extends DiagramPng {
         boolean summarizeByOrgType = false;
         boolean summarizeByOrg = false;
         boolean summarizeByRole = false;
+        boolean showingOrphans = false;
+        boolean showingAvailability = false;
         ModelService modelService = communityService.getModelService();
         if ( parameters.getNamedKeys().contains( SUMMARIZE ) ) {
             String summarizeBy = parameters.get( SUMMARIZE ).toString();
@@ -49,6 +53,12 @@ public class SupplyChainsPng extends DiagramPng {
             } else if ( summarizeBy.equals( SUMMARIZE_BY_ORG_TYPE ) ) summarizeByOrgType = true;
             else if ( summarizeBy.equals( SUMMARIZE_BY_ORG ) ) summarizeByOrg = true;
             else if ( summarizeBy.equals( SUMMARIZE_BY_ROLE ) ) summarizeByRole = true;
+        }
+        if ( parameters.getNamedKeys().contains( ORPHANS ) ) {
+            showingOrphans = parameters.get( ORPHANS ).toBoolean();
+        }
+        if ( parameters.getNamedKeys().contains( AVAILABILITY ) ) {
+            showingAvailability = parameters.get( AVAILABILITY ).toBoolean();
         }
         if ( parameters.getNamedKeys().contains( ASSET_PARM ) ) {
             if ( !parameters.get( ASSET_PARM ).toString().equals( NONE ) )
@@ -69,6 +79,8 @@ public class SupplyChainsPng extends DiagramPng {
                 summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
+                showingOrphans,
+                showingAvailability,
                 diagramSize,
                 orientation );
     }

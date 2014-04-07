@@ -2536,53 +2536,71 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Part> findPartsPreceding( Part part ) {
-        return doFindPartsPreceding( part, new HashSet<ModelObject>() );
+        Set<Part> precedingParts = findTriggeringParts( part, new HashSet<ModelObject>() );
+        // initial parts in same segment
+        for ( Part segmentPart : part.getSegment().listParts() ) {
+            if ( segmentPart.isOngoing() ) precedingParts.add( segmentPart );
+            if ( segmentPart.isStartsWithSegment() ) precedingParts.add( segmentPart );
+        }
+        // initial parts in segment with same scenario
+        for ( Segment sameScenarioSegment : findSegmentsWithScenariosMatching( part.getSegment() ) ) {
+            for ( Part segmentPart : sameScenarioSegment.listParts() ) {
+                if ( segmentPart.isOngoing() ) precedingParts.add( segmentPart );
+                if ( segmentPart.isStartsWithSegment() ) precedingParts.add( segmentPart );
+            }
+        }
+        // all parts in segments of preceding scenarios
+        for ( Segment precedingSegment : findSegmentsPreceding( part.getSegment() ) ) {
+            for ( Part precedingSegmentPart : precedingSegment.listParts() ) {
+                precedingParts.add( precedingSegmentPart );
+            }
+        }
+        return new ArrayList<Part>( precedingParts );
     }
 
-    private List<Part> doFindPartsPreceding( Part part, Set<ModelObject> visited ) {
+    private List<Segment> findSegmentsWithScenariosMatching( Segment segment ) {
+        List<Segment> matchingSegments = new ArrayList<Segment>();
+        for ( Segment other : getCollaborationModel().getSegments() ) {
+            if ( !other.equals( segment ) ) {
+                if ( segment.getEventPhase().narrowsOrEquals( other.getEventPhase(), getPlanLocale() ) ) {
+                    // todo - what about event timing contexts?
+                    matchingSegments.add( other );
+                }
+            }
+        }
+        return matchingSegments;
+    }
+
+    private Set<Part> findTriggeringParts( Part part, Set<ModelObject> visited ) {
         Set<Part> precedingParts = new HashSet<Part>();
         if ( !visited.contains( part ) ) {
             visited.add( part );
             // triggering parts
-            Iterator<Flow> receives = part.receives();
+            Iterator<Flow> receives = part.getAllSharingReceives().iterator();
             while ( receives.hasNext() ) {
                 Flow receive = receives.next();
                 if ( receive.isNotification() && receive.isTriggeringToTarget() ) {
                     Node source = receive.getSource();
                     if ( source.isPart() && !visited.contains( (Part) source ) ) {
                         precedingParts.add( (Part) source );
-                        precedingParts.addAll( doFindPartsPreceding( (Part) source, visited ) );
+                        precedingParts.addAll( findTriggeringParts( (Part) source, visited ) );
                     }
                 }
             }
-            Iterator<Flow> sends = part.sends();
+            Iterator<Flow> sends = part.getAllSharingSends().iterator();
             while ( sends.hasNext() ) {
                 Flow send = sends.next();
                 if ( send.isAskedFor() && send.isTriggeringToSource() ) {
                     Node target = send.getTarget();
                     if ( target.isPart() && !visited.contains( (Part) target ) ) {
                         precedingParts.add( (Part) target );
-                        precedingParts.addAll( doFindPartsPreceding( (Part) target, visited ) );
+                        precedingParts.addAll( findTriggeringParts( (Part) target, visited ) );
                     }
-                }
-            }
-            // initial parts in same segment
-            for ( Part segmentPart : part.getSegment().listParts() ) {
-                if ( !visited.contains( segmentPart ) ) {
-                    if ( segmentPart.isOngoing() ) precedingParts.add( segmentPart );
-                    if ( segmentPart.isStartsWithSegment() ) precedingParts.add( segmentPart );
-                }
-            }
-            // all parts in segments of preceding scenarios?
-            for ( Segment precedingSegment : findSegmentsPreceding( part.getSegment() ) ) {
-                for ( Part precedingSegmentPart : precedingSegment.listParts() ) {
-                    if ( !visited.contains( precedingSegmentPart ) )
-                        precedingParts.add( precedingSegmentPart );
                 }
             }
         }
         assert !precedingParts.contains( part );
-        return new ArrayList<Part>( precedingParts );
+        return precedingParts;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -3804,21 +3822,12 @@ public abstract class DefaultQueryService implements QueryService {
         for ( Part supplier : list( Part.class ) ) {
             for ( MaterialAsset asset : findAssetsProvisionedBy( supplier ) ) {
                 findAssetSupplyRelationships(
-                        supplier,
+                        supplier, // start supply-demand chain at supplier
                         asset,
                         supplier,
                         new HashSet<Restriction>(),
                         results,
                         new HashSet<Part>() );
-                /*
-                for ( Part supplied : safeFindAllSupplied( supplier, asset, false, new HashSet<Part>() ) ) {
-                    AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, supplied );
-                    if ( !results.contains( rel ) ) {
-                        results.add( rel );
-                    }
-                    int index = results.indexOf( rel );
-                    results.get( index ).addAsset( asset );
-                }*/
             }
         }
         return results;
@@ -3826,61 +3835,98 @@ public abstract class DefaultQueryService implements QueryService {
 
     private List<MaterialAsset> findAssetsProvisionedBy( Part part ) {
         Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
-        for ( Flow flow : part.getAllNonInitiatedSharingFlows() ) {
+        for ( Flow flow : part.getAllSharingSends() ) {
             assets.addAll( flow.getAssetConnections().findAssetsProvisioned() );
         }
         return new ArrayList<MaterialAsset>( assets );
     }
 
     @SuppressWarnings( "unchecked" )
-    private void findAssetSupplyRelationships( final Part part,
+    private void findAssetSupplyRelationships( final Part part, // part in the supply-demand* chain. At first, part == supplier
                                                final MaterialAsset asset,
                                                final Part supplier,
                                                Set<Restriction> restrictions,
                                                List<AssetSupplyRelationship<Part>> results,
                                                HashSet<Part> visited ) {
 
-        if ( !visited.contains( part ) ) {
+        if ( !visited.contains( part ) ) { // avoid circularity
             visited.add( part );
-            List<Flow> supplyFlows = (List<Flow>) CollectionUtils.select(
-                    part.getAllNonInitiatedSharingFlows(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            Flow flow = (Flow) object;
-                            return !part.equals( supplier ) // already down the forwarding chain
-                                    ? !flow.getAssetConnections().demanding().about( asset ).isEmpty() // asset demanded
-                                    : !flow.getAssetConnections().provisioning().about( asset ).isEmpty(); // asset provisioned
+            List<Flow> supplyDemandFlows;
+            boolean demanding = !part.equals( supplier ); // now attempting or continuing going down demand links
+            if ( !demanding ) { // travel down initial asset supply links
+                supplyDemandFlows = (List<Flow>) CollectionUtils.select(
+                        part.getAllSharingSends(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Flow flow = (Flow) object;
+                                return !flow.getAssetConnections().provisioning().about( asset ).isEmpty(); // asset provisioned
+                            }
                         }
+                );
+            } else { // demanding - travel down demand links
+                supplyDemandFlows = (List<Flow>) CollectionUtils.select(
+                        part.getAllNonInitiatedSharingFlows(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Flow flow = (Flow) object;
+                                return !flow.getAssetConnections().demanding().about( asset ).isEmpty(); // asset demanded
+                            }
+                        }
+                );
+            }
+            if ( demanding && supplyDemandFlows.isEmpty() ) { // end of the line
+                addSupplyRelationship(
+                        supplier,
+                        part,
+                        restrictions,
+                        asset,
+                        results );
+            }
+            for ( Flow supplyDemandFlow : supplyDemandFlows ) {
+                Part candidateSuppliedPart;
+                boolean forwarding = !supplyDemandFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
+                if ( !demanding ) { // still on initial supply link
+                    candidateSuppliedPart = (Part) supplyDemandFlow.getTarget();
+                    if ( forwarding ) { // a supply link can also be a request link (if request-reply)
+                        findAssetSupplyRelationships( candidateSuppliedPart, asset, supplier, restrictions, results, visited );
+                    } else {
+                        addSupplyRelationship(
+                                supplier,
+                                candidateSuppliedPart,
+                                restrictions,
+                                asset,
+                                results );
                     }
-            );
-            for ( Flow supplyFlow : supplyFlows ) {
-                Part suppliedPart = supplyFlow.isNotification()
-                        ? (Part) supplyFlow.getSource()
-                        : (Part) supplyFlow.getTarget();
-                boolean forwarding = !supplyFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
-                Set<Restriction> combinedRestrictions = new HashSet<Restriction>( restrictions );
-                combinedRestrictions.addAll( supplyFlow.getRestrictions() );
-                if ( !forwarding ) {
-                    addSupplyRelationship(
-                            supplier,
-                            suppliedPart,
-                            combinedRestrictions,
-                            asset,
-                            results );
                 } else {
-                    findAssetSupplyRelationships( suppliedPart, asset, supplier, combinedRestrictions, results, visited );
+                    candidateSuppliedPart =
+                            supplyDemandFlow.isNotification()
+                                    ? (Part) supplyDemandFlow.getSource()
+                                    : (Part) supplyDemandFlow.getTarget();
+                    Set<Restriction> combinedRestrictions = new HashSet<Restriction>( restrictions );
+                    combinedRestrictions.addAll( supplyDemandFlow.getRestrictions() );
+                    if ( forwarding ) {
+                        findAssetSupplyRelationships( candidateSuppliedPart, asset, supplier, combinedRestrictions, results, visited );
+                    } else {
+                        addSupplyRelationship(
+                                supplier,
+                                candidateSuppliedPart,
+                                combinedRestrictions,
+                                asset,
+                                results );
+                    }
                 }
             }
         }
     }
 
-    private void addSupplyRelationship( Part supplier,
+    private void addSupplyRelationship( Part supplierPart,
                                         Part suppliedPart,
                                         Set<Restriction> restrictions,
                                         MaterialAsset asset,
                                         List<AssetSupplyRelationship<Part>> results ) {
-        AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, suppliedPart, restrictions );
+        AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplierPart, suppliedPart, restrictions );
         if ( !results.contains( rel ) ) {
             results.add( rel );
         }

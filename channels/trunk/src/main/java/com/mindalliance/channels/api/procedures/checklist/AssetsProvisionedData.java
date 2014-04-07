@@ -59,12 +59,11 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
         for ( CommunityCommitment benefitingCommitment : benefitingCommitments ) {
             Flow sharing = benefitingCommitment.getSharing();
             for ( AssetConnection connection : sharing.getAssetConnections().provisioning() ) {
-                boolean assetsIncoming = sharing.isAskedFor();
                 AssetProvisionedData assetProvisionedData = new AssetProvisionedData(
                         serverUrl,
                         connection,
-                        resolveContact( connection, assetsIncoming, benefitingCommitment, true, communityService ),
-                        assetsIncoming, // assets out if receiving notification, in if receiving reply (sending request)
+                        resolveContact( connection, benefitingCommitment, true, communityService ),// benefiting means incoming assets (I am being supplied )
+                        true, // assets in if receiving notification or receiving reply
                         communityService,
                         user
                 );
@@ -75,12 +74,11 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
         for ( CommunityCommitment committingCommitment : committingCommitments ) {
             Flow sharing = committingCommitment.getSharing();
             for ( AssetConnection connection : sharing.getAssetConnections().provisioning() ) {
-                boolean assetsIncoming = sharing.isNotification();
                 AssetProvisionedData assetProvisionedData = new AssetProvisionedData(
                         serverUrl,
                         connection,
-                        resolveContact( connection, assetsIncoming, committingCommitment, false, communityService ),
-                        assetsIncoming, // assets in if sending notification, out if sending reply (receiving request)
+                        resolveContact( connection, committingCommitment, false, communityService ), // committing means outgoing assets (I am supplying)
+                        false, // assets out if sending notification, out if sending reply (receiving request)
                         communityService,
                         user
                 );
@@ -95,7 +93,6 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
     // If the task is context is benefiting from the commitment, then the other party is the committer.
     // If the task in context is committing, then the other party is the beneficiary.
     private List<CommunityEmployment> resolveContact( AssetConnection connection,
-                                                boolean assetIncoming,
                                                 CommunityCommitment commitment,
                                                 boolean benefiting,
                                                 CommunityService communityService ) {
@@ -110,7 +107,7 @@ public class AssetsProvisionedData extends AbstractProcedureElementData {
                     .resolveForwarding(
                             communityAssignment,
                             connection.getAsset(),
-                            assetIncoming,
+                            benefiting,
                             communityService.getAllCommitments( false ) ); // can return nothing if no demand is being forwarded
             for ( CommunityAssignment assignment : assignments ) {
                 communityEmployments.add( assignment.getCommunityEmployment() );

@@ -65,7 +65,7 @@ public class Segment extends ModelObject {
     /**
      * Usernames of developers who own the segment.
      */
-    private List<String> owners = new ArrayList<String>(  );
+    private List<String> owners = new ArrayList<String>();
 
     /**
      * Whether this segment is in the process of being deleted.
@@ -118,7 +118,7 @@ public class Segment extends ModelObject {
      *
      * @return a list of goals
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Goal> getRisks() {
         return (List<Goal>) CollectionUtils.select( goals,
                 new Predicate() {
@@ -175,7 +175,7 @@ public class Segment extends ModelObject {
     }
 
     public void addOwner( String username ) {
-        if (!owners.contains( username) ) {
+        if ( !owners.contains( username ) ) {
             owners.add( username );
         }
     }
@@ -272,7 +272,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having sends
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             @Override
@@ -288,7 +288,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on parts
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
             @Override
@@ -304,7 +304,7 @@ public class Segment extends ModelObject {
      *
      * @return an iterator on connectors having receives
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
             @Override
@@ -510,7 +510,7 @@ public class Segment extends ModelObject {
      *
      * @return a list of parts
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Part> listParts() {
         return IteratorUtils.toList( parts() );
     }
@@ -520,7 +520,7 @@ public class Segment extends ModelObject {
      *
      * @return a list of flows
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> listFlows() {
         return IteratorUtils.toList( flows() );
     }
@@ -624,7 +624,7 @@ public class Segment extends ModelObject {
      *
      * @return a list of connectors
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Connector> listConnectors() {
         return (List<Connector>) CollectionUtils.select(
                 (List<Node>) IteratorUtils.toList( nodes() ),
@@ -697,9 +697,9 @@ public class Segment extends ModelObject {
      *
      * @return a list of goals
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Goal> getTerminatingGoals() {
-        return (List<Goal>)CollectionUtils.select( goals,
+        return (List<Goal>) CollectionUtils.select( goals,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -828,8 +828,26 @@ public class Segment extends ModelObject {
     }
 
     public boolean precedes( Segment other ) {
-        return !this.equals( other )
-                && getEventPhase().precedes( other.getEventPhase() ); // todo - ignore event timings context?
+        if ( !this.equals( other ) ) {
+            return getEventPhase().precedes( other.getEventPhase() )
+                    || other.contextFollows( getEventPhase() );
+        } else
+            return false;
+    }
+
+    private boolean contextFollows( final EventPhase eventPhase ) {
+        return CollectionUtils.exists(
+                getContext(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        EventTiming eventTiming = (EventTiming) object;
+                        return eventTiming.getTiming() == Phase.Timing.PostEvent
+                                && eventPhase.getEvent().narrowsOrEquals( eventTiming.getEvent() )
+                                && eventTiming.getTiming().immediatelyFollows( eventPhase.getEventTiming().getTiming() );
+                    }
+                }
+        );
     }
 
 
@@ -877,7 +895,8 @@ public class Segment extends ModelObject {
                         public boolean evaluate( Object object ) {
                             return !( (Flow) object ).isInternal();
                         }
-                    } );
+                    }
+            );
         }
 
         @Override
@@ -928,7 +947,8 @@ public class Segment extends ModelObject {
                     public boolean evaluate( Object object ) {
                         return ( (Goal) object ).references( mo );
                     }
-                } )
+                }
+        )
                 || CollectionUtils.exists(
                 context,
                 new Predicate() {
@@ -936,6 +956,7 @@ public class Segment extends ModelObject {
                     public boolean evaluate( Object object ) {
                         return ( (EventTiming) object ).references( mo );
                     }
-                } );
+                }
+        );
     }
 }

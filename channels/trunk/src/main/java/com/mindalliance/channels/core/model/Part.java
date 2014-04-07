@@ -1603,12 +1603,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     public AssetConnections findAllProvisionAssetConnections() {
         AssetConnections assetConnections = new AssetConnections();
-        for ( Flow sharing : getAllSharingReceives() ) {
-            if ( sharing.isNotification() )
-                assetConnections.addAll( sharing.getAssetConnections().provisioning().getAll() );
-        }
         for ( Flow sharing : getAllSharingSends() ) {
-            if ( sharing.isAskedFor() )
                 assetConnections.addAll( sharing.getAssetConnections().provisioning().getAll() );
         }
         return assetConnections;
@@ -1633,7 +1628,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     public List<MaterialAsset> findNeededAssets() {
         Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
         assetsNeeded.addAll( findAssetsUsed() );
-        assetsNeeded.addAll( getNonInitiatedAssetConnections().provisioning().getAllAssets() ); // provisioning to other parts
+        assetsNeeded.addAll( getSharingSentAssetConnections().provisioning().getAllAssets() ); // provisioning to other parts
         List<MaterialAsset> assetsProduced = getAssetConnections().producing().getAllAssets();
         List<MaterialAsset> assetsReallyNeeded = new ArrayList<MaterialAsset>(  );
         for ( final MaterialAsset assetNeeded : assetsNeeded ) {
@@ -1650,6 +1645,14 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                 assetsReallyNeeded.add( assetNeeded );
         }
         return assetsReallyNeeded;
+    }
+
+    private AssetConnections getSharingSentAssetConnections() {
+        AssetConnections initiatedConnections = new AssetConnections(  );
+        for ( Flow flow : getAllSharingSends() ) {
+            initiatedConnections.addAll( flow.getAssetConnections().getAll() );
+        }
+        return initiatedConnections;
     }
 
     public List<MaterialAsset> findAssetsUsed() {

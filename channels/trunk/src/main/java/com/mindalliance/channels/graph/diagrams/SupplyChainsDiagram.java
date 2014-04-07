@@ -29,17 +29,23 @@ public class SupplyChainsDiagram extends AbstractDiagram<Assignment,AssignmentAs
     private boolean summarizeByOrg;
 
     private boolean summarizeByRole;
+    private boolean showingOrphans;
+    private boolean showingAvailability;
 
     public SupplyChainsDiagram( MaterialAsset materialAsset,
                                 boolean summarizeByOrgType,
                                 boolean summarizeByOrg,
                                 boolean summarizeByRole,
+                                boolean showingOrphans,
+                                boolean showingAvailability,
                                 double[] diagramSize, String orientation ) {
         super( diagramSize, orientation );
         this.materialAsset = materialAsset;
         this.summarizeByOrgType = summarizeByOrgType;
         this.summarizeByOrg = summarizeByOrg;
         this.summarizeByRole = summarizeByRole;
+        this.showingOrphans = showingOrphans;
+        this.showingAvailability = showingAvailability;
     }
 
     @Override
@@ -52,7 +58,13 @@ public class SupplyChainsDiagram extends AbstractDiagram<Assignment,AssignmentAs
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         SupplyChainsGraphBuilder graphBuilder =
-                new SupplyChainsGraphBuilder( materialAsset, summarizeByOrgType, summarizeByOrg, summarizeByRole );
+                new SupplyChainsGraphBuilder(
+                        materialAsset,
+                        summarizeByOrgType,
+                        summarizeByOrg,
+                        summarizeByRole,
+                        showingOrphans,
+                        showingAvailability );
         graphBuilder.setCommunityService( communityService );
         Graph<Assignment, AssignmentAssetLink> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Assignment, AssignmentAssetLink> graphRenderer = diagramFactory.getGraphRenderer();

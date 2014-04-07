@@ -243,6 +243,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                                            boolean summarizeByOrgType,
                                            boolean summarizeByOrg,
                                            boolean summarizeByRole,
+                                           boolean showingOrphans,
+                                           boolean showingAvailability,
                                            double[] diagramSize,
                                            String orientation ) {
         LOG.debug( "Making supply chains diagram");
@@ -251,6 +253,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                 summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
+                showingOrphans,
+                showingAvailability,
                 diagramSize, orientation );
     }
 }

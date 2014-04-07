@@ -35,6 +35,8 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
     private final boolean summarizedByOrgType;
     private final boolean summarizedByOrg;
     private final boolean summarizedByRole;
+    private boolean showingOrphans;
+    private boolean showingAvailability;
     private Assignments assignmentsUsingAssets;
 
     private CommunityService communityService;
@@ -42,11 +44,15 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
     public SupplyChainsGraphBuilder( MaterialAsset assetFocus,
                                      boolean summarizedByOrgType,
                                      boolean summarizedByOrg,
-                                     boolean summarizedByRole ) {
+                                     boolean summarizedByRole,
+                                     boolean showingOrphans,
+                                     boolean showingAvailability ) {
         this.assetFocus = assetFocus;
         this.summarizedByOrgType = summarizedByOrgType;
         this.summarizedByOrg = summarizedByOrg;
         this.summarizedByRole = summarizedByRole;
+        this.showingOrphans = showingOrphans;
+        this.showingAvailability = showingAvailability;
     }
 
     public void setCommunityService( CommunityService communityService ) {
@@ -82,33 +88,37 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
                     assignmentAssetLink.getToAssignment(),
                     assignmentAssetLink );
         }
-        // Asset availability to use
-        List<AssignmentAssetLink> assetAvailabilityToUse = findAssetAvailabilityToUseLinks(
-                getModelService().getAssignments(),
-                getModelService().findAllAssetSupplyRelationships()
-        );
-        for ( AssignmentAssetLink assignmentAssetLink : assetAvailabilityToUse ) {
-            graph.addVertex( assignmentAssetLink.getFromAssignment() );
-            graph.addVertex( assignmentAssetLink.getToAssignment() );
-            graph.addEdge(
-                    assignmentAssetLink.getFromAssignment(),
-                    assignmentAssetLink.getToAssignment(),
-                    assignmentAssetLink );
-        }
-        Assignments assignments = getModelService().getAssignments();
-        // Producing assignments
-        if ( assetFocus == null ) {
-            for ( Assignment assignment : assignments.producesAssets() ) {
-                graph.addVertex( summarize( assignment ) );
-            }
-        } else {
-            for ( Assignment assignment : assignments.producesAssets().producesAsset( assetFocus ) ) {
-                graph.addVertex( summarize( assignment ) );
+        if ( showingAvailability ) {
+            // Asset availability to use
+            List<AssignmentAssetLink> assetAvailabilityToUse = findAssetAvailabilityToUseLinks(
+                    getModelService().getAssignments(),
+                    getModelService().findAllAssetSupplyRelationships()
+            );
+            for ( AssignmentAssetLink assignmentAssetLink : assetAvailabilityToUse ) {
+                graph.addVertex( assignmentAssetLink.getFromAssignment() );
+                graph.addVertex( assignmentAssetLink.getToAssignment() );
+                graph.addEdge(
+                        assignmentAssetLink.getFromAssignment(),
+                        assignmentAssetLink.getToAssignment(),
+                        assignmentAssetLink );
             }
         }
-        // Using assignments
-        for ( Assignment assignment : findAssignmentsOnlyUsingAssets( ) ) {
-            graph.addVertex( summarize( assignment ) );
+        if ( showingOrphans ) {
+            Assignments assignments = getModelService().getAssignments();
+            // Producing assignments
+            if ( assetFocus == null ) {
+                for ( Assignment assignment : assignments.producesAssets() ) {
+                    graph.addVertex( summarize( assignment ) );
+                }
+            } else {
+                for ( Assignment assignment : assignments.producesAssets().producesAsset( assetFocus ) ) {
+                    graph.addVertex( summarize( assignment ) );
+                }
+            }
+            // Using assignments
+            for ( Assignment assignment : findAssignmentsOnlyUsingAssets() ) {
+                graph.addVertex( summarize( assignment ) );
+            }
         }
 
     }
@@ -142,20 +152,33 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
                                                                        List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
         List<AssignmentAssetLink> links = new ArrayList<AssignmentAssetLink>();
         for ( Assignment assignmentUsingAssets : findAssignmentsOnlyUsingAssets() ) {
-            for ( Part precedingPart : getModelService().findPartsPreceding( assignmentUsingAssets.getPart() ) ) {
-                for ( Assignment precedingAssignment : allAssignments.assignedTo( precedingPart ).with( assignmentUsingAssets.getActor() ) ) {
-                    for ( MaterialAsset asset : assignmentUsingAssets.getPart().findAssetsUsed() ) {
-                        if ( assetFocus == null || asset.narrowsOrEquals( assetFocus ) ) {
-                            if ( getModelService().isAssetAvailableToAssignment(
-                                    precedingAssignment,
-                                    asset,
-                                    allAssignments,
-                                    allAssetSupplyRelationships ) ) {
-                                links.add( new AssignmentAssetLink(
+            for ( final Part precedingPart : getModelService().findPartsPreceding( assignmentUsingAssets.getPart() ) ) {
+                boolean producesOrIsSupplied = !precedingPart.getAssetConnections().producing().isEmpty()
+                        || CollectionUtils.exists(
+                        allAssetSupplyRelationships,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                AssetSupplyRelationship<Part> assetSupplyRelationship = (AssetSupplyRelationship<Part>)object;
+                                return assetSupplyRelationship.getSupplied( getModelService() ).equals( precedingPart );
+                            }
+                        }
+                );
+                if ( producesOrIsSupplied ) {
+                    for ( Assignment precedingAssignment : allAssignments.assignedTo( precedingPart ).with( assignmentUsingAssets.getActor() ) ) {
+                        for ( MaterialAsset asset : assignmentUsingAssets.getPart().findAssetsUsed() ) {
+                            if ( assetFocus == null || asset.narrowsOrEquals( assetFocus ) ) {
+                                if ( getModelService().isAssetAvailableToAssignment(
                                         precedingAssignment,
-                                        assignmentUsingAssets,
                                         asset,
-                                        AssignmentAssetLink.Type.AvailabilityToUse ) );
+                                        allAssignments,
+                                        allAssetSupplyRelationships ) ) {
+                                    links.add( new AssignmentAssetLink(
+                                            precedingAssignment,
+                                            assignmentUsingAssets,
+                                            asset,
+                                            AssignmentAssetLink.Type.AvailabilityToUse ) );
+                                }
                             }
                         }
                     }

@@ -267,7 +267,7 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
 
         protected String getEdgeLabel( AssignmentAssetLink assignmentAssetLink, boolean highlighted ) {
             String text = assignmentAssetLink.getMaterialAsset().getName()
-                    + ( assignmentAssetLink.isSupplyCommitment() ? " supplied to" : " available to");
+                    + ( assignmentAssetLink.isSupplyCommitment() ? " supplied" : " available");
             String label = AbstractMetaProvider.separate(
                     text,
                     LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );

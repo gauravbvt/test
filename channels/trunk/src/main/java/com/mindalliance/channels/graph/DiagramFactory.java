@@ -272,6 +272,8 @@ public interface DiagramFactory<Vertex, Edge> {
                                     boolean summarizeByOrgType,
                                     boolean summarizeByOrg,
                                     boolean summarizeByRole,
+                                    boolean showingOrphans,
+                                    boolean showingAvailability,
                                     double[] diagramSize,
                                     String orientation );
 }

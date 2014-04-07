@@ -324,8 +324,7 @@ public class AssetConnection implements Mappable {
     }
 
     public void setConsuming( boolean val ) {
-        assert type == Type.Using;
-        if ( val )
+         if ( val )
             setProperty( CONSUMING, "true" );
         else
             removeProperty( CONSUMING );
@@ -336,7 +335,6 @@ public class AssetConnection implements Mappable {
     }
 
     public void setCritical( boolean val ) {
-        assert type == Type.Using;
         if ( val )
             setProperty( CRITICAL, "true" );
         else
@@ -348,8 +346,7 @@ public class AssetConnection implements Mappable {
     }
 
     public void setForwarding( boolean val ) {
-        assert type == Type.Demanding;
-        if ( val )
+          if ( val )
             setProperty( FORWARDING, "true" );
         else
             removeProperty( FORWARDING );

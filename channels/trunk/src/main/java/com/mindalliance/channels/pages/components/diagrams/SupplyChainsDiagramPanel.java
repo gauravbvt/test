@@ -32,6 +32,8 @@ public class SupplyChainsDiagramPanel extends AbstractDiagramPanel {
     private boolean summarizeByOrgType;
     private boolean summarizeByOrg;
     private boolean summarizeByRole;
+    private boolean showingOrphans;
+    private boolean showingAvailability;
 
     private MaterialAsset materialAsset;
 
@@ -40,12 +42,16 @@ public class SupplyChainsDiagramPanel extends AbstractDiagramPanel {
                                      boolean summarizeByOrgType,
                                      boolean summarizeByOrg,
                                      boolean summarizeByRole,
+                                     boolean showingOrphans,
+                                     boolean showingAvailability,
                                      Settings settings ) {
         super( id, settings );
         this.materialAsset = materialAsset;
         this.summarizeByOrgType = summarizeByOrgType;
         this.summarizeByOrg = summarizeByOrg;
         this.summarizeByRole = summarizeByRole;
+        this.showingOrphans = showingOrphans;
+        this.showingAvailability = showingAvailability;
         init();
     }
 
@@ -61,6 +67,8 @@ public class SupplyChainsDiagramPanel extends AbstractDiagramPanel {
                 summarizeByOrgType,
                 summarizeByOrg,
                 summarizeByRole,
+                showingOrphans,
+                showingAvailability,
                 getDiagramSize(),
                 getOrientation()
         );
@@ -86,6 +94,14 @@ public class SupplyChainsDiagramPanel extends AbstractDiagramPanel {
                 : summarizeByRole
                 ? SupplyChainsPng.SUMMARIZE_BY_ROLE
                 : "NONE" );
+        if ( showingOrphans )
+            sb.append( "&")
+                    .append( SupplyChainsPng.ORPHANS )
+                    .append("=true");
+        if ( showingAvailability )
+            sb.append( "&")
+                    .append( SupplyChainsPng.AVAILABILITY )
+                    .append("=true");
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );
