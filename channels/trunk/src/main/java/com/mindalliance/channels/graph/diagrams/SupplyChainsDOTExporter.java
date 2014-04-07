@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.engine.analysis.graph.AssetSupplyCommitment;
+import com.mindalliance.channels.engine.analysis.graph.AssignmentAssetLink;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.MetaProvider;
 
@@ -12,9 +12,9 @@ import com.mindalliance.channels.graph.MetaProvider;
  * Date: 4/3/14
  * Time: 9:58 PM
  */
-public class SupplyChainsDOTExporter extends AbstractDOTExporter<Assignment, AssetSupplyCommitment> {
+public class SupplyChainsDOTExporter extends AbstractDOTExporter<Assignment, AssignmentAssetLink> {
 
-    public SupplyChainsDOTExporter( MetaProvider<Assignment, AssetSupplyCommitment> metaProvider ) {
+    public SupplyChainsDOTExporter( MetaProvider<Assignment, AssignmentAssetLink> metaProvider ) {
         super( metaProvider );
     }
 

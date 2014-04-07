@@ -1590,20 +1590,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return new ArrayList<MaterialAsset>( demandedAssets );
     }
 
-    public boolean isAssetAvailable( final MaterialAsset demandedAsset, CommunityService communityService ) {
-        return CollectionUtils.exists(
-                communityService.getModelService().findAllAssetsAvailableTo(
-                        this,
-                        communityService.getModelService().findAllAssetSupplyRelationships() ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (MaterialAsset) object ).narrowsOrEquals( demandedAsset );
-                    }
-                }
-        );
-    }
-
     public AssetConnections getAllFlowAssetConnections() {
         AssetConnections assetConnections = new AssetConnections();
         for ( Flow sharing : getAllSharingReceives() ) {
@@ -1646,7 +1632,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     public List<MaterialAsset> findNeededAssets() {
         Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
-        assetsNeeded.addAll( getAssetConnections().using().getAllAssets() );
+        assetsNeeded.addAll( findAssetsUsed() );
         assetsNeeded.addAll( getNonInitiatedAssetConnections().provisioning().getAllAssets() ); // provisioning to other parts
         List<MaterialAsset> assetsProduced = getAssetConnections().producing().getAllAssets();
         List<MaterialAsset> assetsReallyNeeded = new ArrayList<MaterialAsset>(  );
@@ -1664,6 +1650,24 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                 assetsReallyNeeded.add( assetNeeded );
         }
         return assetsReallyNeeded;
+    }
+
+    public List<MaterialAsset> findAssetsUsed() {
+        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
+        // assets used by the execution of the task
+        assetsNeeded.addAll( getAssetConnections().using().getAllAssets() );
+        // assets needed for communications
+        for ( Flow sharing : getAllSharingReceives() ) {
+            for ( Channel channel : sharing.getEffectiveChannels() ) {
+                assetsNeeded.addAll( channel.getMedium().getAssetConnections().using().getAllAssets() );
+            }
+        }
+        for ( Flow sharing : getAllSharingSends() ) {
+            for ( Channel channel : sharing.getEffectiveChannels() ) {
+                assetsNeeded.addAll( channel.getMedium().getAssetConnections().using().getAllAssets() );
+            }
+        }
+        return new ArrayList<MaterialAsset>( assetsNeeded );
     }
 
 

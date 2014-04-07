@@ -365,8 +365,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetNeededButNotRequested"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequestNotReceivedYetForwarded"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequestedButNotNeeded"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetIsCriticalYetHasInsufficientSuppliers"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetHasInsufficientSuppliers"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetProducedByMiscategorizedPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequiredForChannelNotAvailable"/>
             </list>
         </property>
     </bean>

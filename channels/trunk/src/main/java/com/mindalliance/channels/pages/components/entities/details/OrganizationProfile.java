@@ -207,7 +207,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 new ConnectedAssetsPanel(
                         "assets",
                         new PropertyModel<Function>( this, "organization" ) );
-        connectedAssetsPanel.setVisible( getOrganization().isActual() );
+        // connectedAssetsPanel.setVisible( getOrganization().isActual() );
         assetsContainer.add( connectedAssetsPanel );
     }
 

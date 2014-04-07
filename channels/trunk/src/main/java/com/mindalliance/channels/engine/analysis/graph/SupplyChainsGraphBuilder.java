@@ -12,6 +12,8 @@ import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -26,13 +28,14 @@ import java.util.List;
  * Date: 4/3/14
  * Time: 9:50 PM
  */
-public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, AssetSupplyCommitment> {
+public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, AssignmentAssetLink> {
 
     private MaterialAsset assetFocus;
 
     private final boolean summarizedByOrgType;
     private final boolean summarizedByOrg;
     private final boolean summarizedByRole;
+    private Assignments assignmentsUsingAssets;
 
     private CommunityService communityService;
 
@@ -51,34 +54,122 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, AssetS
     }
 
     @Override
-    public DirectedGraph<Assignment, AssetSupplyCommitment> buildDirectedGraph() {
-        DirectedGraph<Assignment, AssetSupplyCommitment> digraph =
-                new DirectedMultigraph<Assignment, AssetSupplyCommitment>( new EdgeFactory<Assignment, AssetSupplyCommitment>() {
+    public DirectedGraph<Assignment, AssignmentAssetLink> buildDirectedGraph() {
+        DirectedGraph<Assignment, AssignmentAssetLink> digraph =
+                new DirectedMultigraph<Assignment, AssignmentAssetLink>( new EdgeFactory<Assignment, AssignmentAssetLink>() {
 
                     @Override
-                    public AssetSupplyCommitment createEdge( Assignment sourceAssignment, Assignment targetAssignment ) {
-                        return new AssetSupplyCommitment( sourceAssignment, targetAssignment, MaterialAsset.UNKNOWN );
+                    public AssignmentAssetLink createEdge( Assignment sourceAssignment, Assignment targetAssignment ) {
+                        return new AssignmentAssetLink(
+                                sourceAssignment,
+                                targetAssignment,
+                                MaterialAsset.UNKNOWN,
+                                AssignmentAssetLink.Type.SupplyCommitment );
                     }
                 } );
         populateProceduresGraph( digraph );
         return digraph;
     }
 
-    private void populateProceduresGraph( DirectedGraph<Assignment, AssetSupplyCommitment> graph ) {
-        List<AssetSupplyCommitment> assetSupplyCommitments = findAssetSupplyCommitments();
-        for ( AssetSupplyCommitment assetSupplyCommitment : assetSupplyCommitments ) {
-            graph.addVertex( assetSupplyCommitment.getSupplier() );
-            graph.addVertex( assetSupplyCommitment.getSupplied() );
+    private void populateProceduresGraph( DirectedGraph<Assignment, AssignmentAssetLink> graph ) {
+        // Asset supply commitments
+        List<AssignmentAssetLink> assetSupplyCommitments = findAssetSupplyCommitments();
+        for ( AssignmentAssetLink assignmentAssetLink : assetSupplyCommitments ) {
+            graph.addVertex( assignmentAssetLink.getFromAssignment() );
+            graph.addVertex( assignmentAssetLink.getToAssignment() );
             graph.addEdge(
-                    assetSupplyCommitment.getSupplier(),
-                    assetSupplyCommitment.getSupplied(),
-                    assetSupplyCommitment );
+                    assignmentAssetLink.getFromAssignment(),
+                    assignmentAssetLink.getToAssignment(),
+                    assignmentAssetLink );
         }
+        // Asset availability to use
+        List<AssignmentAssetLink> assetAvailabilityToUse = findAssetAvailabilityToUseLinks(
+                getModelService().getAssignments(),
+                getModelService().findAllAssetSupplyRelationships()
+        );
+        for ( AssignmentAssetLink assignmentAssetLink : assetAvailabilityToUse ) {
+            graph.addVertex( assignmentAssetLink.getFromAssignment() );
+            graph.addVertex( assignmentAssetLink.getToAssignment() );
+            graph.addEdge(
+                    assignmentAssetLink.getFromAssignment(),
+                    assignmentAssetLink.getToAssignment(),
+                    assignmentAssetLink );
+        }
+        Assignments assignments = getModelService().getAssignments();
+        // Producing assignments
+        if ( assetFocus == null ) {
+            for ( Assignment assignment : assignments.producesAssets() ) {
+                graph.addVertex( summarize( assignment ) );
+            }
+        } else {
+            for ( Assignment assignment : assignments.producesAssets().producesAsset( assetFocus ) ) {
+                graph.addVertex( summarize( assignment ) );
+            }
+        }
+        // Using assignments
+        for ( Assignment assignment : findAssignmentsOnlyUsingAssets( ) ) {
+            graph.addVertex( summarize( assignment ) );
+        }
+
     }
 
-    private List<AssetSupplyCommitment> findAssetSupplyCommitments() {
+    private Assignments findAssignmentsOnlyUsingAssets() {
+        if ( assignmentsUsingAssets == null ) {
+            assignmentsUsingAssets = new Assignments( getModelService().getPlanLocale() );
+            Assignments usingAssignments = assetFocus == null
+                    ? getModelService().getAssignments().onlyUsesAssets()
+                    : getModelService().getAssignments().onlyUsesAsset( assetFocus );
+            for ( final Assignment assignment : usingAssignments ) { // uses but does not produce
+                boolean supplied = CollectionUtils.exists(
+                        findAssetSupplyCommitments(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                AssignmentAssetLink assetSupplyCommitment = (AssignmentAssetLink) object;
+                                return assetSupplyCommitment.getToAssignment().equals( assignment );
+                            }
+                        }
+                );
+                if ( !supplied ) {
+                    assignmentsUsingAssets.add( assignment );
+                }
+            }
+        }
+        return assignmentsUsingAssets;
+    }
 
-        List<AssetSupplyCommitment> assetSupplyCommitments = new ArrayList<AssetSupplyCommitment>();
+    private List<AssignmentAssetLink> findAssetAvailabilityToUseLinks( Assignments allAssignments,
+                                                                       List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
+        List<AssignmentAssetLink> links = new ArrayList<AssignmentAssetLink>();
+        for ( Assignment assignmentUsingAssets : findAssignmentsOnlyUsingAssets() ) {
+            for ( Part precedingPart : getModelService().findPartsPreceding( assignmentUsingAssets.getPart() ) ) {
+                for ( Assignment precedingAssignment : allAssignments.assignedTo( precedingPart ).with( assignmentUsingAssets.getActor() ) ) {
+                    for ( MaterialAsset asset : assignmentUsingAssets.getPart().findAssetsUsed() ) {
+                        if ( assetFocus == null || asset.narrowsOrEquals( assetFocus ) ) {
+                            if ( getModelService().isAssetAvailableToAssignment(
+                                    precedingAssignment,
+                                    asset,
+                                    allAssignments,
+                                    allAssetSupplyRelationships ) ) {
+                                links.add( new AssignmentAssetLink(
+                                        precedingAssignment,
+                                        assignmentUsingAssets,
+                                        asset,
+                                        AssignmentAssetLink.Type.AvailabilityToUse ) );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<AssignmentAssetLink> results = new ArrayList<AssignmentAssetLink>();
+        for ( AssignmentAssetLink link : links )
+            results.add( summarize( link ) );
+        return results;
+    }
+
+    private List<AssignmentAssetLink> findAssetSupplyCommitments() {
+        List<AssignmentAssetLink> assignmentAssetLinks = new ArrayList<AssignmentAssetLink>();
         ModelService modelService = getModelService();
         Assignments allAssignments = modelService.getAssignments( false );
         List<AssetSupplyRelationship<Part>> assetSupplyRels = getModelService().findAllAssetSupplyRelationships();
@@ -97,44 +188,48 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, AssetS
                     for ( Assignment supplier : supplierAssignments ) {
                         for ( Assignment supplied : suppliedAssignments ) {
                             if ( modelService.allowsCommitment( supplier, supplied, locale, assetSupplyRel.getRestrictions() ) )
-                                assetSupplyCommitments.add( new AssetSupplyCommitment( supplier, supplied, asset ) );
+                                assignmentAssetLinks.add( new AssignmentAssetLink(
+                                        supplier,
+                                        supplied,
+                                        asset,
+                                        AssignmentAssetLink.Type.SupplyCommitment ) );
                         }
                     }
                 }
             }
         }
-        List<AssetSupplyCommitment> results = new ArrayList<AssetSupplyCommitment>();
-        for ( AssetSupplyCommitment commitment : assetSupplyCommitments )
-            results.add( summarize( commitment ) );
+        List<AssignmentAssetLink> results = new ArrayList<AssignmentAssetLink>();
+        for ( AssignmentAssetLink link : assignmentAssetLinks )
+            results.add( summarize( link ) );
         return results;
     }
 
-    private AssetSupplyCommitment summarize( AssetSupplyCommitment assetSupplyCommitment ) {
-        Assignment supplier = new Assignment( assetSupplyCommitment.getSupplier() );
-        Assignment supplied = new Assignment( assetSupplyCommitment.getSupplied() );
+    private AssignmentAssetLink summarize( AssignmentAssetLink assignmentAssetLink ) {
+        Assignment supplier = summarize( assignmentAssetLink.getFromAssignment() );
+        Assignment supplied = summarize( assignmentAssetLink.getToAssignment() );
+        return new AssignmentAssetLink(
+                supplier,
+                supplied,
+                assignmentAssetLink.getMaterialAsset(),
+                assignmentAssetLink.getType() );
+    }
+
+    private Assignment summarize( Assignment assignment ) {
+        Assignment summarizedAssignment = new Assignment( assignment );
         if ( summarizedByOrgType ) {
-            Organization supplierOrg = getOrganizationType( supplier.getPart() );
-            Role supplierRole = summarizedByRole ? supplier.getRole() : null;
-            if ( supplierRole != null )
-                supplier.setEmployment( new Employment( supplierOrg, supplierRole ) );
+            Organization org = getOrganizationType( assignment.getPart() );
+            Role role = summarizedByRole ? assignment.getRole() : null;
+            if ( role != null )
+                summarizedAssignment.setEmployment( new Employment( org, role ) );
             else
-                supplier.setEmployment( new Employment( supplierOrg ) );
-            Organization suppliedOrg = getOrganizationType( supplied.getPart() );
-            Role suppliedRole = summarizedByRole ? supplied.getRole() : null;
-            if ( suppliedRole != null )
-                supplied.setEmployment( new Employment( suppliedOrg, suppliedRole ) );
-            else
-                supplied.setEmployment( new Employment( suppliedOrg ) );
+                summarizedAssignment.setEmployment( new Employment( org ) );
         } else if ( summarizedByOrg ) {
-            Organization supplierOrg = supplier.getOrganization();
-            Organization suppliedOrg = supplied.getOrganization();
-            supplier.setEmployment( new Employment( supplierOrg ) );
-            supplied.setEmployment( new Employment( suppliedOrg ) );
+            Organization org = assignment.getOrganization();
+            summarizedAssignment.setEmployment( new Employment( org ) );
         } else if ( summarizedByRole ) {
-            supplier.setEmployment( new Employment( supplier.getOrganization(), supplier.getRole() ) );
-            supplied.setEmployment( new Employment( supplied.getOrganization(), supplied.getRole() ) );
+            summarizedAssignment.setEmployment( new Employment( assignment.getOrganization(), assignment.getRole() ) );
         }
-        return new AssetSupplyCommitment( supplier, supplied, assetSupplyCommitment.getMaterialAsset() );
+        return summarizedAssignment;
     }
 
     private Organization getOrganizationType( Part part ) {

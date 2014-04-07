@@ -20,6 +20,7 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -264,14 +265,14 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Actor> getActualKnownActors() {
-        return (List<Actor>)CollectionUtils.select(
+        return (List<Actor>) CollectionUtils.select(
                 getActualActors(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !((Actor)object).isUnknown();
+                        return !( (Actor) object ).isUnknown();
                     }
                 }
         );
@@ -387,8 +388,8 @@ public class Assignments implements Iterable<Assignment>, Serializable {
 
     /**
      * Find assignments that are started with the segments.
-     * @param queryService a query service
      *
+     * @param queryService a query service
      * @return a list of assignments
      */
     public Assignments getImmediates( QueryService queryService ) {
@@ -421,14 +422,14 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-    public static boolean isOptional( Part part, QueryService queryService) {
+    public static boolean isOptional( Part part, QueryService queryService ) {
         return !isImmediate( part, queryService ) && !isNotification( part, queryService ) && !isRequest( part );
     }
 
     /**
      * Find assignments triggered by an incoming notification.
-     * @param queryService a query service
      *
+     * @param queryService a query service
      * @return a list of assignments
      */
     public Assignments getNotifications( QueryService queryService ) {
@@ -565,6 +566,60 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
+    public Assignments producesAssets() {
+        Assignments result = new Assignments( locale );
+        for ( Assignment other : this )
+            if ( !other.getPart().getAssetConnections().producing().isEmpty() )
+                result.add( other );
+        return result;
+    }
+
+    public Assignments producesAsset( MaterialAsset asset ) {
+        Assignments result = new Assignments( locale );
+        for ( Assignment other : this )
+            if ( !other.getPart().getAssetConnections().producing().about( asset ).isEmpty() )
+                result.add( other );
+        return result;
+    }
+
+
+    public Assignments usesAssets() {
+        Assignments result = new Assignments( locale );
+        for ( Assignment other : this )
+            if ( !other.getPart().findAssetsUsed().isEmpty() )
+                result.add( other );
+        return result;
+    }
+
+    public Assignments onlyUsesAssets() { // does not produce
+        Assignments result = new Assignments( locale );
+        for ( Assignment other : this )
+            if ( !other.getPart().findAssetsUsed().isEmpty()
+                    && other.getPart().getAssetConnections().producing().isEmpty() )
+                result.add( other );
+        return result;
+    }
+
+    public Assignments onlyUsesAsset( final MaterialAsset asset ) { // does not produce
+        Assignments result = new Assignments( locale );
+        for ( Assignment other : this ) {
+            boolean assetUsed = CollectionUtils.exists(
+                    other.getPart().findAssetsUsed(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (MaterialAsset) object ).narrowsOrEquals( asset );
+                        }
+                    }
+            );
+            if ( assetUsed
+                    && other.getPart().getAssetConnections().producing().about( asset ).isEmpty() )
+                result.add( other );
+        }
+        return result;
+    }
+
+
     //--------------------------------------
 
     /**
@@ -631,7 +686,8 @@ public class Assignments implements Iterable<Assignment>, Serializable {
                                 basis == null ? null : basis.getRole() ),
                         getCommon( spec.getOrganization(), source.getOrganization(),
                                 basis == null ? null : basis.getOrganization() ),
-                        getCommon( spec.getJurisdiction(), source.getJurisdiction(), null ) );
+                        getCommon( spec.getJurisdiction(), source.getJurisdiction(), null )
+                );
         }
 
         return spec;

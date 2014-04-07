@@ -827,6 +827,11 @@ public class Segment extends ModelObject {
         return false;
     }
 
+    public boolean precedes( Segment other ) {
+        return !this.equals( other )
+                && getEventPhase().precedes( other.getEventPhase() ); // todo - ignore event timings context?
+    }
+
 
 //=================================================
 

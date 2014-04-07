@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.AssetSupplyCommitment;
+import com.mindalliance.channels.engine.analysis.graph.AssignmentAssetLink;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -29,7 +29,7 @@ import java.util.List;
  * Date: 4/3/14
  * Time: 9:58 PM
  */
-public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, AssetSupplyCommitment> {
+public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, AssignmentAssetLink> {
 
     private final MaterialAsset assetFocus;
 
@@ -93,8 +93,8 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
     }
 
     @Override
-    public URLProvider<Assignment, AssetSupplyCommitment> getURLProvider() {
-        return new URLProvider<Assignment, AssetSupplyCommitment>() {
+    public URLProvider<Assignment, AssignmentAssetLink> getURLProvider() {
+        return new URLProvider<Assignment, AssignmentAssetLink>() {
             /**
              * The URL for the graph that contains the vertex
              *
@@ -132,28 +132,28 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
             /**
              * The edges's URL. Returns null if none.
              *
-             * @param assetSupplyCommitment -- an edge
+             * @param assignmentAssetLink -- an edge
              * @return a URL string
              */
             @Override
-            public String getEdgeURL( AssetSupplyCommitment assetSupplyCommitment ) {
+            public String getEdgeURL( AssignmentAssetLink assignmentAssetLink ) {
                 return null;
             }
         };
     }
 
     @Override
-    public DOTAttributeProvider<Assignment, AssetSupplyCommitment> getDOTAttributeProvider() {
+    public DOTAttributeProvider<Assignment, AssignmentAssetLink> getDOTAttributeProvider() {
         return new SupplyChainsDOTAttributeProvider();
     }
 
     @Override
-    public EdgeNameProvider<AssetSupplyCommitment> getEdgeLabelProvider() {
-        return new EdgeNameProvider<AssetSupplyCommitment>() {
+    public EdgeNameProvider<AssignmentAssetLink> getEdgeLabelProvider() {
+        return new EdgeNameProvider<AssignmentAssetLink>() {
             @Override
-            public String getEdgeName( AssetSupplyCommitment assetSupplyCommitment ) {
+            public String getEdgeName( AssignmentAssetLink assignmentAssetLink ) {
                 String label = AbstractMetaProvider.separate(
-                        assetSupplyCommitment.getMaterialAsset().getName(), LINE_WRAP_SIZE )
+                        assignmentAssetLink.getMaterialAsset().getName(), LINE_WRAP_SIZE )
                         .replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
             }
@@ -184,7 +184,7 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
     /**
      * A DOTAttributeProvider for segments.
      */
-    private class SupplyChainsDOTAttributeProvider implements DOTAttributeProvider<Assignment, AssetSupplyCommitment> {
+    private class SupplyChainsDOTAttributeProvider implements DOTAttributeProvider<Assignment, AssignmentAssetLink> {
 
         private SupplyChainsDOTAttributeProvider() {
         }
@@ -249,12 +249,13 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, AssetSupplyCommitment edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, AssignmentAssetLink edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "label", getEdgeLabel( edge, highlighted ) ) );
             list.add( new DOTAttribute( "color", "steelblue" ) );
-            list.add( new DOTAttribute( "arrowhead", "normal" ) );
-            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "arrowhead", edge.isSupplyCommitment() ? "normal" : "vee" ) );
+            list.add( new DOTAttribute( "style", edge.isSupplyCommitment() ? "solid" : "dotted" ) );
+            list.add( new DOTAttribute( "arrowsize", edge.isSupplyCommitment() ? "0.75" : "0.5") );
             list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
             list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
@@ -264,9 +265,11 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
             return list;
         }
 
-        protected String getEdgeLabel( AssetSupplyCommitment assetSupplyCommitment, boolean highlighted ) {
+        protected String getEdgeLabel( AssignmentAssetLink assignmentAssetLink, boolean highlighted ) {
+            String text = assignmentAssetLink.getMaterialAsset().getName()
+                    + ( assignmentAssetLink.isSupplyCommitment() ? " supplied to" : " available to");
             String label = AbstractMetaProvider.separate(
-                    assetSupplyCommitment.getMaterialAsset().getName(),
+                    text,
                     LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
         }
@@ -275,9 +278,16 @@ public class SupplyChainsMetaProvider extends AbstractMetaProvider<Assignment, A
             String iconName;
             String[] lines = assignment.getFullTitle( "|" ).split( "\\|" );
             int numLines = Math.min( lines.length, 5 );
+            Part part = assignment.getPart();
+            String uses = !part.findAssetsUsed().isEmpty()
+                    ? ImagingService.USES
+                    : "";
+            String produces = !part.getAssetConnections().producing().isEmpty()
+                    ? ImagingService.PRODUCES
+                    : "";
             iconName = imagingService.findIconName( communityService, assignment );
 
-            return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+            return iconName + ( numLines > 0 ? numLines : "" ) + uses + produces + ".png";
         }
     }
 }

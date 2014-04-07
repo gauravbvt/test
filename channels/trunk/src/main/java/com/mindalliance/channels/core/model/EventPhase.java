@@ -136,4 +136,8 @@ public class EventPhase implements Serializable, Comparable<EventPhase> {
     public EventTiming getEventTiming() {
         return new EventTiming( getPhase().getTiming(), getEvent() );
     }
+
+    public boolean precedes( EventPhase other ) {
+        return getPhase().precedes( other.getPhase() ) && other.getEvent().narrowsOrEquals( getEvent() );
+    }
 }

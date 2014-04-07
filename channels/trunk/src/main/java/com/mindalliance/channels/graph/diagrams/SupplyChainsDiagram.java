@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.AssetSupplyCommitment;
+import com.mindalliance.channels.engine.analysis.graph.AssignmentAssetLink;
 import com.mindalliance.channels.engine.analysis.graph.SupplyChainsGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramException;
@@ -21,7 +21,7 @@ import java.io.OutputStream;
  * Date: 4/3/14
  * Time: 9:13 PM
  */
-public class SupplyChainsDiagram extends AbstractDiagram<Assignment,AssetSupplyCommitment> {
+public class SupplyChainsDiagram extends AbstractDiagram<Assignment,AssignmentAssetLink> {
 
     private MaterialAsset materialAsset;
     private final boolean summarizeByOrgType;
@@ -54,8 +54,8 @@ public class SupplyChainsDiagram extends AbstractDiagram<Assignment,AssetSupplyC
         SupplyChainsGraphBuilder graphBuilder =
                 new SupplyChainsGraphBuilder( materialAsset, summarizeByOrgType, summarizeByOrg, summarizeByRole );
         graphBuilder.setCommunityService( communityService );
-        Graph<Assignment, AssetSupplyCommitment> graph = graphBuilder.buildDirectedGraph();
-        GraphRenderer<Assignment, AssetSupplyCommitment> graphRenderer = diagramFactory.getGraphRenderer();
+        Graph<Assignment, AssignmentAssetLink> graph = graphBuilder.buildDirectedGraph();
+        GraphRenderer<Assignment, AssignmentAssetLink> graphRenderer = diagramFactory.getGraphRenderer();
         SupplyChainsMetaProvider metaProvider = new SupplyChainsMetaProvider( materialAsset,
                 outputFormat,
                 diagramFactory.getImageDirectory(),

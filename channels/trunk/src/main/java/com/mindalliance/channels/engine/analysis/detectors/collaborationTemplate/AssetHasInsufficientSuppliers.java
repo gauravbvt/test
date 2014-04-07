@@ -26,9 +26,9 @@ import java.util.Set;
  * Date: 4/2/14
  * Time: 12:34 PM
  */
-public class AssetIsCriticalYetHasInsufficientSuppliers extends AbstractIssueDetector {
+public class AssetHasInsufficientSuppliers extends AbstractIssueDetector {
 
-    public AssetIsCriticalYetHasInsufficientSuppliers() {
+    public AssetHasInsufficientSuppliers() {
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AssetIsCriticalYetHasInsufficientSuppliers extends AbstractIssueDet
     public List<? extends Issue> detectIssues( final CommunityService communityService, Identifiable identifiable ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) identifiable;
-        List<MaterialAsset> criticalAssets = part.getAssetConnections().using().critical().getAllAssets();
+        List<MaterialAsset> neededAssets = part.findAssetsUsed();
         Assignments allAssignments = communityService.getModelService().getAssignments( false );
         Place locale = communityService.getModelService().getPlanLocale( );
         List<AssetSupplyRelationship<Part>> supplyRels =
@@ -49,10 +49,10 @@ public class AssetIsCriticalYetHasInsufficientSuppliers extends AbstractIssueDet
                             }
                         }
                 );
-        for ( final MaterialAsset criticalAsset : criticalAssets ) {
+        for ( final MaterialAsset neededAsset : neededAssets ) {
             List<AssetSupplyRelationship<Part>> applicableSupplyRels = new ArrayList<AssetSupplyRelationship<Part>>();
             for ( AssetSupplyRelationship<Part> supplyRel : supplyRels ) {
-                if ( supplyRel.isAssetSupplied( criticalAsset ) ) {
+                if ( supplyRel.isAssetSupplied( neededAsset ) ) {
                     applicableSupplyRels.add( supplyRel );
                 }
             }
@@ -72,10 +72,10 @@ public class AssetIsCriticalYetHasInsufficientSuppliers extends AbstractIssueDet
                 if ( supplyingActors.size() < 2 ) {
                     if ( !isMultipleParticipation( supplyingActors ) ) {
                         Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
-                        issue.setDescription( "Task \"" + part.getTitle() + "\" uses critical asset " + "\"" + criticalAsset.getName()
+                        issue.setDescription( "Task \"" + part.getTitle() + "\" uses asset " + "\"" + neededAsset.getName()
                                 + "\" and has " + ( supplyingActors.size() == 0 ? "no" : "only one" ) + " identified supplier." );
                         issue.setSeverity( computeTaskFailureSeverity( communityService.getModelService(), part ) );
-                        issue.setRemediation( "Make used asset \"" + criticalAsset.getName() + "\" not critical to the task"
+                        issue.setRemediation( "Remove usage of asset \"" + neededAsset.getName() + "\" by the task and the communication channels it uses"
                                         + "\nor add another task with different agents assigned to it that supplies the asset."
                         );
                         issues.add( issue );
@@ -106,7 +106,7 @@ public class AssetIsCriticalYetHasInsufficientSuppliers extends AbstractIssueDet
 
     @Override
     protected String getKindLabel() {
-        return "Too few suppliers for critical asset";
+        return "Too few suppliers for asset used by the task";
     }
 
     @Override

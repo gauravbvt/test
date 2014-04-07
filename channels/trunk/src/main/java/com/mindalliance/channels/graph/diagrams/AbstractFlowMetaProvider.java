@@ -261,7 +261,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                         ? ImagingService.NEGATED
                         : "";
                 if ( isShowingAssets() ) {
-                    uses = !part.getAssetConnections().using().isEmpty()
+                    uses = !part.findAssetsUsed().isEmpty()
                         ? ImagingService.USES
                         : "";
                     produces = !part.getAssetConnections().producing().isEmpty()

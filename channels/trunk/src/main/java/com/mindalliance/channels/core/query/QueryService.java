@@ -651,6 +651,13 @@ public interface QueryService {
     Boolean findIfPartStarted( Part part );
 
     /**
+     * Find all parts that precede a given part.
+     * @param part the given part
+     * @return a list of preceding parts
+     */
+    List<Part> findPartsPreceding( Part part );
+
+    /**
      * Whether the plan segment can ever start.
      *
      * @param segment a plan segment
@@ -1788,4 +1795,16 @@ public interface QueryService {
      * @return a list of asset supply relationships.
      */
     List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships();
+
+    /**
+     * Is a material asset available to the actor assigned to a given task?
+     * @param assignment a task assignment
+     * @param assetNeeded the needed material asset
+     * @param assetSupplyRelationships all asset supply relationships (for optimization)
+     * @return whether or not it is safe to say that the asset is available
+     */
+    Boolean isAssetAvailableToAssignment( Assignment assignment,
+                                          MaterialAsset assetNeeded,
+                                          Assignments allAssignments,
+                                          List<AssetSupplyRelationship<Part>> assetSupplyRelationships );
 }

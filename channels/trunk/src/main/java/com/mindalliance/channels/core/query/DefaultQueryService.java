@@ -386,7 +386,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Integer countReferences( final ModelObject mo ) {
         int count = 0;
         Iterator classes = ModelObject.referencingClasses().iterator();
@@ -475,26 +475,26 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
         return getDao().listKnownEntities( clazz );
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, Boolean mustBeReferenced ) {
         return getDao().listActualEntities( clazz, mustBeReferenced );
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
         return getDao().listActualEntities( clazz );
     }
 
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
         final Place locale = getPlanLocale();
         return getDao().listEntitiesNarrowingOrEqualTo( entity, locale );
@@ -525,7 +525,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         List<T> domain;
         if ( Part.class.isAssignableFrom( clazz ) ) {
@@ -539,7 +539,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return getDao().listReferencedEntities( clazz );
     }
@@ -555,7 +555,7 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
         return getDao().listTypeEntities( clazz );
     }
@@ -566,7 +566,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
         if ( getCollaborationModel().references( mo ) )
             return true;
@@ -660,7 +660,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActualActors( ResourceSpec resourceSpec ) {
         Place locale = getPlanLocale();
         Set<Actor> actors = new HashSet<Actor>();
@@ -948,7 +948,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Commitment> findAllBypassCommitments( final Flow flow ) {
         assert flow.isSharing();
         Set<Commitment> commitments = new HashSet<Commitment>();
@@ -1430,7 +1430,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForActor( final Actor actor ) {
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
@@ -1446,7 +1446,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForRole( final Role role ) {
         final Place locale = getPlanLocale();
         return (List<Employment>) CollectionUtils.select(
@@ -1499,7 +1499,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Place place ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( place ),
@@ -1507,7 +1507,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( Phase phase ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( phase ),
@@ -1515,7 +1515,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( TransmissionMedium medium ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( medium ),
@@ -1523,7 +1523,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllEntitiesIn( MaterialAsset asset ) {
         return (List<ModelEntity>) CollectionUtils.select(
                 findAllModelObjectsIn( asset ),
@@ -1602,7 +1602,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Agreement> findAllImpliedAgreementsOf(
             Organization organization,
             Assignments assignments,
@@ -1787,7 +1787,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelObject> findAllModelObjectsIn( Phase phase ) {
         List<ModelObject> inPhase = new ArrayList<ModelObject>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -1811,7 +1811,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
         final Place locale = getPlanLocale();
         return (List<? extends ModelEntity>) CollectionUtils.select(
@@ -1941,7 +1941,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
                 userDao.getDevelopers( getCollaborationModel().getUri() ),
@@ -1987,7 +1987,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> List<T> findAllReferencing( final ModelObject referenced, final Class<T> clazz ) {
         List<T> referencers = new ArrayList<T>();
         if ( CollaborationModel.class.isAssignableFrom( clazz ) ) {
@@ -2105,7 +2105,7 @@ public abstract class DefaultQueryService implements QueryService {
                 && isEOIsCoveredBy( need.getEffectiveEois(), send.getEffectiveEois() );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private static boolean isEOIsCoveredBy( List<ElementOfInformation> coveredEois, final List<ElementOfInformation> coveringEois ) {
         if ( coveredEois.isEmpty() ) {
             return true;
@@ -2165,7 +2165,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Segment> findAllSegmentsForPhase( final Phase phase ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
@@ -2303,7 +2303,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<ElementOfInformation> findCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
@@ -2364,7 +2364,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> findEssentialFlowsFrom( Part part, Boolean assumeAlternatesFail ) {
         // Find all downstream important flows, avoiding circularity
         List<Flow> importantFlows = findImportantFlowsFrom( part, new HashSet<Part>(), assumeAlternatesFail );
@@ -2403,7 +2403,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private static List<Flow> keepEssentialFlows( final List<Flow> importantFlows ) {
         List<Flow> nonEssentialFlows = (List<Flow>) CollectionUtils.select(
                 importantFlows,
@@ -2533,6 +2533,72 @@ public abstract class DefaultQueryService implements QueryService {
             return started;
         }
     }
+
+    @Override
+    public List<Part> findPartsPreceding( Part part ) {
+        return doFindPartsPreceding( part, new HashSet<ModelObject>() );
+    }
+
+    private List<Part> doFindPartsPreceding( Part part, Set<ModelObject> visited ) {
+        Set<Part> precedingParts = new HashSet<Part>();
+        if ( !visited.contains( part ) ) {
+            visited.add( part );
+            // triggering parts
+            Iterator<Flow> receives = part.receives();
+            while ( receives.hasNext() ) {
+                Flow receive = receives.next();
+                if ( receive.isNotification() && receive.isTriggeringToTarget() ) {
+                    Node source = receive.getSource();
+                    if ( source.isPart() && !visited.contains( (Part) source ) ) {
+                        precedingParts.add( (Part) source );
+                        precedingParts.addAll( doFindPartsPreceding( (Part) source, visited ) );
+                    }
+                }
+            }
+            Iterator<Flow> sends = part.sends();
+            while ( sends.hasNext() ) {
+                Flow send = sends.next();
+                if ( send.isAskedFor() && send.isTriggeringToSource() ) {
+                    Node target = send.getTarget();
+                    if ( target.isPart() && !visited.contains( (Part) target ) ) {
+                        precedingParts.add( (Part) target );
+                        precedingParts.addAll( doFindPartsPreceding( (Part) target, visited ) );
+                    }
+                }
+            }
+            // initial parts in same segment
+            for ( Part segmentPart : part.getSegment().listParts() ) {
+                if ( !visited.contains( segmentPart ) ) {
+                    if ( segmentPart.isOngoing() ) precedingParts.add( segmentPart );
+                    if ( segmentPart.isStartsWithSegment() ) precedingParts.add( segmentPart );
+                }
+            }
+            // all parts in segments of preceding scenarios?
+            for ( Segment precedingSegment : findSegmentsPreceding( part.getSegment() ) ) {
+                for ( Part precedingSegmentPart : precedingSegment.listParts() ) {
+                    if ( !visited.contains( precedingSegmentPart ) )
+                        precedingParts.add( precedingSegmentPart );
+                }
+            }
+        }
+        assert !precedingParts.contains( part );
+        return new ArrayList<Part>( precedingParts );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Segment> findSegmentsPreceding( final Segment segment ) {
+        return (List<Segment>) CollectionUtils.select(
+                getCollaborationModel().getSegments(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Segment otherSegment = (Segment) object;
+                        return otherSegment.precedes( segment );
+                    }
+                }
+        );
+    }
+
 
     private boolean doFindIfSegmentStarted( Segment segment, Set<ModelObject> visited ) {
         if ( getCollaborationModel().isIncident( segment.getEvent() ) ) return true;
@@ -2710,7 +2776,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Segment> findSegmentsRespondingTo( final Event event ) {
         return (List<Segment>) CollectionUtils.select(
                 list( Segment.class ),
@@ -2753,7 +2819,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<ModelEntity> findTaskedEntities(
             Segment segment,
             Class entityClass,
@@ -3150,7 +3216,7 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Actor getKnownActualActor( Part part ) {
         List<Actor> knownActors = (List<Actor>) CollectionUtils.collect( findAllAssignments( part, false ),
                 new Transformer() {
@@ -3551,7 +3617,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     @Override
     public List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
         Set<Organization> allEmployers = new HashSet<Organization>();
@@ -3672,6 +3738,8 @@ public abstract class DefaultQueryService implements QueryService {
                 }
             }
         }
+        // available to a triggering task assigned to subsuming resources
+        // todo
         return new ArrayList<MaterialAsset>( availableAssets );
     }
 
@@ -3680,15 +3748,16 @@ public abstract class DefaultQueryService implements QueryService {
     public List<MaterialAsset> findAllAssetsProvisionedTo( final Part part,
                                                            List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
         List<AssetSupplyRelationship<Part>> supplyRels =
-                (List<AssetSupplyRelationship<Part>>)CollectionUtils.select(
+                (List<AssetSupplyRelationship<Part>>) CollectionUtils.select(
                         allAssetSupplyRelationships,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ((AssetSupplyRelationship<Part>)object).getSupplied( DefaultQueryService.this ).equals( part );
+                                return ( (AssetSupplyRelationship<Part>) object ).getSupplied( DefaultQueryService.this ).equals( part );
                             }
-                        });
-        Set<MaterialAsset> suppliedAssets = new HashSet<MaterialAsset>(  );
+                        }
+                );
+        Set<MaterialAsset> suppliedAssets = new HashSet<MaterialAsset>();
         for ( AssetSupplyRelationship<Part> supplyRel : supplyRels ) {
             suppliedAssets.addAll( supplyRel.getAssets() );
         }
@@ -3714,7 +3783,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<MaterialAsset> findAllUsersOfAssetField( final MaterialAsset materialAsset, final AssetField field ) {
         return (List<MaterialAsset>) CollectionUtils.select(
                 listActualEntities( MaterialAsset.class, true ),
@@ -3740,7 +3809,7 @@ public abstract class DefaultQueryService implements QueryService {
                         supplier,
                         new HashSet<Restriction>(),
                         results,
-                        new HashSet<Part>());
+                        new HashSet<Part>() );
                 /*
                 for ( Part supplied : safeFindAllSupplied( supplier, asset, false, new HashSet<Part>() ) ) {
                     AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplier, supplied );
@@ -3818,6 +3887,50 @@ public abstract class DefaultQueryService implements QueryService {
         int index = results.indexOf( rel );
         results.get( index ).addAsset( asset );
     }
+
+    @Override
+    public Boolean isAssetAvailableToAssignment( final Assignment assignment,
+                                                 final MaterialAsset asset,
+                                                 final Assignments allAssignments,
+                                                 final List<AssetSupplyRelationship<Part>> assetSupplyRelationships ) {
+        boolean availableToAssignment = isAssetAvailableToPart( assignment.getPart(), asset, assetSupplyRelationships );
+        if ( availableToAssignment ) {
+            return true;
+        } else {
+            for ( Part precedingPart : findPartsPreceding( assignment.getPart() ) ) {
+                Assignments precedingAssignments = allAssignments.assignedTo( precedingPart ).with( assignment.getActor() );
+                boolean available = CollectionUtils.exists(
+                        precedingAssignments.getAssignments(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Assignment precedingAssignment = (Assignment) object;
+                                return isAssetAvailableToPart( precedingAssignment.getPart(), asset, assetSupplyRelationships );
+                            }
+                        }
+                );
+                if ( available )
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    private boolean isAssetAvailableToPart( Part part, final MaterialAsset asset, List<AssetSupplyRelationship<Part>> assetSupplyRelationships ) {
+        return CollectionUtils.exists(
+                findAllAssetsAvailableTo(
+                        part,
+                        assetSupplyRelationships ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (MaterialAsset) object ).narrowsOrEquals( asset );
+                    }
+                }
+        );
+
+    }
+
 
 /*
 
