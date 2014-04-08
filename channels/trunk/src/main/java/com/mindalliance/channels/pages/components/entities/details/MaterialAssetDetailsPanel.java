@@ -68,6 +68,10 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
     }
 
     private void addPlaceholder() {
+        WebMarkupContainer placeholderContainer = new WebMarkupContainer( "placeholderContainer" );
+        placeholderContainer.setOutputMarkupId( true );
+        placeholderContainer.setVisible( getMaterialAsset().isActual() );
+        moDetailsDiv.addOrReplace( placeholderContainer );
         AjaxCheckBox placeholderCheckBox = new AjaxCheckBox(
                 "placeholder",
                 new PropertyModel<Boolean>(this, "placeholder")
@@ -77,8 +81,8 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
                 update( target, new Change( Change.Type.Updated, getMaterialAsset() ) );
             }
         };
-        placeholderCheckBox.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( placeholderCheckBox );
+        placeholderCheckBox.setEnabled( isLockedByUser( getMaterialAsset() ));
+        placeholderContainer.add( placeholderCheckBox );
     }
 
     private void addAssetDependenciesPanel() {

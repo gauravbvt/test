@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
@@ -171,6 +172,12 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
                     assetConnectionWrappers.add( new AssetConnectionWrapper( function, assetConnection ) );
                 }
             }
+            for ( TransmissionMedium medium : getQueryService().listTypeEntities( TransmissionMedium.class ) ) {
+                for ( AssetConnection assetConnection : medium.getAssetConnections() ) {
+                    assetConnectionWrappers.add( new AssetConnectionWrapper( medium, assetConnection ) );
+                }
+            }
+
         }
         return assetConnectionWrappers;
     }
@@ -296,6 +303,10 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
             return assetConnectable;
         }
 
+        public String getAssetConnectableType() {
+            return StringUtils.capitalize( assetConnectable.getTypeName() );
+        }
+
         public AssetConnection getAssetConnection() {
             return assetConnection;
         }
@@ -337,6 +348,7 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
         @SuppressWarnings( "unchecked" )
         private void initTable() {
             final List<IColumn<AssetConnectionWrapper>> columns = new ArrayList<IColumn<AssetConnectionWrapper>>();
+            columns.add( makeColumn( "Kind", "assetConnectableType", EMPTY ));
             columns.add( makeFilterableLinkColumn(
                     "Model element",
                     "assetConnectable",

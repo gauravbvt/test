@@ -751,7 +751,7 @@
                         * The task produces it
                         * The organization - on behalf of which the assigned agent executes the task - stocks it
                         * Agents assigned to another task supplies the asset to the agent
-                        * The asset is made available to a task that is necessarily executed prior to this one and this prior task is assigned to the agent
+                        * The asset is made available to a task that is necessarily executed prior to this one, this prior task is assigned to the agent and it does ''not'' consume the asset
 
                         A task A precedes another task B if...
 
@@ -2684,6 +2684,7 @@
                         * Tasks
                         * The information needs and capabilities of tasks
                         * Information sharing flows connecting tasks
+                        * Material asset requests and delivery
 
                         [[File:model_flow_map_legend.png|Flow map legend]]
 
@@ -2691,6 +2692,7 @@
 
                         * hide or show info needs and capabilities,
                         * hide or show goals,
+                        * show asset usage, production, request and delivery
                         * hide tasks without assignments and flows without commitments
                         * maximize the flow map to occupy to whole browser window,
                         * shrink it to fit in the display space,
@@ -3877,6 +3879,8 @@
                         The supply chains panel shows how material assets are supplied from agents assigned to a task
                         to agents assigned to another task.
 
+                        [[File:model_improving_supply_chains.png|Material asset supply chains]]
+
                         The task assignments in supply chains can be aggregated (summarized) by role, organization type or not at all.
 
                         A material asset is available to agents assigned to a task if the assets are made available to them
@@ -4213,11 +4217,13 @@
                 </item>
             </topic>
             <topic id="all-material-assets">
-                <name>Material assets</name>
+                <name>Material assets index</name>
                 <item>
                     <description>
                         All material assets referenced in the collaboration model are compiled showing how
                         they related to other model elements.
+
+                        [[File:model_searching_assets.png|Searching all material assets]]
                     </description>
                     <scripted>
                         <action>Open the material assets compilation</action>

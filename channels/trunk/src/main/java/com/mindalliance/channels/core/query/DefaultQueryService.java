@@ -3951,7 +3951,8 @@ public abstract class DefaultQueryService implements QueryService {
                             @Override
                             public boolean evaluate( Object object ) {
                                 Assignment precedingAssignment = (Assignment) object;
-                                return isAssetAvailableToPart( precedingAssignment.getPart(), asset, assetSupplyRelationships );
+                                boolean isConsumed = precedingAssignment.getPart().getAssetConnections().isConsumed( asset );
+                                return !isConsumed && isAssetAvailableToPart( precedingAssignment.getPart(), asset, assetSupplyRelationships );
                             }
                         }
                 );
