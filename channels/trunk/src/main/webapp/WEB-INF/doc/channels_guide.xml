@@ -35,23 +35,29 @@
                         that become the basis collaboration communities in which organizations and individuals participate
                         to get checklists that implement robust collaborations.
 
-                        A collaboration model forms the basis of collaboration communities where the identities of ''placeholder'
-                        organizations are given and where users are assigned to the positions defined in the model in terms of
-                        jobs given to agents in organizations.
-
-                        A collaboration model specifies how various kinds of organizations ought to communicate and share
+                        A collaboration model defines rules and practices of successful collaboration that are to be applied by
+                        communities of organizations in anticipated scenarios. More specifically, a collaboration model
+                        specifies how various kinds of organizations ought to communicate and share
                         information to collaboratively prevent, respond to, or recover from a number of anticipated
                         events that test their missions.
 
-                        Channels continuously examines collaboration models for gaps and brittleness, and suggests
-                        options for remediation.
+                        Since models can not know ahead of time the identities of all organizations and individuals,
+                        you can represent them as  "placeholders" to be resolved by collaboration communities that adopt your model.
 
-                        Channels produces visualizations, analytics and reports that help planners and stakeholders
+                        Collaboration communities are expected to associate organizations to model-defined organization placeholders and
+                        to assign individuals to the positions of responsibility within these organizations. These
+                        individuals then receive access to the checklists you, as model developer, defined and that detail
+                        how they are expected to collaborate and with who.
+
+                        Channels assists you in the development of collaboration models by continuously examining them
+                        for gaps and brittleness, and by suggesting options for remediation.
+
+                        Channels produces visualizations, analytics and reports that help model developers
                         understand and improve complex collaboration models.
 
-                        Channels is a ''planning'' tool. It does not manage the ''actual'' sharing of information. It is
-                        used to capture and improve the collaboration ''practices'' of organizations and to adaptively
-                        produce collaboration checklists.
+                        Always keep in mind that Channels is a ''planning'' tool. It does not manage the ''actual'' sharing
+                        of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively
+                        deliver collaboration checklists.
                     </description>
                 </item>
                 <next section="about-channels" topic="model-building-strategies"/>
@@ -98,19 +104,19 @@
                 </item>
             </topic>
             <topic id="collaboration-vs-process">
-                <name>Collaborations vs. business processes</name>
+                <name>Collaboration plans vs. business processes</name>
                 <item>
                     <description>
                         Business processes (aka workflows) and collaborations are very different concepts. While some collaborations
-                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration communities.
+                        can be captured as business processes, most collaborations can not. All business processes, however, can be captured as collaboration plans.
                         Furthermore, while business processes have "owners", no one by definition can be said to "own" a collaboration.
 
                         A ''business process'' is a close orchestration of people and systems within one (extended) organization,
                         all working harmoniously according to a known and repeatable script in order to accomplish organizational goals.
 
-                        A ''collaboration'', as understood in Channels, is the coordination via communications of interdependent work done
-                        by multiple individuals, from one or more organizations, where organizations are trying to achieve their own, possibly conflicting,
-                        goals.
+                        A ''collaboration plan'', as understood in Channels, is the mutually expected task coordination,
+                        information sharing and resource (asset) allocation to be carried out by responsible individuals within co-dependent organizations
+                        that are trying to achieve their own, possibly conflicting, goals in given scenarios.
 
                         The goals of organizations, namely risk mitigation and opportunity captures, are
                         instantiated by events to be caused, prevented, responded to, recovered from etc. collaboratively.
@@ -119,7 +125,9 @@
 
                         Collaboration planning focuses on information as the source of task inter-dependencies.
                         Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
-                        or inform them so they can succeed (information sharing).
+                        or inform them so they can succeed (information sharing). Collaboration planning also addresses
+                        the production, requesting and delivery of ''material assets'' required for the execution of tasks
+                        and communications.
 
                         Unlike business processes, a collaboration community does '''not''' tightly script the tasks; it only attempts to resolve their
                         information and coordination inter-dependencies via information flows and to make explicit the
@@ -363,6 +371,8 @@
                 <definition section="plan-concepts" topic="plan-planning-scenario"/>
                 <definition section="plan-concepts" topic="plan-requirement"/>
                 <definition section="plan-concepts" topic="chain-of-command"/>
+                <definition section="plan-concepts" topic="material-asset"/>
+
             </topic>
         </section>
         <section id="plan-concepts">
@@ -370,14 +380,15 @@
             <topic id="collaboration-planning">
                 <name>Collaboration planning</name>
                 <item>
-                    <description>Collaboration Planning is the process by which organizations decide and agree on how they will coordinate and share information
-                        in anticipated scenarios so that they can manage risks and capture opportunities.
+                    <description>Collaboration Planning is the process by which organizations decide and agree on how they will coordinate, share information
+                        and allocate material assets in anticipated scenarios so that they can manage risks and capture opportunities.
 
                         Collaboration planning captures and disseminates as collaboration plans...
 
                         * the commitments of responsible individuals
                         * in anticipated planning scenarios
                         * to communicate and share information
+                        * and allocate material assets
                         * so that co-dependent organizations
                         * can successfully coordinate and inform
                         * tasks that achieve mission-critical goals
@@ -403,8 +414,8 @@
                 <name>Collaboration plan</name>
                 <item>
                     <description>
-                        A collaboration plan can be defined as the sum of all collaboration checklists assigned to and
-                        accepted by the participants in a collaboration community.
+                        A collaboration plan can be defined as the sum of all collaboration checklists (documenting expected collaboration behaviors)
+                        assigned to and accepted by the participants in a collaboration community.
                     </description>
                 </item>
             </topic>
@@ -412,7 +423,7 @@
                 <name>Collaboration community</name>
                 <item>
                     <description>A collaboration community defines how identified individuals in positions of responsibility within organizations
-                        are expected to act and communicate in anticipated planning scenarios.
+                        are expected to act, communicate and allocate material assets in anticipated planning scenarios.
 
                         [[File:collaboration_community_illustration.png|Collaboration community ]]
 
@@ -424,18 +435,21 @@
                         * the collaborators and their organizations,
                         * the tasks that directly or indirectly mitigate risks or achieve goals,
                         * the communications that coordinate and inform the tasks,
+                        * the allocation of material assets,
                         * and the checklists detailing when and how to execute the tasks and communicate.
 
                         The collaboration model is defined using "placeholders" for...
 
                         * organizations (organization placeholders),
                         * people and systems (agents)
+                        * material assets (asset placeholders)
                         * and places (location placeholders).
 
                         A collaboration community  adopting a model identifies...
 
                         * the locations of location placeholders,
                         * the organizations participating as organization placeholders,
+                        * an actual asset for each material asset placeholder
                         * and users (and systems) participating as agents in positions of responsibility within participating organizations.
 
                         More than one collaboration community  can adopt a given collaboration model.
@@ -471,6 +485,7 @@
 
                         * tasks required to achieve objectives in identified planning scenarios,
                         * the communications that coordinate and inform these tasks,
+                        * the allocation of assets required for the execution tasks and communications
                         * how to assign tasks to individuals assigned on the basis of their positions in organizations
                         * checklists detailing how to execute each task and how to coordinate and inform their execution via communication and information sharing
 
@@ -508,7 +523,7 @@
             <topic id="plan-placeholder">
                 <name>Placeholder</name>
                 <item>
-                    <description>A placeholder is an organization, place or individual whose final identity is not known
+                    <description>A placeholder is an organization, place, individual or material asset whose final identity is not known
                         to a collaboration model but is known to collaboration communities based on it.
 
                         A placeholder for an individual is called a position in a collaboration community.
@@ -516,7 +531,11 @@
                         A location placeholder that sets the overall locale for a collaboration community must be instantiated
                         with an actual location for the community to be opened for participation.
 
-                        Most often, the term placeholder is used as a shorthand for organization placeholder.
+                        Material asset placeholders allow each collaboration community to give a unique identity to
+                        assets defined in the collaboration model. For example, a model might define a "Standard Secure Radio"
+                        asset placeholder. Each community can substitute it with their own standard secure radio equipment.
+
+                        Most often than not, the term placeholder when used alone is used as a shorthand for organization placeholder.
 
                         The collaboration model upon which a collaboration community is based identifies all the
                         organizations that are involved in the collaboration it defines. Because each collaboration community
@@ -648,7 +667,8 @@
                         what impacts a failing the task would have on the collaboration.
 
                         Each task in the collaboration model a collaboration community is based on has an associated checklist,
-                        minus contact information, that details how to execute the task.
+                        minus contact information, that details how to execute the task. The description of the task
+                        may involve obtaining and supplying material assets.
 
                         When a user receives checklists from being assigned to positions assigned to tasks, the checklists
                         are personalized with contact names and information of other users who participate in positions the user collaborates with.
@@ -711,6 +731,63 @@
                         relationships involving that user from participation in a collaboration community.</description>
                 </item>
             </topic>
+            <topic id="material-asset">
+                <name>Material asset</name>
+                <item>
+                    <description>
+                        A material asset is typically something physical and costly to replicate (unlike information which
+                        is ethereal and infinitely replicable) and that is needed for the execution of a task
+                        or for communicating using a transmission medium that requires it.
+
+                        A task can produce, use and possibly consume material assets. A material asset used
+                        by a task can be merely useful (nice to have) or critical (must have) to the task.
+
+                        Material assets are owned by organizations and can be provisioned to agents, usually upon request.
+                        If an organization is said to stock some given material assets, then it is assumed that the
+                        production and replenishment of these assets may not be necessary.
+
+                        A material asset is available to an agent executing a task if...
+
+                        * The task produces it
+                        * The organization - on behalf of which the assigned agent executes the task - stocks it
+                        * Agents assigned to another task supplies the asset to the agent
+                        * The asset is made available to a task that is necessarily executed prior to this one and this prior task is assigned to the agent
+
+                        A task A precedes another task B if...
+
+                        * task A  directly or indirectly triggers task B
+                        * task A is ongoing in the same scenario or is initiated by the same scenario that "contains" task B
+                        * task A is a scenario that always preceded the scenario for task B (for example responding to an event precedes recovering from that event)
+
+                        A material asset can be dependent on other material assets, meaning all dependent assets of a
+                        required asset must be acquired for it to be of use to a task.
+
+                        A request for material assets is done via a notification or information request initiated
+                        by the agents assigned to a task. The request is addressed to the agents being contacted.
+
+                        The supply of material assets is associated with a notification of a reply to an information
+                        request. The agents supplying the assets are those executing the task that "sent" the notification
+                        or reply. The recipients of the assets are the agents assigned to the task that "receives"
+                        the notification or reply.
+
+                        A request received by agents assigned to a task can be forwarded to agents in another task in which case
+                        any supplying in done in return will bypass the request forwarders and be made directly to agents
+                        who made the original requests.
+
+                        References to material assets will appear in checklists for each task that produces them,
+                        requires them, receives them or supply them.
+
+                        A material asset is implemented as a kind of domain entity - agents, organizations, events,
+                        places, functions, transmission media etc. are also domain entities. material asset are created
+                        when first referenced by name in the collaboration model, just like any other domain entity.
+                        And just like organizations and places, an actual material asset can be marked as a placeholder
+                        to be resolved in collaboration communities.
+                    </description>
+                </item>
+                <next section="profiling" topic="profiling-asset"/>
+                <next section="improving" topic="supply-chains"/>
+                <next section="searching" topic="all-material-assets"/>
+            </topic>
         </section>
         <section id="communities-page">
             <name>All Collaboration Communities page</name>
@@ -768,6 +845,9 @@
                         to be resolved. Until it is, a planner can not open the community for participation.
 
                         [[File:model_locale.png|Collaboration model locale]]
+
+                        A community can also give a community-specific identity to any of the material asset placeholders
+                        defined in its collaboration model.
 
                         As a planner, you are automatically a guest of the adopted collaboration model. If you are a guest or
                         a developer of the collaboration model upon which the community is based, you can access it.
@@ -1510,6 +1590,7 @@
                         * an event triggered or terminated,
                         * goals achieved
                         * information acquired that can then be shared
+                        * material assets produced and/or delivered
 
                         A task specifies what agents known to the collaboration models will be assigned to it and,
                         whether they will be executing the task individually or as a team.
@@ -1568,6 +1649,7 @@
                         * The transmission media over which the information would be communicated
                         * The maximum acceptable delay between acquiring the information and communicating it
                         * Instructions, such as whether to also share the planning scenario in context
+                        * Material assets requested (with forwarding or not) and supplied as a result
 
                         An information flow can connect tasks that are from different segments.
 
@@ -1754,6 +1836,9 @@
                         A transmission medium can be meant for broadcasting (to all), multicasting (to many but not all) or
                         narrowcasting (to one per communication).
 
+                        A transmission medium can be stated to require the use one or more material assets. For example,
+                        a "secure radio" transmission medium may require the use of a "secure radio system" asset.
+
                         A transmission medium is always a type (a category).
                     </description>
                 </item>
@@ -1826,6 +1911,7 @@
                         * functions
                         * information formats
                         * information products
+                        * material assets
                         * organizations
                         * phases
                         * places
@@ -1953,11 +2039,11 @@
 
                         [[File:model_checklist_subtask_steps.png|Subtask steps from flows]]
 
-                        The conditions on executing steps can be the goals achieved and events triggered by the task, or
-                        other stated conditions.
+                        The conditions on executing steps can be the goals achieved and events triggered by the task,
+                        material assets being available to the task, or other ad hoc conditions.
 
                         The outcomes of a task (events caused or terminated, goals achieved, sharing capabilities
-                        acquired) can be associated with the execution of individual steps.
+                        acquired, material assets produced or supplied/delivered) can be associated with the execution of individual steps.
 
                         Channels will raise an issue whenever a condition or outcome from the definition of a task is
                         not referenced by at least one step, for example, when a goal achieved by the task is not
@@ -2081,6 +2167,7 @@
                         * Taxonomies - Open the panel showing all entity taxonomies defined in this model
                         * Who's who - Open the panel listing all agents (people and systems) represented in this model
                         * All attachments - Open the panel listing all file and Web page attachments in this model
+                        * Material assets - Open the panel listing all material assets in this model how how they relate to other model elements
                     </description>
                 </item>
             </topic>
@@ -2104,6 +2191,7 @@
                         * All Checklists - open the panel where all checklists in the model can be browsed
                         * Task Mover - Open the panel used to easily move tasks from the current segment to another (only visible to developers)
                         * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and commit to share information - as reflected in their checklists
+                        * Supply Chains - Open a visualization of how material assets are supplied and made available to agents assigned to tasks that need them
                         * Model Evaluation - Open a panel containing metrics of all issues found in this model
                         * All Issues - Open a panel listing all the issues found in this model
                         * Model versions - Open a panel identifying the current version of this model and allowing developers to vote on moving it to production
@@ -2650,6 +2738,7 @@
                         * profiling which agents will be assigned to it [[File:model_task_definition_assigned.png|The task's assignment profile]]
                         * stating timing attributes [[File:model_task_definition_timing.png|The task's time-related attributes]]
                         * what effects it is meant to have [[File:model_task_definition_effects.png|The intended effects of the task]]
+                        * what material assets the task produces and uses
                         * and instructions and documentation for those assigned to the task [[File:model_task_definition_documentation.png|Documenting the task]]
 
                         Note that as little and as much as wanted can be put into a task's definition.
@@ -2732,6 +2821,7 @@
                         * the communication channels to use, each including transmission medium and, optionally, a required format [[File:model_flow_channels.png|Communication channels]]
                         * timeliness constraints [[File:model_flow_timing.png|Communication timeliness]]
                         * if a flow to a ''middleman'', whether it can be bypassed [[File:model_flow_bypassing_intermediate.png|Permission to disintermediate]]
+                        * identifying the material assets to be requested (forwarding or not) and supplied as a result
                         * and documenting it [[File:model_flow_documentation.png|Documenting a send or receive]]
 
                         A flow is defined by first adding an information need and then identifying a source task, or by
@@ -2884,6 +2974,7 @@
                         * Events triggered or terminated by the task
                         * Information needs of the task
                         * The task having failed (a non-optional condition for "on-failure notification steps)
+                        * Needed material assets being available
                         * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
                         Outcomes of a steps can be...
@@ -2891,6 +2982,7 @@
                         * Goals, if any, achieved by the task
                         * Events, if any, caused or terminated by the task
                         * Sharing capabilities acquired for or from successfully executing the task
+                        * Material assets produced or supplied (delivered)
 
                         [[File:model_checklist_step_editor.png|Editing a step in a checklist]]
 
@@ -3032,6 +3124,7 @@
                         * categorizing it with organization types
                         * stating its mission
                         * identifying the actual parent organization
+                        * identifying the material assets stocked by the organization
                         * If an actual organization, by
                         ** giving the organization location (a place)
                         ** giving contact information for the organization as a whole
@@ -3056,6 +3149,7 @@
                 <next section="profiling" topic="organization-jobs"/>
                 <next section="profiling" topic="organization-participation"/>
                 <next section="profiling" topic="profiling-agent"/>
+                <next section="profiling" topic="profiling-asset"/>
             </topic>
             <topic id="organization-jobs">
                 <name>Positions in an organization</name>
@@ -3301,6 +3395,7 @@
                         * naming the other media this one can delegate to
                         * naming its level of security - in terms of secrecy classification levels
                         * giving the pattern the media's ''addresses'' must conform to
+                        * identifying the material assets the medium requires to be used
 
                         Note that all profile attributes are optional.
                     </description>
@@ -3324,6 +3419,7 @@
                         </change>
                     </scripted>
                 </item>
+                <next section="profiling" topic="profiling-asset"/>
             </topic>
             <topic id="profiling-info-product">
                 <name>Profile an information product</name>
@@ -3433,6 +3529,30 @@
                     </scripted>
                 </item>
 
+            </topic>
+            <topic id="profiling-asset">
+                <name>Profiling a material asset</name>
+                <item>
+                    <description>
+                        Define a material asset that tasks can use or produce, flows can request and cause delivery of,
+                        and transmission media are require.
+
+                        A material asset can be...
+
+                        * named
+                        * described
+                        * categorized by (more generic) types of material asset
+
+                        A material asset can identify other material assets (types of actual) it depends on to be effective.
+
+                        A material asset type can define named property fields to be used in further describing actual material assets
+                        categorized by this asset type.
+
+                        An actual material asset can give values to its property fields.
+                    </description>
+                </item>
+                <next section="improving" topic="supply-chains"/>
+                <next section="searching" topic="all-material-assets"/>
             </topic>
         </section>
         <section id="analyzing">
@@ -3733,7 +3853,7 @@
                         The map is focused on one agent or one organization (as an aggregate of agents). It shows the
                         commitments that involved that agent or organizations.
 
-                        The other parties to the commitments can be aggregated by role, organization type or not at all.
+                        The other parties to the commitments can be aggregated (summarized) by role, organization type or not at all.
 
                         Clicking on an assigned task navigates to the task's definition and opens the checklist flow
                         diagram for this task.
@@ -3749,6 +3869,24 @@
                 <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="tune-task-flow-definition"/>
                 <next section="improving" topic="verify-taxonomy"/>
+            </topic>
+            <topic id="supply-chains">
+                <name>Supply chains</name>
+                <item>
+                    <description>
+                        The supply chains panel shows how material assets are supplied from agents assigned to a task
+                        to agents assigned to another task.
+
+                        The task assignments in supply chains can be aggregated (summarized) by role, organization type or not at all.
+
+                        A material asset is available to agents assigned to a task if the assets are made available to them
+                        assigned to another task that necessarily precedes the task. Availability from prior tasks can optionally be shown.
+
+                        "Orphan" task assignments can also optionally be shown. "Orphan" task assignments are those that
+                        produce or use material assets (to execute or communicate) but are not part
+                        of displayed supply chains or prior availability relationships.
+                    </description>
+                </item>
             </topic>
             <topic id="all-checklists">
                 <name>All checklists</name>
@@ -4073,6 +4211,26 @@
                         </change>
                     </scripted>
                 </item>
+            </topic>
+            <topic id="all-material-assets">
+                <name>Material assets</name>
+                <item>
+                    <description>
+                        All material assets referenced in the collaboration model are compiled showing how
+                        they related to other model elements.
+                    </description>
+                    <scripted>
+                        <action>Open the material assets compilation</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Material assets</property>
+                        </change>
+                    </scripted>
+
+                </item>
+                <next section="profiling" topic="profiling-asset"/>
+                <next section="improving" topic="supply-chains"/>
             </topic>
         </section>
         <section id="user-issues">

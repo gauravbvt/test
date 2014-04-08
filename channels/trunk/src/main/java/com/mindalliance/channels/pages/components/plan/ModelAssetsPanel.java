@@ -92,7 +92,7 @@ public class ModelAssetsPanel extends AbstractCommandablePanel implements NameRa
 
     @Override
     public String getHelpTopicId() {
-        return "assets";
+        return "all-material-assets";
     }
 
     @Override
