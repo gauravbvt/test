@@ -361,7 +361,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private void addMustBeReferenced() {
         AjaxCheckBox referencedCheckbox = new AjaxCheckBox(
-           "referenced",
+                "referenced",
                 new PropertyModel<Boolean>( this, "mustBeReferenced" )
         ) {
             @Override
@@ -372,7 +372,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             }
         };
         referencedCheckbox.setOutputMarkupId( true );
-        addOrReplace(  referencedCheckbox );
+        addOrReplace( referencedCheckbox );
     }
 
     private void addIndices() {
@@ -446,7 +446,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> getIndexedNamesFilteredByTags() {
         List<? extends Taggable> taggables;
         if ( indexedOn.equals( ALL ) ) {
@@ -481,9 +481,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             taggables = findIndexedInfoFormats();
         } else if ( indexedOn.equals( FUNCTIONS ) ) {
             taggables = findIndexedFunctions();
-        }  else if ( indexedOn.equals( ASSETS ) ) {
+        } else if ( indexedOn.equals( ASSETS ) ) {
             taggables = findIndexedMaterialAssets();
-        }else {
+        } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
         return (List<String>) CollectionUtils.collect(
@@ -492,12 +492,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             public boolean evaluate( Object obj ) {
                                 return !isFilteredOutByTags( (Taggable) obj );
                             }
-                        } ),
+                        }
+                ),
                 new Transformer() {
                     public Object transform( Object obj ) {
                         return ( indexName( (Taggable) obj ) ).toLowerCase();
                     }
-                } );
+                }
+        );
 
     }
 
@@ -506,7 +508,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      *
      * @return a list of strings
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> getIndexedNamesFilteredByName() {
         List<String> names;
         if ( indexedOn.equals( ALL ) ) {
@@ -539,9 +541,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedInfoProducts() );
         } else if ( indexedOn.equals( INFO_FORMATS ) ) {
             names = indexNamesFor( findIndexedInfoFormats() );
-        }  else if ( indexedOn.equals( FUNCTIONS ) ) {
+        } else if ( indexedOn.equals( FUNCTIONS ) ) {
             names = indexNamesFor( findIndexedFunctions() );
-        }  else if ( indexedOn.equals( ASSETS ) ) {
+        } else if ( indexedOn.equals( ASSETS ) ) {
             names = indexNamesFor( findIndexedMaterialAssets() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
@@ -552,12 +554,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                             public boolean evaluate( Object obj ) {
                                 return !isFilteredOutByName( (String) obj );
                             }
-                        } ),
+                        }
+                ),
                 new Transformer() {
                     public Object transform( Object obj ) {
                         return ( (String) obj ).toLowerCase();
                     }
-                } );
+                }
+        );
     }
 
     private List<String> getAllNames() {
@@ -602,7 +606,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         return taggables;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> indexNamesFor( List<? extends Nameable> nameables ) {
         return (List<String>) CollectionUtils.collect(
                 nameables,
@@ -728,9 +732,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedInfoProducts() );
             } else if ( indexedOn.equals( INFO_FORMATS ) ) {
                 indices = indicesFor( findIndexedInfoFormats() );
-            }  else if ( indexedOn.equals( FUNCTIONS ) ) {
+            } else if ( indexedOn.equals( FUNCTIONS ) ) {
                 indices = indicesFor( findIndexedFunctions() );
-            }  else if ( indexedOn.equals( ASSETS ) ) {
+            } else if ( indexedOn.equals( ASSETS ) ) {
                 indices = indicesFor( findIndexedMaterialAssets() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
@@ -786,7 +790,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<IndexEntry> indicesFor( List<? extends Modelable> modelables ) {
         Map<String, IndexEntry> entries = new HashMap<String, IndexEntry>();
         for ( Modelable modelable : modelables ) {
@@ -825,19 +829,20 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     }
 
     private void styleEntityEntry( Component component, ModelObject mo ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         if ( mo.isEntity() && ( (ModelEntity) mo ).isType() ) {
             sb.append( "font-style: oblique" );
         }
-        if  ( mo.isEntity() && !getQueryService().isReferenced( mo ) ) {
-            if ( sb.length() > 0) sb.append( "; " );
+        if ( mo.isEntity() && !getQueryService().isReferenced( mo ) ) {
+            if ( sb.length() > 0 ) sb.append( "; " );
             sb.append( "text-decoration:line-through" );
         }
         if ( sb.length() > 0 ) {
             component.add(
                     new AttributeModifier(
                             "style",
-                            new Model<String>( sb.toString() ) ) );
+                            new Model<String>( sb.toString() ) )
+            );
         }
     }
 
@@ -866,11 +871,15 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? "overridden"
                     : "";
         } else if ( modelObject instanceof Organization ) {
-            if ( ((Organization)modelObject).isActual() && ((Organization)modelObject).isPlaceHolder() ) {
+            if ( ( (Organization) modelObject ).isActual() && ( (Organization) modelObject ).isPlaceHolder() ) {
                 added = "placeholder";
             }
         } else if ( modelObject instanceof Place ) {
-            if ( ((Place)modelObject).isActual() && ((Place)modelObject).isPlaceholder() ) {
+            if ( ( (Place) modelObject ).isActual() && ( (Place) modelObject ).isPlaceholder() ) {
+                added = "placeholder";
+            }
+        } else if ( modelObject instanceof MaterialAsset ) {
+            if ( ( (MaterialAsset) modelObject ).isActual() && ( (MaterialAsset) modelObject ).isPlaceholder() ) {
                 added = "placeholder";
             }
         }
@@ -1010,21 +1019,23 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? mo.getClass().getSimpleName()
                     : ( mo instanceof Actor && ( (Actor) mo ).isActual() )
                     ? ( ( (Actor) mo ).isPerson() ? "Person" : "System" )
-                    : mo instanceof Organization && ((Organization) mo).isPlaceHolder()
+                    : mo instanceof Organization && ( (Organization) mo ).isPlaceHolder()
                     ? "Placeholder " + mo.getClass().getSimpleName().toLowerCase()
-                    : mo instanceof Place && ((Place) mo).isPlaceholder()
+                    : mo instanceof Place && ( (Place) mo ).isPlaceholder()
+                    ? "Placeholder " + mo.getClass().getSimpleName().toLowerCase()
+                    : mo instanceof MaterialAsset && ( (MaterialAsset) mo ).isPlaceholder()
                     ? "Placeholder " + mo.getClass().getSimpleName().toLowerCase()
                     : ( (ModelEntity) mo ).isActual()
                     ? "Actual " + mo.getClass().getSimpleName().toLowerCase()
                     : ( ModelEntity.canBeActual( ( (ModelEntity) mo ) )
                     ? ( "Type of " + mo.getClass().getSimpleName().toLowerCase() )
-                    :  mo.getClass().getSimpleName() ) );
+                    : mo.getClass().getSimpleName() ) );
             return kind
                     + ( isNameAbbreviated() ? ": " + getFullName() : "" )
                     + " [" + mo.getId() + "]"
                     + ( mo.getDescription().isEmpty()
                     ? ""
-                    : ( " - " + StringUtils.abbreviate( mo.getDescription(), MAX_NAME_LENGTH * 3 )  ) );
+                    : ( " - " + StringUtils.abbreviate( mo.getDescription(), MAX_NAME_LENGTH * 3 ) ) );
         }
 
         /**

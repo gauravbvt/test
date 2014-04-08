@@ -204,7 +204,11 @@ public interface CommunityService {
      * @return a list of places
      */
     List<Place> findUnboundLocationPlaceholders();
-
+    /**
+     * Find all placeholder assets not bound by the plan community.
+     * @return a list of assets
+     */
+    List<MaterialAsset> findUnboundAssetPlaceholders();
     /**
      * resolve a place to itself or its bound location if bound.
      * @param place a place
@@ -212,6 +216,12 @@ public interface CommunityService {
      */
     Place resolveLocation( Place place );
 
+    /**
+     * resolve an asset to itself or its bound asset if bound.
+     * @param asset a material asset
+     * @return the resolved asset
+     */
+    MaterialAsset resolveAsset( MaterialAsset asset );
     /**
      * Get the appropriate doctor.
      * @return a doctor

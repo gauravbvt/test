@@ -23,6 +23,7 @@ import java.util.List;
 public class MaterialAssetData extends ModelEntityData {
 
     private List<AssetFieldData> assetFieldDataList;
+    private List<MaterialAsset> dependencies;
 
     public MaterialAssetData() {
     }
@@ -37,6 +38,10 @@ public class MaterialAssetData extends ModelEntityData {
         for ( AssetField assetField : getMaterialAsset().getFields() ) {
             assetFieldDataList.add( new AssetFieldData( assetField ));
         }
+        for ( MaterialAsset dependency : getMaterialAsset().getDependencies() ) {
+            dependencies.add( communityService.resolveAsset( dependency ) ); // todo - don't assume resolved asset has same dependencies
+        }
+
     }
 
     @Override
@@ -78,7 +83,7 @@ public class MaterialAssetData extends ModelEntityData {
     @XmlElement( name="dependencyId" )
     public List<Long> getDependencies() {
         List<Long> ids = new ArrayList<Long>(  );
-        for ( MaterialAsset dependency : getMaterialAsset().getDependencies() ) {
+        for ( MaterialAsset dependency : dependencies ) {
             ids.add( dependency.getId() );
         }
         return ids;

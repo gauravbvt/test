@@ -3,11 +3,13 @@ package com.mindalliance.channels.pages.components.community;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.command.commands.UpdateModelObject;
+import com.mindalliance.channels.core.community.AssetBinding;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.LocationBinding;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -39,7 +41,8 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
     private String description;
     private AjaxLink<String> cancelButton;
     private AjaxLink<String> acceptButton;
-    private List<LocationBinding> tempBindings;
+    private List<LocationBinding> locationBindings;
+    private List<AssetBinding> assetBindings;
 
 
     public CollaborationCommunityDetailsPanel( String id, IModel<? extends Identifiable> iModel ) {
@@ -50,15 +53,17 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
     private void init() {
         name = getPlanCommunity().getName();
         description = getPlanCommunity().getDescription();
-        initTempBindings();
+        initLocationBindings();
+        initAssetBindings();
         addUri();
         addName();
         addDescription();
         addLocationBindingsPanel();
+        addAssetBindingsPanel();
         addButtons();
     }
 
-    public void initTempBindings() {
+    public void initLocationBindings() {
         List<LocationBinding> bindings = new ArrayList<LocationBinding>(  );
         for ( LocationBinding locationBinding : getPlanCommunity().getLocationBindings() ) {
             bindings.add( new LocationBinding( locationBinding ) );
@@ -79,9 +84,32 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
         for ( Place unbound : unboundPlaceholders ) {
             bindings.add( new LocationBinding( unbound ) );
         }
-        tempBindings = bindings;
+        locationBindings = bindings;
     }
 
+    public void initAssetBindings() {
+        List<AssetBinding> bindings = new ArrayList<AssetBinding>(  );
+        for ( AssetBinding assetBinding : getPlanCommunity().getAssetBindings() ) {
+            bindings.add( new AssetBinding( assetBinding ) );
+        }
+        Collections.sort( bindings, new Comparator<AssetBinding>() {
+            @Override
+            public int compare( AssetBinding binding1, AssetBinding binding2 ) {
+                return binding1.getPlaceholder().getName().compareTo( binding2.getPlaceholder().getName() );
+            }
+        } );
+        List<MaterialAsset> unboundPlaceholders = findUnboundAssetPlaceholders();
+        Collections.sort( unboundPlaceholders, new Comparator<MaterialAsset>() {
+            @Override
+            public int compare( MaterialAsset asset1, MaterialAsset asset2 ) {
+                return asset1.getName().compareTo( asset2.getName() );
+            }
+        } );
+        for ( MaterialAsset unbound : unboundPlaceholders ) {
+            bindings.add( new AssetBinding( unbound ) );
+        }
+        assetBindings = bindings;
+    }
     private List<Place> findUnboundLocationPlaceholders() {
         List<Place> boundPlaceholders = getBoundLocationPlaceholders();
         List<Place> unboundPlaceholders = new ArrayList<Place>(  );
@@ -105,7 +133,7 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
     @SuppressWarnings( "unchecked" )
     private List<LocationBinding> getBoundLocationBindings() {
         return (List<LocationBinding>)CollectionUtils.select(
-                tempBindings,
+                locationBindings,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -115,6 +143,39 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
         );
     }
 
+
+    private List<MaterialAsset> findUnboundAssetPlaceholders() {
+        List<MaterialAsset> boundPlaceholders = getBoundAssetPlaceholders();
+        List<MaterialAsset> unboundPlaceholders = new ArrayList<MaterialAsset>(  );
+        for ( MaterialAsset asset : getCommunityService().listActualEntities( MaterialAsset.class, true ) ) {
+            if ( asset.isPlaceholder() && !boundPlaceholders.contains( asset ) ) {
+                unboundPlaceholders.add( asset );
+            }
+        }
+        return unboundPlaceholders;
+    }
+
+    private List<MaterialAsset> getBoundAssetPlaceholders() {
+        List<MaterialAsset> boundPlaceholders = new ArrayList<MaterialAsset>(  );
+        for ( AssetBinding assetBinding : getPlanCommunity().getAssetBindings() ) {
+            if ( assetBinding.isBound() )
+                boundPlaceholders.add( assetBinding.getPlaceholder() );
+        }
+        return boundPlaceholders;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<AssetBinding> getBoundAssetBindings() {
+        return (List<AssetBinding>)CollectionUtils.select(
+                assetBindings,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((AssetBinding)object).isBound();
+                    }
+                }
+        );
+    }
 
 
 
@@ -165,9 +226,15 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
     }
 
     private void addLocationBindingsPanel() {
-        LocationBindingsPanel locationBindingsPanel = new LocationBindingsPanel( "locationBindings", tempBindings );
+        LocationBindingsPanel locationBindingsPanel = new LocationBindingsPanel( "locationBindings", locationBindings );
         addOrReplace( locationBindingsPanel );
     }
+
+    private void addAssetBindingsPanel() {
+        AssetBindingsPanel assetBindingsPanel = new AssetBindingsPanel( "assetBindings", assetBindings );
+        addOrReplace( assetBindingsPanel );
+    }
+
 
     private List<Place> getPlaceCandidates() {
         return getCommunityService().listActualEntities( Place.class, true );
@@ -229,6 +296,24 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
                         locationBindingsUpdate
                 ) );
             }
+            if ( !isAssetBindingsUnchanged() ) {
+                CommunityService communityService = getCommunityService();
+                List<AssetBinding> assetBindingsUpdate = new ArrayList<AssetBinding>();
+                // Just to be safe, refresh the updated location bindings
+                for ( AssetBinding assetBinding :getBoundAssetBindings() ) {
+                    MaterialAsset asset = communityService.safeFindOrCreate( MaterialAsset.class, assetBinding.getAsset().getName() );
+                    if ( asset.isActual() ) {
+                        assetBindingsUpdate.add( new AssetBinding( assetBinding.getPlaceholder(), asset ) );
+                    }
+                }
+                multiCommand.addCommand( new UpdateModelObject(
+                        getUsername(),
+                        getCommunity(),
+                        "assetBindings",
+                        assetBindingsUpdate
+                ) );
+            }
+
             doCommand( multiCommand );
         }
     }
@@ -237,7 +322,9 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
         PlanCommunity planCommunity = getCommunity();
         return !( name != null && name.equals( planCommunity.getName() )
                 && ( description != null && description.equals( planCommunity.getDescription() ) )
-                && isLocationBindingsUnchanged() );
+                && isLocationBindingsUnchanged()
+                && isAssetBindingsUnchanged()
+        );
     }
 
     private boolean isLocationBindingsUnchanged() {
@@ -245,6 +332,13 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
                 getPlanCommunity().getLocationBindings(),
                 getBoundLocationBindings() );
     }
+
+    private boolean isAssetBindingsUnchanged() {
+        return CollectionUtils.isEqualCollection(
+                getPlanCommunity().getAssetBindings(),
+                getBoundAssetBindings() );
+    }
+
 
     private PlanCommunity getCommunity() {
         return (PlanCommunity) getModel().getObject();

@@ -169,9 +169,7 @@ public class AssetConnections implements Iterable<AssetConnection>, Serializable
     public String getFirstPersonLabel() {
         StringBuilder sb = new StringBuilder();
         List<MaterialAsset> assets = findAllMaterialAssets();
-        if ( assets.isEmpty() ) {
-            sb.append( "None" );
-        } else {
+        if ( !assets.isEmpty() ) {
             Collections.sort( assets );
             for ( MaterialAsset asset : assets ) {
                 if ( sb.length() > 0 )

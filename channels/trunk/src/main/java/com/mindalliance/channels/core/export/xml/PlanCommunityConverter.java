@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.IssueDetectionWaiver;
+import com.mindalliance.channels.core.community.AssetBinding;
 import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.LocationBinding;
 import com.mindalliance.channels.core.community.PlanCommunity;
@@ -8,6 +9,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -132,6 +134,27 @@ public class PlanCommunityConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
+        for ( AssetBinding assetBinding : planCommunity.getAssetBindings() ) {
+            if ( assetBinding.isBound() ) {
+                writer.startNode( "assetBinding" );
+                // placeholder
+                writer.startNode( "placeholder" );
+                MaterialAsset placeholder = assetBinding.getPlaceholder();
+                writer.addAttribute( "id", Long.toString( placeholder.getId() ) );
+                writer.addAttribute( "kind", placeholder.getKind().name() );
+                writer.setValue( placeholder.getName() );
+                writer.endNode();
+                // bound asset
+                MaterialAsset asset = assetBinding.getAsset();
+                writer.startNode( "asset" );
+                writer.addAttribute( "id", Long.toString( asset.getId() ) );
+                writer.addAttribute( "kind", asset.getKind().name() );
+                writer.setValue( asset.getName() );
+                writer.endNode();
+                writer.endNode();
+            }
+        }
+
         // Export issue detection waivers (for non-modelObjects)
         for ( IssueDetectionWaiver waiver : planCommunity.getIssueDetectionWaivers() ) {
             writer.startNode( "issueDetectionWaiver" );
@@ -230,12 +253,39 @@ public class PlanCommunityConverter extends AbstractChannelsConverter {
                         context );
                 reader.moveUp();
                 planCommunity.addLocationBinding( placeholder, location );
+            } else if ( nodeName.equals( "assetBinding" ) ) {
+                String assetId;
+                String kindName;
+                String name;
+                reader.moveDown();
+                assert reader.getNodeName().equals( "placeholder" );
+                assetId = reader.getAttribute( "id" );
+                kindName = reader.getAttribute( "kind" );
+                name = reader.getValue();
+                MaterialAsset placeholder = this.getEntity( MaterialAsset.class,
+                        name,
+                        Long.getLong( assetId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
+                reader.moveUp();
+                reader.moveDown();
+                assert reader.getNodeName().equals( "asset" );
+                assetId = reader.getAttribute( "id" );
+                kindName = reader.getAttribute( "kind" );
+                name = reader.getValue();
+                MaterialAsset asset = this.getEntity( MaterialAsset.class,
+                        name,
+                        Long.getLong( assetId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
+                reader.moveUp();
+                planCommunity.addAssetBinding( placeholder, asset );
             } else if ( nodeName.equals( "requirement" ) ) {
                 context.convertAnother(
                         planCommunity,
                         Requirement.class );
             } else if ( nodeName.equals( "issueDetectionWaiver" ) ) {
-                planCommunity.addIssueDetectionWaiver( (IssueDetectionWaiver)context.convertAnother(
+                planCommunity.addIssueDetectionWaiver( (IssueDetectionWaiver) context.convertAnother(
                         planCommunity,
                         IssueDetectionWaiver.class ) );
             } else {

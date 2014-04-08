@@ -49,7 +49,7 @@ public class AssetProvisionedData implements Serializable {
     }
 
     private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        asset = assetConnection.getAsset();
+        asset = communityService.resolveAsset( assetConnection.getAsset() );
         label = (assetIncoming ? "Obtaining " : "Supplying ") + asset.getName();
         Set<ContactData> allContacts = new HashSet<ContactData>(  );
         for ( CommunityEmployment contactEmployment : contactEmployments ) {

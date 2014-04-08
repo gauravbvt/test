@@ -394,6 +394,18 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public List<MaterialAsset> findUnboundAssetPlaceholders() {
+        List<MaterialAsset> boundPlaceholders = getPlanCommunity().getBoundAssetPlaceholders();
+        List<MaterialAsset> unboundPlaceholders = new ArrayList<MaterialAsset>();
+        for ( MaterialAsset asset : listActualEntities( MaterialAsset.class, true ) ) {
+            if ( asset.isPlaceholder() && !boundPlaceholders.contains( asset ) ) {
+                unboundPlaceholders.add( asset );
+            }
+        }
+        return unboundPlaceholders;
+    }
+
+    @Override
     public List<Place> findUnboundLocationPlaceholders() {
         List<Place> boundPlaceholders = getPlanCommunity().getBoundLocationPlaceholders();
         List<Place> unboundPlaceholders = new ArrayList<Place>();
@@ -416,6 +428,19 @@ public class CommunityServiceImpl implements CommunityService {
             return place;
         }
     }
+
+    @Override
+    public MaterialAsset resolveAsset( MaterialAsset asset ) {
+        if ( asset == null ) {
+            return null;
+        } else if ( asset.isPlaceholder() ) {
+            MaterialAsset boundAsset = getPlanCommunity().getAssetBoundTo( asset );
+            return boundAsset == null ? asset : boundAsset;
+        } else {
+            return asset;
+        }
+    }
+
 
     @Override
     public Doctor getDoctor() {

@@ -4,7 +4,6 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.checklist.AssetProvisionedData;
 import com.mindalliance.channels.api.procedures.checklist.AssetsProvisionedData;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -59,12 +58,9 @@ public class AssetsProvisionedDataPanel extends AbstractDataPanel {
             protected void populateItem( ListItem<MaterialAsset> item ) {
                 MaterialAsset asset = item.getModelObject();
                 String assetName = asset.getName();
-                String assetText = (ChannelsUtils.startsWithVowel( assetName )
-                        ? "an "
-                        :"a ") + assetName;
                 item.add( new Label(
                         "asset",
-                        assetText ) );
+                        assetName ) );
                 item.add( makeContactsListView( assetsProvisionedMap.get( asset)));
             }
         };

@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.AssetProvisionedOutcome;
 import com.mindalliance.channels.core.model.checklist.Outcome;
 
@@ -31,7 +32,8 @@ public class AssetProvisionedOutcomeData extends OutcomeData {
     @Override
     protected void initData( Outcome outcome, String serverUrl, CommunityService communityService, ChannelsUser user ) {
         super.initData( outcome, serverUrl, communityService, user );
-        assetId = ((AssetProvisionedOutcome)getOutcome()).getProvisionedAsset().getId();
+        MaterialAsset asset = communityService.resolveAsset( ((AssetProvisionedOutcome)getOutcome()).getProvisionedAsset() );
+        assetId = asset.getId();
     }
 
     @Override

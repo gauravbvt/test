@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.AssetAvailableCondition;
 import com.mindalliance.channels.core.model.checklist.Condition;
 
@@ -37,7 +38,8 @@ public class AssetAvailableConditionData extends ConditionData {
     @Override
     protected void initData( Condition condition, String serverUrl, CommunityService communityService, ChannelsUser user ) {
         super.initData( condition, serverUrl, communityService, user );
-        assetId = ((AssetAvailableCondition) getCondition()).getAssetAvailable().getId();
+        MaterialAsset asset = communityService.resolveAsset( ((AssetAvailableCondition) getCondition()).getAssetAvailable() );
+        assetId = asset.getId();
     }
 
     @Override

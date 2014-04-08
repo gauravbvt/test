@@ -105,7 +105,10 @@ public class ChecklistDataPanel extends AbstractDataPanel {
 
     private void addAssets() {
         WebMarkupContainer assetsContainer = new WebMarkupContainer( "assets" );
-        assetsContainer.add( new Label("summary",  StringUtils.capitalize( getTask().getAssetConnectionsSummary() ) ) );
+        String summary = getTask().getAssetConnectionsSummary();
+        Label summaryLabel = new Label("summary",  StringUtils.capitalize( summary ) );
+        summaryLabel.setVisible( !summary.isEmpty() );
+        assetsContainer.add( summaryLabel );
         AssetsProvisionedDataPanel assetsProvisionedDataPanel = new AssetsProvisionedDataPanel(
                 "provisioning",
                 checklistData.getAssetsProvisioned(),

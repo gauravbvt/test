@@ -178,12 +178,11 @@ public class EnvironmentData implements Serializable {
     }
 
     private void initMaterialAssets( String serverUrl, CommunityService communityService ) throws NotFoundException {
-        ModelService modelService = communityService.getModelService();
         assets = new ArrayList<MaterialAssetData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allAssetIds() ) {
             try {
-                MaterialAsset asset = modelService.find( MaterialAsset.class, id );
+                MaterialAsset asset = communityService.find( MaterialAsset.class, id );
                 assets.add( new MaterialAssetData( serverUrl, asset, communityService ) );
                 added.add( id );
                 for ( ModelEntity category : asset.getAllTypes() ) {

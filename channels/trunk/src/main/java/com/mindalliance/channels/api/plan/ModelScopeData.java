@@ -131,11 +131,13 @@ public class ModelScopeData implements Serializable {
     }
 
     private void initMaterialAssets( String serverUrl, CommunityService communityService ) {
-        ModelService modelService = communityService.getModelService();
         assets = new ArrayList<MaterialAssetData>();
-        for ( MaterialAsset asset : modelService.list( MaterialAsset.class ) ) {
+        for ( MaterialAsset asset : communityService.list( MaterialAsset.class ) ) {
             if ( !asset.isUnknown() && !asset.isUniversal() )
-                assets.add( cache( asset, new MaterialAssetData( serverUrl, asset, communityService ) ) );
+                assets.add(
+                        cache( asset, new MaterialAssetData(
+                        serverUrl,
+                        asset, communityService ) ) );
         }
     }
 

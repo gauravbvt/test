@@ -17,6 +17,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -61,8 +62,23 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
+        addPlaceholder();
         addAssetDependenciesPanel();
         addAssetFieldsPanel();
+    }
+
+    private void addPlaceholder() {
+        AjaxCheckBox placeholderCheckBox = new AjaxCheckBox(
+                "placeholder",
+                new PropertyModel<Boolean>(this, "placeholder")
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getMaterialAsset() ) );
+            }
+        };
+        placeholderCheckBox.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( placeholderCheckBox );
     }
 
     private void addAssetDependenciesPanel() {
@@ -83,6 +99,19 @@ public class MaterialAssetDetailsPanel extends EntityDetailsPanel implements Gui
             );
         }
         moDetailsDiv.addOrReplace( assetFieldsPanel );
+    }
+
+    public boolean isPlaceholder() {
+        return getMaterialAsset().isPlaceholder();
+    }
+
+    public void setPlaceholder( boolean val ) {
+        doCommand( new UpdateModelObject(
+                getUsername(),
+                getMaterialAsset(),
+                "placeholder",
+                val
+        ));
     }
 
     public MaterialAsset getMaterialAsset() {

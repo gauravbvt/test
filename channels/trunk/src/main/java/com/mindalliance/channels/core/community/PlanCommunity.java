@@ -3,10 +3,11 @@ package com.mindalliance.channels.core.community;
 import com.mindalliance.channels.core.IssueDetectionWaiver;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     private int modelVersion;
     private boolean closed;
     private List<LocationBinding> locationBindings = new ArrayList<LocationBinding>();
+    private List<AssetBinding> assetBindings = new ArrayList<AssetBinding>();
     private String plannerSupportCommunity = "";
     private String userSupportCommunity = "";
     private String communityCalendar = "";
@@ -76,6 +78,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         development = planCommunity.isDevelopment();
         idShifts = planCommunity.getIdShifts();
         locationBindings = planCommunity.copyLocationBindings();
+        assetBindings = planCommunity.copyAssetBindings();
         description = planCommunity.getDescription();
         closed = planCommunity.isClosed();
         dateCreated = planCommunity.getDateCreated();
@@ -94,6 +97,15 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         }
         return copy;
     }
+
+    private List<AssetBinding> copyAssetBindings() {
+        List<AssetBinding> copy = new ArrayList<AssetBinding>();
+        for ( AssetBinding assetBinding : assetBindings ) {
+            copy.add( new AssetBinding( assetBinding ) );
+        }
+        return copy;
+    }
+
 
     public void setId( long id ) {
         this.id = id;
@@ -127,6 +139,14 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         this.locationBindings = locationBindings;
     }
 
+    public List<AssetBinding> getAssetBindings() {
+        return assetBindings;
+    }
+
+    public void setAssetBindings( List<AssetBinding> assetBindings ) {
+        this.assetBindings = assetBindings;
+    }
+
     public void addLocationBinding( Place locationPlaceholder, Place actualLocation ) {
         assert actualLocation.isActual() && !actualLocation.isPlaceholder();
         assert locationPlaceholder.isPlaceholder();
@@ -135,6 +155,16 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
             locationBindings.add( locationBinding );
         }
     }
+
+    public void addAssetBinding( MaterialAsset assetPlaceholder, MaterialAsset actualAsset ) {
+        assert actualAsset.isActual() && !actualAsset.isPlaceholder();
+        assert assetPlaceholder.isPlaceholder();
+        AssetBinding assetBinding = new AssetBinding( assetPlaceholder, actualAsset );
+        if ( !assetBindings.contains( assetBinding ) ) {
+            assetBindings.add( assetBinding );
+        }
+    }
+
 
     public Place getLocationBoundTo( Place locationPlaceholder ) {
         for ( LocationBinding locationBinding : locationBindings ) {
@@ -152,6 +182,24 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         }
         return boundPlaces;
     }
+
+    public MaterialAsset getAssetBoundTo( MaterialAsset assetPlaceholder ) {
+        for ( AssetBinding assetBinding : assetBindings ) {
+            if ( assetBinding.getPlaceholder().equals( assetPlaceholder ) )
+                return assetBinding.getAsset();
+        }
+        return null;
+    }
+
+    public List<MaterialAsset> getBoundAssetPlaceholders() {
+        List<MaterialAsset> boundAssets = new ArrayList<MaterialAsset>();
+        for ( AssetBinding assetBinding : assetBindings ) {
+            if ( assetBinding.isBound() )
+                boundAssets.add( assetBinding.getPlaceholder() );
+        }
+        return boundAssets;
+    }
+
 
     public List<IssueDetectionWaiver> getIssueDetectionWaivers() {
         return issueDetectionWaivers;
@@ -350,6 +398,10 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         for ( LocationBinding locationBinding : locationBindings ) {
             return ModelObject.areIdentical( locationBinding.getPlaceholder(), mo )
                     ||  ModelObject.areIdentical( locationBinding.getLocation(), mo );
+        }
+        for (AssetBinding assetBinding : assetBindings ) {
+            return ModelObject.areIdentical( assetBinding.getPlaceholder(), mo )
+                    ||  ModelObject.areIdentical( assetBinding.getAsset(), mo );
         }
         return false;
     }
