@@ -11248,6 +11248,26 @@
                     <entry><para>Yes</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Actual asset has dependencies inconsistent with its categorization</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Add missing dependency</para>
+                        </listitem>
+                        <listitem>
+                            <para>or change how the asset is categorized</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove the dependency from the categories thatlist it</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>

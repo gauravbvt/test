@@ -10,13 +10,14 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +52,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                     findIntentMismatch( flow, send, mismatches );
                     findChannelsMismatch( flow, send, mismatches, queryService.getPlanLocale() );
                     findDelayMismatch( flow, send, mismatches );
+                    findAssetConnectionsMismatch( flow, send, mismatches );
                     if ( !mismatches.isEmpty() ) {
                         Issue issue = makeIssue( communityService, Issue.VALIDITY, flow );
                         issue.setDescription(
@@ -116,6 +118,16 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                     mismatches.add( "Sharing over unexpected channel \"" + sharingChannel + "\"." );
             }
         }
+    }
+
+    private void findAssetConnectionsMismatch( Flow sharing, Flow capability, List<String> mismatches ) {
+        // asset connections
+        for ( AssetConnection assetConnection : capability.getAssetConnections() ) {
+            if ( !sharing.getAssetConnections().implies( assetConnection ) ) {
+                mismatches.add( "Sharing has unexpected asset relationship \" " + assetConnection.getLabel() + "\".");
+            }
+        }
+
     }
 
     private static String mismatchesToString( List<String> mismatches ) {

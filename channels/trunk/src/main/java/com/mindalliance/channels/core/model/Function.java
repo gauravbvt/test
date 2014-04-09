@@ -194,7 +194,10 @@ public class Function extends ModelEntity implements AssetConnectable {
 
 
     public boolean isEmpty() {
-        return objectives.isEmpty() && infoAcquired.isEmpty() && infoNeeded.isEmpty();
+        return objectives.isEmpty()
+                && infoAcquired.isEmpty()
+                && infoNeeded.isEmpty()
+                && assetConnections.isEmpty();
     }
 
     public boolean implementedBy( Part part, QueryService queryService ) {
