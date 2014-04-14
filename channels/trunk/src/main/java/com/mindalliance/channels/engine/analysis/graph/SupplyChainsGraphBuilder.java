@@ -157,7 +157,7 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
         List<AssignmentAssetLink> links = new ArrayList<AssignmentAssetLink>();
         for ( Assignment assignment : allAssignments ) {
             for ( MaterialAsset assetNeeded : findAssetsNeededBy( assignment, allAssetSupplyRelationships ) ) { // assets used but not directly available
-                if ( assetFocus == null || assetNeeded.narrowsOrEquals( assetFocus ) ) {
+                if ( assetFocus == null || assetFocus.narrowsOrEquals( assetNeeded ) ) {
                     for ( Assignment precedingAssignment
                             : getModelService().findPrecedingAssignmentsWithAssetDirectlyAvailable(
                             assignment,
