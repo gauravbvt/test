@@ -58,7 +58,7 @@ public class AssetNeededButNotRequested extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Needed asset is not requested";
+        return "Asset is needed but not requested";
     }
 
     @Override

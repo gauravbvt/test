@@ -23,7 +23,7 @@ import java.util.List;
 public class MaterialAssetData extends ModelEntityData {
 
     private List<AssetFieldData> assetFieldDataList;
-    private List<MaterialAsset> dependencies;
+    private List<MaterialAsset> dependencies = new ArrayList<MaterialAsset>(  );
 
     public MaterialAssetData() {
     }

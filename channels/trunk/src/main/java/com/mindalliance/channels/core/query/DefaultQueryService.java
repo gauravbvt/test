@@ -2536,7 +2536,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Part> findPartsPreceding( Part part ) {
-        Set<Part> precedingParts = findTriggeringParts( part, new HashSet<ModelObject>() );
+        Set<Part> precedingParts = findAllTriggeringParts( part, new HashSet<ModelObject>() );
         // initial parts in same segment
         for ( Part segmentPart : part.getSegment().listParts() ) {
             if ( segmentPart.isOngoing() ) precedingParts.add( segmentPart );
@@ -2571,7 +2571,7 @@ public abstract class DefaultQueryService implements QueryService {
         return matchingSegments;
     }
 
-    private Set<Part> findTriggeringParts( Part part, Set<ModelObject> visited ) {
+    private Set<Part> findAllTriggeringParts( Part part, Set<ModelObject> visited ) {
         Set<Part> precedingParts = new HashSet<Part>();
         if ( !visited.contains( part ) ) {
             visited.add( part );
@@ -2583,7 +2583,7 @@ public abstract class DefaultQueryService implements QueryService {
                     Node source = receive.getSource();
                     if ( source.isPart() && !visited.contains( (Part) source ) ) {
                         precedingParts.add( (Part) source );
-                        precedingParts.addAll( findTriggeringParts( (Part) source, visited ) );
+                        precedingParts.addAll( findAllTriggeringParts( (Part) source, visited ) );
                     }
                 }
             }
@@ -2594,7 +2594,7 @@ public abstract class DefaultQueryService implements QueryService {
                     Node target = send.getTarget();
                     if ( target.isPart() && !visited.contains( (Part) target ) ) {
                         precedingParts.add( (Part) target );
-                        precedingParts.addAll( findTriggeringParts( (Part) target, visited ) );
+                        precedingParts.addAll( findAllTriggeringParts( (Part) target, visited ) );
                     }
                 }
             }
@@ -3736,47 +3736,44 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<MaterialAsset> findAllAssetsAvailableTo( Part part,
-                                                         List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
+    public List<MaterialAsset> findAllAssetsDirectlyAvailableTo( Assignment assignment,
+                                                                 List<AssetSupplyRelationship> allAssetSupplyRelationships ) {
         Set<MaterialAsset> availableAssets = new HashSet<MaterialAsset>();
         // produced
+        Part part = assignment.getPart();
         for ( AssetConnection assetConnection : part.getAssetConnections() ) {
             if ( assetConnection.isProducing() ) {
                 availableAssets.add( assetConnection.getAsset() );
             }
         }
         // provisioned
-        availableAssets.addAll( findAllAssetsProvisionedTo( part, allAssetSupplyRelationships ) );
+        availableAssets.addAll( findAllAssetsProvisionedTo( assignment, allAssetSupplyRelationships ) );
         // stocked by organization assigned to task
-        for ( Assignment assignment : findAllAssignments( part, false ) ) {
-            Organization organization = assignment.getOrganization();
-            for ( AssetConnection assetConnection : organization.getAssetConnections() ) {
-                if ( assetConnection.isStocking() ) {
-                    availableAssets.add( assetConnection.getAsset() );
-                }
+        Organization organization = assignment.getOrganization();
+        for ( AssetConnection assetConnection : organization.getAssetConnections() ) {
+            if ( assetConnection.isStocking() ) {
+                availableAssets.add( assetConnection.getAsset() );
             }
         }
-        // available to a triggering task assigned to subsuming resources
-        // todo
         return new ArrayList<MaterialAsset>( availableAssets );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<MaterialAsset> findAllAssetsProvisionedTo( final Part part,
-                                                           List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships ) {
-        List<AssetSupplyRelationship<Part>> supplyRels =
-                (List<AssetSupplyRelationship<Part>>) CollectionUtils.select(
+    public List<MaterialAsset> findAllAssetsProvisionedTo( final Assignment assignment,
+                                                           List<AssetSupplyRelationship> allAssetSupplyRelationships ) {
+        List<AssetSupplyRelationship> supplyRels =
+                (List<AssetSupplyRelationship>) CollectionUtils.select(
                         allAssetSupplyRelationships,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ( (AssetSupplyRelationship<Part>) object ).getSupplied( DefaultQueryService.this ).equals( part );
+                                return ( (AssetSupplyRelationship) object ).getSupplied().equals( assignment );
                             }
                         }
                 );
         Set<MaterialAsset> suppliedAssets = new HashSet<MaterialAsset>();
-        for ( AssetSupplyRelationship<Part> supplyRel : supplyRels ) {
+        for ( AssetSupplyRelationship supplyRel : supplyRels ) {
             suppliedAssets.addAll( supplyRel.getAssets() );
         }
         return new ArrayList<MaterialAsset>( suppliedAssets );
@@ -3817,17 +3814,18 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships() {
-        List<AssetSupplyRelationship<Part>> results = new ArrayList<AssetSupplyRelationship<Part>>();
-        for ( Part supplier : list( Part.class ) ) {
-            for ( MaterialAsset asset : findAssetsProvisionedBy( supplier ) ) {
-                findAssetSupplyRelationships(
-                        supplier, // start supply-demand chain at supplier
-                        asset,
-                        supplier,
-                        new HashSet<Restriction>(),
-                        results,
-                        new HashSet<Part>() );
+    public List<AssetSupplyRelationship> findAllAssetSupplyRelationships( Assignments allAssignments,
+                                                                          Commitments allCommitments ) {
+        List<AssetSupplyRelationship> results = new ArrayList<AssetSupplyRelationship>();
+        for ( Part part : list( Part.class ) ) {
+            for ( MaterialAsset asset : findAssetsProvisionedBy( part ) ) {
+                for ( Assignment supplier : allAssignments.assignedTo( part ) )
+                    findAssetSupplyRelationships(
+                            supplier, // the supplying assignment
+                            asset,
+                            null, // a demand forwarding assignment
+                            results,
+                            allCommitments );
             }
         }
         return results;
@@ -3842,91 +3840,50 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @SuppressWarnings( "unchecked" )
-    private void findAssetSupplyRelationships( final Part part, // part in the supply-demand* chain. At first, part == supplier
+    private void findAssetSupplyRelationships( final Assignment supplier,
                                                final MaterialAsset asset,
-                                               final Part supplier,
-                                               Set<Restriction> restrictions,
-                                               List<AssetSupplyRelationship<Part>> results,
-                                               HashSet<Part> visited ) {
+                                               final Assignment forwardingAssignment, // not null if traveling down forwarder chain
+                                               List<AssetSupplyRelationship> results,
+                                               Commitments allCommitments ) { // parts visited
 
-        if ( !visited.contains( part ) ) { // avoid circularity
-            visited.add( part );
-            List<Flow> supplyDemandFlows;
-            boolean demanding = !part.equals( supplier ); // now attempting or continuing going down demand links
-            if ( !demanding ) { // travel down initial asset supply links
-                supplyDemandFlows = (List<Flow>) CollectionUtils.select(
-                        part.getAllSharingSends(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                Flow flow = (Flow) object;
-                                return !flow.getAssetConnections().provisioning().about( asset ).isEmpty(); // asset provisioned
-                            }
-                        }
-                );
-            } else { // demanding - travel down demand links
-                supplyDemandFlows = (List<Flow>) CollectionUtils.select(
-                        part.getAllNonInitiatedSharingFlows(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                Flow flow = (Flow) object;
-                                return !flow.getAssetConnections().demanding().about( asset ).isEmpty(); // asset demanded
-                            }
-                        }
-                );
-            }
-            if ( demanding && supplyDemandFlows.isEmpty() ) { // end of the line
-                addSupplyRelationship(
-                        supplier,
-                        part,
-                        restrictions,
-                        asset,
-                        results );
-            }
-            for ( Flow supplyDemandFlow : supplyDemandFlows ) {
-                Part candidateSuppliedPart;
-                boolean forwarding = !supplyDemandFlow.getAssetConnections().about( asset ).forwarding().isEmpty();
-                if ( !demanding ) { // still on initial supply link
-                    candidateSuppliedPart = (Part) supplyDemandFlow.getTarget();
-                    if ( forwarding ) { // a supply link can also be a request link (if request-reply)
-                        findAssetSupplyRelationships( candidateSuppliedPart, asset, supplier, restrictions, results, visited );
-                    } else {
-                        addSupplyRelationship(
-                                supplier,
-                                candidateSuppliedPart,
-                                restrictions,
-                                asset,
-                                results );
-                    }
-                } else {
-                    candidateSuppliedPart =
-                            supplyDemandFlow.isNotification()
-                                    ? (Part) supplyDemandFlow.getSource()
-                                    : (Part) supplyDemandFlow.getTarget();
-                    Set<Restriction> combinedRestrictions = new HashSet<Restriction>( restrictions );
-                    combinedRestrictions.addAll( supplyDemandFlow.getRestrictions() );
-                    if ( forwarding ) {
-                        findAssetSupplyRelationships( candidateSuppliedPart, asset, supplier, combinedRestrictions, results, visited );
-                    } else {
-                        addSupplyRelationship(
-                                supplier,
-                                candidateSuppliedPart,
-                                combinedRestrictions,
-                                asset,
-                                results );
+        if ( forwardingAssignment == null || supplier != forwardingAssignment ) { // avoid circularity
+            if ( forwardingAssignment == null ) { // look for supply links from supplier assignment to then follow to supplied assignments
+                Commitments supplyCommitments = allCommitments.committing( supplier ).provisioning( asset ); // supplying follows sends
+                for ( Commitment supplyCommitment : supplyCommitments ) {
+                    Assignment nextInChain = supplyCommitment.getBeneficiary();
+                    boolean isReceivingForwardedDemand = !allCommitments.initiatedBy( nextInChain )
+                            .forwardingDemandFor( asset ).isEmpty();
+                    if ( isReceivingForwardedDemand ) {
+                        findAssetSupplyRelationships( supplier, asset, nextInChain, results, allCommitments );
+                    } else { // direct supply
+                        addSupplyRelationship( supplier, nextInChain, asset, results );
                     }
                 }
+            } else { // looking for demand or demand forwarding received by the current assignment in the chain
+                Commitments forwardedDemandCommitments = allCommitments.involvingButNotInitiatedBy( forwardingAssignment ).forwardingDemandFor( asset );
+                for ( Commitment forwardedDemandCommitment : forwardedDemandCommitments ) { // go down demand forwarding
+                    Assignment nextInChain = forwardedDemandCommitment.getSharing().isNotification() // demands received from non-initiated flows
+                            ? forwardedDemandCommitment.getCommitter()
+                            : forwardedDemandCommitment.getBeneficiary();
+                    findAssetSupplyRelationships( supplier, asset, nextInChain, results, allCommitments );
+                }
+                Commitments demandCommitments = allCommitments.involvingButNotInitiatedBy( forwardingAssignment ).demanding( asset );
+                for ( Commitment demandCommitment : demandCommitments ) { // stop forwarding demand chain at initial demand
+                    Assignment supplied = demandCommitment.getSharing().isNotification()
+                            ? demandCommitment.getCommitter()
+                            : demandCommitment.getBeneficiary();
+                    addSupplyRelationship( supplier, supplied, asset, results );
+                }
             }
+
         }
     }
 
-    private void addSupplyRelationship( Part supplierPart,
-                                        Part suppliedPart,
-                                        Set<Restriction> restrictions,
+    private void addSupplyRelationship( Assignment supplier,
+                                        Assignment supplied,
                                         MaterialAsset asset,
-                                        List<AssetSupplyRelationship<Part>> results ) {
-        AssetSupplyRelationship<Part> rel = new AssetSupplyRelationship<Part>( supplierPart, suppliedPart, restrictions );
+                                        List<AssetSupplyRelationship> results ) {
+        AssetSupplyRelationship rel = new AssetSupplyRelationship( supplier, supplied );
         if ( !results.contains( rel ) ) {
             results.add( rel );
         }
@@ -3937,36 +3894,46 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public Boolean isAssetAvailableToAssignment( final Assignment assignment,
                                                  final MaterialAsset asset,
-                                                 final Assignments allAssignments,
-                                                 final List<AssetSupplyRelationship<Part>> assetSupplyRelationships ) {
-        boolean availableToAssignment = isAssetAvailableToPart( assignment.getPart(), asset, assetSupplyRelationships );
-        if ( availableToAssignment ) {
-            return true;
-        } else {
-            for ( Part precedingPart : findPartsPreceding( assignment.getPart() ) ) {
-                Assignments precedingAssignments = allAssignments.assignedTo( precedingPart ).with( assignment.getActor() );
-                boolean available = CollectionUtils.exists(
-                        precedingAssignments.getAssignments(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                Assignment precedingAssignment = (Assignment) object;
-                                boolean isConsumed = precedingAssignment.getPart().getAssetConnections().isConsumed( asset );
-                                return !isConsumed && isAssetAvailableToPart( precedingAssignment.getPart(), asset, assetSupplyRelationships );
-                            }
-                        }
-                );
-                if ( available )
-                    return true;
-            }
-            return false;
-        }
+                                                 final List<AssetSupplyRelationship> assetSupplyRelationships,
+                                                 final Assignments allAssignments ) {
+        return isAssetDirectlyAvailableToAssignment( assignment, asset, assetSupplyRelationships )
+                || !findPrecedingAssignmentsWithAssetDirectlyAvailable(
+                assignment,
+                asset,
+                assetSupplyRelationships,
+                allAssignments ).isEmpty();
     }
 
-    private boolean isAssetAvailableToPart( Part part, final MaterialAsset asset, List<AssetSupplyRelationship<Part>> assetSupplyRelationships ) {
+    @Override
+    public Assignments findPrecedingAssignmentsWithAssetDirectlyAvailable( Assignment assignment,
+                                                                            final MaterialAsset asset,
+                                                                            final List<AssetSupplyRelationship> assetSupplyRelationships,
+                                                                            Assignments allAssignments ) {
+        Assignments result = new Assignments( getPlanLocale() );
+        for ( Part precedingPart : findPartsPreceding( assignment.getPart() ) ) { // find ALL parts preceding this assignment directly or indirectly
+            Assignments precedingAssignments = allAssignments.assignedTo( precedingPart ).with( assignment.getActor() );
+            for ( Assignment precedingAssignment : precedingAssignments ) {
+                boolean isConsumed = precedingAssignment.getPart().getAssetConnections().isConsumed( asset );
+                boolean directlyAvailable = !isConsumed
+                        && isAssetDirectlyAvailableToAssignment(
+                        precedingAssignment,
+                        asset,
+                        assetSupplyRelationships );
+                if ( directlyAvailable ) {
+                    result.add( precedingAssignment );
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Boolean isAssetDirectlyAvailableToAssignment( Assignment assignment,
+                                                          final MaterialAsset asset,
+                                                          List<AssetSupplyRelationship> assetSupplyRelationships ) {
         return CollectionUtils.exists(
-                findAllAssetsAvailableTo(
-                        part,
+                findAllAssetsDirectlyAvailableTo(
+                        assignment,
                         assetSupplyRelationships ),
                 new Predicate() {
                     @Override

@@ -16,6 +16,9 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
@@ -116,10 +119,14 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private void findAndProcessAssetSupplyRelationships( CommunityService communityService, Graph<Node, Flow> g ) {
-        List<AssetSupplyRelationship<Part>> allRelationships = communityService.getModelService().findAllAssetSupplyRelationships();
-        for ( AssetSupplyRelationship<Part> rel : allRelationships ) {
-            Part supplier = rel.getSupplier( communityService.getModelService() );
-            Part supplied = rel.getSupplied( communityService.getModelService() );
+        ModelService modelService = communityService.getModelService();
+        Assignments allAssignments = modelService.getAssignments( false );
+        Commitments allCommitments = modelService.getAllCommitments( false );
+        List<AssetSupplyRelationship> allRelationships = communityService.getModelService()
+                .findAllAssetSupplyRelationships( allAssignments, allCommitments );
+        for ( AssetSupplyRelationship rel : allRelationships ) {
+            Part supplier = rel.getSupplier(  ).getPart();
+            Part supplied = rel.getSupplied(  ).getPart();
             Set<Node> nodeSet = g.vertexSet();
             if ( nodeSet.contains( supplier ) || nodeSet.contains( supplied ) ) {
                 assetSupplyRelationships.add( rel );
@@ -513,10 +520,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     @SuppressWarnings( "unchecked" )
     private void exportAssetSupplying( PrintWriter out, Graph<Node, Flow> g, CommunityService communityService ) {
         Set<String> drawn = new HashSet<String>();
-        for ( AssetSupplyRelationship<Part> rel : assetSupplyRelationships ) {
+        for ( AssetSupplyRelationship rel : assetSupplyRelationships ) {
             Set<Flow.Restriction> restrictions = rel.getRestrictions();
-            Part supplier = rel.getSupplier( communityService.getModelService() );
-            Part supplied = rel.getSupplied( communityService.getModelService() );
+            Part supplier = rel.getSupplier(  ).getPart();
+            Part supplied = rel.getSupplied(  ).getPart();
             List<String> assetNames = (List<String>) CollectionUtils.collect(
                     rel.getAssets(),
                     new Transformer() {
@@ -546,7 +553,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                         + "["
                         + asElementAttributes( attributes )
                         + "]";
-                if ( !drawn.contains( s ) ) {
+                if ( !drawn.contains( s ) ) { // no duplicates!
                     out.print( s );
                     drawn.add( s );
                 }

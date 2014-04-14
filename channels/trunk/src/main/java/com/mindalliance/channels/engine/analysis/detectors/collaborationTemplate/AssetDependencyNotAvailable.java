@@ -33,13 +33,20 @@ public class AssetDependencyNotAvailable extends AbstractIssueDetector {
         Part part = (Part) identifiable;
         ModelService modelService = communityService.getModelService();
         List<MaterialAsset> assetsUsed = part.findAssetsUsed();
-        Assignments assignments = modelService.getAssignments().assignedTo( part );
-        List<AssetSupplyRelationship<Part>> assetSupplyRelationships = modelService.findAllAssetSupplyRelationships();
+        Assignments allAssignments = modelService.getAssignments().assignedTo( part );
+        List<AssetSupplyRelationship> assetSupplyRelationships = modelService.findAllAssetSupplyRelationships(
+                modelService.getAssignments(),
+                modelService.getAllCommitments( false )
+        );
         for ( MaterialAsset assetUsed : assetsUsed ) {
             if ( !assetUsed.getDependencies().isEmpty() ) {
                 for ( MaterialAsset dependency : assetUsed.allDependencies() ) {
-                    for ( Assignment assignment : assignments ) {
-                        if ( !modelService.isAssetAvailableToAssignment( assignment, dependency, assignments, assetSupplyRelationships ) ) {
+                    for ( Assignment assignment : allAssignments ) {
+                        if ( !modelService.isAssetAvailableToAssignment(
+                                assignment,
+                                dependency,
+                                assetSupplyRelationships,
+                                allAssignments ) ) {
                             Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                             issue.setDescription(
                                     assignment.getEmployment().getLabel()

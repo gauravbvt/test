@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -129,9 +128,12 @@ public class ModelSupplyChainsPanel extends AbstractUpdatablePanel {
     private Collection<? extends MaterialAsset> findAllSuppliedAssets() {
         if ( allAssetsSupplied == null ) {
             Set<MaterialAsset> assetsSupplied = new HashSet<MaterialAsset>(  );
-            List<AssetSupplyRelationship<Part>> assetSupplyRelationships =
-                    getQueryService().findAllAssetSupplyRelationships();
-            for ( AssetSupplyRelationship<Part> assetSupplyRelationship : assetSupplyRelationships ) {
+            List<AssetSupplyRelationship> assetSupplyRelationships =
+                    getQueryService().findAllAssetSupplyRelationships(
+                            getQueryService().getAssignments( false ),
+                            getQueryService().getAllCommitments( false )
+                    );
+            for ( AssetSupplyRelationship assetSupplyRelationship : assetSupplyRelationships ) {
                 assetsSupplied.addAll( assetSupplyRelationship.getAssets() );
             }
             allAssetsSupplied = new ArrayList<MaterialAsset>( assetsSupplied );

@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
@@ -67,9 +68,12 @@ public class AssetRequiredForChannelNotAvailable extends AbstractIssueDetector {
                              CommunityService communityService ) {
         ModelService modelService = communityService.getModelService();
         Assignments assignments = modelService.getAssignments().assignedTo( part );
-        List<AssetSupplyRelationship<Part>> assetSupplyRelationships = modelService.findAllAssetSupplyRelationships();
+        Assignments allAssignments = communityService.getModelService().getAssignments( false );
+        Commitments allCommitments = communityService.getModelService().getAllCommitments( false );
+        List<AssetSupplyRelationship> allSupplyRelationships =
+                communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( Assignment assignment : assignments ) {
-            if ( !modelService.isAssetAvailableToAssignment( assignment, assetNeeded, assignments, assetSupplyRelationships ) ) {
+            if ( !modelService.isAssetAvailableToAssignment( assignment, assetNeeded, allSupplyRelationships, allAssignments ) ) {
                 Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
                 issue.setDescription(
                         assignment.getEmployment().getLabel()

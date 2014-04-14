@@ -6,9 +6,9 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.graph.AssetSupplyRelationship;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,42 +38,35 @@ public class AssetHasInsufficientSuppliers extends AbstractIssueDetector {
         final Part part = (Part) identifiable;
         List<MaterialAsset> neededAssets = part.findAssetsUsed();
         Assignments allAssignments = communityService.getModelService().getAssignments( false );
-        Place locale = communityService.getModelService().getPlanLocale( );
-        List<AssetSupplyRelationship<Part>> supplyRels =
-                (List<AssetSupplyRelationship<Part>>) CollectionUtils.select(
-                        communityService.getModelService().findAllAssetSupplyRelationships(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (AssetSupplyRelationship<Part>) object ).getSupplied( communityService.getModelService() ).equals( part );
-                            }
-                        }
-                );
+        Commitments allCommitments = communityService.getModelService().getAllCommitments( false );
+        List<AssetSupplyRelationship> allSupplyRelationships =
+                communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( final MaterialAsset neededAsset : neededAssets ) {
-            List<AssetSupplyRelationship<Part>> applicableSupplyRels = new ArrayList<AssetSupplyRelationship<Part>>();
-            for ( AssetSupplyRelationship<Part> supplyRel : supplyRels ) {
-                if ( supplyRel.isAssetSupplied( neededAsset ) ) {
-                    applicableSupplyRels.add( supplyRel );
-                }
-            }
-            for ( Assignment suppliedAssignment : allAssignments.assignedTo( part ) ) {
+            for ( final Assignment toBeSuppliedAssignment : allAssignments.assignedTo( part ) ) {
+                List<AssetSupplyRelationship> effectiveSupplyRels =
+                        (List<AssetSupplyRelationship>) CollectionUtils.select(
+                                allSupplyRelationships,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        AssetSupplyRelationship supplyRel = (AssetSupplyRelationship) object;
+                                        return supplyRel.getSupplied().equals( toBeSuppliedAssignment )
+                                                && supplyRel.isAssetSupplied( neededAsset );
+                                    }
+                                }
+                        );
                 Set<Actor> supplyingActors = new HashSet<Actor>();
-                for ( AssetSupplyRelationship<Part> applicableSupplyRel : applicableSupplyRels ) {
-                    Part supplyingPart = applicableSupplyRel.getSupplier( communityService.getModelService() );
-                    for ( Assignment supplyingAssignment : allAssignments.assignedTo( supplyingPart ) ) {
-                        if ( communityService.getModelService().allowsCommitment(
-                                supplyingAssignment,
-                                suppliedAssignment,
-                                locale,
-                                applicableSupplyRel.getRestrictions() ) )
-                            supplyingActors.add( supplyingAssignment.getActor() );
-                    }
+                for ( AssetSupplyRelationship applicableSupplyRel : effectiveSupplyRels ) {
+                    Assignment supplyingAssignment = applicableSupplyRel.getSupplier();
+                    supplyingActors.add( supplyingAssignment.getActor() );
                 }
                 if ( supplyingActors.size() < 2 ) {
                     if ( !isMultipleParticipation( supplyingActors ) ) {
                         Issue issue = makeIssue( communityService, Issue.ROBUSTNESS, part );
-                        issue.setDescription( "Task \"" + part.getTitle() + "\" uses asset " + "\"" + neededAsset.getName()
-                                + "\" and has " + ( supplyingActors.size() == 0 ? "no" : "only one" ) + " identified supplier." );
+                        issue.setDescription(
+                                toBeSuppliedAssignment.getEmployment().getLabel()
+                                + " is assigned to task \"" + part.getTask() + "\" which uses asset " + "\"" + neededAsset.getName()
+                                + "\" but there is " + ( supplyingActors.size() == 0 ? "no" : "only one" ) + " identified supplier." );
                         issue.setSeverity( computeTaskFailureSeverity( communityService.getModelService(), part ) );
                         issue.setRemediation( "Remove usage of asset \"" + neededAsset.getName() + "\" by the task and the communication channels it uses"
                                         + "\nor add another task with different agents assigned to it that supplies the asset."
@@ -106,7 +99,7 @@ public class AssetHasInsufficientSuppliers extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Too few suppliers for asset used by the task";
+        return "Too few suppliers of asset needed for the task";
     }
 
     @Override

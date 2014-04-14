@@ -652,6 +652,7 @@ public interface QueryService {
 
     /**
      * Find all parts that precede a given part.
+     *
      * @param part the given part
      * @return a list of preceding parts
      */
@@ -1753,29 +1754,29 @@ public interface QueryService {
     List<Actor> findAllActorsEmployedBy( Organization organization );
 
     /**
-     * Find all assets that are available to a task.
+     * Find all assets that are available to an assignment to a task.
      *
-     * @param part a part
+     * @param assignment                  an assignment
      * @param allAssetSupplyRelationships all known asset supply relationships
      * @return a list of material assets
      */
-    List<MaterialAsset> findAllAssetsAvailableTo( Part part,
-                                                  List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships);
+    List<MaterialAsset> findAllAssetsDirectlyAvailableTo( Assignment assignment,
+                                                          List<AssetSupplyRelationship> allAssetSupplyRelationships );
 
     /**
-     * Find all assets that are provisioned to a given task
+     * Find all assets that are provisioned to a given assignment
      *
-     * @param part a part
+     * @param assignment                  an assignment
      * @param allAssetSupplyRelationships all known asset supply relationships
      * @return a list of material assets
      */
-    List<MaterialAsset> findAllAssetsProvisionedTo( Part part
-            , List<AssetSupplyRelationship<Part>> allAssetSupplyRelationships );
+    List<MaterialAsset> findAllAssetsProvisionedTo( Assignment assignment,
+                                                    List<AssetSupplyRelationship> allAssetSupplyRelationships );
 
     /**
-     * Find all parts visible to a given part that use or demand a given asset.
+     * Find all parts visible to a given assignment that use or demand a given asset.
      *
-     * @param part                        a part
+     * @param part an part
      * @return a list of parts
      */
     List<Part> findAllPartsVisibleTo( Part part );
@@ -1792,19 +1793,50 @@ public interface QueryService {
     /**
      * Find all asset provisioning relationships in the model.
      *
+     * @param allAssignments all assignments
+     * @param allCommitments all commitments
      * @return a list of asset supply relationships.
      */
-    List<AssetSupplyRelationship<Part>> findAllAssetSupplyRelationships();
+    List<AssetSupplyRelationship> findAllAssetSupplyRelationships( Assignments allAssignments,
+                                                                   Commitments allCommitments );
 
     /**
      * Is a material asset available to the actor assigned to a given task?
-     * @param assignment a task assignment
-     * @param assetNeeded the needed material asset
+     *
+     * @param assignment               a task assignment
+     * @param assetNeeded              the needed material asset
      * @param assetSupplyRelationships all asset supply relationships (for optimization)
+     * @param allAssignments           all assignments (for optimization)
      * @return whether or not it is safe to say that the asset is available
      */
     Boolean isAssetAvailableToAssignment( Assignment assignment,
                                           MaterialAsset assetNeeded,
-                                          Assignments allAssignments,
-                                          List<AssetSupplyRelationship<Part>> assetSupplyRelationships );
+                                          List<AssetSupplyRelationship> assetSupplyRelationships,
+                                          Assignments allAssignments );
+
+    /**
+     * Find all assignments that precede a given assignment to which a given asset is directly available.
+     *
+     * @param assignment               a task assignment
+     * @param asset              the needed material asset
+     * @param assetSupplyRelationships all asset supply relationships (for optimization)
+     * @param allAssignments           all assignments (for optimization)
+     * @return whether or not it is safe to say that the asset is available
+     */
+    Assignments findPrecedingAssignmentsWithAssetDirectlyAvailable( Assignment assignment,
+                                                                    final MaterialAsset asset,
+                                                                    final List<AssetSupplyRelationship> assetSupplyRelationships,
+                                                                    Assignments allAssignments );
+
+    /**
+     * Whether a given asset is directly available to a given assignment.
+     *
+     * @param assignment               a task assignment
+     * @param asset              the needed material asset
+     * @param assetSupplyRelationships all asset supply relationships (for optimization)
+     * @return whether or not it is safe to say that the asset is available
+     */
+    Boolean isAssetDirectlyAvailableToAssignment( Assignment assignment,
+                                                  final MaterialAsset asset,
+                                                  List<AssetSupplyRelationship> assetSupplyRelationships );
 }

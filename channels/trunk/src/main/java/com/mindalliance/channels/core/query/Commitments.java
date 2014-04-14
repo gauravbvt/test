@@ -9,6 +9,7 @@ package com.mindalliance.channels.core.query;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
@@ -16,9 +17,9 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -285,6 +286,67 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     }
 
 
+    public Commitments provisioning( MaterialAsset materialAsset ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( !commitment.getSharing().getAssetConnections().provisioning().about( materialAsset ).isEmpty() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments forwardingDemandFor( MaterialAsset materialAsset ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getSharing().getAssetConnections().forwardsRequestFor( materialAsset ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments demanding( MaterialAsset materialAsset ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( !commitment.getSharing().getAssetConnections().demanding().about( materialAsset ).isEmpty() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments involvingButNotInitiatedBy( Assignment assignment ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+           Flow sharing = commitment.getSharing();
+            if ( sharing.isNotification() ) {
+                if ( commitment.getBeneficiary().equals( assignment ) ) {
+                    result.add( commitment );
+                }
+            }  else {
+                if ( commitment.getCommitter().equals( assignment ) ) {
+                    result.add( commitment );
+                }
+            }
+        }
+        return result;
+   }
+
+    public Commitments initiatedBy( Assignment assignment ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            Flow sharing = commitment.getSharing();
+            if ( sharing.isNotification() ) {
+                if ( commitment.getCommitter().equals( assignment ) ) {
+                    result.add( commitment );
+                }
+            }  else {
+                if ( commitment.getBeneficiary().equals( assignment ) ) {
+                    result.add( commitment );
+                }
+            }
+        }
+        return result;
+    }
+
     public void add( Commitment commitment ) {
         commitments.add( commitment );
     }
@@ -317,6 +379,5 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public List<Commitment> toList() {
         return new ArrayList<Commitment>( commitments );
     }
-
 }
 

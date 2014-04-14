@@ -1,10 +1,8 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -17,57 +15,51 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Asset supply relationship between parts
+ * Asset supply relationship between assignments
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 3/31/14
  * Time: 2:04 PM
  */
-public class AssetSupplyRelationship<T extends ModelObject> extends Relationship {
+public class AssetSupplyRelationship extends Relationship<Assignment> {
 
     /**
      * Class logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AssetSupplyRelationship.class );
 
+    private Assignment supplier;
+
+    private Assignment supplied;
+
     private Set<MaterialAsset> assets = new HashSet<MaterialAsset>();
 
-    private Set<Flow.Restriction> restrictions = new HashSet<Flow.Restriction>(  );
+    private Set<Flow.Restriction> restrictions = new HashSet<Flow.Restriction>();
 
     public AssetSupplyRelationship() {
     }
 
-    public AssetSupplyRelationship( T supplier, T supplied ) {
+    public AssetSupplyRelationship( Assignment supplier, Assignment supplied ) {
         super( supplier, supplied );
+        this.supplier = supplier;
+        this.supplied = supplied;
     }
 
-    public AssetSupplyRelationship( T supplier, T supplied, Set<Flow.Restriction> restrictions ) {
-        super( supplier, supplied );
+    public AssetSupplyRelationship( Assignment supplier, Assignment supplied, Set<Flow.Restriction> restrictions ) {
+        this( supplier, supplied );
         this.restrictions = new HashSet<Flow.Restriction>( restrictions );
     }
 
 
     @SuppressWarnings( "unchecked" )
-    public T getSupplier( QueryService queryService ) {
-        try {
-            // TODO - Should be find( Identifiable.class,...)
-            return (T) queryService.find( ModelObject.class, getFromIdentifiable() );
-        } catch ( NotFoundException e ) {
-            LOG.warn( "From-identifiable not found", e );
-            return null;
-        }
+    public Assignment getSupplier() {
+        return supplier;
     }
 
     @SuppressWarnings( "unchecked" )
-    public T getSupplied( QueryService queryService ) {
-        try {
-            // TODO - Should be find( Identifiable.class,...)
-            return (T) queryService.find( ModelObject.class, getToIdentifiable() );
-        } catch ( NotFoundException e ) {
-            LOG.warn( "To-identifiable not found", e );
-            return null;
-        }
+    public Assignment getSupplied() {
+        return supplied;
     }
 
 
@@ -106,23 +98,33 @@ public class AssetSupplyRelationship<T extends ModelObject> extends Relationship
 
     @Override
     public boolean equals( Object obj ) {
-        return super.equals( obj )
-                && CollectionUtils.isEqualCollection( restrictions, ( (AssetSupplyRelationship<T>) obj ).getRestrictions() );
+        if ( obj instanceof AssetSupplyRelationship ) {
+            AssetSupplyRelationship other = (AssetSupplyRelationship) obj;
+            return supplier.equals( other.getSupplier() )
+                    && supplied.equals( ( other ).getSupplied() )
+                    && CollectionUtils.isEqualCollection( assets, other.getAssets() )
+                    && CollectionUtils.isEqualCollection( restrictions, ( (AssetSupplyRelationship) obj ).getRestrictions() );
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int hashCode() {
-        int hash = super.hashCode();
-        int subHash = 0;
+        int hash = 0;
+        hash = hash + 31 * supplier.hashCode();
+        hash = hash + 31 * supplied.hashCode();
         for ( Flow.Restriction restriction : getRestrictions() ) {
-            subHash = subHash + restriction.hashCode(); // order does not matter
+            hash = hash + restriction.hashCode(); // order does not matter
         }
-        hash = hash + 31 * subHash;
+        for ( MaterialAsset asset: getAssets() ) {
+            hash = hash + asset.hashCode(); // order does not matter
+        }
         return hash;
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<String> getRestrictionLabels(  ) {
+    public List<String> getRestrictionLabels() {
         return (List<String>) CollectionUtils.collect(
                 getRestrictions(),
                 new Transformer() {
