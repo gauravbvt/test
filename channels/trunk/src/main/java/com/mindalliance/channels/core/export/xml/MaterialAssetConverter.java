@@ -71,7 +71,7 @@ public class MaterialAssetConverter extends EntityConverter {
         } else if ( nodeName.equals( "placeholder" ) ) {
             asset.setPlaceholder( Boolean.parseBoolean( reader.getValue() ) );
         } else if ( nodeName.equals( "field" ) ) {
-            AssetField field = (AssetField)context.convertAnother( getModel(), AssetField.class );
+            AssetField field = (AssetField)context.convertAnother( asset, AssetField.class );
             asset.addField( field );
         }
     }

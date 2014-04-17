@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.CollaborationModel;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
@@ -357,9 +357,9 @@ public class ModelsPage extends AbstractChannelsBasicPage {
     private String getGotoModelDescription( ChannelsUser user, CollaborationModel collaborationModel ) {
         return user.isDeveloperOrAdmin( collaborationModel.getUri() ) && getCollaborationModel().isDevelopment()
                 ? "Build or modify the collaboration model.\n" +
-                " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
+                " (Requires a modern, standards-compliant browser - Internet Explorer 8 or earlier is not supported)"
                 : "View the collaboration model.\n" +
-                "  (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)";
+                " (Requires a modern, standards-compliant browser - Internet Explorer 8 or earlier is not supported)";
     }
 
     private void addSocial() {

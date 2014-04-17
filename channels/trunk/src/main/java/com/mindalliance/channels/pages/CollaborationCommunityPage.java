@@ -500,9 +500,9 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
     private String getGotoModelDescription( ChannelsUser user, CollaborationModel collaborationModel ) {
         return user.isDeveloperOrAdmin( collaborationModel.getUri() ) && getCollaborationModel().isDevelopment()
                 ? "Build or modify the " + collaborationModel.getName() + " collaboration model.\n" +
-                " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
-                : "View the " + collaborationModel.getName() + " collaoration model.\n" +
-                "  (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)";
+                " (Requires a modern, standards-compliant browser - Internet Explorer 8 or earlier is not supported)"
+                : "View the " + collaborationModel.getName() + " collaboration model.\n" +
+                " (Requires a modern, standards-compliant browser - Internet Explorer 8 or earlier is not supported)";
     }
 
     private void addSocial() {
