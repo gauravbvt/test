@@ -45,7 +45,8 @@ public class CyclePanel extends AbstractCommandablePanel {
     }
 
     private void addSummary() {
-        Label summaryLabel = new Label( "summary", getCycle().getLabel() );
+        Cycle cycle = getCycle();
+        Label summaryLabel = new Label( "summary", cycle == null ? "" : cycle.getLabel() );
         summaryLabel.setOutputMarkupId( true );
         cycleContainer.addOrReplace( summaryLabel );
     }

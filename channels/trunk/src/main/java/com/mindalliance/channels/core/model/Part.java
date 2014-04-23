@@ -968,7 +968,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
         state.put( "task", task );
-        state.put( "repeatsEvery", new Cycle( repeatsEvery ) );
+        state.put( "repeatsEvery", repeatsEvery == null ? null : new Cycle( repeatsEvery ) );
         state.put( "completionTime", new Delay( completionTime ) );
         state.put( "selfTerminating", selfTerminating );
         state.put( "repeating", repeating );

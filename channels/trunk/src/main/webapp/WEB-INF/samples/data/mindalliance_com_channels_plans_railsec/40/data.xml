@@ -4864,7 +4864,6 @@
         <role id="12" kind="Type">Chief of Security</role>
         <organization id="2585" kind="Type">Public Transit Security</organization>
         <assignedLocation kind="NamedPlace"/>
-        <repeatsEvery>1 day</repeatsEvery>
         <startsWithSegment>false</startsWithSegment>
         <ongoing>false</ongoing>
         <terminatesEvent>false</terminatesEvent>
