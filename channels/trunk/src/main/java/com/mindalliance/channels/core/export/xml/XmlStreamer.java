@@ -221,6 +221,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new SegmentConverter( this ) );
             stream.registerConverter( new GoalConverter( this ) );
             stream.registerConverter( new PartConverter( this ) );
+            stream.registerConverter( new CycleConverter( this ) );
             stream.registerConverter( new ChecklistConverter( this ) );
             stream.registerConverter( new FlowConverter( this ) );
             stream.registerConverter( new ElementOfInformationConverter( this ) );

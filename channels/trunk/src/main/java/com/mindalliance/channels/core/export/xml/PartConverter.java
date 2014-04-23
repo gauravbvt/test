@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.AssignedLocation;
+import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -121,7 +122,7 @@ public class PartConverter extends AbstractChannelsConverter {
         }
         if ( part.isRepeating() ) {
             writer.startNode( "repeatsEvery" );
-            writer.setValue( part.getRepeatsEvery().toString() );
+            context.convertAnother( part.getRepeatsEvery() );
             writer.endNode();
         }
         writer.startNode( "startsWithSegment" );
@@ -262,7 +263,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "completionTime" ) ) {
                 part.setCompletionTime( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "repeatsEvery" ) ) {
-                part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
+                part.setRepeatsEvery( (Cycle)context.convertAnother( part, Cycle.class ) );
             } else if ( nodeName.equals( "startsWithSegment" ) ) {
                 part.setStartsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "ongoing" ) ) {

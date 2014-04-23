@@ -9,6 +9,8 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Cycle;
+import com.mindalliance.channels.core.model.Cyclic;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Function;
@@ -163,7 +165,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * Repetition.
      */
-    private DelayPanel repeatsEveryPanel;
+    private CyclePanel repeatsEveryPanel;
 
     /**
      * Completion.
@@ -657,7 +659,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         makeVisible( timingContainer, !isShowSimpleForm() );
         addOrReplace( timingContainer );
         repeatsEveryPanel =
-                new DelayPanel( "repeats-every", new PropertyModel<ModelObject>( this, "part" ), "repeatsEvery" );
+                new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "part" ), "repeatsEvery" );
         repeatsEveryPanel.setOutputMarkupId( true );
         timingContainer.add( repeatsEveryPanel );
         completionTimePanel =
@@ -955,17 +957,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "task", task ) );
     }
 
-    public Delay getRepeatsEvery() {
+    public Cycle getRepeatsEvery() {
         return getPart().getRepeatsEvery();
     }
 
     /**
      * Sets repeat period.
      *
-     * @param delay a delay
+     * @param cycle a delay
      */
-    public void setRepeatsEvery( Delay delay ) {
-        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "repeatsEvery", delay ) );
+    public void setRepeatsEvery( Cycle cycle ) {
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "repeatsEvery", cycle ) );
     }
 
     public Delay getCompletionTime() {

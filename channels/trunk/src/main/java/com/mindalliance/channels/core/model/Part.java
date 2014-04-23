@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable, Prohibitable, AssetConnectable {
+public class Part extends Node implements GeoLocatable, Specable, Prohibitable, AssetConnectable, Cyclic {
 
     /**
      * Default actor label, when unknown.
@@ -70,12 +70,12 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     /**
      * Whether the part's task repeats (at fixed intervals).
      */
-    private boolean repeating;
+    private boolean repeating = false;
 
     /**
      * How long before the task is repeated. Not repeated if null.
      */
-    private Delay repeatsEvery = new Delay();
+    private Cycle repeatsEvery;
 
     /**
      * Whether this part is started by the onset of the segment.
@@ -282,12 +282,17 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         this.completionTime = completionTime;
     }
 
-    public Delay getRepeatsEvery() {
-        return isOngoing() ? new Delay() : repeatsEvery;
+    public Cycle getRepeatsEvery() {
+        return isOngoing() ? null : repeatsEvery;
     }
 
-    public void setRepeatsEvery( Delay repeatsEvery ) {
-        this.repeatsEvery = repeatsEvery;
+    @Override
+    public Cycle getCycle() {
+        return getRepeatsEvery();
+    }
+
+    public void setRepeatsEvery( Cycle repeatsEvery ) {
+        this.repeatsEvery = new Cycle( repeatsEvery );
     }
 
     public Category getCategory() {
@@ -365,9 +370,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      */
     public void setRepeating( boolean val ) {
         repeating = val;
-        if ( val && repeatsEvery.getAmount() == 0 ) {
-            repeatsEvery.setAmount( 1 );
-            repeatsEvery.setUnit( Delay.Unit.days );
+        if ( val && repeatsEvery == null ) {
+            repeatsEvery = new Cycle();
         }
     }
 
@@ -964,7 +968,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
         state.put( "task", task );
-        state.put( "repeatsEvery", new Delay( repeatsEvery ) );
+        state.put( "repeatsEvery", new Cycle( repeatsEvery ) );
         state.put( "completionTime", new Delay( completionTime ) );
         state.put( "selfTerminating", selfTerminating );
         state.put( "repeating", repeating );
@@ -1004,7 +1008,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         super.initFromMap( state, communityService );
         ModelService modelService = communityService.getModelService();
         setTask( (String) state.get( "task" ) );
-        setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        setRepeatsEvery( (Cycle) state.get( "repeatsEvery" ) );
         setCompletionTime( (Delay) state.get( "completionTime" ) );
         setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
         setRepeating( (Boolean) state.get( "repeating" ) );
