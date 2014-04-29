@@ -135,7 +135,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
                         sb1.append( "," );
                     }
                 }
-                sb1.append( " is repeated every " );
+                sb1.append( " is repeated " );
                 sb1.append( part.getRepeatsEvery().toString() );
             }
             if ( part.initiatesEvent() ) {

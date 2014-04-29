@@ -37,7 +37,7 @@ public class Cycle implements Serializable {
             }
         }
 
-        public static int getMaxIndex( TimeUnit timeUnit ) {
+        public static int getMaxTrancheIndex( TimeUnit timeUnit ) {
             switch (timeUnit) {
                 case Year: return 12;
                 case Month: return 4;
@@ -51,10 +51,13 @@ public class Cycle implements Serializable {
 
     }
 
-    public class Tranche {
+    public class Tranche implements Serializable {
 
         private TimeUnit timeUnit = TimeUnit.Day;
         private int index = 1;
+
+        public Tranche() {
+        }
 
         public Tranche( TimeUnit timeUnit, int index ) {
             this.timeUnit = timeUnit;
@@ -77,21 +80,21 @@ public class Cycle implements Serializable {
         }
 
         public void setIndex( int index ) {
-            this.index = Math.min( index, TimeUnit.getMaxIndex( timeUnit ) );
+            this.index = index;
         }
 
         public String getLabel() {
             switch ( timeUnit ) {
-                case Year:
-                    return getMonthLabel( index );
                 case Month:
-                    return getWeekLabel( index );
+                    return getMonthLabel( index );
                 case Week:
-                    return getDayLabel( index );
+                    return getWeekLabel( index );
                 case Day:
+                    return getDayLabel( index );
+                case Hour:
                     return getHourLabel( index );
                 default:
-                    return Integer.toString( index );
+                    return Integer.toString( index - 1 );
             }
         }
 
@@ -131,12 +134,35 @@ public class Cycle implements Serializable {
         }
 
         private String getHourLabel( int index ) {
-            return Integer.toString( index ) + ":00";
+            int hours = index - 1;
+            if ( hours > 12 ) {
+                return (hours - 12) + "PM";
+            } else {
+                return hours + "AM";
+            }
         }
 
         @Override
         public String toString() {
             return getLabel();
+        }
+
+        @Override
+        public boolean equals( Object object ) {
+            if ( object instanceof  Tranche ) {
+                Tranche other = (Tranche)object;
+                return timeUnit == other.getTimeUnit() &&
+                        index == other.getIndex();
+            } else
+                return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            hash = hash + 31 * timeUnit.hashCode();
+            hash = hash + 31 * index;
+            return hash;
         }
 
     }
@@ -197,13 +223,12 @@ public class Cycle implements Serializable {
     }
 
     private boolean canAddTrancheIndex( int index ) {
-        TimeUnit subUnit = TimeUnit.getSubUnitOf( timeUnit );
-        return index <= TimeUnit.getMaxIndex( subUnit )
+        return index <= TimeUnit.getMaxTrancheIndex( timeUnit )
             && !trancheIndices.contains( index );
     }
 
     public List<Tranche> getTranches() {
-        List<Tranche> allTranches = getAllTranches();
+        List<Tranche> allTranches = getAllPossibleTranches();
         List<Tranche> tranches = new ArrayList<Tranche>();
         for ( Integer i : trancheIndices ) {
             tranches.add( allTranches.get( i ) );
@@ -211,10 +236,29 @@ public class Cycle implements Serializable {
         return tranches;
     }
 
-    private List<Tranche> getAllTranches() {
+    public void setTranches( List<Tranche> tranches ) {
+        resetTranches();
+        List<Tranche> allTranches = getAllPossibleTranches();
+        for ( Tranche tranche : tranches ) {
+            int index = allTranches.indexOf( tranche );
+            if ( index >= 0 )
+                addTrancheIndex( index );
+        }
+    }
+
+    public Tranche trancheFromLabel( String label ) {
+        for ( Tranche tranche : getAllPossibleTranches() ) {
+            if ( tranche.getLabel().equals( label ) ) {
+                return tranche;
+            }
+        }
+        return null;
+    }
+
+    public List<Tranche> getAllPossibleTranches() {
         List<Tranche> tranches = new ArrayList<Tranche>();
         TimeUnit subUnit = TimeUnit.getSubUnitOf( timeUnit );
-        for ( int i = 1; i <= TimeUnit.getMaxIndex( subUnit ); i++ ) {
+        for ( int i = 1; i <= TimeUnit.getMaxTrancheIndex( timeUnit ); i++ ) {
             tranches.add( new Tranche( subUnit, i ) );
         }
         return tranches;
@@ -222,15 +266,16 @@ public class Cycle implements Serializable {
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder(  );
-        sb.append( "Every ");
+        sb.append( "every ");
         if ( hasTranches() ) {
             sb.append( ChannelsUtils.listToString( getTranches(), " and " ) );
             sb.append( " of every " );
         }
         if ( skip > 1 ) {
-            sb.append( skip == 2 ? "other " : skip );
-            sb.append( timeUnit.name().toLowerCase() )
-                    .append( "s" );
+            sb.append( skip == 2 ? "other" : skip )
+                    .append( " " )
+                    .append( timeUnit.name().toLowerCase() )
+                    .append( skip == 2 ? "" : "s" );
         } else {
             sb.append( timeUnit.name().toLowerCase() );
         }

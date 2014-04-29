@@ -49,9 +49,9 @@ public class CycleConverter extends AbstractChannelsConverter {
             if ( nodeName.equals( "timeUnit") ) {
                 cycle.setTimeUnit( Cycle.TimeUnit.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "skip" ) ) {
-                cycle.setSkip( Integer.getInteger( reader.getValue() ));
+                cycle.setSkip( Integer.parseInt( reader.getValue() ));
             } else if ( nodeName.equals( "trancheIndex") ) {
-                cycle.addTrancheIndex( Integer.getInteger( reader.getValue() ) );
+                cycle.addTrancheIndex( Integer.parseInt( reader.getValue() ) );
             }
             reader.moveUp();
         }

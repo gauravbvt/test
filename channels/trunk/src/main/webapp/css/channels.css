@@ -738,6 +738,10 @@ input[type='text'].small {
     width:10em;
 }
 
+input[type='text'].extra-small {
+    width:3em;
+}
+
 input[type='text'].medium {
     width:20em;
 }

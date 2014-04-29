@@ -7,14 +7,13 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id="cycleContainer">
+    <span wicket:id="cycleContainer">
         <span wicket:id="summary">Every....</span>
-        <a wicket:id="edit" class="button"><span wicket:id="changeOrDone">Change</span></a>
-        <div wicket:id="cycleEditor">
-            Every
-            <span wicket:id="tranches">[tranches]</span>
+         <span wicket:id="cycleEditor">
+            every
+            <input wicket:id="tranches" type="text" class="medium"/>
             <span wicket:id="ofEvery">of every</span>
-            <input wicket:id="skip" type="text"/>
+            <input wicket:id="skip" type="text" class="extra-small"/>
             <select wicket:id="timeUnit">
                 <option>Year</option>
                 <option>Month</option>
@@ -22,8 +21,11 @@
                 <option>Day</option>
                 <option>Hour</option>
             </select>
-        </div>
-    </div>
+        </span>
+        <a wicket:id="edit" href="#" class="more">
+            <span wicket:id="changeOrDone">Change</span>
+        </a>
+    </span>
 </wicket:panel>
 </body>
 </html>

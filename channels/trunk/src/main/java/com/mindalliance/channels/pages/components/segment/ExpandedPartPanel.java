@@ -165,7 +165,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * Repetition.
      */
-    private CyclePanel repeatsEveryPanel;
+    private Component repeatsEveryPanel;
 
     /**
      * Completion.
@@ -496,7 +496,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         prohibitedCheckBox.setEnabled( lockedByUser );
         for ( EntityReferencePanel entityReferencePanel : entityFields )
             entityReferencePanel.enable( lockedByUser );
-        repeatsEveryPanel.enable( part.isRepeating() && lockedByUser );
+        if ( repeatsEveryPanel instanceof CyclePanel )
+            ((CyclePanel)repeatsEveryPanel).enable( part.isRepeating() && lockedByUser );
         completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
         selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
         repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
@@ -658,10 +659,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer.setOutputMarkupId( true );
         makeVisible( timingContainer, !isShowSimpleForm() );
         addOrReplace( timingContainer );
-        repeatsEveryPanel =
-                new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "part" ), "repeatsEvery" );
-        repeatsEveryPanel.setOutputMarkupId( true );
-        timingContainer.add( repeatsEveryPanel );
         completionTimePanel =
                 new DelayPanel( "completion-time", new PropertyModel<ModelObject>( this, "part" ), "completionTime" );
         completionTimePanel.setOutputMarkupId( true );
@@ -677,16 +674,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         timingContainer.add( selfTerminatingCheckBox );
-        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
-        timingContainer.add( repeatingCheckBox );
-        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                repeatsEveryPanel.enable( getPart().isRepeating() );
-                target.add( repeatsEveryPanel );
-                update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
-            }
-        } );
+        // repeating
+        addRepeating();
+        // starts with segment
         startWithSegmentCheckBox =
                 new CheckBox( "startsWithSegment", new PropertyModel<Boolean>( this, "startsWithSegment" ) );
         timingContainer.add( startWithSegmentCheckBox );
@@ -709,10 +699,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 Part part = getPart();
                 boolean lockedByUser = isLockedByUser( part );
                 startWithSegmentCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
-                repeatsEveryPanel.enable( part.isRepeating() && lockedByUser );
+                addRepeating();
                 completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
                 selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
-                repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+                repeatingCheckBox.setEnabled( lockedByUser  && !part.isOngoing()  );
                 target.add(
                         startWithSegmentCheckBox,
                         repeatingCheckBox,
@@ -722,7 +712,33 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "ongoing" ) );
             }
         } );
+    }
 
+    private void addRepeating() {
+        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
+        repeatingCheckBox.setOutputMarkupId( true );
+        timingContainer.addOrReplace( repeatingCheckBox );
+        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addCyclePanel();
+                target.add( repeatsEveryPanel );
+                update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
+            }
+        } );
+        addCyclePanel();
+    }
+
+    private void addCyclePanel() {
+        if ( getPart().isRepeating() ) {
+            repeatsEveryPanel =
+                    new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "part" ), "repeatsEvery" );
+            repeatsEveryPanel.setOutputMarkupId( true );
+            ( (CyclePanel) repeatsEveryPanel ).enable( getPart().isRepeating() && isLockedByUser( getPart() ) );
+        } else {
+            repeatsEveryPanel = new Label( "repeats-every", "" );
+        }
+        timingContainer.addOrReplace( repeatsEveryPanel );
     }
 
     private void addTerminatesSegmentFields() {

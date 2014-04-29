@@ -68,11 +68,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     private Delay completionTime = new Delay();
 
     /**
-     * Whether the part's task repeats (at fixed intervals).
-     */
-    private boolean repeating = false;
-
-    /**
      * How long before the task is repeated. Not repeated if null.
      */
     private Cycle repeatsEvery;
@@ -360,7 +355,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @return a boolean
      */
     public boolean isRepeating() {
-        return repeating && !isOngoing();
+        return getCycle() != null && !isOngoing();
     }
 
     /**
@@ -369,8 +364,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param val a boolean
      */
     public void setRepeating( boolean val ) {
-        repeating = val;
-        if ( val && repeatsEvery == null ) {
+        if ( !val ) {
+            repeatsEvery = null;
+        } else {
             repeatsEvery = new Cycle();
         }
     }
@@ -971,7 +967,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         state.put( "repeatsEvery", repeatsEvery == null ? null : new Cycle( repeatsEvery ) );
         state.put( "completionTime", new Delay( completionTime ) );
         state.put( "selfTerminating", selfTerminating );
-        state.put( "repeating", repeating );
         state.put( "terminatesEventPhase", terminatesEventPhase );
         state.put( "startsWithSegment", startsWithSegment );
         state.put( "ongoing", ongoing );
@@ -1011,7 +1006,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         setRepeatsEvery( (Cycle) state.get( "repeatsEvery" ) );
         setCompletionTime( (Delay) state.get( "completionTime" ) );
         setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        setRepeating( (Boolean) state.get( "repeating" ) );
         setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
         setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
         setOngoing( (Boolean) state.get( "ongoing" ) );
