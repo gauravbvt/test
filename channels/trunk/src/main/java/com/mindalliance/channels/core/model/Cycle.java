@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,26 +27,40 @@ public class Cycle implements Serializable {
         Second;
 
         public static TimeUnit getSubUnitOf( TimeUnit timeUnit ) {
-            switch (timeUnit) {
-                case Year: return TimeUnit.Month;
-                case Month: return TimeUnit.Week;
-                case Week: return TimeUnit.Day;
-                case Day: return TimeUnit.Hour;
-                case Hour: return TimeUnit.Minute;
-                case Minute: return TimeUnit.Second;
-                default: return null;
+            switch ( timeUnit ) {
+                case Year:
+                    return TimeUnit.Month;
+                case Month:
+                    return TimeUnit.Week;
+                case Week:
+                    return TimeUnit.Day;
+                case Day:
+                    return TimeUnit.Hour;
+                case Hour:
+                    return TimeUnit.Minute;
+                case Minute:
+                    return TimeUnit.Second;
+                default:
+                    return null;
             }
         }
 
         public static int getMaxTrancheIndex( TimeUnit timeUnit ) {
-            switch (timeUnit) {
-                case Year: return 12;
-                case Month: return 4;
-                case Week: return 7;
-                case Day: return 24;
-                case Hour: return 60;
-                case Minute: return 60;
-                default: return 0;
+            switch ( timeUnit ) {
+                case Year:
+                    return 12;
+                case Month:
+                    return 4;
+                case Week:
+                    return 7;
+                case Day:
+                    return 24;
+                case Hour:
+                    return 60;
+                case Minute:
+                    return 60;
+                default:
+                    return 0;
             }
         }
 
@@ -99,20 +114,33 @@ public class Cycle implements Serializable {
         }
 
         private String getMonthLabel( int index ) {
-            switch (index ) {
-                case 1 : return "January";
-                case 2 : return "February";
-                case 3 : return "March";
-                case 4 : return "April";
-                case 5 : return "May";
-                case 6 : return "June";
-                case 7 : return "July";
-                case 8 : return "August";
-                case 9 : return "September";
-                case 10 : return "October";
-                case 11 : return "November";
-                case 12 : return "December";
-                default: return null;
+            switch ( index ) {
+                case 1:
+                    return "January";
+                case 2:
+                    return "February";
+                case 3:
+                    return "March";
+                case 4:
+                    return "April";
+                case 5:
+                    return "May";
+                case 6:
+                    return "June";
+                case 7:
+                    return "July";
+                case 8:
+                    return "August";
+                case 9:
+                    return "September";
+                case 10:
+                    return "October";
+                case 11:
+                    return "November";
+                case 12:
+                    return "December";
+                default:
+                    return null;
             }
         }
 
@@ -121,25 +149,34 @@ public class Cycle implements Serializable {
         }
 
         private String getDayLabel( int index ) {
-            switch (index ) {
-                case 1 : return "Monday";
-                case 2 : return "Tuesday";
-                case 3 : return "Wednesday";
-                case 4 : return "Thursday";
-                case 5 : return "Friday";
-                case 6 : return "Saturday";
-                case 7 : return "Sunday";
-                default: return null;
+            switch ( index ) {
+                case 1:
+                    return "Monday";
+                case 2:
+                    return "Tuesday";
+                case 3:
+                    return "Wednesday";
+                case 4:
+                    return "Thursday";
+                case 5:
+                    return "Friday";
+                case 6:
+                    return "Saturday";
+                case 7:
+                    return "Sunday";
+                default:
+                    return null;
             }
         }
 
         private String getHourLabel( int index ) {
             int hours = index - 1;
-            if ( hours > 12 ) {
-                return (hours - 12) + "PM";
-            } else {
+            if ( hours == 12 )
+                return "12PM";
+            else if ( hours > 12 )
+                return ( hours - 12 ) + "PM";
+            else
                 return hours + "AM";
-            }
         }
 
         @Override
@@ -149,8 +186,8 @@ public class Cycle implements Serializable {
 
         @Override
         public boolean equals( Object object ) {
-            if ( object instanceof  Tranche ) {
-                Tranche other = (Tranche)object;
+            if ( object instanceof Tranche ) {
+                Tranche other = (Tranche) object;
                 return timeUnit == other.getTimeUnit() &&
                         index == other.getIndex();
             } else
@@ -169,9 +206,9 @@ public class Cycle implements Serializable {
 
     private TimeUnit timeUnit = TimeUnit.Day;
     private int skip = 1;
-    private List<Integer> trancheIndices = new ArrayList<Integer>(  );
+    private List<Integer> trancheIndices = new ArrayList<Integer>();
 
-    public Cycle( ) {
+    public Cycle() {
     }
 
     public Cycle( Cycle cycle ) {
@@ -219,17 +256,18 @@ public class Cycle implements Serializable {
     }
 
     public void resetTranches() {
-        trancheIndices = new ArrayList<Integer>(  );
+        trancheIndices = new ArrayList<Integer>();
     }
 
     private boolean canAddTrancheIndex( int index ) {
         return index <= TimeUnit.getMaxTrancheIndex( timeUnit )
-            && !trancheIndices.contains( index );
+                && !trancheIndices.contains( index );
     }
 
     public List<Tranche> getTranches() {
         List<Tranche> allTranches = getAllPossibleTranches();
         List<Tranche> tranches = new ArrayList<Tranche>();
+        Collections.sort( trancheIndices );
         for ( Integer i : trancheIndices ) {
             tranches.add( allTranches.get( i ) );
         }
@@ -265,8 +303,8 @@ public class Cycle implements Serializable {
     }
 
     public String getLabel() {
-        StringBuilder sb = new StringBuilder(  );
-        sb.append( "every ");
+        StringBuilder sb = new StringBuilder();
+        sb.append( "every " );
         if ( hasTranches() ) {
             sb.append( ChannelsUtils.listToString( getTranches(), " and " ) );
             sb.append( " of every " );
@@ -294,7 +332,7 @@ public class Cycle implements Serializable {
     @Override
     public boolean equals( Object object ) {
         if ( object instanceof Cycle ) {
-            Cycle other = (Cycle)object;
+            Cycle other = (Cycle) object;
             return timeUnit == other.getTimeUnit()
                     && skip == other.getSkip()
                     && CollectionUtils.isEqualCollection( trancheIndices, other.getTrancheIndices() );
@@ -313,7 +351,6 @@ public class Cycle implements Serializable {
         }
         return hash;
     }
-
 
 
 }

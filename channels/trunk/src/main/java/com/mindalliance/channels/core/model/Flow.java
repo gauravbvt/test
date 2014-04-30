@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable, EOIsHolder, AssetConnectable {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable, EOIsHolder, AssetConnectable, Cyclic {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -126,7 +126,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * The flow's asset connections.
      */
-    private AssetConnections assetConnections = new AssetConnections(  );
+    private AssetConnections assetConnections = new AssetConnections();
+
+    /**
+     * How long before the communication is repeated. Not repeated if null.
+     */
+    private Cycle repeatsEvery;
 
 
     protected Flow() {
@@ -486,6 +491,42 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.published = published;
     }
 
+    /**
+     * Whether the part is self-repeating.
+     *
+     * @return a boolean
+     */
+    public boolean isRepeating() {
+        return getCycle() != null && isSharing();
+    }
+
+    @Override
+    public Cycle getCycle() {
+        return getRepeatsEvery();
+    }
+
+    /**
+     * Sets repeating attribute.
+     *
+     * @param val a boolean
+     */
+    public void setRepeating( boolean val ) {
+        if ( !val ) {
+            repeatsEvery = null;
+        } else {
+            repeatsEvery = new Cycle();
+        }
+    }
+
+
+    public Cycle getRepeatsEvery() {
+        return repeatsEvery;
+    }
+
+    public void setRepeatsEvery( Cycle repeatsEvery ) {
+        this.repeatsEvery = repeatsEvery;
+    }
+
     public String getShortName( Node node, boolean qualified ) {
         String result = "somebody";
 
@@ -517,7 +558,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         //    : isTriggeringToTarget() ? "{1} telling {2} to {0}"
                         : "{1} notify {2} of \"{0}\"",
 
-                message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
+                message, getShortName( getSource(), false ), getShortName( getTarget(), false )
+        );
     }
 
     /**
@@ -596,7 +638,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     isAskedFor() ? "Needs to ask for \"{0}\""
                             //  : isTriggeringToTarget() ? "Needs to be told to {0}"
                             : "Needs to be notified of \"{0}\"",
-                    message.toLowerCase() );
+                    message.toLowerCase()
+            );
 
         } else {
             Part part = (Part) source;
@@ -607,7 +650,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     message.toLowerCase(),
                     getShortName( part, false ),
                     getOrganizationString( part ),
-                    getJurisdictionString( part ) );
+                    getJurisdictionString( part )
+            );
         }
         return ( isProhibited() ? "Prohibited: " : "" ) + title;
     }
@@ -739,7 +783,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             public boolean evaluate( Object object ) {
                                 return Restriction.implies( (Restriction) object, restriction ); // first narrows the second
                             }
-                        } );
+                        }
+                );
     }
 
     private boolean contradictsRestrictions( final Restriction restriction ) {
@@ -751,7 +796,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             public boolean evaluate( Object object ) {
                                 return ( (Restriction) object ).contradicts( restriction );
                             }
-                        } );
+                        }
+                );
     }
 
     public boolean isIfTaskFails() {
@@ -968,6 +1014,24 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public abstract boolean canGetTerminatesSource();
+
+    /**
+     * Whether the flow can repeat.
+     *
+     * @return a boolean
+     */
+    public boolean canGetRepeatsEvery() {
+        return isSharing();
+    }
+
+    /**
+     * Whether the flow can be set to repeat.
+     *
+     * @return a boolean
+     */
+    public boolean canSetRepeatsEvery() {
+        return canGetRepeatsEvery();
+    }
 
     /**
      * Whether the flow has a connector as source or target
@@ -1320,7 +1384,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     public boolean evaluate( Object obj ) {
                         return ( (Channel) obj ).references( mo );
                     }
-                } )
+                }
+        )
                 || ( infoProduct != null && infoProduct.equals( mo ) )
                 || getAssetConnections().references( mo );
     }
@@ -1515,8 +1580,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public boolean isTimeSensitive( final String eoiContent ) {
-        return isInfoProductTimeSensitive() &&  infoProductHasEoiNamed( eoiContent )
-        || CollectionUtils.exists(
+        return isInfoProductTimeSensitive() && infoProductHasEoiNamed( eoiContent )
+                || CollectionUtils.exists(
                 getEffectiveEois(),
                 new Predicate() {
                     @Override
@@ -1538,7 +1603,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return Matcher.same(((ElementOfInformation)object).getContent(), eoiContent);
+                            return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoiContent );
                         }
                     }
             );
@@ -1558,7 +1623,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                             public boolean evaluate( Object object ) {
                                 return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoiContent );
                             }
-                        });
+                        }
+                );
     }
 
     public List<TransmissionMedium> transmissionMedia() {
@@ -1635,7 +1701,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     public boolean evaluate( Object object ) {
                         return !eoiContents.contains( (String) object );
                     }
-                } ) ) );
+                }
+        ) ) );
     }
 
     private List<String> getEoiContents() {
@@ -1654,6 +1721,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "askedFor", isAskedFor() );
         state.put( "all", isAll() );
         state.put( "maxDelay", getMaxDelay().copy() );
+        if ( repeatsEvery != null )
+            state.put( "repeatsEvery", new Cycle( repeatsEvery ) );
         state.put( "channels", getChannelsCopy() );
         state.put( "significanceToTarget", getSignificanceToTarget() );
         state.put( "significanceToSource", getSignificanceToSource() );
@@ -1691,6 +1760,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setAll( (Boolean) state.get( "all" ) );
         if ( state.containsKey( "maxDelay" ) )
             setMaxDelay( (Delay) state.get( "maxDelay" ) );
+        if ( state.containsKey( "repeatsEvery" ) )
+            setRepeatsEvery( (Cycle) state.get( "repeatsEvery" ) );
         if ( state.containsKey( "channels" ) )
             setChannels( (List<Channel>) state.get( "channels" ) );
         if ( state.containsKey( "significanceToTarget" ) )
@@ -1715,8 +1786,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
         if ( state.containsKey( "infoProductTimeSensitive" ) )
             setInfoProductTimeSensitive( (Boolean) state.get( "infoProductTimeSensitive" ) );
-        if ( state.containsKey( "assetConnections") )
-            for ( Map<String,Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
+        if ( state.containsKey( "assetConnections" ) )
+            for ( Map<String, Object> assetConnectionMap : (List<Map<String, Object>>) state.get( "assetConnections" ) ) {
                 addAssetConnection( communityService.getModelService().assetConnectionFromMap( assetConnectionMap ) );
             }
     }
@@ -1751,7 +1822,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isNeed();
     }
 
-    public boolean canSetAssets(  ) {
+    public boolean canSetAssets() {
         return isSharing();
     }
 
@@ -1776,7 +1847,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     : isNeed()
                     ? " by " + "\"" + getTarget().getTitle() + "\""
                     : " with " + "\"" + getTarget().getTitle() + "\"" );
-         }
+        }
         return sb.toString();
     }
 
@@ -1851,7 +1922,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        AssetConnection assetConnection = (AssetConnection)object;
+                        AssetConnection assetConnection = (AssetConnection) object;
                         return assetConnection.isDemanding() && asset.narrowsOrEquals( assetConnection.getAsset() );
                     }
                 }
@@ -1864,7 +1935,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        AssetConnection assetConnection = (AssetConnection)object;
+                        AssetConnection assetConnection = (AssetConnection) object;
                         return assetConnection.isProvisioning() && asset.narrowsOrEquals( assetConnection.getAsset() );
                     }
                 }
@@ -1985,8 +2056,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-         * Intent of flows.
-         */
+     * Intent of flows.
+     */
     public enum Intent {
 
         Alarm,

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.export.PartSpecification;
 import com.mindalliance.channels.core.export.SegmentSpecification;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -110,6 +111,11 @@ public class FlowConverter extends AbstractChannelsConverter {
         if ( flow.getMaxDelay() != null ) {
             writer.startNode( "maxDelay" );
             writer.setValue( flow.getMaxDelay().toString() );
+            writer.endNode();
+        }
+        if ( flow.isRepeating() ) {
+            writer.startNode( "repeatsEvery" );
+            context.convertAnother( flow.getRepeatsEvery() );
             writer.endNode();
         }
         // Flow user issues (exported only if an internal flow)
@@ -304,6 +310,8 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "maxDelay" ) ) {
                 String maxDelay = reader.getValue();
                 flow.setMaxDelay( Delay.parse( maxDelay ) );
+            } else if ( nodeName.equals( "repeatsEvery" ) ) {
+                flow.setRepeatsEvery( (Cycle) context.convertAnother( flow, Cycle.class ) );
             } else if ( nodeName.equals( "askedFor" ) ) {
                 boolean askedFor = Boolean.valueOf( reader.getValue() );
                 flow.setAskedFor( askedFor );

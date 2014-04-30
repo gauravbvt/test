@@ -74,7 +74,10 @@ public class InternalFlow extends Flow {
     public void initFrom( Flow flow ) {
         setName( flow.getName() );
         setDescription( flow.getDescription() );
-        if ( !hasConnector() ) setMaxDelay( flow.getMaxDelay() );
+        if ( !hasConnector() )  {
+            setMaxDelay( new Delay( flow.getMaxDelay() ) );
+            setRepeatsEvery( flow.getRepeatsEvery() == null ? null : new Cycle( flow.getRepeatsEvery() ) );
+        }
         setPublished( flow.isPublished() );
         setAskedFor( flow.isAskedFor() );
         setChannels( flow.copyChannels() );

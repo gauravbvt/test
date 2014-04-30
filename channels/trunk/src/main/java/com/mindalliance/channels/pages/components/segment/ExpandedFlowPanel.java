@@ -13,6 +13,8 @@ import com.mindalliance.channels.core.command.commands.SatisfyNeed;
 import com.mindalliance.channels.core.command.commands.StandardizeInformation;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Cycle;
+import com.mindalliance.channels.core.model.Cyclic;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
@@ -273,6 +275,18 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Assets container.
      */
     private WebMarkupContainer assetsContainer;
+    /**
+     * Repeating container.
+     */
+    private WebMarkupContainer repeatingContainer;
+    /**
+     * Repeating checkbox.
+     */
+    private CheckBox repeatingCheckBox;
+    /**
+     * Cycle panel or label.
+     */
+    private Component repeatsEveryPanel;
 
     protected ExpandedFlowPanel(
             String id,
@@ -320,7 +334,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         // to the flow's canGetChannels() and canSetChannels() values
         channelRow = createChannelRow();
         add( channelRow );
-        addMaxDelayRow();
+        addTimingRow();
         addSignificanceToSource();
         addFlowDescription();
         addCanBypassIntermediate();
@@ -542,6 +556,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         channelRow.setVisible( f.canGetChannels() );
         this.timingContainer.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
+        if ( repeatsEveryPanel instanceof CyclePanel )
+            ( (CyclePanel) repeatsEveryPanel ).enable( f.isRepeating() && lockedByUser );
         significanceToSourceContainer.setVisible( f.canGetSignificanceToSource() );
         triggersSourceContainer.setVisible( ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
@@ -684,7 +700,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         ? "that could be shared"
                         : isSend()
                         ? "to be sent"
-                        : "to be received" ) );
+                        : "to be received" )
+        );
         addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
         add( nameField );
     }
@@ -869,7 +886,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         terminatesSourceContainer.add(
                 new Label(
                         "notifying-or-replying",
-                        new PropertyModel<String>( this, "replyingOrNotifying" ) ) );
+                        new PropertyModel<String>( this, "replyingOrNotifying" ) )
+        );
     }
 
     private void addIfTaskFails() {
@@ -996,7 +1014,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addAssetConnections() {
         assetsContainer = new WebMarkupContainer( "assetsContainer" );
         assetsContainer.setOutputMarkupId( true );
-        makeVisible( assetsContainer, getFlow().canSetAssets( ) &&  !isShowSimpleForm( ) );
+        makeVisible( assetsContainer, getFlow().canSetAssets() && !isShowSimpleForm() );
         add( assetsContainer );
  /*       List<AssetConnection.Type> excluded = new ArrayList<AssetConnection.Type>(  );
         if ( isSend() && getFlow().isNotification() || !isSend() && getFlow().isAskedFor() ) {
@@ -1004,7 +1022,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else if ( isSend() && getFlow().isAskedFor() || !isSend() && getFlow().isNotification() ) {
             excluded.add( AssetConnection.Type.Demanding ); // can only provision
         }
-*/        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
+*/
+        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
                 "assetConnections",
                 new PropertyModel<AssetConnectable>( this, "flow" ) );
         assetsContainer.add( connectedAssetsPanel );
@@ -1295,7 +1314,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean isRedundant( Part part ) {
         String info = getFlow().getName();
         // redundant if part has a matching need or capability
@@ -1318,7 +1337,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      *
      * @return a list of parts
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Node> getSecondChoices() {
         final List<Part> relatedParts = findRelatedParts();
         final Node node = getNode();
@@ -1344,17 +1363,54 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     protected abstract WebMarkupContainer createChannelRow();
 
-    private void addMaxDelayRow() {
-        this.timingContainer = new WebMarkupContainer( "timing" );
-        this.timingContainer.setOutputMarkupId( true );
+    private void addTimingRow() {
+        timingContainer = new WebMarkupContainer( "timing" );
+        timingContainer.setOutputMarkupId( true );
         makeVisible( this.timingContainer, !isShowSimpleForm() );
-        add( this.timingContainer );
+        addOrReplace( timingContainer );
+        addMaxDelay();
+        addRepeating();
+    }
+
+    private void addMaxDelay() {
         delayPanel = new DelayPanel(
                 "max-delay",
                 new PropertyModel<ModelObject>( this, "flow" ),
                 "maxDelay" );
-        this.timingContainer.add( delayPanel );
+        timingContainer.addOrReplace( delayPanel );
     }
+
+    private void addRepeating() {
+        repeatingContainer = new WebMarkupContainer( "repeatingContainer" );
+        repeatingContainer.setOutputMarkupId( true );
+        makeVisible( repeatingContainer, getFlow().isSharing() );
+        timingContainer.addOrReplace( repeatingContainer );
+        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
+        repeatingCheckBox.setOutputMarkupId( true );
+        repeatingContainer.addOrReplace( repeatingCheckBox );
+        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addTimingRow();
+                target.add( timingContainer );
+                update( target, new Change( Change.Type.Updated, getFlow(), "onclick" ) );
+            }
+        } );
+        addCyclePanel();
+    }
+
+    private void addCyclePanel() {
+        if ( getFlow().isRepeating() ) {
+            repeatsEveryPanel =
+                    new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "flow" ), "repeatsEvery" );
+            repeatsEveryPanel.setOutputMarkupId( true );
+            ( (CyclePanel) repeatsEveryPanel ).enable( getFlow().isRepeating() && isLockedByUser( getFlow() ) );
+        } else {
+            repeatsEveryPanel = new Label( "repeats-every", "" );
+        }
+        repeatingContainer.addOrReplace( repeatsEveryPanel );
+    }
+
 
     /**
      * Figure out if channel field is relevant.
@@ -1709,7 +1765,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     new UpdateSegmentObject( getUser().getUsername(),
                             getFlow(),
                             "restrictions",
-                            new ArrayList<Flow.Restriction>() ) );
+                            new ArrayList<Flow.Restriction>() )
+            );
         }
     }
 
@@ -1814,6 +1871,39 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "receiptConfirmationRequested", val ) );
         }
     }
+
+    /**
+     * Is flow repeating?
+     *
+     * @return a boolean
+     */
+    public boolean isRepeating() {
+        return getFlow().isRepeating();
+    }
+
+    /**
+     * Sets whether repeating.
+     *
+     * @param val a boolean
+     */
+    public void setRepeating( boolean val ) {
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "repeating", val ) );
+    }
+
+
+    public Cycle getRepeatsEvery() {
+        return getFlow().getRepeatsEvery();
+    }
+
+    /**
+     * Sets repeat period.
+     *
+     * @param cycle a delay
+     */
+    public void setRepeatsEvery( Cycle cycle ) {
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "repeatsEvery", cycle ) );
+    }
+
 
     @Override
     public void changed( Change change ) {

@@ -28,6 +28,8 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Cycle;
+import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventPhase;
@@ -468,7 +470,8 @@ public class XmlStreamer implements ImportExportFactory {
 
         private void copy( Flow inner, ExternalFlow external ) {
             external.setChannels( new ArrayList<Channel> ( inner.getChannels() ) );
-            external.setMaxDelay( inner.getMaxDelay() );
+            external.setMaxDelay( new Delay( inner.getMaxDelay() ) );
+            external.setRepeatsEvery( inner.getRepeatsEvery() == null ? null : new Cycle( inner.getRepeatsEvery() ) );
             external.setSignificanceToSource( inner.getSignificanceToSource() );
             external.setSignificanceToTarget( inner.getSignificanceToTarget() );
             external.setAll( inner.isAll() );

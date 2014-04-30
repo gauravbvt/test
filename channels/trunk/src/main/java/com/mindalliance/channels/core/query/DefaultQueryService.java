@@ -3154,7 +3154,7 @@ public abstract class DefaultQueryService implements QueryService {
             label += sep;
         label += part.getTask();
         if ( part.isRepeating() ) {
-            label += " (every " + part.getRepeatsEvery() + ")";
+            label += " (repeats)";
         }
         return label;
     }

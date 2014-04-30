@@ -8,13 +8,13 @@
 <body>
 <wicket:panel>
 
- <!--   <ul class="menu">
-        <li><a wicket:id="hide" href="#">Hide</a></li>
-        <li wicket:id="replicate-item"><a wicket:id="replicate" href="#">Add copy</a></li>
-        <li><a wicket:id="add-issue" href="#">Add issue</a></li>
-        <li><label><input wicket:id="delete" type="checkbox"> Delete</label></li>
-    </ul>
--->
+    <!--   <ul class="menu">
+           <li><a wicket:id="hide" href="#">Hide</a></li>
+           <li wicket:id="replicate-item"><a wicket:id="replicate" href="#">Add copy</a></li>
+           <li><a wicket:id="add-issue" href="#">Add issue</a></li>
+           <li><label><input wicket:id="delete" type="checkbox"> Delete</label></li>
+       </ul>
+   -->
     <span wicket:id="title" class="pointer">[flow title panel]</span>
     <span wicket:id="simpleAdvanced" class="simple-advanced">Show simple form</span>
 
@@ -24,7 +24,9 @@
                 <th align="right">
                     <span wicket:id="information">Information</span>:
                 </th>
-                <td><input wicket:id="name" type="text" value="information" size="40"><br/><input wicket:id="standardized" type="checkbox"/> is a standard info product </td>
+                <td><input wicket:id="name" type="text" value="information" size="40"><br/><input
+                        wicket:id="standardized" type="checkbox"/> is a standard info product
+                </td>
             </tr>
             <tr wicket:id="tagsContainer">
                 <th align="right"><label>
@@ -35,17 +37,21 @@
             <tr wicket:id="classificationContainer">
                 <th align="right">Intent:</th>
                 <td>
-                    <select wicket:id="intent"><option>Report</option></select>
-                    <span class="if-task-fails" wicket:id="ifTaskFailsContainer"><input wicket:id="ifTaskFails" type="checkbox"> only if the task fails</span>
-                    <span class="prohibited" wicket:id="prohibitedContainer"><input wicket:id="prohibited" type="checkbox"/> prohibited</span>
+                    <select wicket:id="intent">
+                        <option>Report</option>
+                    </select>
+                    <span class="if-task-fails" wicket:id="ifTaskFailsContainer"><input wicket:id="ifTaskFails"
+                                                                                        type="checkbox"> only if the task fails</span>
+                    <span class="prohibited" wicket:id="prohibitedContainer"><input wicket:id="prohibited"
+                                                                                    type="checkbox"/> prohibited</span>
                 </td>
             </tr>
-              <tr>
+            <tr>
                 <th class="area" align="right" valign="top">
                     <a wicket:id="editEOIs" href="#" title="Click to edit the elements">Elements:</a>
                 </th>
                 <td>
-                    <ul wicket:id= "eoisContainer" class="element-list">
+                    <ul wicket:id="eoisContainer" class="element-list">
                         <li wicket:id="eois"><span wicket:id="summary">eoi</span></li>
                     </ul>
                     <span wicket:id="referencesEventPhaseContainer">
@@ -67,7 +73,9 @@
                         <label><input wicket:id="askedForTrue" type="radio"> reply</label>
                     </span>
                     <span class="as-target">
-                        <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
+                        <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target">
+                            <option>is critical to</option>
+                        </select> <span wicket:id="target-label">this task</span></label>
                     </span>
                 </td>
             </tr>
@@ -77,7 +85,7 @@
 							<span class="every-node">
 								<label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label>
 							</span>
-							<span wicket:id="other">[other node selector]</span>
+                    <span wicket:id="other">[other node selector]</span>
                 </td>
             </tr>
 
@@ -88,6 +96,7 @@
                 <td>
                     <input wicket:id="restricted" type="checkbox"/>&nbsp;but only if
                     <span wicket:id="restrictionsSummary">in the same organization and in different locations</span>
+
                     <div wicket:id="restrictions">
                         [restrictions panel]
                     </div>
@@ -101,18 +110,25 @@
                 <th align="right"><label>Within:</label></th>
                 <td>
                     <span wicket:id="max-delay">[delay panel]</span>
+                    <div wicket:id="repeatingContainer">
+                        <input type="checkbox" wicket:id="repeating"/>Repeats
+                        <span wicket:id="repeats-every">[Cycle panel]</span>
+                    </div>
                 </td>
-                <!--<td><input wicket:id="maxDelay" type="text" value=""></td>-->
             </tr>
 
             <tr wicket:id="significance-to-source">
                 <th align="right"><span wicket:id="source-task">Sender task</span>:</th>
                 <td>
                 		<span class="triggers-source">
-								<label wicket:id="triggers-source-container"><input wicket:id="triggers-source" type="checkbox"/> is triggered by the request</label>
+								<label wicket:id="triggers-source-container"><input wicket:id="triggers-source"
+                                                                                    type="checkbox"/> is triggered by
+                                    the request</label>
 							</span>
 							<span class="terminates-source">
-								<label wicket:id="terminates-source-container"><input wicket:id="terminates-source" type="checkbox"/> terminates after <span wicket:id="notifying-or-replying">notifying</span></label>
+								<label wicket:id="terminates-source-container"><input wicket:id="terminates-source"
+                                                                                      type="checkbox"/> terminates after
+                                    <span wicket:id="notifying-or-replying">notifying</span></label>
 							</span>
                 </td>
             </tr>
@@ -128,12 +144,13 @@
 							<span class="can-bypass-intermediate" wicket:id="canBypassIntermediateContainer">
 								<input wicket:id="canBypassIntermediate" type="checkbox"/> can bypass intermediate<br/>
 							</span>
-							<span class="receipt-confirmation-requested" wicket:id="receiptConfirmationRequestedContainer">
+							<span class="receipt-confirmation-requested"
+                                  wicket:id="receiptConfirmationRequestedContainer">
 								<input wicket:id="receiptConfirmationRequested" type="checkbox"/> receipt confirmation requested<br/>
 							</span>
-							<textarea id="description" name="description" wicket:id="description"
-                      cols="40" rows="1">Instructions</textarea>
-					</td>
+                    <textarea id="description" name="description" wicket:id="description"
+                              cols="40" rows="1">Instructions</textarea>
+                </td>
             </tr>
             <tr wicket:id="assetsContainer">
                 <th align="right">

@@ -75,7 +75,6 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private String getPre() {
-        boolean published = flow.isPublished();
         if ( isSend ) {
             Node node = flow.getTarget();
             if ( node.isConnector() ) {
@@ -166,6 +165,13 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         if ( flow.canSetAssets() && !assetConnections.isEmpty() ) {
             sb.append( ". " )
                     .append( StringUtils.capitalize( assetConnections.getLabel() ) );
+        }
+        if ( flow.isSharing() && flow.isRepeating() ) {
+            sb.append( ". " )
+                    .append( ( isSend && flow.isNotification() || !isSend && flow.isAskedFor() )
+                            ? "Repeat "
+                            : "Repeated " )
+                    .append( flow.getCycle().getLabel() );
         }
         return sb.toString();
     }
