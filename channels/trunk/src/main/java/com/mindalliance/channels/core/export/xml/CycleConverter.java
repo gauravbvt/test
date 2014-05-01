@@ -51,7 +51,7 @@ public class CycleConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "skip" ) ) {
                 cycle.setSkip( Integer.parseInt( reader.getValue() ));
             } else if ( nodeName.equals( "trancheIndex") ) {
-                cycle.addTrancheIndex( Integer.parseInt( reader.getValue() ) );
+                cycle.addTrancheIndexAndSort( Integer.parseInt( reader.getValue() ) );
             }
             reader.moveUp();
         }

@@ -230,6 +230,7 @@ public class Cycle implements Serializable {
         for ( int index : trancheIndices ) {
             addTrancheIndex( index );
         }
+        Collections.sort( trancheIndices );
     }
 
     public TimeUnit getTimeUnit() {
@@ -249,10 +250,15 @@ public class Cycle implements Serializable {
         return trancheIndices;
     }
 
-    public void addTrancheIndex( int index ) {
+    private void addTrancheIndex( int index ) {
         if ( canAddTrancheIndex( index ) ) {
             trancheIndices.add( index );
         }
+    }
+
+    public void addTrancheIndexAndSort( int index ) {
+        addTrancheIndex( index );
+        Collections.sort( trancheIndices );
     }
 
     public void resetTranches() {
@@ -267,7 +273,6 @@ public class Cycle implements Serializable {
     public List<Tranche> getTranches() {
         List<Tranche> allTranches = getAllPossibleTranches();
         List<Tranche> tranches = new ArrayList<Tranche>();
-        Collections.sort( trancheIndices );
         for ( Integer i : trancheIndices ) {
             tranches.add( allTranches.get( i ) );
         }
@@ -282,6 +287,7 @@ public class Cycle implements Serializable {
             if ( index >= 0 )
                 addTrancheIndex( index );
         }
+        Collections.sort( trancheIndices );
     }
 
     public Tranche trancheFromLabel( String label ) {

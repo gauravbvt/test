@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -20,7 +21,7 @@ import java.util.List;
  * Date: 4/8/13
  * Time: 8:34 PM
  */
-@XmlType( name = "researchStep", propOrder = {"label", "research", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
+@XmlType( name = "researchStep", propOrder = {"label", "cycle", "research", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
 public class ResearchStepData extends SubTaskStepData {
 
     private ResearchData research;
@@ -59,6 +60,10 @@ public class ResearchStepData extends SubTaskStepData {
         return researchCommitment.getCommitter();
     }
 
+    @XmlElement
+    public CycleData getCycle() {
+        return super.getCycle();
+    }
 
     @Override
     @XmlElement( name = "if" )

@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -37,6 +38,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private boolean initiating;
     private Flow flow;
     private Level failureSeverity;
+    private CycleData cycleData;
     private List<CommunityEmployment> allEmployments;
     private DocumentationData documentation;
     private List<MediumData> mediumDataList;
@@ -68,6 +70,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         initFailureSeverity( modelService );
         initMediumDataList( serverUrl, communityService );
         initChannelDataList( communityService );
+        initCycle();
         documentation = new DocumentationData( serverUrl, getSharing() );
     }
 
@@ -112,6 +115,16 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
             mediumDataList.add( new MediumData( serverUrl, medium, communityService ) );
         }
+    }
+
+    private void initCycle() {
+        Cycle cycle = getSharing().getCycle();
+        if ( cycle != null )
+            cycleData = new CycleData( cycle );
+    }
+
+    public CycleData getCycle() {
+        return cycleData;
     }
 
     private void initFailureSeverity( ModelService modelService ) {

@@ -1,7 +1,9 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 
@@ -15,6 +17,8 @@ import com.mindalliance.channels.core.model.checklist.SubTaskStep;
  */
 public abstract class SubTaskStepData extends AbstractStepData {
 
+    private CycleData cycleData;
+
 
     public SubTaskStepData() {
         // required
@@ -26,6 +30,14 @@ public abstract class SubTaskStepData extends AbstractStepData {
                             CommunityService communityService,
                             ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
+        initCycle();
+    }
+
+    private void initCycle() {
+        Cycle cycle = getSubTaskStep().getSharing().getCycle();
+        if ( cycle != null ) {
+            cycleData = new CycleData( cycle );
+        }
     }
 
     public boolean isResearchStep() {
@@ -34,6 +46,10 @@ public abstract class SubTaskStepData extends AbstractStepData {
 
     public boolean isFollowUpStep() {
         return getSubTaskStep().isFollowUp();
+    }
+
+    public CycleData getCycle() {
+        return cycleData;
     }
 
     protected SubTaskStep getSubTaskStep() {

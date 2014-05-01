@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
@@ -33,7 +34,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "location", "function", "assetConnectionsSummary", "instructions",
+@XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "cycle", "location", "function", "assetConnectionsSummary", "instructions",
         "teamContacts", "goals", "failureImpact", "assetConnections", "documentation"})
 public class TaskData extends AbstractProcedureElementData {
 
@@ -44,6 +45,7 @@ public class TaskData extends AbstractProcedureElementData {
     private Level failureLevel;
     private Part part;
     private PlaceData placeData;
+    private CycleData cycleData;
     private List<AssetConnectionData> assetConnectionDataList;
     private String assetConnectionsSummary;
     private DocumentationData documentation;
@@ -65,6 +67,7 @@ public class TaskData extends AbstractProcedureElementData {
         initOtherAssignments( communityService );
         initTeamContacts( serverUrl, communityService );
         initAssetConnections();
+        initCycle();
     }
 
     public TaskData( String serverUrl,
@@ -134,6 +137,12 @@ public class TaskData extends AbstractProcedureElementData {
         documentation = new DocumentationData( serverUrl, getPart() );
     }
 
+    private void initCycle() {
+        Cycle cycle = getPart().getCycle();
+        if ( cycle != null )
+            cycleData = new CycleData( cycle );
+    }
+
     @XmlElement
     public String getId() {
         return Long.toString( getPart().getId() );
@@ -198,6 +207,11 @@ public class TaskData extends AbstractProcedureElementData {
             goals.add( new GoalData( goal ) );
         }
         return goals;
+    }
+
+    @XmlElement
+    public CycleData getCycle() {
+        return cycleData;
     }
 
     @XmlElement

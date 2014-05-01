@@ -4,8 +4,8 @@ import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.NotificationData;
-import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -48,6 +48,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addMaxDelay();
         addOnFailure();
         addEois();
+        addCycle();
         addInstructions();
         addDocumentation();
     }
@@ -61,7 +62,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     new ChecklistDataLinkPanel(
                             "producerTaskLink",
                             flowData.getAssignmentData(),
-                            getFinder() ) );
+                            getFinder() )
+            );
         } else {
             producerTaskContainer.add( new Label( "producerTaskLink", "" ) );
         }
@@ -199,7 +201,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         : "I can expect an answer"
                         : flowData.isNotification()
                         ? "Send notification"
-                        : "Answer" );
+                        : "Answer"
+        );
         maxDelayContainer.add( whenLabel );
         Label delayLabel = new Label(
                 "maxDelay", makeDelayLabel( timeDelay ) );
@@ -279,7 +282,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 "instructions",
                 instructionsText == null || instructionsText.trim().isEmpty()
                         ? ""
-                        : instructionsText );
+                        : instructionsText
+        );
         instructionsLabel.setVisible( instructionsText != null && !instructionsText.trim().isEmpty() );
         instructionContainer.setVisible( isInstructed() );
         instructionContainer.add( instructionsLabel );
@@ -319,7 +323,19 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         failureImpact.add( severityLabel );
     }
 
-    @SuppressWarnings("unchecked")
+    private void addCycle() {
+        CycleData cycleData = flowData.getCycle();
+        WebMarkupContainer cycleContainer = new WebMarkupContainer( "cycle" );
+        cycleContainer.setVisible( cycleData != null );
+        add( cycleContainer );
+        cycleContainer.add( cycleData != null
+                        && flowData.isInitiating()
+                        ? new Label( "cycleLabel", cycleData.getLabel() )
+                        : new Label( "cycleLabel", ""  )
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
     private List<ChannelData> getWorkChannels( ContactData contactData ) {
         final List<Long> mediumIds = flowData.getMediumIds();
         return (List<ChannelData>) CollectionUtils.select(

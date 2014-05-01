@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.FollowUpData;
 import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
@@ -9,6 +10,7 @@ import com.mindalliance.channels.api.procedures.checklist.ResearchStepData;
 import com.mindalliance.channels.api.procedures.checklist.SubTaskStepData;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -28,7 +30,14 @@ public class SubTaskPanel extends AbstractDataPanel {
     }
 
     private void init() {
+        addCycle();
         addSubTaskLink();
+    }
+
+    private void addCycle() {
+        CycleData cycleData = getSubTaskStepData().getCycle();
+        Label cycleLabel = new Label( "cycle", cycleData == null ? "" : cycleData.getLabel() );
+        add( cycleLabel );
     }
 
     private void addSubTaskLink() {

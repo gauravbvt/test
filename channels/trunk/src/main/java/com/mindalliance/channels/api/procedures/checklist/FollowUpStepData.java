@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.FollowUpData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -21,7 +22,7 @@ import java.util.List;
  * Date: 4/8/13
  * Time: 8:34 PM
  */
-@XmlType( name = "followUpStep", propOrder = {"label", "followUp", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
+@XmlType( name = "followUpStep", propOrder = {"label", "cycle", "followUp", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
 public class FollowUpStepData extends SubTaskStepData {
 
     private FollowUpData followUp;
@@ -92,6 +93,11 @@ public class FollowUpStepData extends SubTaskStepData {
     @XmlElement
     public FollowUpData getFollowUp() {
         return followUp;
+    }
+
+    @XmlElement
+    public CycleData getCycle() {
+        return super.getCycle();
     }
 
     public Part getDiscoveringPart() {
