@@ -7,6 +7,9 @@ import com.mindalliance.channels.core.model.asset.AssetConnectable;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Cyclic;
+import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -1941,6 +1944,26 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 }
         );
 
+    }
+
+    public Part getInitiatingPart() {
+        assert isSharing();
+        return isNotification()
+                ? (Part)getSource()
+                : (Part)getTarget();
+    }
+
+    public String getDescriptiveLabel() {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( isAskedFor() ? "request for " : "notification of ");
+        if ( getIntent() != null ) {
+            sb.append( getIntent().getLabel() )
+                    .append( " " );
+        }
+        sb.append( "\"")
+                .append( getName() )
+                .append( "\"");
+        return sb.toString();
     }
 
     /**

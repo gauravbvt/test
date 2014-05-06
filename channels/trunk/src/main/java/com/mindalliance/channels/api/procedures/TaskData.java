@@ -8,13 +8,13 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.time.Cycle;
 import com.mindalliance.channels.core.query.ModelService;
 import org.apache.commons.lang.StringEscapeUtils;
 

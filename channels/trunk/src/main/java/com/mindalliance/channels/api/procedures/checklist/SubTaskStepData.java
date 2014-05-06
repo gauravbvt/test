@@ -3,9 +3,9 @@ package com.mindalliance.channels.api.procedures.checklist;
 import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
+import com.mindalliance.channels.core.model.time.Cycle;
 
 /**
  * Web service data for a sub-task collaboration step in a checklist.

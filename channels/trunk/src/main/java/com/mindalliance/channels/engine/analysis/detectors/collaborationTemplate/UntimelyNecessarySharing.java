@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;

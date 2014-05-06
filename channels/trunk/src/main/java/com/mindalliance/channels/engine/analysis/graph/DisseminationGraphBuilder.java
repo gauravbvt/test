@@ -6,15 +6,15 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation.Type;
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
+import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;

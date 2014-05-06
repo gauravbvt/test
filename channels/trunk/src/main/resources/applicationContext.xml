@@ -256,7 +256,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UnnamedFlow"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowWithUndefinedSource"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowWithUndefinedTarget"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartWithInvalidTiming"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrphanedPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RedundantFlow"/>
@@ -369,6 +368,10 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetProducedByMiscategorizedPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetRequiredForChannelNotAvailable"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.AssetHasInconsistentDependencies"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowCycleExceedsPartCycle"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartRepeatsBeforeItCompletes"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskRepeatedlyTerminated"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RepeatedTaskDoesNotInitiateFlows"/>
             </list>
         </property>
     </bean>

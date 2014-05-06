@@ -2,6 +2,8 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetConnections;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Delay;
 
 import java.util.List;
 

@@ -2,8 +2,6 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.AssignedLocation;
-import com.mindalliance.channels.core.model.Cycle;
-import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Function;
@@ -17,6 +15,8 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.checklist.Checklist;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Delay;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;

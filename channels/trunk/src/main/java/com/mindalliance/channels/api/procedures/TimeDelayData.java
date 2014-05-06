@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.model.Delay;
+import com.mindalliance.channels.core.model.time.Delay;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;

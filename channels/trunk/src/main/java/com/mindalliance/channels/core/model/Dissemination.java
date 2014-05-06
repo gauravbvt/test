@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.model.Transformation.Type;
+import com.mindalliance.channels.core.model.time.Delay;
 
 import java.io.Serializable;
 

@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Delay;
+
 import java.util.ArrayList;
 import java.util.List;
 

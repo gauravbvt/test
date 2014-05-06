@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import java.io.Serializable;

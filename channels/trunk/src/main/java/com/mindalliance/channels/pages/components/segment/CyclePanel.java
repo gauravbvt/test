@@ -2,8 +2,10 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.model.Cycle;
-import com.mindalliance.channels.core.model.Cyclic;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Cyclic;
+import com.mindalliance.channels.core.model.time.TimeUnit;
+import com.mindalliance.channels.core.model.time.Tranche;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -44,7 +46,7 @@ public class CyclePanel extends AbstractCommandablePanel {
     private Label summaryLabel;
     private Label ofEveryLabel;
     private TextField<String> tranchesField;
-    private DropDownChoice<Cycle.TimeUnit> timeUnitDropDownChoice;
+    private DropDownChoice<TimeUnit> timeUnitDropDownChoice;
     private TextField<String> skipField;
 
     public CyclePanel( String id, IModel<Cyclic> cyclicModel, String cycleProperty ) {
@@ -132,7 +134,7 @@ public class CyclePanel extends AbstractCommandablePanel {
 
     private String getTranchesHint() {
         StringBuilder sb = new StringBuilder();
-        List<Cycle.Tranche> tranches = getCycle().getAllPossibleTranches();
+        List<Tranche> tranches = getCycle().getAllPossibleTranches();
         if ( tranches.size() > 1 ) {
             sb.append( tranches.get( 0 ).getLabel() )
                     .append( ", " )
@@ -143,7 +145,7 @@ public class CyclePanel extends AbstractCommandablePanel {
     }
 
     private boolean hasTranches() {
-        return getCycle() != null && getCycle().getTimeUnit().compareTo( Cycle.TimeUnit.Minute ) < 0;
+        return getCycle() != null && getCycle().getTimeUnit().compareTo( TimeUnit.Minute ) < 0;
     }
 
     private void addOfEvery() {
@@ -174,19 +176,19 @@ public class CyclePanel extends AbstractCommandablePanel {
     }
 
     private void addTimeUnit() {
-        timeUnitDropDownChoice = new DropDownChoice<Cycle.TimeUnit>(
+        timeUnitDropDownChoice = new DropDownChoice<TimeUnit>(
                 "timeUnit",
-                new PropertyModel<Cycle.TimeUnit>( this, "timeUnit" ),
-                Arrays.asList( Cycle.TimeUnit.values() ),
-                new IChoiceRenderer<Cycle.TimeUnit>() {
+                new PropertyModel<TimeUnit>( this, "timeUnit" ),
+                Arrays.asList( TimeUnit.values() ),
+                new IChoiceRenderer<TimeUnit>() {
                     @Override
-                    public Object getDisplayValue( Cycle.TimeUnit timeUnit ) {
+                    public Object getDisplayValue( TimeUnit timeUnit ) {
                         return timeUnit.name().toLowerCase()
                                 + ( getCycle().getSkip() > 2 ? "s" : "" );
                     }
 
                     @Override
-                    public String getIdValue( Cycle.TimeUnit object, int index ) {
+                    public String getIdValue( TimeUnit object, int index ) {
                         return Integer.toString( index );
                     }
                 }
@@ -216,9 +218,9 @@ public class CyclePanel extends AbstractCommandablePanel {
 
     public String getTranchesString() {
         StringBuilder sb = new StringBuilder();
-        Iterator<Cycle.Tranche> iterator = getTranches().iterator();
+        Iterator<Tranche> iterator = getTranches().iterator();
         while ( iterator.hasNext() ) {
-            Cycle.Tranche tranche = iterator.next();
+            Tranche tranche = iterator.next();
             sb.append( tranche.getLabel() );
             if ( iterator.hasNext() )
                 sb.append( ", " );
@@ -242,9 +244,9 @@ public class CyclePanel extends AbstractCommandablePanel {
 
     private int guessTrancheIndexFromLabel( String trancheLabel ) {
         String input = trancheLabel.toLowerCase().trim();
-        List<Cycle.Tranche> allTranches = getCycle().getAllPossibleTranches();
+        List<Tranche> allTranches = getCycle().getAllPossibleTranches();
         for ( int i = 0; i < allTranches.size(); i++ ) {
-            Cycle.Tranche tranche = allTranches.get( i );
+            Tranche tranche = allTranches.get( i );
             if ( tranche.getLabel().toLowerCase().startsWith( input ) ) {
                 return i;
             }
@@ -252,7 +254,7 @@ public class CyclePanel extends AbstractCommandablePanel {
         return -1;
     }
 
-    private List<Cycle.Tranche> getTranches() {
+    private List<Tranche> getTranches() {
         return getCycle().getTranches();
     }
 
@@ -268,11 +270,11 @@ public class CyclePanel extends AbstractCommandablePanel {
         );
     }
 
-    public Cycle.TimeUnit getTimeUnit() {
+    public TimeUnit getTimeUnit() {
         return getCycle().getTimeUnit();
     }
 
-    public void setTimeUnit( Cycle.TimeUnit val ) {
+    public void setTimeUnit( TimeUnit val ) {
         doCommand(
                 new UpdateSegmentObject(
                         getUsername(),
@@ -328,12 +330,12 @@ public class CyclePanel extends AbstractCommandablePanel {
         return getCyclic().getCycle();
     }
 
-    private List<Cycle.Tranche> queryMatches( String term, int page, int pageSize ) {
-        List<Cycle.Tranche> result = new ArrayList<Cycle.Tranche>();
+    private List<Tranche> queryMatches( String term, int page, int pageSize ) {
+        List<Tranche> result = new ArrayList<Tranche>();
         term = term.toUpperCase();
         final int offset = page * pageSize;
         int matched = 0;
-        for ( Cycle.Tranche tranche : getCycle().getAllPossibleTranches() ) { // todo - cache this
+        for ( Tranche tranche : getCycle().getAllPossibleTranches() ) { // todo - cache this
             if ( result.size() == pageSize ) {
                 break;
             }
@@ -348,8 +350,8 @@ public class CyclePanel extends AbstractCommandablePanel {
     }
 
 
-    public List<Cycle.Tranche> toChoices( List<String> ids ) {
-        ArrayList<Cycle.Tranche> tranches = new ArrayList<Cycle.Tranche>();
+    public List<Tranche> toChoices( List<String> ids ) {
+        ArrayList<Tranche> tranches = new ArrayList<Tranche>();
         for ( String id : ids ) {
             tranches.add( getCycle().trancheFromLabel( id ) );
         }

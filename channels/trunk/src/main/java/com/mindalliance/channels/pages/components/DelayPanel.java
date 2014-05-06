@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateModelObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.model.time.TimeUnit;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -60,16 +60,16 @@ public class DelayPanel extends AbstractCommandablePanel {
             }
         } );
         add( amountField );
-        unitChoice = new DropDownChoice<Delay.Unit>(
+        unitChoice = new DropDownChoice<TimeUnit>(
                 "delay-unit",
-                new PropertyModel<Delay.Unit>( this, "unit" ),
-                new PropertyModel<List<? extends Delay.Unit>>( this, "units" ),
-                new IChoiceRenderer<Delay.Unit>() {
-                    public Object getDisplayValue( Delay.Unit unit ) {
+                new PropertyModel<TimeUnit>( this, "unit" ),
+                new PropertyModel<List<? extends TimeUnit>>( this, "units" ),
+                new IChoiceRenderer<TimeUnit>() {
+                    public Object getDisplayValue( TimeUnit unit ) {
                         return unit.toString();
                     }
 
-                    public String getIdValue( Delay.Unit unit, int index ) {
+                    public String getIdValue( TimeUnit unit, int index ) {
                         return unit.toString();
                     }
                 }
@@ -111,17 +111,17 @@ public class DelayPanel extends AbstractCommandablePanel {
      * (Used by PropertyModel)
      * @param val a a delay unit
      */
-    public void setUnit( Delay.Unit val ) {
+    public void setUnit( TimeUnit val ) {
         setProperty( "unit", val );
     }
 
-    public Delay.Unit getUnit() {
-        return (Delay.Unit) getProperty( "unit" );
+    public TimeUnit getUnit() {
+        return (TimeUnit) getProperty( "unit" );
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<? extends Delay.Unit> getUnits() {
-        return (List<? extends Delay.Unit>) getProperty( "units" );
+    public List<? extends TimeUnit> getUnits() {
+        return (List<? extends TimeUnit>) getProperty( "units" );
     }
 
     private Object getProperty( String prop ) {

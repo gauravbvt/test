@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -330,7 +331,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         add( cycleContainer );
         cycleContainer.add( cycleData != null
                         && flowData.isInitiating()
-                        ? new Label( "cycleLabel", cycleData.getLabel() )
+                        ? new Label( "cycleLabel", StringUtils.capitalize( cycleData.getLabel() ) )
                         : new Label( "cycleLabel", ""  )
         );
     }

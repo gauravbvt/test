@@ -14,11 +14,11 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 

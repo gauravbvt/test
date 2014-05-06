@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.model.Cycle;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Tranche;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -42,7 +43,7 @@ public class CycleData implements Serializable {
     @XmlElement( name="tranche")
     public List<String> getTranches() {
         List<String> labels = new ArrayList<String>(  );
-        for ( Cycle.Tranche tranche : cycle.getTranches() ) {
+        for ( Tranche tranche : cycle.getTranches() ) {
             labels.add( tranche.getLabel() );
         }
         return labels;

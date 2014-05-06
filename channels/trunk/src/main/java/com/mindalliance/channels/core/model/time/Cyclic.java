@@ -1,4 +1,6 @@
-package com.mindalliance.channels.core.model;
+package com.mindalliance.channels.core.model.time;
+
+import com.mindalliance.channels.core.model.Identifiable;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.

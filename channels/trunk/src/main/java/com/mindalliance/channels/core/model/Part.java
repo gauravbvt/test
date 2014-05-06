@@ -7,6 +7,10 @@ import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.model.checklist.Checklist;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.Cyclic;
+import com.mindalliance.channels.core.model.time.Delay;
+import com.mindalliance.channels.core.model.time.TimeUnit;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -389,7 +393,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         selfTerminating = val;
         if ( val && completionTime.getAmount() == 0 ) {
             completionTime.setAmount( 1 );
-            completionTime.setUnit( Delay.Unit.hours );
+            completionTime.setUnit( TimeUnit.Hour );
         }
     }
 

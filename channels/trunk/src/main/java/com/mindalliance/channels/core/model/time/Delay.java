@@ -1,4 +1,6 @@
-package com.mindalliance.channels.core.model;
+package com.mindalliance.channels.core.model.time;
+
+import com.mindalliance.channels.core.model.Copyable;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -14,32 +16,6 @@ import java.util.List;
  */
 public class Delay implements Comparable, Copyable, Serializable {
 
-    /**
-     * Time units
-     */
-    public enum Unit {
-        /**
-         * Seconds
-         */
-        seconds,
-        /**
-         * Minutes
-         */
-        minutes,
-        /**
-         * Hours
-         */
-        hours,
-        /**
-         * Days
-         */
-        days,
-        /**
-         * Weeks
-         */
-        weeks
-    }
-
     private static String[] numbers = {
             "zero", "one", "two", "three", "four", "five", "six",
             "seven", "eight", "nine", "ten", "eleven", "twelve",
@@ -50,7 +26,7 @@ public class Delay implements Comparable, Copyable, Serializable {
     /**
      * Time unit
      */
-    private Unit unit = Unit.seconds;
+    private TimeUnit unit = TimeUnit.Second;
 
     /**
      * Amount of a unit of time
@@ -65,7 +41,7 @@ public class Delay implements Comparable, Copyable, Serializable {
         this.unit = delay.getUnit();
     }
 
-    public Delay( int amount, Unit unit ) {
+    public Delay( int amount, TimeUnit unit ) {
         this.amount = amount;
         this.unit = unit;
     }
@@ -93,11 +69,11 @@ public class Delay implements Comparable, Copyable, Serializable {
         this.amount = Math.max( 0, amount );
     }
 
-    public Unit getUnit() {
+    public TimeUnit getUnit() {
         return unit;
     }
 
-    public void setUnit( Unit unit ) {
+    public void setUnit( TimeUnit unit ) {
         this.unit = unit;
     }
 
@@ -106,8 +82,8 @@ public class Delay implements Comparable, Copyable, Serializable {
      *
      * @return list of strings
      */
-    public List<Unit> getUnits() {
-        return Arrays.asList( Unit.values() );
+    public List<TimeUnit> getUnits() {
+        return Arrays.asList( TimeUnit.values() );
     }
 
     /**
@@ -118,23 +94,31 @@ public class Delay implements Comparable, Copyable, Serializable {
     public int getSeconds() {
         int factor;
         switch ( unit ) {
-            case seconds:
+            case Second:
                 factor = 1;
                 break;
-            case minutes:
+            case Minute:
                 factor = 60;
                 break;
-            case hours:
+            case Hour:
                 // 3600
                 factor = 60 * 60;
                 break;
-            case days:
+            case Day:
                 // 86400
                 factor = 24 * 60 * 60;
                 break;
-            case weeks:
+            case Week:
                 // 604800
                 factor = 7 * 24 * 60 * 60;
+                break;
+            case Month:
+                // 604800 * 4
+                factor = 7 * 24 * 60 * 60 * 4; // 4 weeks in a month
+                break;
+            case Year:
+                // 604800 * 52
+                factor = 7 * 24 * 60 * 60 * 52; // 52 weeks in a year
                 break;
             default:
                 throw new IllegalStateException( "Unknown unit" );
@@ -234,8 +218,7 @@ public class Delay implements Comparable, Copyable, Serializable {
             if ( items.length == 2 ) {
                 int amount = Integer.parseInt( items[0] );
                 String unitString = items[1];
-                if ( !unitString.endsWith( "s" ) ) unitString += "s";
-                Unit unit = Unit.valueOf( unitString );
+                TimeUnit unit = TimeUnit.parse( unitString );
                 delay = new Delay( amount, unit );
             } else {
                 throw new IllegalArgumentException( "Invalid delay string " + s );
@@ -289,7 +272,7 @@ public class Delay implements Comparable, Copyable, Serializable {
      * @return a new delay
      */
     public Delay add( Delay delay ) {
-        return new Delay( getSeconds() + delay.getSeconds(), Unit.seconds );
+        return new Delay( getSeconds() + delay.getSeconds(), TimeUnit.Second );
     }
 
     /**
@@ -300,7 +283,7 @@ public class Delay implements Comparable, Copyable, Serializable {
      * @return a new delay
      */
     public Delay subtract( Delay delay ) {
-        return new Delay( Math.max( 0, getSeconds() - delay.getSeconds() ), Unit.seconds );
+        return new Delay( Math.max( 0, getSeconds() - delay.getSeconds() ), TimeUnit.Second );
     }
 
     /**

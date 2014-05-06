@@ -9730,25 +9730,6 @@
 
                 <entry><para>Yes</para></entry>
               </row>
-
-              <row>
-                <entry><para>Task repeats too soon</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Make the task complete sooner, wait longer before it repeats, make it
-                        non-repeating, </para>
-                    </listitem>
-                    <listitem>
-                      <para>or set a completion time for the task.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>No</para></entry>
-              </row>
-
               <row>
                 <entry><para>Task without named role</para></entry>
 
@@ -10247,6 +10228,57 @@
                     </listitem>
 
                     <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Flow repeatedly terminates a task</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the terminating flow non-repetitive</para>
+                        </listitem>
+                        <listitem>
+                            <para>or do not make the flow terminate the task</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Task repeats before it would normally complete</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Chage the repeat cycle of the task to be longer than its typical completion time</para>
+                        </listitem>
+                        <listitem>
+                            <para>r make the task non-repetitive</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Repeat cycle of flow longer than repeat cycle of task initiating it</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the repeat cycle fall within the repeat cycle of the task</para>
+                        </listitem>
+                        <listitem>
+                            <para>or make either non-repetitive</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
                 </row>
 
 
@@ -11264,6 +11296,23 @@
                             <para>or remove the dependency from the categories thatlist it</para>
                         </listitem>
                     </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Repeated task does not initiate flows</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Have the task initiate on or more communications</para>
+                        </listitem>
+                        <listitem>
+                            <para>or make the task non-repetitive.</para>
+                        </listitem>
+                     </itemizedlist></entry>
 
                     <entry><para>Yes</para></entry>
                 </row>

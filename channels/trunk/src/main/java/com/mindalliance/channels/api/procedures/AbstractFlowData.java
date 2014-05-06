@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.model.Cycle;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -18,6 +17,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
+import com.mindalliance.channels.core.model.time.Cycle;
 import com.mindalliance.channels.core.query.ModelService;
 
 import java.util.ArrayList;

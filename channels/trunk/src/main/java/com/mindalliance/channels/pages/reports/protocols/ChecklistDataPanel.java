@@ -141,7 +141,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         cycleContainer.add(
                 cycleData == null
                         ? new Label( "cycleLabel", "" )
-                        : new Label( "cycleLabel", cycleData.getLabel() )
+                        : new Label( "cycleLabel", StringUtils.capitalize( cycleData.getLabel() ) )
         );
     }
 

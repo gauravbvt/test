@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
-import com.mindalliance.channels.core.model.Cycle;
+import com.mindalliance.channels.core.model.time.Cycle;
+import com.mindalliance.channels.core.model.time.TimeUnit;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -47,7 +48,7 @@ public class CycleConverter extends AbstractChannelsConverter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "timeUnit") ) {
-                cycle.setTimeUnit( Cycle.TimeUnit.valueOf( reader.getValue() ) );
+                cycle.setTimeUnit( TimeUnit.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "skip" ) ) {
                 cycle.setSkip( Integer.parseInt( reader.getValue() ));
             } else if ( nodeName.equals( "trancheIndex") ) {
