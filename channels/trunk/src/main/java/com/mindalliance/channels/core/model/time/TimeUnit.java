@@ -73,4 +73,25 @@ public enum TimeUnit {
         else
             throw new IllegalArgumentException( "Can't parse time unit " + unitString );
     }
+
+    public String asAdverb() {
+        switch( this ) {
+            case Year:
+                return "yearly";
+            case Month:
+                return "monthly";
+            case Week:
+                return "weekly";
+            case Day:
+                return "daily";
+            case Hour:
+                return "hourly";
+            case Minute:
+                return "on the minute";
+            case Second:
+                return "on the second";
+            default:
+                return "";
+        }
+    }
 }

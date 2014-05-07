@@ -9,7 +9,7 @@ import java.io.Serializable;
 * Date: 5/1/14
 * Time: 2:41 PM
 */
-public class Tranche implements Serializable {
+public class Tranche implements Serializable, Comparable<Tranche> {
 
     private Cycle cycle;
     private TimeUnit timeUnit = TimeUnit.Day;
@@ -124,6 +124,26 @@ public class Tranche implements Serializable {
         else
             return hours + "AM";
     }
+
+    /// COMPARABLE
+
+    @Override
+    public int compareTo( Tranche other ) {
+        assert other != null;
+        int i = timeUnit.compareTo( other.getTimeUnit() );
+        if ( i != 0 )
+            return i;
+        else {
+            return index < other.getIndex()
+                    ? -1
+                    : index > other.getIndex()
+                    ? 1
+                    : 0;
+        }
+    }
+
+
+    /// OBJECT
 
     @Override
     public String toString() {

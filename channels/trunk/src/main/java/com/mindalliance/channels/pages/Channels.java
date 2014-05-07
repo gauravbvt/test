@@ -95,6 +95,7 @@ public class Channels extends WebApplication
     public static final long ALL_GOALS = -19;
     public static final long GALLERY_ID = -20;
     public static final long SUPPLY_CHAINS = -21;
+    public static final long RHYTHM = -22;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;

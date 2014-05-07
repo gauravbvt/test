@@ -46,6 +46,7 @@ import com.mindalliance.channels.pages.components.plan.floating.AllFeedbackFloat
 import com.mindalliance.channels.pages.components.plan.floating.AllGoalsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllIssuesFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ChecklistsMapFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.CollaborationRhythmFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelClassificationsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelEventsAndPhasesFloatingPanel;
@@ -390,6 +391,8 @@ public final class ModelPage extends AbstractChannelsWebPage {
      */
     private String topicId;
     private AjaxLink<String> allSegmentsButton;
+    private AjaxLink<String> rhythmButton;
+    private Component collaborationRhythmPanel;
 
     /**
      * Used when page is called without parameters.
@@ -617,11 +620,12 @@ public final class ModelPage extends AbstractChannelsWebPage {
         addSegmentEditPanel();
         addModelEditPanel( null );
         addFlowLegendPanel();
+        addCollaborationRhythmPanel();
+        addAllSegmentsPanel();
         // scoping
         addAllEventsPanel();
         addAllGoalsPanel();
         addAllOrganizationsPanel( null );
-        addAllSegmentsPanel();
         addAllClassificationsPanel();
         // improving
         addTaskMoverPanel();
@@ -655,6 +659,24 @@ public final class ModelPage extends AbstractChannelsWebPage {
         addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this collaboration model" );
         form.addOrReplace( allSegmentsButton );
     }
+
+    private void addRhythmButton() {
+        rhythmButton = new AjaxLink<String>( "rhythmButton" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                boolean isExpanded = getExpansions().contains( Channels.RHYTHM );
+                Change change = new Change( isExpanded
+                        ? Change.Type.Collapsed
+                        : Change.Type.Expanded,
+                        Channels.RHYTHM );
+                update( target, change );
+            }
+        };
+        rhythmButton.setOutputMarkupId( true );
+        addTipTitle( rhythmButton, "Opens (or closes) the collaboration rhythm panel" );
+        form.addOrReplace( rhythmButton );
+    }
+
 
     private void addRefreshNow() {
         refreshNeededComponent = new AjaxLink( "refresh-needed" ) {
@@ -781,6 +803,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
     }
 
     private void addModelMenubar() {
+        addRhythmButton();
         addAllSegmentsButton();
         addModelActionsMenu();
         addModelShowMenu();
@@ -1115,6 +1138,18 @@ public final class ModelPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( allSegmentsPanel );
     }
+
+    private void addCollaborationRhythmPanel() {
+        if ( !getExpansions().contains( Channels.RHYTHM ) ) {
+            collaborationRhythmPanel = new Label( "rhythm", "" );
+            collaborationRhythmPanel.setOutputMarkupId( true );
+            makeVisible( collaborationRhythmPanel, false );
+        } else {
+            collaborationRhythmPanel = new CollaborationRhythmFloatingPanel( "rhythm" );
+        }
+        form.addOrReplace( collaborationRhythmPanel );
+    }
+
 
     private void addAllClassificationsPanel() {
         if ( !getExpansions().contains( Channels.ALL_CLASSIFICATIONS ) ) {
@@ -2282,6 +2317,8 @@ public final class ModelPage extends AbstractChannelsWebPage {
             refreshAllOrganizationsPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_SEGMENTS ) {
             refreshAllSegmentsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.RHYTHM ) {
+            refreshCollaborationRhythmPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_CLASSIFICATIONS ) {
             refreshAllClassificationsPanel( target, change, updated );
         } else if ( change.getId() == Channels.TASK_MOVER ) {
@@ -2481,6 +2518,7 @@ public final class ModelPage extends AbstractChannelsWebPage {
         refreshAllEventsPanel( target, change, updated );
         refreshAllOrganizationsPanel( target, change, updated );
         refreshAllSegmentsPanel( target, change, updated );
+        refreshCollaborationRhythmPanel( target, change, updated );
         refreshAllClassificationsPanel( target, change, updated );
         refreshTaskMoverPanel( target, change, updated );
         refreshProtocolsMapPanel( target, change, updated );
@@ -2764,6 +2802,20 @@ public final class ModelPage extends AbstractChannelsWebPage {
                     updated );
         }
     }
+
+    private void refreshCollaborationRhythmPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( id == Channels.RHYTHM
+                && change.isDisplay() ) {
+            addCollaborationRhythmPanel();
+            target.add( collaborationRhythmPanel );
+        } else if ( collaborationRhythmPanel instanceof CollaborationRhythmFloatingPanel ) {
+            ( (CollaborationRhythmFloatingPanel) collaborationRhythmPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
 
     private void refreshAllClassificationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
