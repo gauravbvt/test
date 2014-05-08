@@ -1595,8 +1595,8 @@
                         A task specifies what agents known to the collaboration models will be assigned to it and,
                         whether they will be executing the task individually or as a team.
 
-                        A task can also specify where the task is to be executed and how the location will become known to the agents
-                        assigned to the task.
+                        A task can also specify where the task is to be executed, whether it repeats and how often it does,
+                        and how the location will become known to the agents assigned to the task.
 
                         Each task is accompanied by a checklist that details how to execute the task.
                     </description>
@@ -2738,7 +2738,7 @@
                         * identifying the function it implements [[File:model_task_definition_function.png|The function the task implements]]
                         * identifying where it is to be executed [[File:model_task_definition_location.png|Where the task is to be executed]]
                         * profiling which agents will be assigned to it [[File:model_task_definition_assigned.png|The task's assignment profile]]
-                        * stating timing attributes [[File:model_task_definition_timing.png|The task's time-related attributes]]
+                        * stating timing attributes, including whether the task repeats and how often [[File:model_task_definition_timing.png|The task's time-related attributes]]
                         * what effects it is meant to have [[File:model_task_definition_effects.png|The intended effects of the task]]
                         * what material assets the task produces and uses
                         * and instructions and documentation for those assigned to the task [[File:model_task_definition_documentation.png|Documenting the task]]
@@ -2822,6 +2822,7 @@
                         * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets [[File:model_flow_restrictions.png|Restrictions on a flow]]
                         * the communication channels to use, each including transmission medium and, optionally, a required format [[File:model_flow_channels.png|Communication channels]]
                         * timeliness constraints [[File:model_flow_timing.png|Communication timeliness]]
+                        * whether the flow is repeated and how often
                         * if a flow to a ''middleman'', whether it can be bypassed [[File:model_flow_bypassing_intermediate.png|Permission to disintermediate]]
                         * identifying the material assets to be requested (forwarding or not) and supplied as a result
                         * and documenting it [[File:model_flow_documentation.png|Documenting a send or receive]]
@@ -3905,6 +3906,21 @@
                     </description>
                 </item>
                 <next section="info-sharing" topic="edit-checklist"/>
+            </topic>
+            <topic id="rhythm">
+                <name>Collaboration rhythm</name>
+                <item>
+                    <description>
+                        The collaboration rhythm panel displays the repeating tasks defined the collaboration model.
+
+                        The panel shows the tasks that repeat yearly, monthly, weekly, daily or hourly, and shows how they repeat.
+
+                        The tasks shown can be further filtered by the phases and/or events of the segments to which the tasks
+                        belong.
+
+                        You can navigate to any of the tasks listed in the panel by clicking on their names.
+                    </description>
+                </item>
             </topic>
         </section>
         <section id="learning">

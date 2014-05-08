@@ -148,9 +148,13 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         } else {
             if ( flow.isProhibited() )
                 flowName += " -PROHIBITED-";
-            if ( !flow.getRestrictions().isEmpty() ) {
-                if ( highlighted )
-                    flowName += " (if " + flow.getRestrictionString( !flow.isNeed() ) + ")";
+            if ( !flow.getRestrictions().isEmpty() || flow.isRepeating() ) {
+                if ( highlighted ) {
+                    if ( !flow.getRestrictions().isEmpty() )
+                        flowName += " (if " + flow.getRestrictionString( !flow.isNeed() ) + ")";
+                    if ( flow.isRepeating() )
+                        flowName += " -repeats-";
+                }
                 else
                     flowName += "*";
             }
@@ -379,11 +383,16 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 }
-                String labelTooltip;
-                if ( !edge.getRestrictions().isEmpty() ) {
-                    labelTooltip = "Only if " + edge.getRestrictionString( !edge.isNeed() );
+                String labelTooltip = "";
+                boolean hasRestrictions = !edge.getRestrictions().isEmpty();
+                if ( hasRestrictions || edge.isRepeating() ) {
+                   if (hasRestrictions)
+                        labelTooltip += "only if " + edge.getRestrictionString( !edge.isNeed() );
+                   if ( edge.isRepeating() ) {
+                       labelTooltip += (hasRestrictions ? " - repeat" : "repeat");
+                   }
                 } else {
-                    labelTooltip = sanitize( edge.getName() );
+                    labelTooltip += sanitize( edge.getName() );
                 }
                 list.add( new DOTAttribute( "labeltooltip", labelTooltip ) );
                 String edgeTooltip;
@@ -404,7 +413,10 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                         edgeTooltip += " - only if " + edge.getRestrictionString( !edge.isNeed() );
                     }
                     if ( edge.isReceiptConfirmationRequested() ) {
-                        edgeTooltip += " - request receipt confirmation ";
+                        edgeTooltip += " - receipt confirmation requested";
+                    }
+                    if ( edge.isRepeating() ) {
+                        edgeTooltip += " - repeat";
                     }
                     edgeTooltip = sanitize( edgeTooltip );
                 }
