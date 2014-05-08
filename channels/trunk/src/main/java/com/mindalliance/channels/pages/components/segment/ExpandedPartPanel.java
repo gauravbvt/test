@@ -721,8 +721,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addCyclePanel();
-                target.add( repeatsEveryPanel );
+                addTimingFields();
+                target.add( timingContainer );
                 update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
             }
         } );
