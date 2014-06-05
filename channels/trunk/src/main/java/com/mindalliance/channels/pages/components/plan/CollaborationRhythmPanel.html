@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div>
+    <div style="margin-bottom: 10px">
         View
         <select wicket:id="timeUnits">
             <option>Hourly</option>
@@ -28,30 +28,34 @@
     <div wicket:id="noRepeatingTasks">
         <span wicket:id="noRepeating">There are no daily repeating tasks</span>
     </div>
-    <table wicket:id="rhythmTable">
-        <tr>
-            <th class="segment-column">Segments</th>
-            <th>Any <span wicket:id="subTimeUnit">hour</span></th>
-            <th wicket:id="tranches"><span wicket:id="tranche">9AM</span></th>
-            <!-- repeated -->
-        </tr>
-        <tr wicket:id="segmentRows"> <!-- repeated -->
-            <td><span wicket:id="segment">A segment name</span></td>
-            <td>
-                <ul>
-                    <li wicket:id="anytimeTasks"> <!-- repeated -->
-                        <span wicket:id="taskLink">[link to task]</span>
-                    </li>
-                </ul>
-            </td>
-            <td wicket:id="segmentTranches"> <!-- repeated -->
-                <ul>
-                    <li wicket:id="trancheTasks"><!-- repeated -->
-                        <span wicket:id="taskLink">[link to task]</span>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+    <table wicket:id="rhythmTable" class="data-table">
+        <thead>
+            <tr class="headers">
+                <th class="segment-column">Segments</th>
+                <th style="text-align:center">Any <span wicket:id="subTimeUnit">hour</span></th>
+                <th wicket:id="tranches" style="text-align:center"><span wicket:id="tranche">9AM</span></th>
+                <!-- repeated -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr wicket:id="segmentRows"> <!-- repeated -->
+                <td><span wicket:id="segment">A segment name</span></td>
+                <td>
+                    <ul style="list-style-type: none">
+                        <li wicket:id="anytimeTasks"> <!-- repeated -->
+                            <span wicket:id="taskLink">[link to task]</span>
+                        </li>
+                    </ul>
+                </td>
+                <td wicket:id="segmentTranches"> <!-- repeated -->
+                    <ul style="list-style-type: none">
+                        <li wicket:id="trancheTasks"><!-- repeated -->
+                            <span wicket:id="taskLink">[link to task]</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
     </table>
 </wicket:panel>
 </body>
