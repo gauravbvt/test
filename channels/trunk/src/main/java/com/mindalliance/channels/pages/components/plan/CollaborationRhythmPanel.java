@@ -39,7 +39,8 @@ import java.util.Set;
  */
 public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
 
-    private static String ANY = "any";
+    private static String ANYPHASE = "ALL PHASES";
+    private static String ANYEVENT = "ALL EVENTS";
 
     private TimeUnit timeUnit = TimeUnit.Day;
     private Phase phase = Phase.UNKNOWN;
@@ -135,7 +136,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                     @Override
                     public Object getDisplayValue( Phase p ) {
                         return p.isUnknown()
-                                ? ANY
+                                ? ANYPHASE
                                 : p.getLabel();
                     }
                 }
@@ -158,7 +159,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                     @Override
                     public Object getDisplayValue( Event e ) {
                         return e.isUnknown()
-                                ? ANY
+                                ? ANYEVENT
                                 : e.getLabel();
                     }
                 }

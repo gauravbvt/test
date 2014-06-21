@@ -4118,4 +4118,111 @@ div.newAssetField {
     margin-bottom: 5px;
 }
 
+/* ----- Collab Rhythm ----- */
 
+div.collab-rhythm.controls {
+    padding: 20px 20px 10px;
+}
+
+div.collab-rhythm.controls select.phase {
+    margin: 0 10px 0 0;
+    padding: 5px;
+    width: 100px;
+}
+
+div.collab-rhythm.controls select.event {
+    padding: 5px;
+    width: 200px;
+}
+
+div.collab-rhythm.controls ul.date {
+    display: block;
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 0;
+    border: 1px solid #cccccc;
+}
+
+div.collab-rhythm.controls ul.date li {
+    display: block;
+    float: left;
+}
+
+div.collab-rhythm.controls ul.date li a {
+    background: #e4eefe;
+    color: #666666;
+    display: block;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+
+div.collab-rhythm.controls ul.date li a:hover,
+div.collab-rhythm.controls ul.date li a.active {
+    background: #c3d9ff;
+    color: #333333;
+}
+
+div.rhythm-table-cont {
+	padding: 10px 20px 20px 20px;
+}
+
+table.data-table.collab-rhythm {
+    border-top: none;
+    table-layout: fixed;
+}
+
+table.data-table.collab-rhythm tr.headers {
+	background: none;
+}
+
+table.data-table.collab-rhythm tr.headers th {
+    border-bottom: 1px solid #ccc;
+    color: #666666;
+    font-size: 12px;
+    line-height: 300%;
+    padding: 0 0 0 10px;
+    text-align: left;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+table.data-table.collab-rhythm tr.headers th:first-child {
+    padding: 0 10px;
+}
+
+table.data-table.collab-rhythm td {
+    color: #333333;
+    line-height: 150%;
+    padding: 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 5px solid #f3f3f3;
+}
+
+table.data-table.collab-rhythm td.active {
+    background: none repeat scroll 0 0 #e8e8e8;
+    border-right: 5px solid #f3f3f3;
+}
+
+table.data-table.collab-rhythm td.active:hover {
+	background: #cccccc;
+}
+
+table.data-table.collab-rhythm td:first-child {
+    padding: 10px;
+    font-weight: bold;
+}
+
+table.data-table.collab-rhythm tr td ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	line-height: 150%;
+}
+
+table.data-table.collab-rhythm tr td ul li {
+	margin: 0;
+	padding: 0;
+	display: block;
+}
