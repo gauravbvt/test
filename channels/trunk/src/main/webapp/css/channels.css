@@ -4240,8 +4240,16 @@ table.data-table.collab-rhythm tr td ul {
 	line-height: 150%;
 }
 
-table.data-table.collab-rhythm tr td ul li {
+table.data-table.collab-rhythm tr td ul li:first-child {
 	margin: 0;
 	padding: 0;
+	display: block;
+	border: none;
+}
+
+table.data-table.collab-rhythm tr td ul li {
+    border-top: 1px solid #c7c8ca;
+    margin: 7px 0 0 0;
+    padding: 7px 0 0 0;
 	display: block;
 }
