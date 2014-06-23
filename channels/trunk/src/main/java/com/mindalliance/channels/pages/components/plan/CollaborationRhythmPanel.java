@@ -273,16 +273,18 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                 addSegmentTrancheTasks( segment, item );
             }
         };
-        if ( !tranches.isEmpty() ) {
-            tranchesListView.add( new AttributeModifier( "class", "active" ) );
-        }
         segmentRowItem.add( tranchesListView );
     }
 
     private void addSegmentTrancheTasks( Segment segment, ListItem<Tranche> item ) {
+        List<Part> segmentTrancheParts = findPartsInSegmentAndTranche( segment, item.getModelObject() );
+        WebMarkupContainer trancheTasksContainer = new WebMarkupContainer( "trancheTasksContainer" );
+        if ( !segmentTrancheParts.isEmpty() ) {
+            trancheTasksContainer.add( new AttributeModifier( "class", "active" ) );
+        }
         ListView<Part> segmentTranchePartsListView = new ListView<Part>(
                 "trancheTasks",
-                findPartsInSegmentAndTranche( segment, item.getModelObject() )
+                segmentTrancheParts
         ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
@@ -293,7 +295,8 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                 addTipTitle( item, item.getModelObject().getName() );
             }
         };
-        item.add( segmentTranchePartsListView );
+        trancheTasksContainer.add( segmentTranchePartsListView );
+        item.add( trancheTasksContainer );
     }
 
     public TimeUnit getTimeUnit() {

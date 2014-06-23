@@ -123,7 +123,7 @@ public class Event extends ModelEntity implements GeoLocatable {
         StringBuilder sb = new StringBuilder(  );
         sb.append( getName() );
         if ( scope != null ) {
-            sb.append( " in " );
+            sb.append( " - " );
             sb.append( scope.getName() );
         }
         return sb.toString();

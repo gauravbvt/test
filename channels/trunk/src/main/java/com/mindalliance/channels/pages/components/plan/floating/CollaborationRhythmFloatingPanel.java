@@ -41,7 +41,7 @@ public class CollaborationRhythmFloatingPanel extends AbstractFloatingCommandabl
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Collaboration rhythm" ) );
+                "Collaboration rhythm - Tasks" ) );
     }
 
     private void addCollaborationRhythmPanel() {
@@ -51,7 +51,7 @@ public class CollaborationRhythmFloatingPanel extends AbstractFloatingCommandabl
 
     @Override
     protected String getTitle() {
-        return "Collaboration rhythm";
+        return "Collaboration rhythm - Tasks";
     }
 
     @Override

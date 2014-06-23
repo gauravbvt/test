@@ -45,20 +45,22 @@
         	        <td>
             	    	<span wicket:id="segment">A segment name</span>
                 	</td>
-	                <td wicket:id="anytimeTasksContainer"> <!-- Class "active" only if there is content inside this td -->
+	                <td wicket:id="anytimeTasksContainer"> <!-- Class "active" only if there is content inside -->
     	                <ul>
         	                <li wicket:id="anytimeTasks"> <!-- repeated -->
             	                <span wicket:id="taskLink">[link to task]</span>
                 	        </li>
                     	</ul>
 	                </td>
-    	            <td wicket:id="segmentTranches"> <!-- repeated -->   <!-- class = "active" only if there is content inside this td -->
-        	            <ul>
-            	            <li wicket:id="trancheTasks"><!-- repeated -->
-                	            <span wicket:id="taskLink">[link to task]</span>
-                    	    </li>
-	                   	</ul>
-    	            </td>
+    	            <span wicket:id="segmentTranches"> <!-- repeated -->
+                        <td wicket:id="trancheTasksContainer"> <!-- class = "active" only if there is content inside -->
+                            <ul>
+                                <li wicket:id="trancheTasks"><!-- repeated -->
+                                    <span wicket:id="taskLink">[link to task]</span>
+                                </li>
+                            </ul>
+    	                </td>
+                    </span>
         	    </tr>
         	</tbody>
     	</table>
