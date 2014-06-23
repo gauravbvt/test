@@ -11,8 +11,10 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -52,6 +54,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
     private List<Part> filteredRepeatingParts;
     private List<Segment> allSegments;
     private List<Tranche> allTranches;
+    private WebMarkupContainer filtersContainer;
 
 
     public CollaborationRhythmPanel( String id ) {
@@ -66,6 +69,9 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
     }
 
     private void addFilters() {
+        filtersContainer = new WebMarkupContainer( "filters" );
+        filtersContainer.setOutputMarkupId( true );
+        addOrReplace( filtersContainer );
         addTimeUnitChoice();
         addPhasesChoice();
         addEventsChoice();
@@ -80,41 +86,46 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
     }
 
     private String makeNoRepeatingTaskMessage() {
-        StringBuilder sb = new StringBuilder(  );
-        sb.append( "There are no ")
+        StringBuilder sb = new StringBuilder();
+        sb.append( "There are no " )
                 .append( timeUnit.asAdverb() )
-                .append( " repeating tasks");
+                .append( " repeating tasks" );
         if ( !phase.isUnknown() ) {
-            sb.append( " in the phase - ")
+            sb.append( " in the phase - " )
                     .append( phase.getLabel() );
         }
         if ( !event.isUnknown() ) {
-            sb.append( phase.isUnknown() ? " for " : ", of ")
-                    .append( "the event - ")
+            sb.append( phase.isUnknown() ? " for " : ", of " )
+                    .append( "the event - " )
                     .append( event.getLabel() );
         }
         return sb.toString();
     }
 
     private void addTimeUnitChoice() {
-        DropDownChoice<TimeUnit> timeUnitChoice = new DropDownChoice<TimeUnit>(
+        ListView<TimeUnit> timeUnitListView = new ListView<TimeUnit>(
                 "timeUnits",
-                new PropertyModel<TimeUnit>( this, "timeUnit" ),
-                new PropertyModel<List<TimeUnit>>( this, "timeUnits" ),
-                new ChoiceRenderer<TimeUnit>() {
-                    @Override
-                    public Object getDisplayValue( TimeUnit tu ) {
-                        return tu.asAdverb();
-                    }
-                }
-        );
-        timeUnitChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                new PropertyModel<List<TimeUnit>>( this, "timeUnits" ) ) {
             @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                refreshPanel( target );
+            protected void populateItem( ListItem<TimeUnit> item ) {
+                final TimeUnit tu = item.getModelObject();
+                AjaxLink<String> timeUnitLink = new AjaxLink<String>( "timeUnitLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        setTimeUnit( tu );
+                        addFilters();
+                        target.add( filtersContainer );
+                        refreshPanel( target );
+                    }
+                };
+                if ( tu.equals( getTimeUnit() ) ) {
+                    timeUnitLink.add( new AttributeModifier( "class", "active" ) );
+                }
+                timeUnitLink.add( new Label( "timeUnit", tu.asAdverb() ) );
+                item.add( timeUnitLink );
             }
-        } );
-        add( timeUnitChoice );
+        };
+        filtersContainer.add( timeUnitListView );
     }
 
     private void refreshPanel( AjaxRequestTarget target ) {
@@ -147,7 +158,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                 refreshPanel( target );
             }
         } );
-        add( phaseChoice );
+        filtersContainer.add( phaseChoice );
     }
 
     private void addEventsChoice() {
@@ -170,7 +181,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                 refreshPanel( target );
             }
         } );
-        add( eventChoice );
+        filtersContainer.add( eventChoice );
     }
 
     private void addRhythmTable() {
@@ -213,9 +224,15 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
 
     private void addAnyTimeTasks( ListItem<Segment> segmentRowItem ) {
         Segment segment = segmentRowItem.getModelObject();
+        List<Part> anytimeTasks = findAnytimePartsIn( segment );
+        WebMarkupContainer anytimeTasksContainer = new WebMarkupContainer( "anytimeTasksContainer" );
+        if ( !anytimeTasks.isEmpty() ) {
+            anytimeTasksContainer.add( new AttributeModifier( "class", "active" ) );
+        }
+        segmentRowItem.add( anytimeTasksContainer );
         ListView<Part> anytimePartsListView = new ListView<Part>(
                 "anytimeTasks",
-                findAnytimePartsIn( segment )
+                anytimeTasks
         ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
@@ -223,13 +240,14 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                         "taskLink",
                         item.getModel(),
                         new Model<String>( textFor( item.getModelObject() ) ) ) );
+                addTipTitle( item, item.getModelObject().getName() );
             }
         };
-        segmentRowItem.add( anytimePartsListView );
+        anytimeTasksContainer.add( anytimePartsListView );
     }
 
     private String textFor( Part part ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         sb.append( part.getTask() );
         int skip = part.getCycle().getSkip();
         if ( skip > 1 ) {
@@ -238,22 +256,26 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                     .append( " " )
                     .append( timeUnit.name().toLowerCase() )
                     .append( skip == 2 ? "" : "s" );
-            sb.append( ")");
+            sb.append( ")" );
         }
         return sb.toString();
     }
 
     private void addTrancheTasks( ListItem<Segment> segmentRowItem ) {
         final Segment segment = segmentRowItem.getModelObject();
+        List<Tranche> tranches = findAllTranches();
         ListView<Tranche> tranchesListView = new ListView<Tranche>(
                 "segmentTranches",
-                findAllTranches()
+                tranches
         ) {
             @Override
             protected void populateItem( ListItem<Tranche> item ) {
                 addSegmentTrancheTasks( segment, item );
             }
         };
+        if ( !tranches.isEmpty() ) {
+            tranchesListView.add( new AttributeModifier( "class", "active" ) );
+        }
         segmentRowItem.add( tranchesListView );
     }
 
@@ -268,6 +290,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                         "taskLink",
                         item.getModel(),
                         new Model<String>( textFor( item.getModelObject() ) ) ) );
+                addTipTitle( item, item.getModelObject().getName() );
             }
         };
         item.add( segmentTranchePartsListView );
@@ -327,7 +350,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         return results;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Part> findRepeatingParts() {
         if ( repeatingParts == null ) {
             repeatingParts = (List<Part>) CollectionUtils.select(
@@ -343,7 +366,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         return repeatingParts;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Part> findFilteredRepeatingParts() {
         if ( filteredRepeatingParts == null ) {
             filteredRepeatingParts = (List<Part>) CollectionUtils.select(
@@ -389,7 +412,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         return allSegments;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Part> findPartsIn( final Segment segment ) {
         return (List<Part>) CollectionUtils.select(
                 findFilteredRepeatingParts(),
@@ -403,7 +426,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Part> findAnytimePartsIn( final Segment segment ) {
         return (List<Part>) CollectionUtils.select(
                 findPartsIn( segment ),
@@ -417,7 +440,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Part> findPartsInSegmentAndTranche( Segment segment, final Tranche tranche ) {
         return (List<Part>) CollectionUtils.select(
                 findPartsIn( segment ),

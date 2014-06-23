@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
-	<div class="collab-rhythm controls">
+	<div wicket:id= "filters" class="collab-rhythm controls">
         <select wicket:id="phases" class="phase">
             <option>PHASE</option>
             <option>Responding</option>
@@ -16,42 +16,13 @@
             <option>EVENT</option>
             <option>Bomb threat</option>
         </select>
-		<ul class="date">   <!-- RC: Need to get this activated -->
-			<li>
-				<a href="#">Hourly</a>
-			</li>
-			<li>
-				<a href="#" class="active">Daily</a>  <!-- RC: Selected link gets an "active" class -->
-			</li>
-			<li>
-				<a href="#">Weekly</a>
-			</li>
-			<li>
-				<a href="#">Monthly</a>
-			</li>
-			<li>
-				<a href="#">Yearly</a>
+		<ul class="date">
+			<li wicket:id="timeUnits"> <!-- repeated -->
+				<a href="#" wicket:id="timeUnitLink"><span wicket:id="timeUnit">Hourly</span></a> <!-- class="active" when selected-->
 			</li>
 		</ul>
 	</div>
-    <div style="margin-bottom: 10px; display:none;">  <!-- RC: Need to get this removed -->
-        View
-        <select wicket:id="timeUnits">
-            <option>Hourly</option>
-            <options>Daily</options>
-        </select>
-        tasks in
-        <select>
-            <option>All</option>
-            <option>Responding</option>
-        </select>
-        phase of
-        <select>
-            <option>All</option>
-            <option>Bomb threat</option>
-        </select>
-        event
-    </div>
+
     <div class="collab-rhythm note" wicket:id="noRepeatingTasks">
         <span wicket:id="noRepeating">There are no daily repeating tasks</span>
     </div>
@@ -74,14 +45,14 @@
         	        <td>
             	    	<span wicket:id="segment">A segment name</span>
                 	</td>
-	                <td class="active"> <!-- RC: Need a class "active" only if there is content inside this td -->
+	                <td wicket:id="anytimeTasksContainer"> <!-- Class "active" only if there is content inside this td -->
     	                <ul>
         	                <li wicket:id="anytimeTasks"> <!-- repeated -->
             	                <span wicket:id="taskLink">[link to task]</span>
                 	        </li>
                     	</ul>
 	                </td>
-    	            <td class="active" wicket:id="segmentTranches"> <!-- repeated -->   <!-- RC: Need a class "active" only if there is content inside this td -->
+    	            <td wicket:id="segmentTranches"> <!-- repeated -->   <!-- class = "active" only if there is content inside this td -->
         	            <ul>
             	            <li wicket:id="trancheTasks"><!-- repeated -->
                 	            <span wicket:id="taskLink">[link to task]</span>
