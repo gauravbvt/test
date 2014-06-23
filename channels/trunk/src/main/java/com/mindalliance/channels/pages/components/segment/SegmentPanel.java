@@ -778,7 +778,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     @SuppressWarnings("unchecked")
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         resizeSocialAndGuidePanels( target, change );
-        boolean stopUpdates = false;
+        boolean stopUpdates = ( change.isExpanded() || change.isCollapsed() ) && !isPartOrFlowUpdated();
         setPartOrFlowUpdated( isPartOrFlowUpdated()
                 || change.hasQualifier( "updated" ) && (Boolean) change.getQualifier( "updated" ) );
         if ( !change.isNone() ) {
@@ -817,7 +817,6 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                     setPartOrFlowUpdated( false );
                     target.add( flowMapDiagramPanel );
                 }
-                stopUpdates = ( change.isExpanded() || change.isCollapsed() ) && !isPartOrFlowUpdated();
             }
             if ( !change.isExists() )
                 refreshMenus( target );

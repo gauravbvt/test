@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.time.Cycle;
@@ -123,6 +124,7 @@ public class CyclePanel extends AbstractCommandablePanel {
                 target.add( tranchesField );
                 addOfEvery();
                 target.add( ofEveryLabel );
+                update( target, new Change( Change.Type.Updated, getCyclic(), cycleProperty ) );
             }
         } );
         addInputHint( tranchesField, getTranchesHint() );
@@ -169,6 +171,7 @@ public class CyclePanel extends AbstractCommandablePanel {
                 target.add( timeUnitDropDownChoice );
                 addSkip();
                 target.add( skipField );
+                update( target, new Change( Change.Type.Updated, getCyclic(), cycleProperty ) );
             }
         } );
         skipField.setOutputMarkupId( true );
@@ -202,6 +205,7 @@ public class CyclePanel extends AbstractCommandablePanel {
                 target.add( tranchesField );
                 target.add( ofEveryLabel );
                 target.add( summaryLabel );
+                update( target, new Change( Change.Type.Updated, getCyclic(), cycleProperty ) );
             }
         } );
         timeUnitDropDownChoice.setOutputMarkupId( true );
