@@ -85,12 +85,12 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
                 .append( timeUnit.asAdverb() )
                 .append( " repeating tasks");
         if ( !phase.isUnknown() ) {
-            sb.append( " in phase ")
+            sb.append( " in the phase - ")
                     .append( phase.getLabel() );
         }
         if ( !event.isUnknown() ) {
-            sb.append( phase.isUnknown() ? " for " : " of ")
-                    .append( "event ")
+            sb.append( phase.isUnknown() ? " for " : ", of ")
+                    .append( "the event - ")
                     .append( event.getLabel() );
         }
         return sb.toString();

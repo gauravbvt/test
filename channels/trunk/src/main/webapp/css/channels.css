@@ -4163,6 +4163,16 @@ div.collab-rhythm.controls ul.date li a.active {
     color: #333333;
 }
 
+div.collab-rhythm.note {
+    background: url("../images/warning.png") no-repeat scroll 15px 11px #e8e8e8;
+    border: 1px solid #ccc;
+    color: #333;
+    margin: 20px;
+    padding: 10px 40px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
 div.rhythm-table-cont {
 	padding: 10px 20px 20px 20px;
 }
@@ -4191,27 +4201,36 @@ table.data-table.collab-rhythm tr.headers th:first-child {
     padding: 0 10px;
 }
 
+table.data-table.collab-rhythm tr.even {
+	background: none;
+}
+
 table.data-table.collab-rhythm td {
     color: #333333;
     line-height: 150%;
     padding: 10px;
     text-transform: uppercase;
     cursor: pointer;
-    border-bottom: 5px solid #f3f3f3;
+    border-left: 1px solid #c7c8ca;
+    border-right: 1px solid #c7c8ca;
 }
 
 table.data-table.collab-rhythm td.active {
-    background: none repeat scroll 0 0 #e8e8e8;
-    border-right: 5px solid #f3f3f3;
+    background: #F3F3F3;
 }
 
 table.data-table.collab-rhythm td.active:hover {
-	background: #cccccc;
+	background: #E8E8E8;
 }
 
 table.data-table.collab-rhythm td:first-child {
     padding: 10px;
     font-weight: bold;
+    border-left: none;
+}
+
+table.data-table.collab-rhythm td:last-child {
+	border-right: none;
 }
 
 table.data-table.collab-rhythm tr td ul {

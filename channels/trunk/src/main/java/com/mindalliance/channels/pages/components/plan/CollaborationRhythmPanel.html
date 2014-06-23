@@ -52,7 +52,7 @@
         </select>
         event
     </div>
-    <div class="note" wicket:id="noRepeatingTasks">
+    <div class="collab-rhythm note" wicket:id="noRepeatingTasks">
         <span wicket:id="noRepeating">There are no daily repeating tasks</span>
     </div>
     <div class="rhythm-table-cont">
@@ -74,14 +74,14 @@
         	        <td>
             	    	<span wicket:id="segment">A segment name</span>
                 	</td>
-	                <td> <!-- RC: Need a class "active" if there is content inside this td -->
+	                <td class="active"> <!-- RC: Need a class "active" only if there is content inside this td -->
     	                <ul>
         	                <li wicket:id="anytimeTasks"> <!-- repeated -->
             	                <span wicket:id="taskLink">[link to task]</span>
                 	        </li>
                     	</ul>
 	                </td>
-    	            <td wicket:id="segmentTranches"> <!-- repeated -->   <!-- RC: Need a class "active" if there is content inside this td -->
+    	            <td class="active" wicket:id="segmentTranches"> <!-- repeated -->   <!-- RC: Need a class "active" only if there is content inside this td -->
         	            <ul>
             	            <li wicket:id="trancheTasks"><!-- repeated -->
                 	            <span wicket:id="taskLink">[link to task]</span>
