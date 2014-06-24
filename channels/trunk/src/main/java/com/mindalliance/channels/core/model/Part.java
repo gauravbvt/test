@@ -290,8 +290,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return getRepeatsEvery();
     }
 
-    public void setRepeatsEvery( Cycle repeatsEvery ) {
-        this.repeatsEvery = new Cycle( repeatsEvery );
+    public void setRepeatsEvery( Cycle cycle ) {
+        this.repeatsEvery = cycle == null ? null : new Cycle( cycle );
     }
 
     public Category getCategory() {
@@ -369,9 +369,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      */
     public void setRepeating( boolean val ) {
         if ( !val ) {
-            repeatsEvery = null;
+            setRepeatsEvery( null );
         } else {
-            repeatsEvery = new Cycle();
+            setRepeatsEvery( new Cycle() );
         }
     }
 

@@ -739,6 +739,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             repeatsEveryPanel = new Label( "repeats-every", "" );
         }
         makeVisible( repeatsEveryPanel, getPart().isRepeating() );
+        repeatsEveryPanel.setOutputMarkupId( true );
         timingContainer.addOrReplace( repeatsEveryPanel );
     }
 
