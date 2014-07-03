@@ -168,6 +168,27 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return task;
     }
 
+    public String getTaskLabel() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getTask() );
+        List<Tag> visibleTags = getVisibleTags();
+        if ( !visibleTags.isEmpty() )
+
+        {
+            Iterator<Tag> iter = visibleTags.iterator();
+            sb.append( " (" );
+            while ( iter.hasNext() ) {
+                Tag tag = iter.next();
+                sb.append( tag.getName() );
+                if ( iter.hasNext() )
+                    sb.append( ", " );
+            }
+            sb.append( ")" );
+        }
+        return sb.toString();
+    }
+
+
     public void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK : task;
     }
@@ -447,7 +468,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of goals
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Goal> getMitigations() {
         return (List<Goal>) CollectionUtils.select( goals, new Predicate() {
             @Override
@@ -517,7 +538,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Iterator<Flow> sendsNamed( final String name ) {
         return new FilterIterator( sends(), new Predicate() {
             @Override
@@ -534,7 +555,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Iterator<Flow> receivesNamed( final String name ) {
         return new FilterIterator( receives(), new Predicate() {
             @Override
@@ -770,7 +791,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( receives() ), new Predicate() {
             @Override
@@ -785,7 +806,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
      *
      * @return a list of flows
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getCapabilities() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( sends() ), new Predicate() {
             @Override
@@ -846,7 +867,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public List<Flow> getAllNonInitiatedSharingFlows() {
-        List<Flow> flows = new ArrayList<Flow>(  );
+        List<Flow> flows = new ArrayList<Flow>();
         for ( Flow flow : getAllSharingReceives() ) {
             if ( flow.isNotification() )
                 flows.add( flow );
@@ -859,7 +880,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public List<Flow> getAllInitiatedSharingFlows() {
-        List<Flow> flows = new ArrayList<Flow>(  );
+        List<Flow> flows = new ArrayList<Flow>();
         for ( Flow flow : getAllSharingReceives() ) {
             if ( flow.isAskedFor() )
                 flows.add( flow );
@@ -1002,7 +1023,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return state;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         super.initFromMap( state, communityService );
         ModelService modelService = communityService.getModelService();
@@ -1219,7 +1240,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Flow> getAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
         allFlows.addAll( (List<Flow>) IteratorUtils.toList( receives() ) );
@@ -1268,7 +1289,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         return !findDependentReceives( infoProduct, queryService ).isEmpty();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Flow> findDependentReceives( final InfoProduct infoProduct, final QueryService queryService ) {
         return (List<Flow>) CollectionUtils.select(
                 getAllSharingReceives(),
@@ -1286,7 +1307,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private boolean dependsOnInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
         return !findDependentReceives( infoFormat, queryService ).isEmpty();
     }
@@ -1606,13 +1627,13 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     public AssetConnections findAllProvisionAssetConnections() {
         AssetConnections assetConnections = new AssetConnections();
         for ( Flow sharing : getAllSharingSends() ) {
-                assetConnections.addAll( sharing.getAssetConnections().provisioning().getAll() );
+            assetConnections.addAll( sharing.getAssetConnections().provisioning().getAll() );
         }
         return assetConnections;
     }
 
     public AssetConnections getNonInitiatedAssetConnections() {
-        AssetConnections nonInitiatedConnections = new AssetConnections(  );
+        AssetConnections nonInitiatedConnections = new AssetConnections();
         for ( Flow flow : getAllNonInitiatedSharingFlows() ) {
             nonInitiatedConnections.addAll( flow.getAssetConnections().getAll() );
         }
@@ -1620,7 +1641,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public AssetConnections getInitiatedAssetConnections() {
-        AssetConnections initiatedConnections = new AssetConnections(  );
+        AssetConnections initiatedConnections = new AssetConnections();
         for ( Flow flow : getAllInitiatedSharingFlows() ) {
             initiatedConnections.addAll( flow.getAssetConnections().getAll() );
         }
@@ -1628,18 +1649,18 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public List<MaterialAsset> findNeededAssets() {
-        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
+        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>();
         assetsNeeded.addAll( findAssetsUsed() );
         assetsNeeded.addAll( getSharingSentAssetConnections().provisioning().getAllAssets() ); // provisioning to other parts
         List<MaterialAsset> assetsProduced = getAssetConnections().producing().getAllAssets();
-        List<MaterialAsset> assetsReallyNeeded = new ArrayList<MaterialAsset>(  );
+        List<MaterialAsset> assetsReallyNeeded = new ArrayList<MaterialAsset>();
         for ( final MaterialAsset assetNeeded : assetsNeeded ) {
             boolean produced = CollectionUtils.exists(
                     assetsProduced,
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return ((MaterialAsset)object).narrowsOrEquals( assetNeeded );
+                            return ( (MaterialAsset) object ).narrowsOrEquals( assetNeeded );
                         }
                     }
             );
@@ -1650,7 +1671,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     private AssetConnections getSharingSentAssetConnections() {
-        AssetConnections initiatedConnections = new AssetConnections(  );
+        AssetConnections initiatedConnections = new AssetConnections();
         for ( Flow flow : getAllSharingSends() ) {
             initiatedConnections.addAll( flow.getAssetConnections().getAll() );
         }
@@ -1658,7 +1679,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public List<MaterialAsset> findAssetsUsed() {
-        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>(  );
+        Set<MaterialAsset> assetsNeeded = new HashSet<MaterialAsset>();
         // assets used by the execution of the task
         assetsNeeded.addAll( getAssetConnections().using().getAllAssets() );
         // assets needed for communications
@@ -1674,7 +1695,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         }
         return new ArrayList<MaterialAsset>( assetsNeeded );
     }
-
 
     /**
      * Category of tasks.

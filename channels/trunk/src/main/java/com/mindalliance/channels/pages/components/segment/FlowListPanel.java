@@ -333,16 +333,20 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        change.addQualifier( "updated", isSelectedFlowUpdated() );
-        target.appendJavaScript( ModelPage.IE7CompatibilityScript );
-        if ( change.isSelected() || change.isDisplay() || change.isAdded() || change.isUpdated() ) {
-            refreshMenus( target );
-            if ( !change.isUpdated() ) target.add( flowsDiv );
-        }
-        if ( !change.isSelected() )
+        if ( change.isForInstanceOf( Flow.class ) ) {
+            change.addQualifier( "updated", isSelectedFlowUpdated() );
+            target.appendJavaScript( ModelPage.IE7CompatibilityScript );
+            if ( change.isSelected() || change.isDisplay() || change.isAdded() || change.isUpdated() ) {
+                refreshMenus( target );
+                if ( !change.isUpdated() ) target.add( flowsDiv );
+            }
+            if ( !change.isSelected() )
+                super.updateWith( target, change, updated );
+            if ( change.isDisplay() ) {
+                setSelectedFlowUpdated( false );
+            }
+        } else {
             super.updateWith( target, change, updated );
-        if ( change.isDisplay() ) {
-            setSelectedFlowUpdated( false );
         }
     }
 

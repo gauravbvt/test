@@ -34,7 +34,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
     private void addSummaryLabels( ) {
         Label preLabel = new Label( "pre", new Model<String>( getPre() ) );
         add( preLabel );
-        Label infoLabel = new Label( "task", new Model<String>( getTask() ) );
+        Label infoLabel = new Label( "task", new Model<String>( getTaskInfo() ) );
         add( infoLabel );
         Label postLabel = new Label( "post", new Model<String>( getPost() ) );
         add( postLabel );
@@ -87,11 +87,11 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         return sb.toString();
     }
 
-    private String getTask() {
-        String task = getPart().getTask();
+    private String getTaskInfo() {
+        String task = getPart().getTaskLabel();
         Part.Category category = getPart().getCategory();
         if ( category != null ) {
-            task += " (" + category.getLabel().toLowerCase() + ")";
+            task += " -" + category.getLabel().toLowerCase() + "-";
         }
         return task;
     }

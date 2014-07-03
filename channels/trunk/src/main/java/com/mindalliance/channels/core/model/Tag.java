@@ -19,6 +19,8 @@ public class Tag implements Nameable, Comparable<Tag> {
     /** Tag separator */
     public static final String SEPARATOR = ",";
 
+    public static final String VISIBILITY_SUFFIX = "*";
+
     private static final Collator CollatorInstance = Collator.getInstance();
 
     private final String name;
@@ -105,5 +107,24 @@ public class Tag implements Nameable, Comparable<Tag> {
 
     public static List<Tag> copy( List<Tag> tags ) {
         return tagsFromString( tagsToString( tags) );
+    }
+
+    public boolean isVisible() {
+        return name.endsWith( VISIBILITY_SUFFIX );
+    }
+
+    public Tag normalize() {
+        return isVisible()
+                ? new Tag( stripVisibilitySuffix() )
+                : this;
+    }
+
+    private String stripVisibilitySuffix() {
+        int i = name.lastIndexOf( VISIBILITY_SUFFIX );
+        if ( i > 0 ) {
+            return name.substring( 0, i );
+        } else {
+            return name;
+        }
     }
 }

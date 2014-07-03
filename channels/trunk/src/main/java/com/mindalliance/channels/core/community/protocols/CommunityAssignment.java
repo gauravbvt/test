@@ -110,7 +110,8 @@ public class CommunityAssignment implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( communityEmployment.toString() );
         sb.append( ", doing task \"" );
-        sb.append( part.getTask() );
+        sb.append( part.getTaskLabel
+                () );
         sb.append( '\"' );
         return sb.toString();
     }

@@ -38,7 +38,7 @@ public class SharedInformationData implements Serializable {
 
     @XmlElement
     public String getName() {
-        return StringEscapeUtils.escapeXml( sharing.getName() );
+        return StringEscapeUtils.escapeXml( sharing.getLabel() );
     }
 
     @XmlElement( name = "eoi" )

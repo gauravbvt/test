@@ -3152,9 +3152,9 @@ public abstract class DefaultQueryService implements QueryService {
         }
         if ( !label.isEmpty() )
             label += sep;
-        label += part.getTask();
+        label += part.getTaskLabel();
         if ( part.isRepeating() ) {
-            label += " (repeats)";
+            label += " - repeats";
         }
         return label;
     }
@@ -3189,7 +3189,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
         if ( !label.isEmpty() )
             label += " - ";
-        label += part.getTask();
+        label += part.getTaskLabel();
         if ( part.isRepeating() ) {
             label += " (every " + part.getRepeatsEvery() + ")";
         }
@@ -3211,7 +3211,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
         if ( !label.isEmpty() )
             label += sep;
-        label += ChannelsUtils.split( part.getTask(), sep, 3, maxLineLength );
+        label += ChannelsUtils.split( part.getTaskLabel(), sep, 3, maxLineLength );
         return label;
     }
 

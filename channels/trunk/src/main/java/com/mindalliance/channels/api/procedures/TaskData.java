@@ -150,7 +150,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getName() {
-        return StringEscapeUtils.escapeXml( getPart().getTask() );
+        return StringEscapeUtils.escapeXml( getPart().getTaskLabel() );
     }
 
     @XmlElement
@@ -261,7 +261,7 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     public String getLabel() {
-        return getPart().getTask();
+        return getPart().getTaskLabel();
     }
 
     public Level getFailureSeverity() {

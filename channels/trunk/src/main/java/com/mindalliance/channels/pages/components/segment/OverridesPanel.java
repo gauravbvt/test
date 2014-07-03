@@ -123,7 +123,7 @@ public class OverridesPanel  extends AbstractFloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getPart().getTask() + " - overrides";
+        return getPart().getTaskLabel() + " - overrides";
     }
 
     /**

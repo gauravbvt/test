@@ -70,7 +70,7 @@ public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getPart().getTask() + " - assignments";
+        return getPart().getTaskLabel() + " - assignments";
     }
 
     private void addAbout() {

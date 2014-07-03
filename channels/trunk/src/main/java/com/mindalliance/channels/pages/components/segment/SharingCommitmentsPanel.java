@@ -65,10 +65,10 @@ public class SharingCommitmentsPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void addAbout() {
-        Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
+        Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTaskLabel() ) );
         fromTask.setOutputMarkupId( true );
         getContentContainer().addOrReplace( fromTask );
-        Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
+        Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTaskLabel() ) );
         toTask.setOutputMarkupId( true );
         getContentContainer().addOrReplace( toTask );
     }

@@ -248,7 +248,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
 
     private String textFor( Part part ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( part.getTask() );
+        sb.append( part.getTaskLabel() );
         int skip = part.getCycle().getSkip();
         if ( skip > 1 ) {
             sb.append( " (every " );

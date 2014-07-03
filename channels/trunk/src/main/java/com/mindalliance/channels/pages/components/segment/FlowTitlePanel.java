@@ -130,7 +130,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private String getInfo() {
-        String message = flow.getName();
+        String message = flow.getLabel();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
         Flow.Intent intent = flow.getIntent();

@@ -153,6 +153,24 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getName() );
+        List<Tag> visibleTags = getVisibleTags();
+        if ( !visibleTags.isEmpty() ) {
+            Iterator<Tag> iter = visibleTags.iterator();
+            sb.append( " (" );
+            while ( iter.hasNext() ) {
+                Tag tag = iter.next();
+                sb.append( tag.getName() );
+                if ( iter.hasNext() )
+                    sb.append( ", " );
+            }
+            sb.append( ")" );
+        }
+        return sb.toString();
+    }
+
     @Override
     public String getClassLabel() {
         return classLabel();
@@ -534,7 +552,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String result = "somebody";
 
         if ( node != null ) {
-            String sourceName = node.getName();
+            String sourceName = node.getLabel();
             if ( sourceName != null && !sourceName.trim().isEmpty() ) {
                 result = sourceName;
             }
@@ -552,7 +570,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return the description
      */
     public String getTitle() {
-        String message = getName();
+        String message = getLabel();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
 
@@ -571,7 +589,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return the description
      */
     public String getStepTitle( boolean prerequisite, boolean answer ) {
-        String message = getName();
+        String message = getLabel();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
         StringBuilder sb = new StringBuilder();
@@ -628,7 +646,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public String getReceiveTitle() {
         String title;
-        String message = getName();
+        String message = getLabel();
         if ( message == null || message.trim().isEmpty() )
             message = /*!isAskedFor() && isTriggeringToTarget() ? "do something" :*/ "something";
         if ( getIntent() != null ) {
@@ -679,7 +697,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public String getSendTitle() {
         if ( getTarget() == null ) return "";
         String title;
-        String message = getName();
+        String message = getLabel();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
         if ( getIntent() != null ) {
@@ -1949,20 +1967,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public Part getInitiatingPart() {
         assert isSharing();
         return isNotification()
-                ? (Part)getSource()
-                : (Part)getTarget();
+                ? (Part) getSource()
+                : (Part) getTarget();
     }
 
     public String getDescriptiveLabel() {
-        StringBuilder sb = new StringBuilder(  );
-        sb.append( isAskedFor() ? "request for " : "notification of ");
+        StringBuilder sb = new StringBuilder();
+        sb.append( isAskedFor() ? "request for " : "notification of " );
         if ( getIntent() != null ) {
             sb.append( getIntent().getLabel() )
                     .append( " " );
         }
-        sb.append( "\"")
-                .append( getName() )
-                .append( "\"");
+        sb.append( "\"" )
+                .append( getLabel() )
+                .append( "\"" );
         return sb.toString();
     }
 

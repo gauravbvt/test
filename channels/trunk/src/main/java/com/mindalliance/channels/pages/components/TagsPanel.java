@@ -45,7 +45,7 @@ public class TagsPanel extends AbstractCommandablePanel {
     }
 
     public TagsPanel( String id, IModel<? extends Taggable> iModel ) {
-        this( id, iModel, "tags" );
+        this( id, iModel, "rawTags" );
     }
 
     private void init() {
@@ -68,7 +68,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         } );
         tagsField.setEnabled( isLockedByUser( getTaggable() ) );
         addInputHint( tagsField, "Comma-separated tags" );
-        addTipTitle( tagsField, "Compose tags with ':' and separate them with ','. Example: 'esf:transportation, law enforcement, practiced'" );
+        addTipTitle( tagsField, "Compose tags with ':' and separate them with ','. Example: 'esf:transportation, law enforcement*, practiced'. Tags ending in '*' will be displayed." );
         add( tagsField );
     }
 

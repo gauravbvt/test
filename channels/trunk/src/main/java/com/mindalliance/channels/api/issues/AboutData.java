@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.issues;
 
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -62,7 +62,7 @@ public class AboutData  implements Serializable {
     @XmlElement
     public String getName() {
         String name =  modelObject instanceof Part
-                ? ((Part)modelObject).getTask()
+                ? ((Part)modelObject).getTaskLabel()
                 : modelObject.getName();
         return StringEscapeUtils.escapeXml( name );
     }

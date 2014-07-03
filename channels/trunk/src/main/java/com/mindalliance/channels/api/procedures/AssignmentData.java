@@ -163,7 +163,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getAssignment().getPart().getTask() );
+        sb.append( getAssignment().getPart().getTaskLabel() );
         sb.append( "\" as " );
         sb.append( getAssignment().getCommunityEmployment().getLabel() );
         return sb.toString();

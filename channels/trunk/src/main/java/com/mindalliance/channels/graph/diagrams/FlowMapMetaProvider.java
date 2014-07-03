@@ -139,7 +139,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
     }
 
     protected String getEdgeLabel( Flow flow, boolean highlighted ) {
-        String flowName = flow.getName();
+        String flowName = flow.getLabel();
  /*       if ( flow.isAskedFor() && !flowName.endsWith( "?" ) )
             flowName += "?";
 */

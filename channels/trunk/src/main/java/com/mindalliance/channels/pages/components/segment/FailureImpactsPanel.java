@@ -199,7 +199,7 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
         sb.append( "Impacts of failing" );
         sb.append( isTask() ? " task " : " to share information " );
         sb.append( "\"" );
-        sb.append( isTask() ? ( (Part) so ).getTask() : so.getName() );
+        sb.append( isTask() ? ( (Part) so ).getTaskLabel() : so.getName() );
         sb.append( "\"" );
         return sb.toString();
     }

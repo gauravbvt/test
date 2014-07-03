@@ -14,9 +14,21 @@ public interface Taggable extends Identifiable {
     /**
      * Get tags.
      *
-     * @return a list of tags
+     * @return a list of normalized tags
      */
     List<Tag> getTags();
+
+    /**
+     * Get all tagged marked for visibility in labels normalized
+     * @return a list of tags
+     */
+    List<Tag> getVisibleTags();
+
+    /**
+     * Get all tags as-is (with visibility suffixes if any)
+     * @return a list of tags
+     */
+    List<Tag> getRawTags();
 
     /**
      * Set tags from string.

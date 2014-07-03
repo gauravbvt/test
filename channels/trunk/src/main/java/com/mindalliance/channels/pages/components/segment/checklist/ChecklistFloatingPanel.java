@@ -59,7 +59,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void addPartTitle() {
-        getContentContainer().add( new Label( "partTitle", getPart().getTask() ) );
+        getContentContainer().add( new Label( "partTitle", getPart().getTaskLabel() ) );
     }
 
     private void addChecklistFlowIcon() {
@@ -100,7 +100,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
 
     @Override
     protected String getTitle() {
-        return getPart().getTask() + " - checklist";
+        return getPart().getTaskLabel() + " - checklist";
     }
 
     public Part getPart() {

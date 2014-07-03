@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.WordUtils;
 
 import java.text.Collator;
@@ -199,10 +200,47 @@ public abstract class ModelObject
 
     @Override
     public List<Tag> getTags() {
+        return  normalizedTags( tags );
+    }
+
+    @Override
+    public List<Tag> getRawTags() {
         return tags;
     }
 
+    @SuppressWarnings( "unchecked" )
+    private List<Tag> normalizedTags( List<Tag> tagList ) {
+        return  (List<Tag>) CollectionUtils.collect(
+                tagList,
+                new Transformer() {
+                    @Override
+                    public Object transform( Object object ) {
+                        return ((Tag)object).normalize();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public List<Tag> getVisibleTags() {
+        List<Tag> visibleTags = (List<Tag>) CollectionUtils.select(
+                tags,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Tag)object).isVisible();
+                    }
+                }
+        );
+        return normalizedTags( visibleTags );
+    }
+
     public void setTags( List<Tag> tags ) {
+        setRawTags( tags );
+    }
+
+    public void setRawTags( List<Tag> tags ) {
         this.tags = tags;
     }
 
@@ -542,7 +580,7 @@ public abstract class ModelObject
         Map<String, Object> state = new HashMap<String, Object>();
         state.put( "name", getName() );
         state.put( "description", getDescription() );
-        state.put( "tags", Tag.tagsToString( getTags() ) );
+        state.put( "tags", Tag.tagsToString( getRawTags() ) );
         state.put( "attachments", new ArrayList<Attachment>( getAttachments() ) );
         state.put( "waivedIssueDetections", new ArrayList<String>( getWaivedIssueDetections() ) );
         return state;

@@ -68,7 +68,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
 
     @Override
     public String getGeoMarkerLabel() {
-        return employment.toString() + ", and is assigned to task \"" + part.getTask() + '\"';
+        return employment.toString() + ", and is assigned to task \"" + part.getTaskLabel() + '\"';
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
         StringBuilder sb = new StringBuilder();
         sb.append( employment.toString() );
         sb.append( ", doing task \"" );
-        sb.append( part.getTask() );
+        sb.append( part.getTaskLabel() );
         sb.append( '\"' );
         return sb.toString();
     }
@@ -232,7 +232,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
             label += getOrganization().getName();
         }
         if ( !label.isEmpty() ) label += sep;
-        label += part.getTask();
+        label += part.getTaskLabel();
         if ( part.isRepeating() ) {
             label += " (every " + part.getRepeatsEvery().toString() + ")";
         }
@@ -267,7 +267,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
 
     @Override
     public String getName() {
-        return part.getTask();
+        return part.getTaskLabel();
     }
 
     public boolean involves( Specable focusEntity ) {

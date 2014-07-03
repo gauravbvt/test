@@ -419,9 +419,9 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param taggable a taggable
      */
     protected void writeTags( HierarchicalStreamWriter writer, Taggable taggable ) {
-        if ( !taggable.getTags().isEmpty() ) {
+        if ( !taggable.getRawTags().isEmpty() ) {
             writer.startNode( "tags" );
-            writer.setValue( Tag.tagsToString( taggable.getTags() ) );
+            writer.setValue( Tag.tagsToString( taggable.getRawTags() ) );
             writer.endNode();
         }
     }

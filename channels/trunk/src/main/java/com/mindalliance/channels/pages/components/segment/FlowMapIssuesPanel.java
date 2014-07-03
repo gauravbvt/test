@@ -158,7 +158,7 @@ public class FlowMapIssuesPanel extends AbstractIssueTablePanel {
         SegmentObject segmentObject = getSelectedSegmentObject();
         String label = segmentObject.getTypeName()
                 + " \""
-                + ( segmentObject instanceof Part ? ( (Part) segmentObject ).getTask() : segmentObject.getName() )
+                + ( segmentObject instanceof Part ? ( (Part) segmentObject ).getTaskLabel() : segmentObject.getName() )
                 + "\"";
         add( new Label( "about", label ) );
     }

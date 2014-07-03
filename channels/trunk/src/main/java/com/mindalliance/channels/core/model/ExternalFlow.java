@@ -5,7 +5,10 @@ import com.mindalliance.channels.core.model.asset.AssetConnections;
 import com.mindalliance.channels.core.model.time.Cycle;
 import com.mindalliance.channels.core.model.time.Delay;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A flow from one Part in this segment to/from a connector in another segment.
@@ -147,9 +150,9 @@ public class ExternalFlow extends Flow {
     }
 
     /**
-      * {@inheritDoc}
-      */
-     @Override
+     * {@inheritDoc}
+     */
+    @Override
     public boolean hasPart( Part part ) {
         return this.part.equals( part );
     }
@@ -182,6 +185,17 @@ public class ExternalFlow extends Flow {
             flow.setName( name );
     }
 
+    public List<Tag> getVisibleTags() {
+        Flow flow = getConnectorFlow();
+        if ( flow == null ) {
+            return super.getVisibleTags();
+        } else {
+            Set<Tag> allVisibleTags = new HashSet<Tag>( flow.getVisibleTags() );
+            allVisibleTags.addAll( super.getVisibleTags() );
+            return new ArrayList<Tag>( allVisibleTags );
+        }
+    }
+
     @Override
     public Intent getIntent() {
         Flow flow = getConnectorFlow();
@@ -212,26 +226,26 @@ public class ExternalFlow extends Flow {
     public List<ElementOfInformation> getEois() {
         Flow flow = getConnectorFlow();
         if ( flow == null )
-            return super.getEois( );
+            return super.getEois();
         else
-            return flow.getEois( );
+            return flow.getEois();
     }
 
     public List<ElementOfInformation> getEffectiveEois() {
         Flow flow = getConnectorFlow();
         if ( flow == null )
-            return super.getEffectiveEois( );
+            return super.getEffectiveEois();
         else
-            return flow.getEffectiveEois( );
+            return flow.getEffectiveEois();
     }
 
 
     public List<ElementOfInformation> getLocalEois() {
         Flow flow = getConnectorFlow();
         if ( flow == null )
-            return super.getLocalEois( );
+            return super.getLocalEois();
         else
-            return flow.getLocalEois( );
+            return flow.getLocalEois();
     }
 
 
@@ -277,9 +291,9 @@ public class ExternalFlow extends Flow {
     public AssetConnections getAssetConnections() {
         Flow flow = getConnectorFlow();
         if ( flow == null )
-            return super.getAssetConnections( );
+            return super.getAssetConnections();
         else
-            return flow.getAssetConnections( );
+            return flow.getAssetConnections();
     }
 
     public void addAssetConnection( AssetConnection assetConnection ) {

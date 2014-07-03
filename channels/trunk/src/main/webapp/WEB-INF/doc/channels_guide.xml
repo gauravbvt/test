@@ -2000,6 +2000,9 @@
                         A given tag can be applied without constraints to model elements of different kinds.
 
                         One use of tags is to specify information in collaboration requirements.
+
+                        Tags of tasks of flows that are marked by a '*' at the end, as in 'approved*', will be displayed,
+                        for example in flow maps, in the labels of what they tag.
                     </description>
                 </item>
             </topic>
