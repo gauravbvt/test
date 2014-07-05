@@ -23,6 +23,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -189,7 +190,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                                                                        T fromEntity, T toEntity,
                                                                                        Segment segment ) {
         Place planLocale = communityService.getModelService().getPlanLocale();
-        Commitments commitments = Commitments.all( communityService.getModelService() )
+        ModelService modelService = communityService.getModelService();
+        Assignments assignments = modelService.getAssignments();
+        Commitments commitments = Commitments.all( modelService, assignments )
                 .inSegment( segment )
                 .withEntityCommitting( fromEntity, planLocale )
                 .withEntityBenefiting( toEntity, planLocale );
@@ -229,7 +232,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         Place planLocale = modelService.getPlanLocale();
         // Committing relationships
-        Commitments entityCommittingCommitments = Commitments.all( modelService )
+        Assignments assignments = modelService.getAssignments();
+        Commitments entityCommittingCommitments = Commitments.all( modelService, assignments )
                 .inSegment( segment )
                 .withEntityCommitting( entity, planLocale );
         List<? extends ModelEntity> otherEntities =
@@ -251,7 +255,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         }
         // Benefiting relationships
-        Commitments entityBenefitingCommitments = Commitments.all( modelService )
+        Commitments entityBenefitingCommitments = Commitments.all( modelService, assignments )
                 .inSegment( segment )
                 .withEntityBenefiting( entity, planLocale );
         for ( ModelEntity otherEntity : otherEntities ) {
@@ -413,7 +417,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             if ( flow.getEffectiveChannels().isEmpty() )
                 remediations.add( "add at least one channel to the flow" );
             else {
-                List<Commitment> commitments = modelService.findAllCommitments( flow );
+                Assignments allAssignments = modelService.getAssignments();
+                List<Commitment> commitments = modelService.findAllCommitments( flow, allAssignments );
                 if ( commitments.isEmpty() ) {
                     remediations.add(
                             "change the definitions of the source and/or target tasks so that agents are assigned to both" );

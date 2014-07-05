@@ -882,51 +882,46 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<Commitment> findAllCommitments() {
+    public List<Commitment> findAllCommitments( Assignments assignments ) {
         List<Commitment> allCommitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() ) {
-            allCommitments.addAll( findAllCommitments( flow ) );
+            allCommitments.addAll( findAllCommitments( flow, assignments ) );
         }
         return allCommitments;
     }
 
     @Override
-    public List<Commitment> findAllCommitments( Boolean includeToSelf ) {
+    public List<Commitment> findAllCommitments( Boolean includeToSelf, Assignments assignments ) {
         List<Commitment> allCommitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() ) {
-            allCommitments.addAll( findAllCommitments( flow, includeToSelf ) );
+            allCommitments.addAll( findAllCommitments( flow, includeToSelf, assignments ) );
         }
         return allCommitments;
     }
 
     @Override
-    public List<Commitment> findAllCommitments( Boolean includeToSelf, Boolean includeUnknowns ) {
+    public List<Commitment> findAllCommitments( Boolean includeToSelf, Boolean includeUnknowns, Assignments assignments ) {
         List<Commitment> allCommitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() ) {
-            allCommitments.addAll( findAllCommitments( flow, includeToSelf, includeUnknowns ) );
+            allCommitments.addAll( findAllCommitments( flow, includeToSelf, includeUnknowns, assignments ) );
         }
         return allCommitments;
     }
 
 
     @Override
-    public List<Commitment> findAllCommitments( Flow flow ) {
-        return findAllCommitments( flow, false );
+    public List<Commitment> findAllCommitments( Flow flow, Assignments assignments ) {
+        return findAllCommitments( flow, false, assignments );
     }
 
     @Override
-    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf ) {
-        return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( true ) );
-    }
-
-    @Override
-    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns ) {
-        return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( includeUnknowns ) );
+    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns, Assignments assignments ) {
+        return findAllCommitments( flow, allowCommitmentsToSelf, assignments );
     }
 
 
     @Override
-    public List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments ) {
+    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Assignments assignments ) {
 
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() && !flow.isProhibited() ) {
@@ -936,7 +931,7 @@ public abstract class DefaultQueryService implements QueryService {
             for ( Assignment committer : assignments.assignedTo( (Part) flow.getSource() ) ) {
                 Actor committerActor = committer.getActor();
                 for ( Assignment beneficiary : beneficiaries ) {
-                    if ( ( selfCommits || !committerActor.equals( beneficiary.getActor() ) )
+                    if ( ( allowCommitmentsToSelf || !committerActor.equals( beneficiary.getActor() ) )
                             && allowsCommitment( committer, beneficiary, locale, flow ) )
 
                         addCommitment( new Commitment( committer, beneficiary, flow ),
@@ -947,42 +942,7 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<Commitment>( commitments );
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Commitment> findAllBypassCommitments( final Flow flow ) {
-        assert flow.isSharing();
-        Set<Commitment> commitments = new HashSet<Commitment>();
-        if ( flow.isCanBypassIntermediate() ) {
-            List<Flow> bypassFlows;
-            if ( flow.isNotification() ) {
-                Part intermediate = (Part) flow.getTarget();
-                bypassFlows = (List<Flow>) CollectionUtils.select(
-                        intermediate.getAllSharingSends(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return flow.containsAsMuchAs( ( (Flow) object ) );
-                            }
-                        }
-                );
-            } else { // request-reply
-                Part intermediate = (Part) flow.getSource();
-                bypassFlows = (List<Flow>) CollectionUtils.select(
-                        intermediate.getAllSharingReceives(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (Flow) object ).containsAsMuchAs( flow );
-                            }
-                        }
-                );
-            }
-            for ( Flow byPassFlow : bypassFlows ) {
-                commitments.addAll( findAllCommitments( byPassFlow, false, false ) );
-            }
-        }
-        return new ArrayList<Commitment>( commitments );
-    }
+
 
 
     private void addCommitment(
@@ -3217,19 +3177,13 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    public Commitments getAllCommitments() {
-        return Commitments.all( this );
+    public Commitments getAllCommitments( Assignments assignments ) {
+        return Commitments.all( this, assignments );
     }
 
     @Override
-    public Commitments getAllCommitments( Boolean includeToSelf ) {
-        return Commitments.all( this, includeToSelf );
-    }
-
-    @Override
-    public Commitments getAllCommitments( Boolean includeToSelf, Boolean includeUnknowns ) {
-        return Commitments.all( this, includeToSelf, includeUnknowns );
-
+    public Commitments getAllCommitments( Boolean includeToSelf, Assignments assignments ) {
+        return Commitments.all( this, includeToSelf, assignments );
     }
 
 

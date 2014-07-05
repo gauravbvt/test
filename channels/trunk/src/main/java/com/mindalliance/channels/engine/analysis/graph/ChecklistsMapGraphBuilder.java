@@ -17,6 +17,8 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -79,8 +81,10 @@ public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commi
 
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
+        ModelService modelService = communityService.getModelService();
+        Assignments allAssignments = modelService.getAssignments();
         for ( Flow flow : findAllFlows() )
-            commitments.addAll( communityService.getModelService().findAllCommitments( flow, true ) );
+            commitments.addAll( communityService.getModelService().findAllCommitments( flow, true, allAssignments ) );
 
         List<Commitment> results = new ArrayList<Commitment>();
         for ( Commitment commitment : commitments )

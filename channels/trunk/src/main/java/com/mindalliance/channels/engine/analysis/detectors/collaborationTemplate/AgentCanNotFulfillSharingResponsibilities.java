@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -101,7 +102,8 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
 
     private Map<Actor, List<Commitment>> findActorCommitments( QueryService queryService, Flow flow ) {
         Map<Actor, List<Commitment>> actorCommitments = new HashMap<Actor, List<Commitment>>();
-        List<Commitment> commitments = queryService.findAllCommitments( flow );
+        Assignments allAssignments = queryService.getAssignments();
+        List<Commitment> commitments = queryService.findAllCommitments( flow, allAssignments );
         for ( Commitment commitment : commitments ) {
             Actor actor = commitment.getCommitter().getActor();
             List<Commitment> list = actorCommitments.get( actor );

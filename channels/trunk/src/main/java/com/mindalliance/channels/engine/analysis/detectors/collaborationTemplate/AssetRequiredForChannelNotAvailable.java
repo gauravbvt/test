@@ -69,7 +69,7 @@ public class AssetRequiredForChannelNotAvailable extends AbstractIssueDetector {
         ModelService modelService = communityService.getModelService();
         Assignments assignments = modelService.getAssignments().assignedTo( part );
         Assignments allAssignments = communityService.getModelService().getAssignments( false );
-        Commitments allCommitments = communityService.getModelService().getAllCommitments( false );
+        Commitments allCommitments = communityService.getModelService().getAllCommitments( false, allAssignments );
         List<AssetSupplyRelationship> allSupplyRelationships =
                 communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( Assignment assignment : assignments ) {

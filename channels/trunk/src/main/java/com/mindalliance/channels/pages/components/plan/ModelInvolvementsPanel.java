@@ -120,7 +120,7 @@ public class ModelInvolvementsPanel extends AbstractCommandablePanel implements 
 
     public Commitments getCommitments() {
         if ( commitments == null ) {
-            commitments = getQueryService().getAllCommitments();
+            commitments = getQueryService().getAllCommitments( getAssignments() );
         }
         return commitments;
     }

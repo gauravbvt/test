@@ -43,23 +43,16 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments() {
     }
 
-    public static Commitments all( QueryService queryService ) {
-        return all( queryService, false );
+    public static Commitments all( QueryService queryService, Assignments assignments ) {
+        return all( queryService, false, assignments );
     }
 
 
-    public static Commitments all( QueryService queryService, Boolean includeToSelf ) {
+    public static Commitments all( QueryService queryService, Boolean includeToSelf, Assignments assignments ) {
         Commitments allCommitments = new Commitments( queryService.getPlanLocale() );
-        allCommitments.addAll( queryService.findAllCommitments( includeToSelf ) );
+        allCommitments.addAll( queryService.findAllCommitments( includeToSelf, assignments ) );
         return allCommitments;
     }
-
-    public static Commitments all( QueryService queryService, Boolean includeToSelf, Boolean includeUnknowns ) {
-        Commitments allCommitments = new Commitments( queryService.getPlanLocale() );
-        allCommitments.addAll( queryService.findAllCommitments( includeToSelf, includeUnknowns ) );
-        return allCommitments;
-    }
-
 
 
     public Commitments( QueryService queryService, Specable profile, Assignments assignments ) {
@@ -69,10 +62,10 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         commitments.addAll( queryService.findAllCommitmentsTo( profile, assignments, sharingFlows ) );
     }
 
-    public Commitments( QueryService queryService, List<Flow> flows ) {
+    public Commitments( QueryService queryService, List<Flow> flows, Assignments assignments ) {
         planLocale = queryService.getPlanLocale();
         for ( Flow flow : flows ) {
-            commitments.addAll( queryService.findAllCommitments( flow ) );
+            commitments.addAll( queryService.findAllCommitments( flow, assignments ) );
         }
     }
 

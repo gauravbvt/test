@@ -9,6 +9,8 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
@@ -55,7 +57,9 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                     }
                 } );
         if ( !qualifiedMedia.isEmpty() ) {
-            List<Commitment> commitments = communityService.getModelService().findAllCommitments( flow );
+            ModelService modelService = communityService.getModelService();
+            Assignments allAssignments = modelService.getAssignments();
+            List<Commitment> commitments = modelService.findAllCommitments( flow, allAssignments );
             Set<Actor> unqualified = new HashSet<Actor>();
             for ( Commitment commitment : commitments ) {
                 checkQualification(

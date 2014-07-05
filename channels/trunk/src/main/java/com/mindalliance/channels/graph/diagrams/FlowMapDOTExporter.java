@@ -121,7 +121,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void findAndProcessAssetSupplyRelationships( CommunityService communityService, Graph<Node, Flow> g ) {
         ModelService modelService = communityService.getModelService();
         Assignments allAssignments = modelService.getAssignments( false );
-        Commitments allCommitments = modelService.getAllCommitments( false );
+        Commitments allCommitments = modelService.getAllCommitments( false, allAssignments );
         List<AssetSupplyRelationship> allRelationships = communityService.getModelService()
                 .findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( AssetSupplyRelationship rel : allRelationships ) {

@@ -92,7 +92,7 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
         if ( showingAvailability ) {
             // Asset availability to use
             ModelService modelService = getModelService();
-            Commitments allCommitments = modelService.getAllCommitments( false );
+            Commitments allCommitments = modelService.getAllCommitments( false, allAssignments );
             List<AssetSupplyRelationship> allSupplyRelationships =
                     communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
             List<AssignmentAssetLink> assetAvailabilityToUse = findAssetAvailabilityToUseLinks(
@@ -203,7 +203,7 @@ public class SupplyChainsGraphBuilder implements GraphBuilder<Assignment, Assign
         List<AssignmentAssetLink> assignmentAssetLinks = new ArrayList<AssignmentAssetLink>();
         ModelService modelService = getModelService();
         Assignments allAssignments = modelService.getAssignments( false );
-        Commitments allCommitments = modelService.getAllCommitments( false );
+        Commitments allCommitments = modelService.getAllCommitments( false, allAssignments );
         List<AssetSupplyRelationship> allSupplyRelationships =
                 communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( AssetSupplyRelationship assetSupplyRel : allSupplyRelationships ) {

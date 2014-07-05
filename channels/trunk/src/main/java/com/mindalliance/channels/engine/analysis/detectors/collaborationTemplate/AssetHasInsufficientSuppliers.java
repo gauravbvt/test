@@ -38,7 +38,7 @@ public class AssetHasInsufficientSuppliers extends AbstractIssueDetector {
         final Part part = (Part) identifiable;
         List<MaterialAsset> neededAssets = part.findAssetsUsed();
         Assignments allAssignments = communityService.getModelService().getAssignments( false );
-        Commitments allCommitments = communityService.getModelService().getAllCommitments( false );
+        Commitments allCommitments = communityService.getModelService().getAllCommitments( false, allAssignments );
         List<AssetSupplyRelationship> allSupplyRelationships =
                 communityService.getModelService().findAllAssetSupplyRelationships( allAssignments, allCommitments );
         for ( final MaterialAsset neededAsset : neededAssets ) {

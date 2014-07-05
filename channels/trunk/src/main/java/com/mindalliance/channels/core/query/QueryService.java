@@ -1164,17 +1164,19 @@ public interface QueryService {
     /**
      * Find all commitments in the plan.
      *
+     * @param assignments all assignments from which to derive the commitments
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments();
+    List<Commitment> findAllCommitments( Assignments assignments );
 
     /**
      * Find all commitments in the plan.
      *
      * @param includeToSelf a boolean
+     * @param assignments all assignments from which to derive the commitments
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Boolean includeToSelf );
+    List<Commitment> findAllCommitments( Boolean includeToSelf, Assignments assignments );
 
     /**
      * Find all commitments.
@@ -1183,7 +1185,7 @@ public interface QueryService {
      * @param includeUnknowns        a boolean
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
+    List<Commitment> findAllCommitments( Boolean allowCommitmentsToSelf, Boolean includeUnknowns, Assignments assignments );
 
     /**
      * Find all commitments to others implied by a sharing flow.
@@ -1191,26 +1193,7 @@ public interface QueryService {
      * @param flow a flow
      * @return a list of commitments
      */
-    List<Commitment> findAllCommitments( Flow flow );
-
-    /**
-     * Find all commitments implied by a sharing flow.
-     *
-     * @param flow                   a flow
-     * @param allowCommitmentsToSelf a boolean
-     * @return a list of commitments
-     */
-    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf );
-
-    /**
-     * Find all commitments implied by a sharing flow.
-     *
-     * @param flow                   a flow
-     * @param allowCommitmentsToSelf a boolean
-     * @param includeUnknowns        a boolean
-     * @return a list of commitments
-     */
-    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
+    List<Commitment> findAllCommitments( Flow flow, Assignments assignments );
 
     /**
      * Find all commitments implied by a sharing flow.
@@ -1223,13 +1206,14 @@ public interface QueryService {
     List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments );
 
     /**
-     * Find all commitments intermediated by a flow.
+     * Find all commitments implied by a sharing flow.
      *
-     * @param flow a flow
+     * @param flow        a flow
+     * @param selfCommits a boolean
+     * @param assignments assignments under consideration
      * @return a list of commitments
      */
-    List<Commitment> findAllBypassCommitments( Flow flow );
-
+    List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Boolean includeUnknowns, Assignments assignments );
 
     List<Commitment> findAllCommitmentsOf(
             Specable specable,
@@ -1659,26 +1643,19 @@ public interface QueryService {
     /**
      * Get all commitments in the plan.
      *
+     * @param assignments all assignments from which to derive the commitments
      * @return commitments
      */
-    Commitments getAllCommitments();
+    Commitments getAllCommitments( Assignments assignments );
 
     /**
      * Get all commitments in the plan.
      *
      * @param includeToSelf a boolean
+     * @param assignments all assignments from which to derive the commitments
      * @return commitments
      */
-    Commitments getAllCommitments( Boolean includeToSelf );
-
-    /**
-     * Get all commitments in the plan.
-     *
-     * @param includeToSelf   a boolean
-     * @param includeUnknowns a boolean
-     * @return commitments
-     */
-    Commitments getAllCommitments( Boolean includeToSelf, Boolean includeUnknowns );
+    Commitments getAllCommitments( Boolean includeToSelf, Assignments assignments );
 
 
     /**

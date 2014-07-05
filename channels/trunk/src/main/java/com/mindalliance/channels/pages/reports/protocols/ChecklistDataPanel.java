@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.GoalData;
 import com.mindalliance.channels.api.procedures.TaskData;
+import com.mindalliance.channels.api.procedures.checklist.AssetsProvisionedData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -111,12 +112,13 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         Label summaryLabel = new Label( "summary", StringUtils.capitalize( summary ) );
         summaryLabel.setVisible( !summary.isEmpty() );
         assetsContainer.add( summaryLabel );
+        AssetsProvisionedData assetsProvisionedData = checklistData.getAssetsProvisioned();
         AssetsProvisionedDataPanel assetsProvisionedDataPanel = new AssetsProvisionedDataPanel(
                 "provisioning",
-                checklistData.getAssetsProvisioned(),
+                assetsProvisionedData,
                 getFinder() );
-        assetsProvisionedDataPanel.setVisible( !checklistData.getAssetsProvisioned().isEmpty() );
         assetsContainer.add( assetsProvisionedDataPanel );
+        assetsContainer.setVisible( !assetsProvisionedData.isEmpty() );
         taskDetailsContainer.add( assetsContainer );
     }
 

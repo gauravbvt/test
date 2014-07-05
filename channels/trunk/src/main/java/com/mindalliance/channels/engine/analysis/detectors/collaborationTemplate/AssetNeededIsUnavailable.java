@@ -35,7 +35,7 @@ public class AssetNeededIsUnavailable extends AbstractIssueDetector {
         ModelService modelService = communityService.getModelService();
         Assignments allAssignments = modelService.getAssignments(false );
         Assignments assignments = allAssignments.assignedTo( part );
-        Commitments allCommitments = communityService.getModelService().getAllCommitments( false );
+        Commitments allCommitments = modelService.getAllCommitments( false, allAssignments );
         List<AssetSupplyRelationship> assetSupplyRelationships = modelService.findAllAssetSupplyRelationships(
                 allAssignments,
                 allCommitments
