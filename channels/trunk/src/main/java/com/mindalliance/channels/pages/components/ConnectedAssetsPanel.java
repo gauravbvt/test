@@ -39,7 +39,7 @@ import java.util.List;
  * Date: 3/11/14
  * Time: 1:49 PM
  */
-public class ConnectedAssetsPanel extends AbstractCommandablePanel {
+public class ConnectedAssetsPanel extends AbstractCommandablePanel implements TabIndexable {
 
     /**
      * Logger.
@@ -49,6 +49,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
     private WebMarkupContainer assetConnectionsContainer;
     private AssetConnection newAssetConnection;
     private List<AssetConnection.Type> excludedConnectionTypes = new ArrayList<AssetConnection.Type>();
+    private TabIndexer tabIndexer;
 
     public ConnectedAssetsPanel( String id,
                                  IModel<? extends AssetConnectable> iModel,
@@ -61,6 +62,11 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
     public ConnectedAssetsPanel( String id, IModel<? extends AssetConnectable> iModel ) {
         super( id, iModel );
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
     }
 
     private void init() {
@@ -126,6 +132,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         } );
         connectionChoice.setEnabled( isLockedByUser( getAssetConnectable() ) );
         item.add( connectionChoice );
+        applyTabIndexTo( connectionChoice, tabIndexer );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -161,6 +168,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
                     MaterialAsset.class );
             assetPanel.enable( isLockedByUser( getAssetConnectable() ) );
             item.add( assetPanel );
+            assetPanel.initTabIndexing( tabIndexer );
         } else {
             MaterialAsset asset = wrapper.getAsset();
             ModelObjectLink assetLink = new ModelObjectLink( "asset",
@@ -175,9 +183,28 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         WebMarkupContainer propertiesContainer = new WebMarkupContainer( "properties" );
         item.add( propertiesContainer );
         makeVisible( propertiesContainer, !wrapper.isMarkedForCreation() && wrapper.hasUsageProperties() );
-        addConsumes( propertiesContainer, wrapper );
         addCritical( propertiesContainer, wrapper );
+        addConsumes( propertiesContainer, wrapper );
         addForwarding( propertiesContainer, wrapper );
+    }
+
+
+    private void addCritical( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
+        WebMarkupContainer criticalContainer = new WebMarkupContainer( "criticalContainer" );
+        makeVisible( criticalContainer, wrapper.getType() == AssetConnection.Type.Using );
+        propertiesContainer.add( criticalContainer );
+        AjaxCheckBox criticalCheckBox = new AjaxCheckBox(
+                "critical",
+                new PropertyModel<Boolean>( wrapper, "critical" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
+            }
+        };
+        criticalCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
+        criticalContainer.add( criticalCheckBox );
+        applyTabIndexTo( criticalCheckBox, tabIndexer );
     }
 
     private void addConsumes( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
@@ -195,23 +222,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         };
         consumesCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
         consumesContainer.add( consumesCheckBox );
-    }
-
-    private void addCritical( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
-        WebMarkupContainer criticalContainer = new WebMarkupContainer( "criticalContainer" );
-        makeVisible( criticalContainer, wrapper.getType() == AssetConnection.Type.Using );
-        propertiesContainer.add( criticalContainer );
-        AjaxCheckBox criticalCheckBox = new AjaxCheckBox(
-                "critical",
-                new PropertyModel<Boolean>( wrapper, "critical" )
-        ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getAssetConnectable(), "assets" ) );
-            }
-        };
-        criticalCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
-        criticalContainer.add( criticalCheckBox );
+        applyTabIndexTo( consumesCheckBox, tabIndexer );
     }
 
     private void addForwarding( WebMarkupContainer propertiesContainer, AssetConnectionWrapper wrapper ) {
@@ -229,6 +240,7 @@ public class ConnectedAssetsPanel extends AbstractCommandablePanel {
         };
         forwardingCheckBox.setEnabled( isLockedByUser( getAssetConnectable() ) );
         forwardingContainer.add( forwardingCheckBox );
+        applyTabIndexTo( forwardingCheckBox, tabIndexer );
     }
 
     private void addDeleteConnection( ListItem<AssetConnectionWrapper> item ) {

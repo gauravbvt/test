@@ -11,6 +11,8 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,7 +40,7 @@ import java.util.List;
  * Date: Oct 8, 2009
  * Time: 10:46:29 AM
  */
-public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommandablePanel {
+public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommandablePanel implements TabIndexable {
 
     /**
      * Class logger.
@@ -77,6 +79,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
      */
     private ModelEntity.Kind referenceKind = null;
 
+    private TabIndexer tabIndexer;
+
     public EntityReferencePanel(
             String id,
             IModel<? extends Identifiable> iModel,
@@ -114,6 +118,12 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         adjustFields();
     }
 
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( nameField ); // at least reserve index for nameField
+        tabIndexer.giveTabIndexTo( actualOrTypeChoice );
+    }
+
     private void addKindChoice() {
         ModelEntity.Kind[] kinds = { ModelEntity.Kind.Type, ModelEntity.Kind.Actual };
         // Actual vs type
@@ -144,6 +154,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
                 && ModelEntity.canBeActualOrType( entityClass )
         );
         add( actualOrTypeChoice );
+        applyTabIndexTo( actualOrTypeChoice, tabIndexer );
     }
 
     private void addEntityName() {
@@ -177,6 +188,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
                 update( target, new Change( Change.Type.Updated, getReferencer(), property ) );
             }
         } );
+        applyTabIndexTo( nameField, tabIndexer );
         add( nameField );
     }
 

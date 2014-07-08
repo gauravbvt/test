@@ -35,6 +35,7 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ConnectedAssetsPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ModelSearchingFloatingPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -310,8 +311,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addHeader();
         addSimpleAdvanced();
         addInfoLabelOrLink();
-        addStandardizedField();
         addNameField();
+        addStandardizedField();
         addTagsPanel();
         addClassificationFields();
         addEOIs();
@@ -319,10 +320,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addPrivacy();
         addAskedForRadios();
         addSignificanceToTarget();
+        addAllField();
         addOtherField();
         addRestrictionFields();
-        addIfTaskFails();
-        addAllField();
 
         Node node = getOther();
         if ( node.isConnector() && node.getSegment().equals( getNode().getSegment() ) ) {
@@ -336,9 +336,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( channelRow );
         addTimingRow();
         addSignificanceToSource();
-        addFlowDescription();
         addCanBypassIntermediate();
         addReceiptConfirmationRequested();
+        addFlowDescription();
         addAssetConnections();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
         issuesPanel = new IssuesPanel(
@@ -373,6 +373,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         tagsContainer.add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getFlow() ) );
         tagsContainer.add( tagsPanel );
+        tagsPanel.initTabIndexing( this );
     }
 
     private void addClassificationFields() {
@@ -406,6 +407,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         classificationContainer.addOrReplace( intentChoice );
+        giveTabIndexTo( intentChoice );
+        addIfTaskFails();
     }
 
     private void addRestrictionFields() {
@@ -437,6 +440,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         restrictedCheckBox.setEnabled( isLockedByUser( getFlow() ) );
         restrictionsContainer.add( restrictedCheckBox );
+        giveTabIndexTo( restrictedCheckBox );
     }
 
     private void addRestrictionsSummary() {
@@ -480,6 +484,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         restrictionsPanel.setOutputMarkupId( true );
         makeVisible( restrictionsPanel, isRestricted() && editingRestrictions );
         restrictionsContainer.addOrReplace( restrictionsPanel );
+        if ( restrictionsPanel instanceof TabIndexable )
+            initTabIndices( restrictionsPanel, this );
     }
 
     private List<String> getAllIntentLabels() {
@@ -655,6 +661,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 && isLockedByUser( f )
                 && f.canSetNameAndElements() );
         addOrReplace( standardizedCheckbox );
+        giveTabIndexTo( standardizedCheckbox );
     }
 
     private void addNameField() {
@@ -704,6 +711,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         );
         addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
         add( nameField );
+        defaultFocus( nameField );
+        giveTabIndexTo( nameField );
     }
 
     /**
@@ -774,16 +783,19 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         privateCheckBox.setEnabled( canSetPrivacy() );
         privacyContainer.add( privateCheckBox );
+        giveTabIndexTo( privateCheckBox );
     }
 
     private void addAskedForRadios() {
         askedForButtons = new RadioGroup<Boolean>(
                 "askedFor",
                 new PropertyModel<Boolean>( this, "askedFor" ) );
-        askedForButtons.add( new Radio<Boolean>( "askedForTrue",
-                new Model<Boolean>( true ) ) );
-        askedForButtons.add( new Radio<Boolean>( "askedForFalse",
-                new Model<Boolean>( false ) ) );
+        Radio<Boolean> askedForTrueRadio = new Radio<Boolean>( "askedForTrue",
+                new Model<Boolean>( true ) );
+        askedForButtons.add( askedForTrueRadio );
+        Radio<Boolean> askedForFalseRadio = new Radio<Boolean>( "askedForFalse",
+                new Model<Boolean>( false ) );
+        askedForButtons.add( askedForFalseRadio );
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -799,8 +811,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
-
         add( askedForButtons );
+        giveTabIndexTo( askedForButtons );
     }
 
     private void addSignificanceToTarget() {
@@ -837,6 +849,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         significanceToTargetLabel.add( significanceToTargetChoice );
+        giveTabIndexTo( significanceToTargetChoice );
     }
 
     private void addSignificanceToSource() {
@@ -869,6 +882,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         triggersSourceContainer.add( triggersSourceCheckBox );
+        giveTabIndexTo( triggersSourceCheckBox );
         terminatesSourceContainer = new WebMarkupContainer( "terminates-source-container" );
         significanceToSourceContainer.add( terminatesSourceContainer );
         terminatesSourceCheckBox = new CheckBox(
@@ -883,6 +897,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         terminatesSourceContainer.add( terminatesSourceCheckBox );
+        giveTabIndexTo( terminatesSourceCheckBox );
         terminatesSourceContainer.add(
                 new Label(
                         "notifying-or-replying",
@@ -907,6 +922,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         ifTaskFailsContainer.add( ifTaskFailsCheckBox );
+        giveTabIndexTo( ifTaskFailsCheckBox );
     }
 
     private void addProhibitedField() {
@@ -926,6 +942,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         prohibitedContainer.add( prohibitedCheckBox );
+        giveTabIndexTo( prohibitedCheckBox );
     }
 
     private void addReferencesEventPhaseField() {
@@ -948,6 +965,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         referencesEventPhaseContainer.add( new Label( "eventPhaseTitle", getEventPhaseTitle() ) );
         referencesEventPhaseContainer.add( referencesEventPhaseCheckBox );
+        giveTabIndexTo( referencesEventPhaseCheckBox );
     }
 
     private String getEventPhaseTitle() {
@@ -966,6 +984,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         flowDescription.setOutputMarkupId( true );
         addInputHint( flowDescription, "Brief advice" );
         add( flowDescription );
+        giveTabIndexTo( flowDescription );
     }
 
     private void addCanBypassIntermediate() {
@@ -987,7 +1006,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         canBypassIntermediateContainer.add( canBypassIntermediateCheckBox );
-        // receipt requested
+        giveTabIndexTo( canBypassIntermediateCheckBox );
     }
 
     private void addReceiptConfirmationRequested() {
@@ -1009,6 +1028,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         receiptConfirmationRequestedContainer.add( receiptConfirmationRequestedCheckBox );
+        giveTabIndexTo( receiptConfirmationRequestedCheckBox );
     }
 
     private void addAssetConnections() {
@@ -1027,6 +1047,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 "assetConnections",
                 new PropertyModel<AssetConnectable>( this, "flow" ) );
         assetsContainer.add( connectedAssetsPanel );
+        connectedAssetsPanel.initTabIndexing( this );
     }
 
     /**
@@ -1124,6 +1145,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         allField = new FormComponentLabel( "all-label", checkBox );
         allField.add( checkBox );
         add( allField );
+        giveTabIndexTo( checkBox );
     }
 
     /*
@@ -1161,6 +1183,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addTipTitle( otherChoice, new Model<String>( getOtherPart().displayString() ) );
         otherChoice.setOutputMarkupId( true );
         addOrReplace( otherChoice );
+        otherChoice.initTabIndexing( this );
     }
 
     /**
@@ -1314,7 +1337,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean isRedundant( Part part ) {
         String info = getFlow().getName();
         // redundant if part has a matching need or capability
@@ -1337,7 +1360,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      *
      * @return a list of parts
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Node> getSecondChoices() {
         final List<Part> relatedParts = findRelatedParts();
         final Node node = getNode();
@@ -1378,6 +1401,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<ModelObject>( this, "flow" ),
                 "maxDelay" );
         timingContainer.addOrReplace( delayPanel );
+        delayPanel.initTabIndexing( this );
     }
 
     private void addRepeating() {
@@ -1396,6 +1420,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "onclick" ) );
             }
         } );
+        giveTabIndexTo( repeatingCheckBox );
         addCyclePanel();
     }
 
@@ -1405,10 +1430,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "flow" ), "repeatsEvery" );
             repeatsEveryPanel.setOutputMarkupId( true );
             ( (CyclePanel) repeatsEveryPanel ).enable( getFlow().isRepeating() && isLockedByUser( getFlow() ) );
+            repeatingContainer.addOrReplace( repeatsEveryPanel );
+            ( (CyclePanel) repeatsEveryPanel ).initTabIndexing( this );
         } else {
             repeatsEveryPanel = new Label( "repeats-every", "" );
+            repeatingContainer.addOrReplace( repeatsEveryPanel );
         }
-        repeatingContainer.addOrReplace( repeatsEveryPanel );
     }
 
 

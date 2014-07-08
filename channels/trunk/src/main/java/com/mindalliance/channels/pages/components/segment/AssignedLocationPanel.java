@@ -10,6 +10,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,15 +39,24 @@ import java.util.Set;
  * Date: 12/19/11
  * Time: 1:59 PM
  */
-public class AssignedLocationPanel extends AbstractCommandablePanel {
+public class AssignedLocationPanel extends AbstractCommandablePanel implements TabIndexable {
 
     private WebMarkupContainer subjectContainer;
     private Component placeReferencePanel;
     private WebMarkupContainer eoiContainer;
+    private TabIndexer tabIndexer;
+    private DropDownChoice<AssignedLocation.Kind> kindChoice;
 
     public AssignedLocationPanel( String id, PropertyModel<Part> partModel ) {
         super( id, partModel );
         init();
+    }
+
+
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( kindChoice );
+        initTabIndices( placeReferencePanel, tabIndexer ); // do it right away to at least reserve the index for the component by id
     }
 
     private void init() {
@@ -64,7 +75,7 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
     }
 
     private void addKindChoice() {
-        DropDownChoice<AssignedLocation.Kind> kindChoice = new DropDownChoice<AssignedLocation.Kind>(
+        kindChoice = new DropDownChoice<AssignedLocation.Kind>(
                 "kind",
                 new PropertyModel<AssignedLocation.Kind>( this, "kind" ),
                 Arrays.asList( AssignedLocation.Kind.values() ),
@@ -90,11 +101,13 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
                                 Change.Type.Updated,
                                 getPart(),
                                 "location"
-                        ) );
+                        )
+                );
             }
         } );
-        kindChoice.setEnabled( isLockedByUser(  getPart() ) );
+        kindChoice.setEnabled( isLockedByUser( getPart() ) );
         add( kindChoice );
+        applyTabIndexTo( kindChoice, tabIndexer );
     }
 
     private void addNamedPlace() {
@@ -107,6 +120,8 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
                     "location.namedPlace",
                     Place.class
             );
+            initTabIndices( placeReferencePanel, tabIndexer ); // generate the tabIndex dom attribute if possible
+
         } else {
             placeReferencePanel = new Label( "named", "" );
             placeReferencePanel.setOutputMarkupId( true );
@@ -146,7 +161,8 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
                                 Change.Type.Updated,
                                 getPart(),
                                 "location"
-                        ) );
+                        )
+                );
                 addSubjectEoi();
                 adjustFields( target );
             }
@@ -181,7 +197,8 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
                                 Change.Type.Updated,
                                 getPart(),
                                 "location"
-                        ) );
+                        )
+                );
             }
         } );
         eoiContainer.add( eoiField );

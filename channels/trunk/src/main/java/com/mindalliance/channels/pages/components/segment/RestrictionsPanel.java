@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -33,12 +35,13 @@ import java.util.List;
  * Date: 6/2/13
  * Time: 10:59 AM
  */
-public class RestrictionsPanel extends AbstractCommandablePanel {
+public class RestrictionsPanel extends AbstractCommandablePanel implements TabIndexable {
 
     private IModel<Flow> flowModel;
     private boolean isSend;
     private WebMarkupContainer restrictionsEditorContainer;
     private DropDownChoice<Flow.Restriction> newRestrictionChoice;
+    private TabIndexer tabIndexer;
 
 
     public RestrictionsPanel( String id, IModel<Flow> flowModel, boolean isSend ) {
@@ -46,6 +49,12 @@ public class RestrictionsPanel extends AbstractCommandablePanel {
         this.flowModel = flowModel;
         this.isSend = isSend;
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( newRestrictionChoice );
     }
 
     private void init() {
@@ -120,6 +129,7 @@ public class RestrictionsPanel extends AbstractCommandablePanel {
             }
         } );
         addOrReplace( newRestrictionChoice );
+        applyTabIndexTo( newRestrictionChoice, tabIndexer );
     }
 
     private List<Flow.Restriction> getOtherRestrictions() {

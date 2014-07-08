@@ -18,11 +18,11 @@ import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.ModelServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
@@ -45,6 +45,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -67,7 +68,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +79,7 @@ import java.util.regex.Pattern;
 /**
  * Abstract base class of updatable panels.
  */
-public class AbstractUpdatablePanel extends Panel implements Updatable {
+public class AbstractUpdatablePanel extends Panel implements Updatable, TabIndexer {
 
     @SpringBean
     private CommanderFactory commanderFactory;
@@ -139,6 +143,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     private Updatable updateTarget;
 
+    private int currentTabIndex = 0;
+
+    private Map<String, Integer> tabIndices = new HashMap<String, Integer>();
+
     /**
      * Name pattern.
      */
@@ -161,6 +169,15 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         setOutputMarkupId( true );
         this.model = model;
         this.expansions = expansions;
+    }
+
+    public int getNextTabIndex() {
+        if ( currentTabIndex == 0 ) {
+            currentTabIndex = new Random().nextInt( Integer.MAX_VALUE - 2000 ) + 1;
+        } else {
+            currentTabIndex = currentTabIndex + 1;
+        }
+        return currentTabIndex;
     }
 
     public String getUserRoleId() {
@@ -361,7 +378,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         }
     }
 
-    protected boolean isMinimized(  ) {
+    protected boolean isMinimized() {
         return this instanceof AbstractFloatingTabbedCommandablePanel
                 && ( (AbstractFloatingTabbedCommandablePanel) this ).isMinimized();
     }
@@ -616,7 +633,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected Actor findActor( ChannelsUser user ) {
         List<UserParticipation> participations = participationManager.getActiveUserParticipations(
                 getUser(),
@@ -732,33 +749,33 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Component makeHelpIcon( String id, final Guidable guidable, String iconSrc ) {
         WebMarkupContainer helpIcon = new WebMarkupContainer( id );
         helpIcon.setOutputMarkupId( true );
-        helpIcon.add( new AttributeModifier( "src", iconSrc) );
-        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        helpIcon.add( new AttributeModifier( "src", iconSrc ) );
+        helpIcon.add( new AttributeModifier( "alt", "Help" ) );
         addTipTitle( helpIcon, "Quick help" );
         helpIcon.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update(  target, Change.guide( guidable.getHelpSectionId(), guidable.getHelpTopicId() ) );
+                update( target, Change.guide( guidable.getHelpSectionId(), guidable.getHelpTopicId() ) );
             }
         } );
         return helpIcon;
     }
 
     protected Component makeHelpIcon( String id, final Guidable guidable ) {
-            return makeHelpIcon( id, guidable, "images/help_guide.png" );
-     }
+        return makeHelpIcon( id, guidable, "images/help_guide.png" );
+    }
 
 
     protected Component makeHelpIcon( String id, final String sectionId, final String topicId, String iconSrc ) {
         WebMarkupContainer helpIcon = new WebMarkupContainer( id );
         helpIcon.setOutputMarkupId( true );
-        helpIcon.add( new AttributeModifier( "src", iconSrc) );
-        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        helpIcon.add( new AttributeModifier( "src", iconSrc ) );
+        helpIcon.add( new AttributeModifier( "alt", "Help" ) );
         addTipTitle( helpIcon, "Quick help" );
         helpIcon.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update(  target, Change.guide( sectionId, topicId ) );
+                update( target, Change.guide( sectionId, topicId ) );
             }
         } );
         return helpIcon;
@@ -771,13 +788,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                                       String iconSrc ) {
         WebMarkupContainer helpIcon = new WebMarkupContainer( id );
         helpIcon.setOutputMarkupId( true );
-        helpIcon.add( new AttributeModifier( "src", iconSrc) );
-        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        helpIcon.add( new AttributeModifier( "src", iconSrc ) );
+        helpIcon.add( new AttributeModifier( "alt", "Help" ) );
         addTipTitle( helpIcon, "Quick help" );
         helpIcon.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update(  target, Change.guide( userRoleId, sectionId, topicId ) );
+                update( target, Change.guide( userRoleId, sectionId, topicId ) );
             }
         } );
         return helpIcon;
@@ -798,5 +815,76 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public String getTopicId() {
         return null;
     }
+
+    /**
+     * Sets default focus on form component.
+     *
+     * @param component a form component
+     */
+    public void defaultFocus( Component component ) {
+        component.add( new DefaultFocusBehavior() );
+    }
+
+    /**
+     * Gives the component the next tab index within this.
+     *
+     * @param component a component
+     */
+    public void giveTabIndexTo( Component component ) {
+        int tabIndex = getTabIndexOf( component );
+        if ( tabIndex > 0 )
+            tabIndex( component, tabIndex );
+    }
+
+    public int getTabIndexOf( Component component ) {
+        String componentId = getIdPath( component );
+        if ( componentId.isEmpty() ) // can not be computed yet
+            return 0;
+        else {
+            if ( !tabIndices.containsKey( componentId ) ) {
+                int nextIndex = getNextTabIndex();
+                tabIndices.put( componentId, nextIndex );
+            }
+            return tabIndices.get( componentId );
+        }
+    }
+
+    private String getIdPath( Component component ) {
+        MarkupContainer parent = component.getParent();
+        if ( parent == null ) // component not yet inserted in component tree
+            return "";
+        else {
+            return this.getId() + "." + parent.getId() + "." + component.getId();
+        }
+    }
+
+    protected void initTabIndices( Component component, TabIndexer tabIndexer ) {
+        if ( tabIndexer != null ) {
+            if ( component instanceof TabIndexable ) {
+                ( (TabIndexable) component ).initTabIndexing( tabIndexer );
+            } else {
+                throw new IllegalArgumentException( "Must be tab-indexable" );
+            }
+        }
+    }
+
+    protected void applyTabIndexTo( Component component, TabIndexer tabIndexer ) {
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( component );
+        }
+    }
+
+    /**
+     * Set the tab index of a form component.
+     *
+     * @param component a form component
+     * @param tabIndex  an integer
+     */
+    private void tabIndex( Component component, int tabIndex ) {
+        if ( component instanceof FormComponent ) {
+            component.add( new AttributeModifier( "tabindex", tabIndex ) );
+        }
+    }
+
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
  * Date: Feb 18, 2009
  * Time: 2:01:00 PM
  */
-public class DelayPanel extends AbstractCommandablePanel {
+public class DelayPanel extends AbstractCommandablePanel implements TabIndexable {
     /**
      * A Delay.
      */
@@ -44,11 +44,20 @@ public class DelayPanel extends AbstractCommandablePanel {
      */
     private String property;
 
+    private TabIndexer tabIndexer;
+
     public DelayPanel( String id, IModel<ModelObject> model, String property ) {
         super( id, model, null );
         this.model = model;
         this.property = property;
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        applyTabIndexTo( amountField, tabIndexer );
+        applyTabIndexTo( unitChoice, tabIndexer );
     }
 
     private void init() {
@@ -60,6 +69,7 @@ public class DelayPanel extends AbstractCommandablePanel {
             }
         } );
         add( amountField );
+        applyTabIndexTo( amountField, tabIndexer );
         unitChoice = new DropDownChoice<TimeUnit>(
                 "delay-unit",
                 new PropertyModel<TimeUnit>( this, "unit" ),
@@ -81,6 +91,7 @@ public class DelayPanel extends AbstractCommandablePanel {
             }
         } );
         add( unitChoice );
+        applyTabIndexTo( unitChoice, tabIndexer );
     }
 
     /**

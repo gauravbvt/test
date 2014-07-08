@@ -7,6 +7,8 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,31 +35,41 @@ import java.util.Set;
  * Date: May 11, 2009
  * Time: 6:24:53 AM
  */
-public class PartGoalsPanel extends AbstractCommandablePanel {
+public class PartGoalsPanel extends AbstractCommandablePanel implements TabIndexable {
+
+    private ListView<GoalWrapper> goalList;
+    private TabIndexer tabIndexer;
 
     public PartGoalsPanel(
             String id,
             IModel<? extends Identifiable> model,
-            Set<Long> expansions ) {
+            Set<Long> expansions,
+            TabIndexer tabIndexer) {
         super( id, model, expansions );
+        this.tabIndexer = tabIndexer;
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
     }
 
     private void init() {
         List<GoalWrapper> wrappers = getWrappedGoals();
-        ListView<GoalWrapper> mitigationList = new ListView<GoalWrapper>(
+        goalList = new ListView<GoalWrapper>(
                 "goals",
                 wrappers
         ) {
             protected void populateItem( ListItem<GoalWrapper> item ) {
                 item.setOutputMarkupId( true );
-                item.add( new GoalPanel(
-                        "goal",
-                        item ) );
+                GoalPanel goalPanel = new GoalPanel( "goal",  item );
+                goalPanel.initTabIndexing( tabIndexer );
+                item.add( goalPanel );
                 addConfirmedCell( item );
             }
         };
-        add( mitigationList );
+        add( goalList );
     }
 
     private void addConfirmedCell( ListItem<GoalWrapper> item ) {
@@ -72,7 +84,8 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target,
                         new Change( Change.Type.Updated, getPart(), "goals"
-                        ) );
+                        )
+                );
             }
         } );
     }
@@ -171,11 +184,13 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
     /**
      * Panel showing goal as label or a choice of goals to be achieved.
      */
-    public class GoalPanel extends Panel {
+    public class GoalPanel extends Panel implements TabIndexable {
         /**
          * Item in list view this panel is a component of.
          */
         private ListItem<GoalWrapper> item;
+        DropDownChoice<Goal> goalChoice;
+        private TabIndexer tabIndexer;
 
         public GoalPanel( String id, ListItem<GoalWrapper> item ) {
             super( id );
@@ -183,8 +198,14 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
             init();
         }
 
+        @Override
+        public void initTabIndexing( TabIndexer tabIndexer ) {
+            this.tabIndexer = tabIndexer;
+            tabIndexer.giveTabIndexTo( goalChoice );
+        }
+
         private void init() {
-            DropDownChoice<Goal> goalChoice = new DropDownChoice<Goal>(
+            goalChoice = new DropDownChoice<Goal>(
                     "goalChoice",
                     new PropertyModel<Goal>( getWrapper(), "goal" ),
                     getCandidateMitigations(),
@@ -204,10 +225,13 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
                         protected void onUpdate( AjaxRequestTarget target ) {
                             update( target,
                                     new Change( Change.Type.Updated, getPart(), "goals"
-                                    ) );
+                                    )
+                            );
                         }
-                    } );
+                    }
+            );
             add( goalChoice );
+            applyTabIndexTo( goalChoice, tabIndexer );
             goalChoice.setVisible( getWrapper().isMarkedForCreation()
                     && !getCandidateMitigations().isEmpty() && isLockedByUser( getPart() ) );
             Goal goal = getWrapper().getGoal();

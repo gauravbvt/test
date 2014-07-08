@@ -281,20 +281,28 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         this.model = model;
         this.modelPage = modelPage;
+        entityFields = new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
         addSummaryPanel();
         addSimpleAdvanced();
-        addTagsPanel();
-        addPartDescription();
         addTaskField();
+        addTagsPanel();
         addClassificationFields();
-        addEntityFields();
-        addEventInitiation();
+        addFunctionField();
+        addLocationField();
+        addLocationLink();
+        addActorField();
+        addRoleField();
+        addJurisdictionField();
+        addOrganizationField();
         addExecution();
+        addEventInitiation();
+        addEntityLinks();
         addTerminatesSegmentFields();
         addTimingFields();
         addGoalsLink();
         addGoals();
         addAssetConnections();
+        addPartDescription();
         addIssuesPanel();
         addAttachments();
         adjustFields();
@@ -328,6 +336,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         add( tagsContainer );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
         tagsContainer.add( tagsPanel );
+        tagsPanel.initTabIndexing( this );
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -355,7 +364,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         simpleAdvanced = new Label( "simpleAdvanced",
                 new Model<String>( isShowSimpleForm() ?
                         "Show advanced form" :
-                        "Show simple form" ) );
+                        "Show simple form" )
+        );
         simpleAdvanced.setOutputMarkupId( true );
         simpleAdvanced.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -400,6 +410,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         partDescription.setOutputMarkupId( true );
         addInputHint( partDescription, "Brief advice" );
         add( partDescription );
+        giveTabIndexTo( partDescription );
     }
 
     private void addCategoryField() {
@@ -417,6 +428,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         classificationContainer.add( categoryChoice );
+        giveTabIndexTo( categoryChoice );
     }
 
     private void addProhibitedField() {
@@ -428,6 +440,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "prohibited" ) );
             }
         } );
+        giveTabIndexTo( prohibitedCheckBox );
     }
 
     private List<String> getCategoryLabels() {
@@ -437,17 +450,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         return labels;
     }
 
-    private void addEntityFields() {
-        entityFields = new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
-        addFunctionField();
-        addActorField();
-        addRoleField();
-        addOrganizationField();
-        addJurisdictionField();
-        addLocationField();
-        addLocationLink();
-        addEntityLinks();
-    }
 
     public List<String> getAllTasks() {
         return getQueryService().findAllTasks();
@@ -497,7 +499,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         for ( EntityReferencePanel entityReferencePanel : entityFields )
             entityReferencePanel.enable( lockedByUser );
         if ( repeatsEveryPanel instanceof CyclePanel )
-            ((CyclePanel)repeatsEveryPanel).enable( part.isRepeating() && lockedByUser );
+            ( (CyclePanel) repeatsEveryPanel ).enable( part.isRepeating() && lockedByUser );
         completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
         selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
         repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
@@ -518,6 +520,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 FUNCTION_PROPERTY,
                 Function.class );
         addOrReplace( field );
+        field.initTabIndexing( this );
         entityFields.add( field );
     }
 
@@ -528,6 +531,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 ACTOR_PROPERTY,
                 Actor.class );
         addOrReplace( field );
+        field.initTabIndexing( this );
         entityFields.add( field );
     }
 
@@ -538,6 +542,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 ROLE_PROPERTY,
                 Role.class );
         addOrReplace( field );
+        field.initTabIndexing( this );
         entityFields.add( field );
     }
 
@@ -547,8 +552,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                         "part" ),
                 getAllOrganizationNames(),
                 ORG_PROPERTY,
-                Organization.class );
+                Organization.class
+        );
         addOrReplace( field );
+        field.initTabIndexing( this );
         entityFields.add( field );
     }
 
@@ -559,6 +566,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 JURISDICTION_PROPERTY,
                 Place.class );
         addOrReplace( field );
+        field.initTabIndexing( this );
         entityFields.add( field );
     }
 
@@ -567,6 +575,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 "location",
                 new PropertyModel<Part>( this, "part" ) );
         addOrReplace( field );
+        field.initTabIndexing( this );
     }
 
     private ModelObjectLink addLocationLink() {
@@ -604,7 +613,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         addInputHint( taskField, "The task to be done" );
+        defaultFocus( taskField );
         add( taskField );
+        giveTabIndexTo( taskField );
     }
 
     private void addEventInitiation() {
@@ -631,6 +642,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         } );
         addInputHint( initiatedEventField, "The name of the event the task may trigger" );
         add( initiatedEventField );
+        giveTabIndexTo( initiatedEventField );
     }
 
     private void addEntityLinks() {
@@ -647,7 +659,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                         "Causes event" :
                         WordUtils.capitalize( prop.equals( "actor" ) ?
                                 "agent" :
-                                prop ) ) );
+                                prop ) )
+        );
         moLink.setOutputMarkupId( true );
         entityLinks.put( prop, moLink );
         addOrReplace( moLink );
@@ -659,37 +672,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer.setOutputMarkupId( true );
         makeVisible( timingContainer, !isShowSimpleForm() );
         addOrReplace( timingContainer );
-        completionTimePanel =
-                new DelayPanel( "completion-time", new PropertyModel<ModelObject>( this, "part" ), "completionTime" );
-        completionTimePanel.setOutputMarkupId( true );
-        timingContainer.add( completionTimePanel );
-        selfTerminatingCheckBox =
-                new CheckBox( "self-terminating", new PropertyModel<Boolean>( this, "selfTerminating" ) );
-        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                completionTimePanel.enable( getPart().isSelfTerminating() && isLockedByUser( getPart() ) );
-                target.add( completionTimePanel );
-                update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
-            }
-        } );
-        timingContainer.add( selfTerminatingCheckBox );
-        // repeating
+        addOngoing();
+        addStartsWithSegment();
+        addSelfTerminating();
+        addCompletionTime();
         addRepeating();
-        // starts with segment
-        startWithSegmentCheckBox =
-                new CheckBox( "startsWithSegment", new PropertyModel<Boolean>( this, "startsWithSegment" ) );
-        timingContainer.add( startWithSegmentCheckBox );
-        startWithSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "startsWithSegment" ) );
-            }
-        } );
-        timingContainer.add( new ModelObjectLink( "event-link",
-                new PropertyModel<Event>( this, "part.segment.event" ),
-                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
-        timingContainer.add( new Label( "event-timing", new PropertyModel<String>( this, "eventTiming" ) ) );
+    }
+
+    private void addOngoing() {
         ongoingCheckBox =
                 new CheckBox( "ongoing", new PropertyModel<Boolean>( this, "ongoing" ) );
         timingContainer.add( ongoingCheckBox );
@@ -702,7 +692,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 addRepeating();
                 completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
                 selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
-                repeatingCheckBox.setEnabled( lockedByUser  && !part.isOngoing()  );
+                repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
                 target.add(
                         startWithSegmentCheckBox,
                         repeatingCheckBox,
@@ -712,35 +702,47 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "ongoing" ) );
             }
         } );
+        giveTabIndexTo( ongoingCheckBox );
     }
 
-    private void addRepeating() {
-        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
-        repeatingCheckBox.setOutputMarkupId( true );
-        timingContainer.addOrReplace( repeatingCheckBox );
-        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+    private void addStartsWithSegment() {
+        startWithSegmentCheckBox =
+                new CheckBox( "startsWithSegment", new PropertyModel<Boolean>( this, "startsWithSegment" ) );
+        timingContainer.add( startWithSegmentCheckBox );
+        startWithSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addTimingFields();
-                target.add( timingContainer );
-                update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "startsWithSegment" ) );
             }
         } );
-        addCyclePanel();
+        giveTabIndexTo( startWithSegmentCheckBox );
+        timingContainer.add( new ModelObjectLink( "event-link",
+                new PropertyModel<Event>( this, "part.segment.event" ),
+                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
+        timingContainer.add( new Label( "event-timing", new PropertyModel<String>( this, "eventTiming" ) ) );
     }
 
-    private void addCyclePanel() {
-        if ( getPart().isRepeating() ) {
-            repeatsEveryPanel =
-                    new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "part" ), "repeatsEvery" );
-            repeatsEveryPanel.setOutputMarkupId( true );
-            ( (CyclePanel) repeatsEveryPanel ).enable( getPart().isRepeating() && isLockedByUser( getPart() ) );
-        } else {
-            repeatsEveryPanel = new Label( "repeats-every", "" );
-        }
-        makeVisible( repeatsEveryPanel, getPart().isRepeating() );
-        repeatsEveryPanel.setOutputMarkupId( true );
-        timingContainer.addOrReplace( repeatsEveryPanel );
+    private void addCompletionTime() {
+        completionTimePanel =
+                new DelayPanel( "completion-time", new PropertyModel<ModelObject>( this, "part" ), "completionTime" );
+        completionTimePanel.setOutputMarkupId( true );
+        timingContainer.add( completionTimePanel );
+        completionTimePanel.initTabIndexing( this );
+    }
+
+    private void addSelfTerminating() {
+        selfTerminatingCheckBox =
+                new CheckBox( "self-terminating", new PropertyModel<Boolean>( this, "selfTerminating" ) );
+        selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                completionTimePanel.enable( getPart().isSelfTerminating() && isLockedByUser( getPart() ) );
+                target.add( completionTimePanel );
+                update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
+            }
+        } );
+        timingContainer.add( selfTerminatingCheckBox );
+        giveTabIndexTo( selfTerminatingCheckBox );
     }
 
     private void addTerminatesSegmentFields() {
@@ -756,6 +758,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
         } );
+        giveTabIndexTo( terminatesSegmentCheckBox );
         WebMarkupContainer phaseEnding = new WebMarkupContainer( "phase-ending" );
         phaseEnding.add( new ModelObjectLink( "end-phase-link",
                 new PropertyModel<Event>( this, "part.segment.phase" ),
@@ -768,6 +771,40 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Event>( this, "part.segment.event" ),
                 new PropertyModel<String>( this, "part.segment.event.name" ) ) );
         terminatesEventPhaseContainer.add( eventEnding );
+    }
+
+
+    private void addRepeating() {
+        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
+        repeatingCheckBox.setOutputMarkupId( true );
+        timingContainer.addOrReplace( repeatingCheckBox );
+        repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addTimingFields();
+                target.add( timingContainer );
+                update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
+            }
+        } );
+        giveTabIndexTo( repeatingCheckBox );
+        addCyclePanel();
+    }
+
+    private void addCyclePanel() {
+        if ( getPart().isRepeating() ) {
+            repeatsEveryPanel =
+                    new CyclePanel( "repeats-every", new PropertyModel<Cyclic>( this, "part" ), "repeatsEvery" );
+            repeatsEveryPanel.setOutputMarkupId( true );
+            ( (CyclePanel) repeatsEveryPanel ).enable( getPart().isRepeating() && isLockedByUser( getPart() ) );
+            timingContainer.addOrReplace( repeatsEveryPanel );
+            ( (CyclePanel) repeatsEveryPanel ).initTabIndexing( this );
+        } else {
+            repeatsEveryPanel = new Label( "repeats-every", "" );
+            timingContainer.addOrReplace( repeatsEveryPanel );
+        }
+        makeVisible( repeatsEveryPanel, getPart().isRepeating() );
+        repeatsEveryPanel.setOutputMarkupId( true );
+        giveTabIndexTo( repeatsEveryPanel );
     }
 
     private Phase getPhase() {
@@ -800,20 +837,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "asTeam" ) );
             }
         } );
+        giveTabIndexTo( asTeamCheckBox );
     }
 
-    private void addAssetConnections() {
-        assetsContainer = new WebMarkupContainer( "assetsContainer" );
-        assetsContainer.setOutputMarkupId( true );
-        makeVisible( assetsContainer, !isShowSimpleForm() );
-        add( assetsContainer );
-        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
-                "assetConnections",
-                new PropertyModel<AssetConnectable>( this, "part" ) );
-        assetsContainer.add( connectedAssetsPanel );
-    }
-
-    private void addGoalsLink() {
+     private void addGoalsLink() {
         AjaxLink segmentGoalsLink = new AjaxLink( "segment-goals-link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -828,11 +855,29 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( getPart().getSegment().getGoals().isEmpty() ) {
             taskGoalsPanel = new Label( "goals", new Model<String>( "(No goals)" ) );
         } else {
-            taskGoalsPanel = new PartGoalsPanel( "goals", new PropertyModel<Part>( this, "part" ), getExpansions() );
+            taskGoalsPanel = new PartGoalsPanel(
+                    "goals",
+                    new PropertyModel<Part>( this, "part" ),
+                    getExpansions(),
+                    this ); // pass tabIndexer
         }
         taskGoalsPanel.setOutputMarkupId( true );
         addOrReplace( taskGoalsPanel );
+        // initTabIndices( taskGoalsPanel, this );
     }
+
+    private void addAssetConnections() {
+        assetsContainer = new WebMarkupContainer( "assetsContainer" );
+        assetsContainer.setOutputMarkupId( true );
+        makeVisible( assetsContainer, !isShowSimpleForm() );
+        add( assetsContainer );
+        ConnectedAssetsPanel connectedAssetsPanel = new ConnectedAssetsPanel(
+                "assetConnections",
+                new PropertyModel<AssetConnectable>( this, "part" ) );
+        assetsContainer.add( connectedAssetsPanel );
+        connectedAssetsPanel.initTabIndexing( this );
+    }
+
 
     //====================================
 
@@ -1213,7 +1258,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void refresh( AjaxRequestTarget target ) {
-        addEntityFields();
+        addFunctionField();
+        addActorField();
+        addRoleField();
+        addOrganizationField();
+        addJurisdictionField();
+        addLocationField();
+        addLocationLink();
+        addEntityLinks();
         adjustFields();
         addGoals();
         // todo - remove

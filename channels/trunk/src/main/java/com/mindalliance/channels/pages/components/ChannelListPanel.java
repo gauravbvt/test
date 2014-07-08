@@ -44,7 +44,7 @@ import java.util.List;
  * Date: Feb 2, 2009
  * Time: 7:25:50 PM
  */
-public class ChannelListPanel extends AbstractCommandablePanel {
+public class ChannelListPanel extends AbstractCommandablePanel implements TabIndexable{
 
     /**
      * Logger.
@@ -83,6 +83,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private boolean restrictToContactInfoMedia = false;
 
+    private TabIndexer tabIndexer;
+
     static {
         NewMediumType = new TransmissionMedium( "New medium" );
         NewMediumType.setType();
@@ -106,15 +108,27 @@ public class ChannelListPanel extends AbstractCommandablePanel {
     }
 
 
-    public ChannelListPanel( String id, IModel<? extends Channelable> model, boolean canAddNewMediumAndFormat ) {
+    public ChannelListPanel( String id,
+                             IModel<? extends Channelable> model,
+                             boolean canAddNewMediumAndFormat,
+                             TabIndexer tabIndexer ) {
         super( id, model, null );
         this.canAddNewMedium = canAddNewMediumAndFormat;
         this.canAddNewInfoFormat = canAddNewMediumAndFormat;
+        this.tabIndexer = tabIndexer;
         init();
     }
 
-    public ChannelListPanel( String id, IModel<? extends Channelable> model ) {
-        this( id, model, true );
+    public ChannelListPanel( String id,
+                             IModel<? extends Channelable> model,
+                             TabIndexer tabIndexer) {
+
+        this( id, model, true, tabIndexer );
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
     }
 
     private void init() {
@@ -416,8 +430,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             item.add( addressLabel );
             TextField<String> addressField = createAddressField( wrapper );
             item.add( addressField );
-            item.add( createMediaChoices( wrapper ) );
-            item.add( createFormatContainer( wrapper ) );
+            applyTabIndexTo( addressField, tabIndexer );
+            createMediaChoices( wrapper, item );
+            createFormatContainer( wrapper, item );
             item.add( createMover( wrapper ) );
         }
 
@@ -474,8 +489,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
 
-        private DropDownChoice<TransmissionMedium> createMediaChoices(
-                final Wrapper wrapper ) {
+        private void createMediaChoices(
+                final Wrapper wrapper,
+                ListItem<Wrapper> item ) {
             final DropDownChoice<TransmissionMedium> mediumDropDownChoice = new DropDownChoice<TransmissionMedium>(
                     "medium",
                     new PropertyModel<TransmissionMedium>( wrapper, "medium" ),
@@ -498,10 +514,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             mediumDropDownChoice.setVisible( isEnabled() && wrapper.isMarkedForCreation() );
-            return mediumDropDownChoice;
+            item.add( mediumDropDownChoice );
+            applyTabIndexTo( mediumDropDownChoice, tabIndexer );
         }
 
-        private WebMarkupContainer createFormatContainer( Wrapper wrapper ) {
+        private void createFormatContainer( Wrapper wrapper, ListItem<Wrapper> item ) {
             WebMarkupContainer formatContainer = new WebMarkupContainer( "formatContainer" );
             InfoFormat format = wrapper.getFormat();
             // format link
@@ -544,7 +561,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     getChannelable().canSetFormat()
                             && !( !canBeEdited() && wrapper.getFormat() == null ) // hide when read only and no format
                             && !wrapper.isMarkedForCreation() );
-            return formatContainer;
+            applyTabIndexTo( formatDropDownChoice, tabIndexer );
+            item.add( formatContainer );
         }
 
         private TextField<String> createAddressField( Wrapper wrapper ) {

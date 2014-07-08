@@ -8,6 +8,8 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -35,7 +37,7 @@ import java.util.List;
  * Date: Apr 28, 2010
  * Time: 1:15:10 PM
  */
-public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
+public class OtherNodeSelectorPanel extends AbstractCommandablePanel implements TabIndexable {
 
     /**
      * Maximum display length for task name.
@@ -87,12 +89,14 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
      */
     private Node selectedOtherNode;
 
+    private TabIndexer tabIndexer;
+
     public OtherNodeSelectorPanel( String id,
                                    IModel<Node> nodeModel,
                                    IModel<Node> otherNodeModel,
                                    IModel<String> flowNameModel,
                                    IModel<List<Node>> firstChoiceNodes,
-                                   IModel<List<Node>> secondChoiceNodes ) {
+                                   IModel<List<Node>> secondChoiceNodes )  {
         super( id );
         this.nodeModel = nodeModel;
         this.otherNodeModel = otherNodeModel;
@@ -100,6 +104,12 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         this.firstChoiceNodes = firstChoiceNodes;
         this.secondChoiceNodes = secondChoiceNodes;
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( firstChoiceInput );
     }
 
     private void init() {
@@ -151,6 +161,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         } );
         firstChoiceInput.setOutputMarkupId( true );
         add( firstChoiceInput );
+        applyTabIndexTo( firstChoiceInput, tabIndexer );
     }
 
     private boolean isUnknownOtherSelected() {

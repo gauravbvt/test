@@ -8,6 +8,8 @@ import com.mindalliance.channels.core.model.time.Cyclic;
 import com.mindalliance.channels.core.model.time.TimeUnit;
 import com.mindalliance.channels.core.model.time.Tranche;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.TabIndexable;
+import com.mindalliance.channels.pages.components.TabIndexer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -34,7 +36,7 @@ import java.util.Set;
  * Date: 4/23/14
  * Time: 4:07 PM
  */
-public class CyclePanel extends AbstractCommandablePanel {
+public class CyclePanel extends AbstractCommandablePanel implements TabIndexable {
 
     private final IModel<Cyclic> cyclicModel;
     private String cycleProperty;
@@ -49,12 +51,21 @@ public class CyclePanel extends AbstractCommandablePanel {
     private TextField<String> tranchesField;
     private DropDownChoice<TimeUnit> timeUnitDropDownChoice;
     private TextField<String> skipField;
+    private TabIndexer tabIndexer;
 
     public CyclePanel( String id, IModel<Cyclic> cyclicModel, String cycleProperty ) {
         super( id );
         this.cyclicModel = cyclicModel;
         this.cycleProperty = cycleProperty;
         init();
+    }
+
+    @Override
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( tranchesField );
+        tabIndexer.giveTabIndexTo( skipField );
+        tabIndexer.giveTabIndexTo( timeUnitDropDownChoice );
     }
 
     private void init() {
@@ -132,6 +143,7 @@ public class CyclePanel extends AbstractCommandablePanel {
         makeVisible( tranchesField, hasTranches() );
         tranchesField.setOutputMarkupId( true );
         cycleEditor.addOrReplace( tranchesField );
+        applyTabIndexTo( tranchesField, tabIndexer );
     }
 
     private String getTranchesHint() {
@@ -158,7 +170,7 @@ public class CyclePanel extends AbstractCommandablePanel {
     }
 
     private void addSkip() {
-       skipField = new TextField<String>(
+        skipField = new TextField<String>(
                 "skip",
                 new PropertyModel<String>( this, "skip" )
         );
@@ -176,6 +188,7 @@ public class CyclePanel extends AbstractCommandablePanel {
         } );
         skipField.setOutputMarkupId( true );
         cycleEditor.addOrReplace( skipField );
+        applyTabIndexTo( skipField, tabIndexer );
     }
 
     private void addTimeUnit() {
@@ -210,6 +223,7 @@ public class CyclePanel extends AbstractCommandablePanel {
         } );
         timeUnitDropDownChoice.setOutputMarkupId( true );
         cycleEditor.addOrReplace( timeUnitDropDownChoice );
+        applyTabIndexTo( timeUnitDropDownChoice, tabIndexer );
     }
 
     public void enable( boolean enabled ) {

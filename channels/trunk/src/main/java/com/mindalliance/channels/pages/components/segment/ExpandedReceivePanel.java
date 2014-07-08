@@ -42,7 +42,8 @@ public class ExpandedReceivePanel extends ExpandedFlowPanel {
 
         ChannelListPanel channelListPanel = new ChannelListPanel(
                 "channels",                                                               // NON-NLS
-                new PropertyModel<Channelable>( this, "flow" ) );                         // NON-NLS
+                new PropertyModel<Channelable>( this, "flow" ),
+                this );                         // NON-NLS
         result.add( channelListPanel );
         return result;
     }

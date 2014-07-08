@@ -31,10 +31,11 @@ import java.util.Set;
  * Date: 1/27/11
  * Time: 2:41 PM
  */
-public class TagsPanel extends AbstractCommandablePanel {
+public class TagsPanel extends AbstractCommandablePanel implements TabIndexable {
 
     private AutoCompleteTextField<String> tagsField;
     private String tagsProperty;
+    private TabIndexer tabIndexer;
 
 
     public TagsPanel( String id, IModel<? extends Taggable> iModel, String tagsProperty ) {
@@ -46,6 +47,11 @@ public class TagsPanel extends AbstractCommandablePanel {
 
     public TagsPanel( String id, IModel<? extends Taggable> iModel ) {
         this( id, iModel, "rawTags" );
+    }
+
+    public void initTabIndexing( TabIndexer tabIndexer ) {
+        this.tabIndexer = tabIndexer;
+        tabIndexer.giveTabIndexTo( tagsField );;
     }
 
     private void init() {
@@ -79,7 +85,7 @@ public class TagsPanel extends AbstractCommandablePanel {
             Tag lastTag = tags.get( tags.size() - 1 );
             Set<Tag> lastTagMatches = new HashSet<Tag>();
             QueryService queryService = getQueryService();
-            List<Tag> domain =  getQueryService().findTagDomain();
+            List<Tag> domain = getQueryService().findTagDomain();
             for ( Tag t : domain ) {
                 if ( !tags.contains( t ) ) {
                     if ( queryService.likelyRelated( lastTag, t ) )
@@ -101,7 +107,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         return choices.iterator();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public String getTagsString() {
         return Tag.tagsToString( (List<Tag>) ChannelsUtils.getProperty( getTaggable(), tagsProperty, null ) );
     }
