@@ -63,9 +63,11 @@ public class CyclePanel extends AbstractCommandablePanel implements TabIndexable
     @Override
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( tranchesField );
-        tabIndexer.giveTabIndexTo( skipField );
-        tabIndexer.giveTabIndexTo( timeUnitDropDownChoice );
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( tranchesField );
+            tabIndexer.giveTabIndexTo( skipField );
+            tabIndexer.giveTabIndexTo( timeUnitDropDownChoice );
+        }
     }
 
     private void init() {

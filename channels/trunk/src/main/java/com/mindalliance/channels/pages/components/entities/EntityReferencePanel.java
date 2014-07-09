@@ -99,7 +99,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             T defaultEntity,
             ModelEntity.Kind referenceKind ) {
         super( id, iModel );
-        entityKind = ModelEntity.defaultKindFor ( entityClass );
+        entityKind = ModelEntity.defaultKindFor( entityClass );
         this.choices = choices;
         this.property = property;
         this.entityClass = entityClass;
@@ -120,12 +120,14 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
 
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( nameField ); // at least reserve index for nameField
-        tabIndexer.giveTabIndexTo( actualOrTypeChoice );
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( nameField ); // at least reserve index for nameField
+            tabIndexer.giveTabIndexTo( actualOrTypeChoice );
+        }
     }
 
     private void addKindChoice() {
-        ModelEntity.Kind[] kinds = { ModelEntity.Kind.Type, ModelEntity.Kind.Actual };
+        ModelEntity.Kind[] kinds = {ModelEntity.Kind.Type, ModelEntity.Kind.Actual};
         // Actual vs type
         actualOrTypeChoice = new DropDownChoice<ModelEntity.Kind>(
                 "actualOrType",
@@ -151,7 +153,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         actualOrTypeChoice.setOutputMarkupId( true );
         actualOrTypeChoice.setVisible(
                 referenceKind == null
-                && ModelEntity.canBeActualOrType( entityClass )
+                        && ModelEntity.canBeActualOrType( entityClass )
         );
         add( actualOrTypeChoice );
         applyTabIndexTo( actualOrTypeChoice, tabIndexer );
@@ -279,7 +281,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             }
         }
         if ( newEntity == null && defaultEntity != null ) {
-           newEntity = defaultEntity;
+            newEntity = defaultEntity;
         }
         Identifiable referencer = getReferencer();
         if ( referencer instanceof SegmentObject ) {

@@ -201,7 +201,8 @@ public class PartGoalsPanel extends AbstractCommandablePanel implements TabIndex
         @Override
         public void initTabIndexing( TabIndexer tabIndexer ) {
             this.tabIndexer = tabIndexer;
-            tabIndexer.giveTabIndexTo( goalChoice );
+            if ( tabIndexer != null )
+                tabIndexer.giveTabIndexTo( goalChoice );
         }
 
         private void init() {

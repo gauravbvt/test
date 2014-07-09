@@ -109,7 +109,9 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel implements 
     @Override
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( firstChoiceInput );
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( firstChoiceInput );
+        }
     }
 
     private void init() {

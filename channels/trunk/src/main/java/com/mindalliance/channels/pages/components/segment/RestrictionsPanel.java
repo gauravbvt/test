@@ -54,7 +54,9 @@ public class RestrictionsPanel extends AbstractCommandablePanel implements TabIn
     @Override
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( newRestrictionChoice );
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( newRestrictionChoice );
+        }
     }
 
     private void init() {

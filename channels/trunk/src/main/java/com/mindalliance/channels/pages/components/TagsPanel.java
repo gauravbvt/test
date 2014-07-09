@@ -51,7 +51,8 @@ public class TagsPanel extends AbstractCommandablePanel implements TabIndexable 
 
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( tagsField );;
+        if ( tabIndexer != null )
+            tabIndexer.giveTabIndexTo( tagsField );
     }
 
     private void init() {

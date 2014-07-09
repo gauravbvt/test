@@ -55,8 +55,10 @@ public class AssignedLocationPanel extends AbstractCommandablePanel implements T
 
     public void initTabIndexing( TabIndexer tabIndexer ) {
         this.tabIndexer = tabIndexer;
-        tabIndexer.giveTabIndexTo( kindChoice );
-        initTabIndices( placeReferencePanel, tabIndexer ); // do it right away to at least reserve the index for the component by id
+        if ( tabIndexer != null ) {
+            tabIndexer.giveTabIndexTo( kindChoice );
+            initTabIndices( placeReferencePanel, tabIndexer ); // do it right away to at least reserve the index for the component by id
+        }
     }
 
     private void init() {
