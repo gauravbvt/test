@@ -75,7 +75,7 @@ public class ConnectedFlowList extends Panel {
             ModelObjectLink link = new ModelObjectLink(
                     "part",
                     new Model<Node>( target ),
-                    new Model<String>( target.getName() ) );
+                    new Model<String>( target.getTitle() ) );
             item.add( link );
             item.add( new Label( "segment", target.getSegment().getName() ) );
 

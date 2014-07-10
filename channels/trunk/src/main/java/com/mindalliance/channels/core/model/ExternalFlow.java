@@ -173,6 +173,12 @@ public class ExternalFlow extends Flow {
         return flow == null ? super.isAskedFor() : flow.isAskedFor();
     }
 
+    @Override
+    public boolean isStandardized() {
+        Flow flow = getConnectorFlow();
+        return flow == null ? super.isStandardized() : flow.isStandardized();
+    }
+
     /**
      * {@inheritDoc}
      */
