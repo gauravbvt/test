@@ -3916,6 +3916,8 @@
                     <description>
                         The collaboration rhythm panel displays the repeating tasks defined the collaboration model.
 
+                        [[File:model_rhythm.png|Collaboration rhythm panel]]
+
                         The panel shows the tasks that repeat yearly, monthly, weekly, daily or hourly, and shows how they repeat.
 
                         The tasks shown can be further filtered by the phases and/or events of the segments to which the tasks
