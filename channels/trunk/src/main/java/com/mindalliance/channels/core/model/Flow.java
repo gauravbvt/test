@@ -552,7 +552,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String result = "somebody";
 
         if ( node != null ) {
-            String sourceName = node.getLabel();
+            String sourceName = node.getName();
             if ( sourceName != null && !sourceName.trim().isEmpty() ) {
                 result = sourceName;
             }

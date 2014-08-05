@@ -20,13 +20,13 @@ import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ModelManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -109,9 +109,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String FROM_COMMUNITY = "from_community";
 
-    public static final int GALLERY_WIDTH = 775;
+    public static final int GALLERY_WIDTH = 880;
 
-    public static final int GALLERY_HEIGHT = 475;
+    public static final int GALLERY_HEIGHT = 645;
 
 
     /**
