@@ -862,9 +862,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable, TabIndex
         if ( tabIndexer != null ) {
             if ( component instanceof TabIndexable ) {
                 ( (TabIndexable) component ).initTabIndexing( tabIndexer );
-            } else {
-                throw new IllegalArgumentException( "Must be tab-indexable" );
-            }
+            } // else do nothing
         }
     }
 
