@@ -3113,9 +3113,6 @@ public abstract class DefaultQueryService implements QueryService {
         if ( !label.isEmpty() )
             label += sep;
         label += part.getTaskLabel();
-        if ( part.isRepeating() ) {
-            label += " - repeats";
-        }
         return label;
     }
 

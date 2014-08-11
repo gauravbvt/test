@@ -435,7 +435,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
     }
 
     public boolean isAutoStarted() {
-        return isOngoing() || isStartsWithSegment();
+        return isOngoing() || isStartsWithSegment() || isRepeating();
     }
 
     public boolean isTerminatesEventPhase() {

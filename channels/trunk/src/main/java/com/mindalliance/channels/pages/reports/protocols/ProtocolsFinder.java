@@ -45,6 +45,7 @@ public class ProtocolsFinder implements Serializable {
     private final Agent agent;
     //
     private List<ChecklistData> ongoingProcedures;
+    private List<ChecklistData> repeatingProcedures;
     private Set<String> communicationContexts;
     private Map<ObservationData, List<ChecklistData>> onObservations;
     private Map<TriggerData, List<ChecklistData>> onRequests;
@@ -83,6 +84,7 @@ public class ProtocolsFinder implements Serializable {
         communicationContexts = new HashSet<String>();
         modelScopeData = channelsService.modelScope( collaborationModel.getUri(), Integer.toString( collaborationModel.getVersion() ), false );
         ongoingProcedures = new ArrayList<ChecklistData>();
+        repeatingProcedures = new ArrayList<ChecklistData>();
         onObservations = new HashMap<ObservationData, List<ChecklistData>>();
         onNotificationsInContextWithInfoByContact = new HashMap<String, Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>>();
         onRequestsInContextForInfoByContact = new HashMap<String, Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>>>();
@@ -104,6 +106,8 @@ public class ProtocolsFinder implements Serializable {
             ChannelsUser user ) {
         if ( checklistData.isOngoing() ) {
             ongoingProcedures.add( checklistData );
+        } else if ( checklistData.isRepeating() ) {
+            repeatingProcedures.add( checklistData );
         } else {
             for ( TriggerData triggerData : checklistData.getObservationTriggers() ) {
                 addTo( onObservations, triggerData.getOnObservation(), checklistData );
@@ -220,6 +224,9 @@ public class ProtocolsFinder implements Serializable {
     public List<ChecklistData> getOngoingProcedures() {
         return ongoingProcedures;
     }
+
+    public List<ChecklistData> getRepeatingProcedures() {
+        return repeatingProcedures; }
 
     public Map<ObservationData, List<ChecklistData>> getOnObservationChecklists() {
         return onObservations;

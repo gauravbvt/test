@@ -61,6 +61,14 @@
                 </li>
             </ul>
         </div>
+        <div class="ongoing-toc" wicket:id="repeating-toc">
+            <h3>My periodically recurring tasks</h3>
+            <ul class="toc-cont">
+                <li wicket:id="repeatingLinks"> <!-- repeated -->
+                    <span wicket:id="checklistLink">[a data link panel]</span>
+                </li>
+            </ul>
+        </div>
         <div class="observations-toc" wicket:id="observations-toc">
             <h3>My tasks when I notice certain things</h3>
             <ul class="toc-cont">
@@ -132,6 +140,11 @@
 
         <div wicket:id="ongoing">
             <div class="ongoingProcedures" wicket:id="ongoingProcedures"> <!-- repeated -->
+                <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+            </div>
+        </div>
+        <div wicket:id="repeating">
+            <div class="repeatingProcedures" wicket:id="repeatingProcedures"> <!-- repeated -->
                 <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
             </div>
         </div>

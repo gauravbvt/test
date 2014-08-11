@@ -136,7 +136,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         Flow.Intent intent = flow.getIntent();
         if ( intent != null )
             message += " (" + intent.getLabel() + ")";
-        return message.toLowerCase();
+        return message;
     }
 
     private String getPost() {

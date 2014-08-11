@@ -2593,7 +2593,6 @@ input[disabled] {
 .flow .info,
 .summary .task {
     font-weight: bold;
-    text-transform: capitalize;
 }
 
 #sg-sel {

@@ -26,7 +26,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "onFollowUp", "onResearch", "requestingTask", "ongoing"} )
+@XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "onFollowUp", "onResearch", "requestingTask", "ongoing", "repeating"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     public static final String WHENEVER = "Whenever";
@@ -38,6 +38,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private RequestData onRequest;
     private Flow requestToSelf;
     private boolean ongoing = false;
+    private boolean repeating = false;
     private List<EventTiming> eventPhaseContext;
     private FollowUpData followUpData;
     private ResearchData researchData;
@@ -83,21 +84,30 @@ public class TriggerData extends AbstractProcedureElementData {
 
     public void setOngoing( boolean ongoing ) {
         this.ongoing = ongoing;
+        if (ongoing) repeating = false;
+    }
+
+    public void setRepeating( boolean repeating) {
+        this.repeating = repeating;
+        if (repeating) ongoing = false;
     }
 
     public void setNotificationFromOther( Flow notificationFromOther ) {
         this.notificationFromOther = notificationFromOther;
         ongoing = false;
+        repeating = false;
     }
 
     public void setRequestFromOther( Flow requestFromOther ) {
         this.requestFromOther = requestFromOther;
         ongoing = false;
+        repeating = false;
     }
 
     public void setEventPhase( EventPhase eventPhase ) {
         this.eventPhase = eventPhase;
         ongoing = false;
+        repeating = false;
     }
 
     public void setEventPhaseContext( List<EventTiming> eventPhaseContext ) {
@@ -107,11 +117,13 @@ public class TriggerData extends AbstractProcedureElementData {
     public void setNotificationToSelf( Flow notificationToSelf ) {
         this.notificationToSelf = notificationToSelf;
         ongoing = false;
+        repeating = false;
     }
 
     public void setRequestToSelf( Flow requestToSelf ) {
         this.requestToSelf = requestToSelf;
         ongoing = false;
+        repeating = false;
     }
 
     // Called after nature of trigger is set.
@@ -190,6 +202,11 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public boolean getOngoing() {
         return ongoing;
+    }
+
+    @XmlElement
+    public boolean getRepeating() {
+        return repeating;
     }
 
 
@@ -438,6 +455,7 @@ public class TriggerData extends AbstractProcedureElementData {
         if ( object instanceof TriggerData ) {
             TriggerData other = (TriggerData) object;
             return ongoing == other.getOngoing()
+                    && repeating == other.getRepeating()
                     && equalOrBothNull( notificationFromOther, other.notificationFromOther() )
                     && equalOrBothNull( requestFromOther, other.requestFromOther() )
                     && equalOrBothNull( requestToSelf, other.requestToSelf() )
@@ -452,7 +470,8 @@ public class TriggerData extends AbstractProcedureElementData {
     @Override
     public int hashCode() {
         int result = 1;
-        if ( ongoing ) result = 31 * result;
+        if ( ongoing ) result = 31 * result + "ongoing".hashCode();
+        if ( repeating ) result = 31 * result + "repeating".hashCode();
         if ( notificationFromOther != null ) result = 31 * result +  notificationFromOther.hashCode();
         if ( requestFromOther != null ) result = 31 * result +  requestFromOther.hashCode();
         if ( requestToSelf != null ) result = 31 * result +  requestToSelf.hashCode();

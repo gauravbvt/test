@@ -301,6 +301,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         finderContainer = new WebMarkupContainer( "finder" );
         getContainer().add( finderContainer );
         addOngoingFinder();
+        addRepeatingFinder();
         addOnObservationFinder();
         addOnCommunicationFinder();
     }
@@ -312,6 +313,15 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         ongoingToc.setVisible( !checklists.isEmpty() );
         ongoingToc.add( makeChecklistLinks( "ongoingLinks", checklists ) );
     }
+
+    private void addRepeatingFinder() {
+        List<ChecklistData> checklists = finder.getRepeatingProcedures();
+        WebMarkupContainer repeatingToc = new WebMarkupContainer( "repeating-toc" );
+        finderContainer.add( repeatingToc );
+        repeatingToc.setVisible( !checklists.isEmpty() );
+        repeatingToc.add( makeChecklistLinks( "repeatingLinks", checklists ) );
+    }
+
 
     private ListView<ChecklistData> makeChecklistLinks( String id, List<ChecklistData> checklistDataList ) {
         List<ChecklistData> sortedChecklistDataList = new ArrayList<ChecklistData>( checklistDataList );
@@ -468,6 +478,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         protocolsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( protocolsContainer );
         addOngoingChecklists();
+        addRepeatingChecklists();
         addOnObservationChecklists();
         addOnRequestChecklists();
         addOnNotificationChecklists();
@@ -502,6 +513,33 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         };
         ongoingContainer.add( ongoingChecklistsListView );
     }
+
+    private void addRepeatingChecklists() {
+        List<ChecklistData> sortedChecklists = new ArrayList<ChecklistData>( finder.getRepeatingProcedures() );
+        Collections.sort(
+                sortedChecklists,
+                new Comparator<ChecklistData>() {
+                    @Override
+                    public int compare( ChecklistData pd1, ChecklistData pd2 ) {
+                        return pd1.getLabel().compareTo( pd2.getLabel() );
+                    }
+                } );
+        WebMarkupContainer repeatingContainer = new WebMarkupContainer( "repeating" );
+        protocolsContainer.add( repeatingContainer );
+        repeatingContainer.setVisible( !sortedChecklists.isEmpty() );
+        ListView<ChecklistData> repeatingChecklistsListView = new ListView<ChecklistData>(
+                "repeatingProcedures",
+                sortedChecklists
+        ) {
+            @Override
+            protected void populateItem( ListItem<ChecklistData> item ) {
+                ChecklistData checklistData = item.getModelObject();
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
+            }
+        };
+        repeatingContainer.add( repeatingChecklistsListView );
+    }
+
 
     private void addOnObservationChecklists() {
         protocolsContainer.add( makeEventTriggeredChecklistsContainer(

@@ -144,9 +144,9 @@ public class RestrictionsPanel extends AbstractCommandablePanel implements TabIn
                             new Predicate() {
                                 @Override
                                 public boolean evaluate( Object object ) {
-                                    Flow.Restriction otherRestriction = (Flow.Restriction) object;
-                                    return otherRestriction.contradicts( restriction ) ||
-                                            Flow.Restriction.implies( restriction, otherRestriction );
+                                    Flow.Restriction setRestriction = (Flow.Restriction) object;
+                                    return setRestriction.contradicts( restriction ) ||
+                                            Flow.Restriction.implies( setRestriction, restriction );
                                 }
                             }
                     ) ) {

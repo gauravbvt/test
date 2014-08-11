@@ -104,8 +104,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
             sb.append( part.getLocation().toString() );
         }
         sb.append( "." );
-        if ( part.isRepeating()
-                || part.isSelfTerminating()
+        if ( part.isSelfTerminating()
                 || part.initiatesEvent()
                 || part.isAutoStarted()
                 || part.isTerminatesEventPhase() ) {

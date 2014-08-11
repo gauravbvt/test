@@ -67,6 +67,10 @@ public class CommunityAssignment implements Serializable {
         return getPart().isOngoing();
     }
 
+    public boolean isRepeating() {
+        return part.isRepeating();
+    }
+
     public boolean isInitiatedByEventPhase() {
         return getPart().isStartsWithSegment();
     }
@@ -140,6 +144,7 @@ public class CommunityAssignment implements Serializable {
     public Assignment getAssignment() {
         return new Assignment( communityEmployment.getEmployment(), part );
     }
+
 
 
     //////////////////

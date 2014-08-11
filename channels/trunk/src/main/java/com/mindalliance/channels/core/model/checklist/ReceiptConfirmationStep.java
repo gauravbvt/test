@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Flow;
  * Date: 5/20/13
  * Time: 3:09 PM
  */
-public class ReceiptConfirmationStep extends Step { // todo - make it a communication step
+public class ReceiptConfirmationStep extends Step { // todo - make it a communication step?
 
     public static final String REF_PREFIX = "conf|";
 
@@ -21,6 +21,11 @@ public class ReceiptConfirmationStep extends Step { // todo - make it a communic
 
     public Flow getSharingToConfirm() {
         return sharing;
+    }
+
+
+    public static boolean isConfirmationReceiptStep( String stepRef ) {
+        return stepRef.startsWith( REF_PREFIX );
     }
 
     @Override

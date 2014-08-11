@@ -8,6 +8,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventPhase;
@@ -15,7 +16,6 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Phase.Timing;
-import com.mindalliance.channels.core.model.CollaborationModel;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
@@ -281,9 +281,14 @@ public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Co
         for ( EventPhase eventPhase : autoStarters.keySet() ) {
             for ( Assignment assignment : autoStarters.get( eventPhase ) ) {
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( assignment.getPart() );
+                Part part = assignment.getPart();
                 attributes.add( new DOTAttribute(
                         "headlabel",
-                        assignment.getPart().isOngoing()? "(ongoing)" : "(starts)" ) );
+                        part.isOngoing()
+                                ? "(ongoing)"
+                                : part.isRepeating()
+                                ? "(recurs)"
+                                : "(starts)" ) );
                 String autoStarterId = getVertexID( assignment );
                 out.print( getIndent() + getStartId( eventPhase ) + getArrow( g ) + autoStarterId );
                 out.print( "[" );

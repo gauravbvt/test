@@ -388,9 +388,6 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 if ( hasRestrictions || edge.isRepeating() ) {
                    if (hasRestrictions)
                         labelTooltip += "only if " + edge.getRestrictionString( !edge.isNeed() );
-                   if ( edge.isRepeating() ) {
-                       labelTooltip += (hasRestrictions ? " - repeat" : "repeat");
-                   }
                 } else {
                     labelTooltip += sanitize( edge.getName() );
                 }

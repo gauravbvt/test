@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
@@ -27,18 +26,24 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( CommunityService communityService, Identifiable modelObject ) {
-        QueryService queryService = communityService.getModelService();
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isAutoStarted() && part.isTriggered() ) {
             Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
             issue.setDescription( "This task is unnecessarily triggered"
                     + " since it "
-                    + ( part.isStartsWithSegment() ? " starts with the segment." : " is ongoing." ) );
+                    + ( part.isStartsWithSegment()
+                        ? " starts with the segment."
+                        : part.isRepeating()
+                        ? "recurs periodically."
+                        : "is ongoing." ) );
             issue.setRemediation( "Have no flow trigger this task\n"
                     + "or have the task not "
-                    + ( part.isStartsWithSegment() ? " start with the segment." : " be ongoing." )
-                    + " start with the segment." );
+                    + ( part.isStartsWithSegment()
+                            ? " start with the segment."
+                            : part.isRepeating()
+                            ? " recur periodically."
+                            : " be ongoing." ) );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }

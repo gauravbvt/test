@@ -388,7 +388,21 @@ public class Checklist implements Serializable, Mappable {
                 ? findCommunicationStep( stepRef )
                 : SubTaskStep.isSubTaskStepRef( stepRef )
                 ? findSubTaskStep( stepRef )
+                : ReceiptConfirmationStep.isConfirmationReceiptStep( stepRef )
+                ? findReceiptConfirmationStep( stepRef )
                 : null;
+    }
+
+    private ReceiptConfirmationStep findReceiptConfirmationStep( final String stepRef ) {
+        return (ReceiptConfirmationStep) CollectionUtils.find(
+                listReceiptConfirmationSteps(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (ReceiptConfirmationStep) object ).getRef().equals( stepRef );
+                    }
+                }
+        );
     }
 
     private ActionStep findActionStep( final String stepRef ) {
@@ -397,7 +411,7 @@ public class Checklist implements Serializable, Mappable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (ActionStep) object ).getRef().equals( stepRef ); // todo - remove after conversion
+                        return ( (ActionStep) object ).getRef().equals( stepRef );
                     }
                 }
         );

@@ -507,8 +507,8 @@ public class Organization extends AbstractUnicastChannelable
         if ( getParent() == null )
             return this;
         else {
-            List<Organization> ancestors = ancestors();
-            return ancestors.get( ancestors.size() - 1 );
+            List<Organization> ancestors = ancestors(); // from parent to root of ancestral tree
+            return ancestors.get( 0 );
         }
     }
 

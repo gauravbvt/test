@@ -392,9 +392,10 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
     private String getTooltip( ChecklistElement vertex ) {
         if ( vertex.isStep() )
-            return vertex.getStep().isRequired()
+            return vertex.getStep().getLabel();
+                  /*  vertex.getStep().isRequired()
                     ? "Required"
-                    : "Optional";
+                    : "Optional";*/
         else
             return "";
     }

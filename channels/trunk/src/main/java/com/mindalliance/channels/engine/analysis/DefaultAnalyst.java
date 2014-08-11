@@ -366,7 +366,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     sb.append( "in all communication commitments, " );
                                 else
                                     sb.append( ", or " );
-                                sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                                sb.append( "the agent to be contacted is not reachable (no channels)" );
                             } else {
                                 List<Commitment> agentsQualified =
                                         agentsQualifiedFilter( reachable, mediaUsed, locale );

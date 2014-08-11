@@ -110,6 +110,11 @@ public class ChecklistData implements Serializable {
             triggerData.setOngoing( true );
             triggerData.initTrigger( communityService );
             triggers.add( triggerData );
+        } else if ( assignment.isRepeating() ) {
+            TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
+            triggerData.setRepeating( true );
+            triggerData.initTrigger( communityService );
+            triggers.add( triggerData );
         } else {
             // event phase is trigger
             if ( assignment.isInitiatedByEventPhase() ) {
@@ -427,6 +432,18 @@ public class ChecklistData implements Serializable {
                     }
                 } );
     }
+
+    public boolean isRepeating() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getRepeating();
+                    }
+                } );
+    }
+
 
     public boolean isTriggeredByObservation() {
         return CollectionUtils.exists(
