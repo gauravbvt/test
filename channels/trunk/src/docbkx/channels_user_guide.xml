@@ -10177,6 +10177,23 @@
                 </row>
 
                 <row>
+                    <entry><para>Organization has jobs with identical titles</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Rename jobs so each has a different title</para>
+                        </listitem>
+                        <listitem>
+                            <para>or all jobs with identical title but one</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
                     <entry><para>Agent has a supervisor from outside own organization</para></entry>
 
                     <entry><para>Medium</para></entry>

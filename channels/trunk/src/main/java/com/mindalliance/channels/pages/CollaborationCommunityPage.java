@@ -220,7 +220,7 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
                 detailsDialog.show( target );
             }
         };
-        editButton.setVisible( isCollaborationPlanner() );
+        editButton.setVisible( isCommunityPlanner() );
         addTipTitle( editButton, "Edit the name, description and locale of the community" );
         detailsContainer.add( editButton );
     }
@@ -248,13 +248,13 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
         updateVersionButton.setOutputMarkupId( true );
         Label updateVersionLabel = new Label( "updateVersionLabel", "Update to version " + latestProdVersion );
         updateVersionButton.add( updateVersionLabel );
-        makeVisible( updateVersionButton, planVersion != latestProdVersion && isCollaborationPlanner() );
+        makeVisible( updateVersionButton, planVersion != latestProdVersion && isCommunityPlanner() );
         addTipTitle( updateVersionButton, "Update to the current production release of the collaboration model "
                 + getCollaborationModel().getName() );
         detailsContainer.addOrReplace( updateVersionButton );
     }
 
-    private boolean isCollaborationPlanner() {
+    private boolean isCommunityPlanner() {
         return getCommunityService().isCommunityPlanner( getUser() );
     }
 
@@ -273,7 +273,7 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
     }
 
     private boolean isAttachmentsReadOnly() {
-        return !isCollaborationPlanner();
+        return !isCommunityPlanner();
     }
 
     private void addStatusPanel() {
@@ -401,7 +401,7 @@ public class CollaborationCommunityPage extends AbstractChannelsBasicPage {
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( gotoIssuesLink )
-                        .setVisible( isCollaborationPlanner() )
+                        .setVisible( isCommunityPlanner() )
                         .setOutputMarkupId( true )
 
         );

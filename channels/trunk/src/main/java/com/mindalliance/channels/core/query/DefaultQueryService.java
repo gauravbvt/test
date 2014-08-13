@@ -943,8 +943,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-
-
     private void addCommitment(
             Commitment commitment, Set<Commitment> commitments, Place locale, List<Flow> allFlows ) {
 
@@ -1423,17 +1421,14 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Employment> findAllEmploymentsIn( Organization organization ) {
-        List<Employment> employments = new ArrayList<Employment>();
-        List<Organization> orgs = listEntitiesNarrowingOrEqualTo( organization );
-        for ( Organization org : orgs ) {
-            for ( Job job : org.getJobs() ) {
-                employments.add( new Employment( job.getActor(), org, job ) );
-            }
-            for ( Job job : findUnconfirmedJobs( org ) ) {
-                employments.add( new Employment( job.getActor(), org, job ) );
-            }
+        Set<Employment> employments = new HashSet<Employment>();
+        for ( Job job : organization.getJobs() ) {
+            employments.add( new Employment( job.getActor(), organization, job ) );
         }
-        return employments;
+        for ( Job job : findUnconfirmedJobs( organization ) ) {
+            employments.add( new Employment( job.getActor(), organization, job ) );
+        }
+        return new ArrayList<Employment>( employments );
     }
 
     @Override
@@ -3678,10 +3673,8 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Actor> findAllActorsEmployedBy( Organization organization ) {
         Set<Actor> actors = new HashSet<Actor>();
-        for ( Organization org : organization.selfAndAncestors() ) {
-            for ( Employment employment : findAllEmploymentsIn( org ) ) {
-                actors.add( employment.getActor() );
-            }
+        for ( Employment employment : findAllEmploymentsIn( organization ) ) {
+            actors.add( employment.getActor() );
         }
         return new ArrayList<Actor>( actors );
     }
@@ -3857,9 +3850,9 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Assignments findPrecedingAssignmentsWithAssetDirectlyAvailable( Assignment assignment,
-                                                                            final MaterialAsset asset,
-                                                                            final List<AssetSupplyRelationship> assetSupplyRelationships,
-                                                                            Assignments allAssignments ) {
+                                                                           final MaterialAsset asset,
+                                                                           final List<AssetSupplyRelationship> assetSupplyRelationships,
+                                                                           Assignments allAssignments ) {
         Assignments result = new Assignments( getPlanLocale() );
         for ( Part precedingPart : findPartsPreceding( assignment.getPart() ) ) { // find ALL parts preceding this assignment directly or indirectly
             Assignments precedingAssignments = allAssignments.assignedTo( precedingPart ).with( assignment.getActor() );
@@ -3880,8 +3873,8 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Boolean isAssetDirectlyAvailableToAssignment( Assignment assignment,
-                                                          final MaterialAsset asset,
-                                                          List<AssetSupplyRelationship> assetSupplyRelationships ) {
+                                                         final MaterialAsset asset,
+                                                         List<AssetSupplyRelationship> assetSupplyRelationships ) {
         return CollectionUtils.exists(
                 findAllAssetsDirectlyAvailableTo(
                         assignment,

@@ -16,6 +16,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -226,13 +227,21 @@ public class CollaborationCommunityDetailsPanel extends AbstractCommandablePanel
     }
 
     private void addLocationBindingsPanel() {
+        WebMarkupContainer locationsContainer = new WebMarkupContainer( "locations" );
+        locationsContainer.setOutputMarkupId( true );
+        makeVisible( locationsContainer, !locationBindings.isEmpty() );
+        addOrReplace( locationsContainer );
         LocationBindingsPanel locationBindingsPanel = new LocationBindingsPanel( "locationBindings", locationBindings );
-        addOrReplace( locationBindingsPanel );
+        locationsContainer.add( locationBindingsPanel );
     }
 
     private void addAssetBindingsPanel() {
+        WebMarkupContainer assetsContainer = new WebMarkupContainer( "assets" );
+        assetsContainer.setOutputMarkupId( true );
+        makeVisible( assetsContainer, !assetBindings.isEmpty() );
+        addOrReplace( assetsContainer );
         AssetBindingsPanel assetBindingsPanel = new AssetBindingsPanel( "assetBindings", assetBindings );
-        addOrReplace( assetBindingsPanel );
+        assetsContainer.add( assetBindingsPanel );
     }
 
 

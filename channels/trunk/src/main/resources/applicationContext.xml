@@ -372,6 +372,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.PartRepeatsBeforeItCompletes"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskRepeatedlyTerminated"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RepeatedTaskDoesNotInitiateFlows"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationsHasJobsWithSameTitle"/>
             </list>
         </property>
     </bean>
