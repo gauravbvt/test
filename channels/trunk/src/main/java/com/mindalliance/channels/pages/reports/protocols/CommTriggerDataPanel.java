@@ -47,7 +47,7 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
                 "communicatedContext",
                 communicatedContext == null
                         ? ""
-                        : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) );
+                        : ChannelsUtils.lcFirst( communicatedContext.getSituationLabel() ) );
         commContextLabel.setVisible( communicatedContext != null );
         add( commContextLabel );
     }

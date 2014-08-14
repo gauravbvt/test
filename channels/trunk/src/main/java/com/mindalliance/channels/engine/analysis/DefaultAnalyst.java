@@ -131,7 +131,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         this.doctor = doctor;
     }
 
-     @Override
+    @Override
     public SegmentRelationship findSegmentRelationship( CommunityService communityService, Segment fromSegment,
                                                         Segment toSegment ) {
         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
@@ -330,7 +330,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 causes.add( "the task \"" + ( (Part) flow.getTarget() ).getTask() + "\" can not be executed" );
             if ( flow.getEffectiveChannels().isEmpty() )
                 causes.add( "no channels is identified" );
-            else {
+            else if ( !flow.isToSelf() ) {
                 List<Commitment> commitments =
                         modelService.findAllCommitments( flow, false, modelService.getAssignments( false ) );
                 if ( commitments.isEmpty() ) {
@@ -473,7 +473,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agreements are in place if required.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> agreedToFilter( List<Commitment> commitments, final ModelService modelService ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override
@@ -484,7 +484,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agent availabilities coincide if required.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> availabilitiesCoincideIfRequiredFilter( List<Commitment> commitments,
                                                                      final List<TransmissionMedium> mediaUsed,
                                                                      final Place planLocale ) {
@@ -544,7 +544,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 */
 
     // Filter commitments where agent to eb contacted has known contact info.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> reachableFilter( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed,
                                               final Place planLocale ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
@@ -570,7 +570,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where both agents are qualified to use a transmission medium.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> agentsQualifiedFilter( List<Commitment> commitments,
                                                     final List<TransmissionMedium> mediaUsed, final Place planLocale ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
@@ -597,7 +597,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agents can understand one another.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private static List<Commitment> commonLanguageFilter( final CollaborationModel collaborationModel, List<Commitment> commitments ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override

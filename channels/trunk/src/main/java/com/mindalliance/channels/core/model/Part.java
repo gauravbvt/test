@@ -13,13 +13,11 @@ import com.mindalliance.channels.core.model.time.Delay;
 import com.mindalliance.channels.core.model.time.TimeUnit;
 import com.mindalliance.channels.core.query.ModelService;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -151,7 +149,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     @Override
     public String getTitle() {
-        return MessageFormat.format( "{0} - {1}", getName(), WordUtils.uncapitalize( task ) );
+        return MessageFormat.format( "{0} - {1}", getName(), task );
     }
 
     @Override
@@ -1476,19 +1474,6 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                     }
                 }
         );
-    }
-
-    public int countChecklistIssues( Analyst analyst, CommunityService communityService ) {
-        return CollectionUtils.select(
-                analyst.getDoctor().listIssues( communityService, this, true, false ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Issue issue = (Issue) object;
-                        return issue.hasTag( "checklist" );
-                    }
-                }
-        ).size();
     }
 
     public List<InfoNeed> getNonTriggeringInfoNeeds() {

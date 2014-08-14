@@ -80,6 +80,7 @@ public class CollaborationCommunityStatusPanel extends AbstractCommandablePanel 
                 "closed",
                 !getPlanCommunity().isClosed()
         );
+        command.setMemorable( false );
         command.makeUndoable( false );
         doCommand( command );
     }

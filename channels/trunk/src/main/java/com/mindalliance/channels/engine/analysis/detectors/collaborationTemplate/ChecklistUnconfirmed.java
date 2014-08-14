@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -51,10 +50,7 @@ public class ChecklistUnconfirmed extends AbstractIssueDetector {
         return null;
     }
 
-    @Override
-    protected List<String> getTags() {
-        return Arrays.asList( "checklist" );
-    }
+    // Do not tag this issue with "checklist" or it will never be confirmed.
 
     @Override
     protected String getKindLabel() {

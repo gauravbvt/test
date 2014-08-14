@@ -10,8 +10,12 @@
     <div class="filters">
         Show <select wicket:id="status">
                 <option>All</option>
-            </select> checklists
-        <input wicket:id="withIssues" type="checkbox"/> but only those that have issues
+            </select> checklists <span wicket:id="filters">, but only those that
+        <input wicket:id="withIssues" type="checkbox"/> have unwaived issues
+        <input wicket:id="unassigned" type="checkbox"/> are not assigned
+        <input wicket:id="notStarted" type="checkbox"/> are never started
+        <input wicket:id="uncommitted" type="checkbox"/> have uncommitted flows
+        </span>
     </div>
     <span wicket:id="checklistTable">[checklist table]</span>
 </wicket:panel>

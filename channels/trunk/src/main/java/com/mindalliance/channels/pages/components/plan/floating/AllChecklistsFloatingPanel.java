@@ -63,5 +63,8 @@ public class AllChecklistsFloatingPanel extends AbstractFloatingCommandablePanel
         return "All checklists";
     }
 
+    protected int getWidth() {
+        return 900;
+    }
 
 }

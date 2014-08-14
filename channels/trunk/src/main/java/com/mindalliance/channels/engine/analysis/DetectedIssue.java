@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Waivable;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
@@ -237,6 +238,7 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return "("
                 + ( isWaived( communityService ) ? "Waived" : severity.getNegativeLabel() )
                 + ") "
+                + getTagsLabel()
                 + getDescription();
     }
 
@@ -246,8 +248,13 @@ public class DetectedIssue extends AnalysisObject implements Issue {
     }
 
     public String getLabel() {
-        return MessageFormat.format( "({0}) {1}",
-                severity.getNegativeLabel(), getDescription() );
+        return MessageFormat.format( "({0}){1} {2}",
+                severity.getNegativeLabel(), getTagsLabel(), getDescription() );
+    }
+
+    private String getTagsLabel() {
+        List<String> tags = getDetectorTags();
+        return tags.isEmpty() ? "" : "[" + ChannelsUtils.listToString( tags, ", " ) + "]";
     }
 
 

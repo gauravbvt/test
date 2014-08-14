@@ -114,7 +114,7 @@ public class ProtocolsFinder implements Serializable {
             }
             for ( TriggerData triggerData : checklistData.getRequestTriggers() ) {
                 addTo( onRequests, triggerData, checklistData );
-                String communicationContext = triggerData.getSituation().getTriggerLabel();
+                String communicationContext = triggerData.getSituationLabel();
                 if ( communicationContext != null )
                     communicationContexts.add( communicationContext );
                 for ( ContactData contactData : triggerData.getOnRequest().getContacts() ) {
@@ -129,9 +129,8 @@ public class ProtocolsFinder implements Serializable {
             }
             for ( TriggerData triggerData : checklistData.getNotificationTriggers() ) {
                 addTo( onNotifications, triggerData, checklistData );
-                String communicationContext = triggerData.getSituation().getTriggerLabel();
-                if ( communicationContext != null )
-                    communicationContexts.add( communicationContext );
+                String communicationContext = triggerData.getSituationLabel();
+                communicationContexts.add( communicationContext );
                 for ( ContactData contactData : triggerData.getOnNotification().getContacts() ) {
                     addTo( onNotificationsInContextWithInfoByContact,
                             communicationContext,
@@ -226,7 +225,8 @@ public class ProtocolsFinder implements Serializable {
     }
 
     public List<ChecklistData> getRepeatingProcedures() {
-        return repeatingProcedures; }
+        return repeatingProcedures;
+    }
 
     public Map<ObservationData, List<ChecklistData>> getOnObservationChecklists() {
         return onObservations;

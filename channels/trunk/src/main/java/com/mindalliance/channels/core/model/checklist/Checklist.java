@@ -2,16 +2,23 @@ package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.command.MappedList;
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.InfoCapability;
 import com.mindalliance.channels.core.model.InfoNeed;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Mappable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.ModelService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.sun.xml.ws.util.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -1016,5 +1023,77 @@ public class Checklist implements Serializable, Mappable {
                 return i;
         }
         return -1;
+    }
+
+    // status
+
+    public boolean canBeConfirmed( CommunityService communityService ) {
+        return  !listEffectiveSteps().isEmpty()
+                && isStarted()
+                && isAssigned( communityService )
+                && findAllUncommittedSharingFlows( communityService ).isEmpty()
+                && findAllUnwaivedIssues( communityService ).isEmpty();
+    }
+
+    public String getConfirmationBlockage( CommunityService communityService ) {
+        List<String> causes = new ArrayList<String>(  );
+        if ( listEffectiveSteps().isEmpty() ) {
+            causes.add("it has no steps");
+        }
+        if ( !isStarted() ) {
+            causes.add("it is never started");
+        }
+        if ( !isAssigned( communityService )) {
+            causes.add("it is not assigned");
+        }
+        if ( !findAllUncommittedSharingFlows( communityService ).isEmpty()) {
+            causes.add("there are flows without commitments");
+        }
+        if ( !findAllUnwaivedIssues( communityService ).isEmpty() ) {
+            causes.add("there are unwaived issues");
+        }
+        return StringUtils.capitalize( ChannelsUtils.listToString( causes, ", ", ", and ") ) + ".";
+    }
+
+    public List<Flow> findAllUncommittedSharingFlows( CommunityService communityService ) {
+        List<Flow> allSharingFlows = new ArrayList<Flow>( part.getAllSharingReceives() );
+        allSharingFlows.addAll( part.getAllSharingSends() );
+        ModelService modelService = communityService.getModelService();
+        Assignments assignments = modelService.getAssignments( false ); // exclude unknown assignments
+        List<Flow> uncommittedFlows = new ArrayList<Flow>();
+        for ( Flow sharing : allSharingFlows ) {
+            if ( !sharing.isToSelf() && modelService.findAllCommitments( sharing, false, assignments ).isEmpty() )
+                uncommittedFlows.add( sharing );
+        }
+        return uncommittedFlows;
+    }
+
+    public boolean isStarted(  ) {
+        return part.isAutoStarted() || part.isTriggered();
+    }
+
+    public boolean isAssigned( CommunityService communityService ) {
+        ModelService modelService = communityService.getModelService();
+        return !modelService.findAllAssignments( part, false, false ).isEmpty();
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    public List<Issue> findAllUnwaivedIssues( CommunityService communityService ) {
+        Analyst analyst = communityService.getAnalyst();
+        return (List<Issue>)CollectionUtils.select(
+                analyst.getDoctor().listIssues( communityService, part, true, false ), // do not count waived issues
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Issue issue = (Issue) object;
+                        return issue.hasTag( "checklist" );
+                    }
+                }
+        );
+    }
+
+    public boolean isEffectivelyConfirmed( CommunityService communityService ) {
+        return canBeConfirmed( communityService ) && isConfirmed();
     }
 }

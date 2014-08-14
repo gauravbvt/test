@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -131,7 +132,6 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         confirmationContainer = new WebMarkupContainer( "confirmationContainer" );
         confirmationContainer.setOutputMarkupId( true );
         addOrReplace( confirmationContainer );
-        makeVisible( confirmationContainer, !getChecklist().listEffectiveSteps().isEmpty() );
         AjaxCheckBox confirmedCheckBox = new AjaxCheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( this, "confirmed" )
@@ -143,11 +143,22 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
+        boolean canBeConfirmed = getChecklist().canBeConfirmed( getCommunityService() );
+        confirmedCheckBox.setEnabled( canBeConfirmed );
         confirmationContainer.add( confirmedCheckBox );
+        if (!canBeConfirmed ) {
+            addTipTitle( confirmationContainer, "The checklist can't be confirmed because: " + getChecklist().getConfirmationBlockage( getCommunityService() ) );
+        }
+        // label
+        WebMarkupContainer confirmedLabel = new WebMarkupContainer( "confirmedLabel");
+        if ( !canBeConfirmed ) {
+            confirmedLabel.add( new AttributeModifier( "style", "text-decoration:line-through" ));
+        }
+        confirmationContainer.add( confirmedLabel );
     }
 
     public boolean isConfirmed() {
-        return getChecklist().isConfirmed();
+        return getChecklist().isEffectivelyConfirmed( getCommunityService() );
     }
 
     public void setConfirmed( boolean val ) {

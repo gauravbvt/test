@@ -89,7 +89,7 @@ public class SituationData extends AbstractProcedureElementData {
     }
 
 
-    public String getTriggerLabel() {
+    public String getSituationLabel() {
         EventPhase eventPhase = getAssignment().getEventPhase();
         Phase phase = eventPhase.getPhase();
         String prefix = phase.isPreEvent()

@@ -299,7 +299,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
             }
         } );
-        int issueCount = getPart().countChecklistIssues( getAnalyst(), getCommunityService() );
+        int issueCount = getPart().getChecklist().findAllUnwaivedIssues( getCommunityService() ).size();
         checklistIcon.add( new AttributeModifier(
                 "src",
                 issueCount == 0

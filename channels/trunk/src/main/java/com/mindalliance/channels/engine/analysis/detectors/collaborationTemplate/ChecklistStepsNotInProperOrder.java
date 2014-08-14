@@ -18,6 +18,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -148,4 +149,11 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
     public boolean canBeWaived() {
         return true;
     }
+
+    @Override
+    protected List<String> getTags() {
+        return Arrays.asList( "checklist" );
+    }
+
+
 }

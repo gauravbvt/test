@@ -175,6 +175,11 @@ public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
             init();
         }
 
+        @Override
+        public int getPageSize() {
+            return 10;
+        }
+
         /**
          * Find all employments in the plan that are not filtered out and are within selected name range.
          *

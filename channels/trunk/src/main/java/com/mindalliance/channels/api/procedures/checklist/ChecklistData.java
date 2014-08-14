@@ -44,6 +44,7 @@ public class ChecklistData implements Serializable {
     private ChannelsUser user;
     private AgencyData employer;
     private AssignmentData assignmentData;
+    private boolean confirmed;
     /**
      * All triggers.
      */
@@ -95,6 +96,7 @@ public class ChecklistData implements Serializable {
                 committingCommitments,
                 communityService,
                 user );
+        confirmed = checklist.isEffectivelyConfirmed( communityService );
     }
 
 
@@ -565,7 +567,7 @@ public class ChecklistData implements Serializable {
 
     @XmlElement
     public boolean getConfirmed() {
-        return checklist().isConfirmed();
+        return confirmed;
     }
 
 }

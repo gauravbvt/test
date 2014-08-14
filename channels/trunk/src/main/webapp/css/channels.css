@@ -662,6 +662,7 @@ div.group.last .refresh {
     outline: medium none;
     padding: 1px 4px;
     text-transform: capitalize;
+    float:left;
 }
 
 div.cancelSend input:hover,

@@ -908,7 +908,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addIfTaskFails() {
         ifTaskFailsContainer = new WebMarkupContainer( "ifTaskFailsContainer" );
         ifTaskFailsContainer.setOutputMarkupId( true );
-        classificationContainer.add( ifTaskFailsContainer );
+        classificationContainer.addOrReplace( ifTaskFailsContainer );
         ifTaskFailsCheckBox = new CheckBox(
                 "ifTaskFails",
                 new PropertyModel<Boolean>( this, "ifTaskFails" )

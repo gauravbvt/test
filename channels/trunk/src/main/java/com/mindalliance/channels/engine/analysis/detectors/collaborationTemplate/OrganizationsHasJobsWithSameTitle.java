@@ -34,10 +34,12 @@ public class OrganizationsHasJobsWithSameTitle extends AbstractIssueDetector {
         if ( jobs.size() > 1 ) {
             Map<String, List<Job>> titleCounts = new HashMap<String, List<Job>>();
             for ( Job job : jobs ) {
-                List<Job> titleJobs = titleCounts.get( job.getTitle() );
-                if ( titleJobs == null ) titleJobs = new ArrayList<Job>(  );
-                titleJobs.add( job );
-                titleCounts.put( job.getTitle(),titleJobs );
+                if ( !job.isLinked() ) {
+                    List<Job> titleJobs = titleCounts.get( job.getTitle() );
+                    if ( titleJobs == null ) titleJobs = new ArrayList<Job>();
+                    titleJobs.add( job );
+                    titleCounts.put( job.getTitle(), titleJobs );
+                }
             }
             for ( String title : titleCounts.keySet() ) {
                 List<Job> sameTitleJobs = titleCounts.get( title );
@@ -45,6 +47,7 @@ public class OrganizationsHasJobsWithSameTitle extends AbstractIssueDetector {
                     Issue issue = makeIssue( communityService, Issue.VALIDITY, org );
                     issue.setDescription( "Organization \"" + org.getLabel() + "\" has more than one job with title \"" + title + "\"" );
                     issue.setRemediation( "Rename jobs so that only one has title \"" + title + "\""
+                            + "\nor make all similarly titled jobs linked (they will then be distinguishable)"
                             + "\nor remove all but one job with title \"" + title + "\"." );
                     issue.setSeverity( Level.Medium );
                     issues.add( issue );

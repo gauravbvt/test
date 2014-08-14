@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -104,4 +105,11 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
     public boolean canBeWaived() {
         return true;
     }
+
+    @Override
+    protected List<String> getTags() {
+        return Arrays.asList( "checklist" );
+    }
+
+
 }

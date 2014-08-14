@@ -450,6 +450,26 @@ public class TriggerData extends AbstractProcedureElementData {
         return eventPhaseContext;
     }
 
+    public Set<ContactData> allContacts() {
+        Set<ContactData> allContacts = new HashSet<ContactData>(  );
+        if ( onNotification != null ) {
+            allContacts.addAll( onNotification.getContacts() );
+        }
+        if ( onRequest != null ) {
+            allContacts.addAll( onRequest.getContacts() );
+        }
+        return allContacts;
+    }
+
+    public boolean isOnResearching() {
+        return requestToSelf != null;
+    }
+
+    public String getSituationLabel() {
+        return getSituation() == null
+                ? "at any time"
+                : getSituation().getSituationLabel();
+    }
 
     public boolean equals( Object object ) {
         if ( object instanceof TriggerData ) {
@@ -485,19 +505,4 @@ public class TriggerData extends AbstractProcedureElementData {
         return result;
     }
 
-    public Set<ContactData> allContacts() {
-        Set<ContactData> allContacts = new HashSet<ContactData>(  );
-        if ( onNotification != null ) {
-            allContacts.addAll( onNotification.getContacts() );
-        }
-        if ( onRequest != null ) {
-            allContacts.addAll( onRequest.getContacts() );
-        }
-        return allContacts;
-    }
-
-    public boolean isOnResearching() {
-        return requestToSelf != null;
-    }
-
-}
+ }

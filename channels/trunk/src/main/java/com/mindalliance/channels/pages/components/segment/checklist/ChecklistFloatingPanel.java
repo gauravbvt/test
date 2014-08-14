@@ -32,6 +32,8 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+
+
     @Override
     public String getHelpSectionId() {
         return "info-sharing";
@@ -50,7 +52,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void addChecklistTitle() {
-        checklistTitle =   new Label( "checklistTitle", getPart().getEffectiveChecklist().isConfirmed()
+        checklistTitle =   new Label( "checklistTitle", getPart().getEffectiveChecklist().isEffectivelyConfirmed( getCommunityService() )
                 ? "Confirmed checklist"
                 : "Unconfirmed checklist" );
         checklistTitle.setOutputMarkupId( true );
