@@ -212,6 +212,8 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
             target.add( stepsContainer );
             addConfirmation();
             target.add( confirmationContainer );
+            addBlockages();
+            target.add( blockagesContainer );
             if ( !change.isExpanded() && !change.isCollapsed() ) {
                 super.updateWith( target, change, updated );
             }

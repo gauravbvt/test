@@ -106,7 +106,7 @@ public class Checklist implements Serializable, Mappable {
         return outcomes;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepOrder> listEffectiveStepOrders( final List<Step> steps ) {
         return (List<StepOrder>) CollectionUtils.select(
                 getStepOrders(),
@@ -119,7 +119,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final boolean positive ) {
         return (List<StepGuard>) CollectionUtils.select(
                 listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() ),
@@ -132,7 +132,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final Step step, final boolean positive ) {
         return (List<StepGuard>) CollectionUtils.select(
                 listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() ),
@@ -152,14 +152,14 @@ public class Checklist implements Serializable, Mappable {
         return listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final List<Step> steps, final List<Condition> conditions ) {
         List<StepGuard> allStepGuards = listEffectiveAndExplicitStepGuards( steps, conditions );
         allStepGuards.addAll( listAllImpliedStepGuards() );
         return allStepGuards;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveAndExplicitStepGuards( final List<Step> steps, final List<Condition> conditions ) {
         return (List<StepGuard>) CollectionUtils.select(
                 getImmutableStepGuards(),
@@ -195,7 +195,7 @@ public class Checklist implements Serializable, Mappable {
         return listEffectiveStepOutcomes( listEffectiveSteps(), listEffectiveOutcomes() );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepOutcome> listEffectiveStepOutcomes( final List<Step> steps, final List<Outcome> outcomes ) {
         return (List<StepOutcome>) CollectionUtils.select(
                 getStepOutcomes(),
@@ -476,7 +476,7 @@ public class Checklist implements Serializable, Mappable {
                 : null; // should never happen
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Condition findEventTimingCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 listEventTimingConditions(),
@@ -489,7 +489,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Condition findGoalCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 listGoalConditions(),
@@ -502,7 +502,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Condition findAssetAvailableCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 listAssetAvailableConditions(),
@@ -515,7 +515,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Condition findNeedSatisfiedCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 listNeedSatisfiedConditions(),
@@ -534,7 +534,7 @@ public class Checklist implements Serializable, Mappable {
 
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Condition findLocalCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 getLocalConditions(),
@@ -547,7 +547,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Outcome findEventOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
                 listEventTimingOutcomes(),
@@ -560,7 +560,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Outcome findAssetProducedOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
                 listAssetProducedOutcomes(),
@@ -573,7 +573,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Outcome findAssetProvisionedOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
                 listAssetProvisionedOutcomes(),
@@ -587,8 +587,7 @@ public class Checklist implements Serializable, Mappable {
     }
 
 
-
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Outcome findGoalAchievedOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
                 listGoalAchievedOutcomes(),
@@ -601,7 +600,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Outcome findCapabilityCreatedOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
                 listCapabilityCreatedOutcomes(),
@@ -646,7 +645,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<NeedSatisfiedCondition> listNeedSatisfiedConditions() {
         List<NeedSatisfiedCondition> needSatisfiedConditions = new ArrayList<NeedSatisfiedCondition>();
-        for ( InfoNeed need : part.getNonTriggeringInfoNeeds() ) {
+        for ( InfoNeed need : part.getExplicitAndImpliedInfoNeeds() ) {
             needSatisfiedConditions.add( new NeedSatisfiedCondition( need ) );
         }
         return needSatisfiedConditions;
@@ -667,10 +666,10 @@ public class Checklist implements Serializable, Mappable {
                                     new AssetConnection( AssetConnection.Type.Using, dependency ) ) );
                 }
             }
-         }
+        }
         // if the task provides the asset
-        for( AssetConnection assetConnection : part.findAllProvisionAssetConnections() ) {
-            assetAvailableConditions.add( new AssetAvailableCondition( assetConnection ));
+        for ( AssetConnection assetConnection : part.findAllProvisionAssetConnections() ) {
+            assetAvailableConditions.add( new AssetAvailableCondition( assetConnection ) );
         }
         return new ArrayList<AssetAvailableCondition>( assetAvailableConditions );
     }
@@ -687,7 +686,7 @@ public class Checklist implements Serializable, Mappable {
     public List<AssetProvisionedOutcome> listAssetProvisionedOutcomes() {
         List<AssetProvisionedOutcome> assetProvisionedOutcomes = new ArrayList<AssetProvisionedOutcome>();
         for ( AssetConnection assetConnection : part.findAllProvisionAssetConnections() ) {
-                assetProvisionedOutcomes.add( new AssetProvisionedOutcome( assetConnection ) );
+            assetProvisionedOutcomes.add( new AssetProvisionedOutcome( assetConnection ) );
         }
         return assetProvisionedOutcomes;
     }
@@ -717,12 +716,15 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public List<CapabilityCreatedOutcome> listCapabilityCreatedOutcomes() {
-        List<CapabilityCreatedOutcome> capabilityCreatedOutcomes = new ArrayList<CapabilityCreatedOutcome>();
+        Set<CapabilityCreatedOutcome> capabilityCreatedOutcomes = new HashSet<CapabilityCreatedOutcome>();
         for ( Flow capability : part.getCapabilities() ) {
             if ( capability.isPublished() )
                 capabilityCreatedOutcomes.add( new CapabilityCreatedOutcome( new InfoCapability( capability ) ) );
         }
-        return capabilityCreatedOutcomes;
+        for ( Flow sharing : part.getAllSharingSends() ) {
+            capabilityCreatedOutcomes.add( new CapabilityCreatedOutcome( new InfoCapability( sharing ) ) );
+        }
+        return new ArrayList<CapabilityCreatedOutcome>( capabilityCreatedOutcomes );
     }
 
 
@@ -952,7 +954,7 @@ public class Checklist implements Serializable, Mappable {
         map.put( "stepGuards", new MappedList<StepGuard>( getImmutableStepGuards() ) );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepOutcome> listEffectiveStepOutcomesFor( Step step ) {
         final String stepRef = step.getRef();
         return (List<StepOutcome>) CollectionUtils.select(
@@ -966,7 +968,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuardsFor( Step step, boolean positive ) {
         final String stepRef = step.getRef();
         return (List<StepGuard>) CollectionUtils.select(
@@ -980,7 +982,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuardsFor( Step step ) {
         final String stepRef = step.getRef();
         return (List<StepGuard>) CollectionUtils.select(
@@ -994,7 +996,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Step> listStepsWithPrerequisite( final Step step ) {
         return (List<Step>) CollectionUtils.select(
                 listEffectiveSteps(),
@@ -1016,8 +1018,8 @@ public class Checklist implements Serializable, Mappable {
 
     public int getIndexOfStep( Step step ) {
         List<Step> steps = listEffectiveSteps();
-        for ( int i=0;i<steps.size();i++) {
-            if ( steps.get(i).equals( step ) )
+        for ( int i = 0; i < steps.size(); i++ ) {
+            if ( steps.get( i ).equals( step ) )
                 return i;
         }
         return -1;
@@ -1026,7 +1028,7 @@ public class Checklist implements Serializable, Mappable {
     // status
 
     public boolean canBeConfirmed( CommunityService communityService ) {
-        return  !listEffectiveSteps().isEmpty()
+        return !listEffectiveSteps().isEmpty()
                 && isStarted()
                 && isAssigned( communityService )
                 && findAllUncommittedSharingFlows( communityService ).isEmpty()
@@ -1034,21 +1036,21 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public List<String> getConfirmationBlockages( CommunityService communityService ) {
-        List<String> causes = new ArrayList<String>(  );
+        List<String> causes = new ArrayList<String>();
         if ( listEffectiveSteps().isEmpty() ) {
-            causes.add("the checklist has no steps");
+            causes.add( "the checklist has no steps" );
         }
         if ( !isStarted() ) {
-            causes.add("the task is never started");
+            causes.add( "the task is never started" );
         }
-        if ( !isAssigned( communityService )) {
-            causes.add("the task is not assigned");
+        if ( !isAssigned( communityService ) ) {
+            causes.add( "the task is not assigned" );
         }
-        if ( !findAllUncommittedSharingFlows( communityService ).isEmpty()) {
-            causes.add("the task has flows without commitments");
+        if ( !findAllUncommittedSharingFlows( communityService ).isEmpty() ) {
+            causes.add( "the task has flows without commitments" );
         }
         if ( !findAllUnwaivedIssues( communityService ).isEmpty() ) {
-            causes.add("there are unwaived checklist issues");
+            causes.add( "there are unwaived checklist issues" );
         }
         return causes;
     }
@@ -1066,7 +1068,7 @@ public class Checklist implements Serializable, Mappable {
         return uncommittedFlows;
     }
 
-    public boolean isStarted(  ) {
+    public boolean isStarted() {
         return part.isAutoStarted() || part.isTriggered();
     }
 
@@ -1076,10 +1078,10 @@ public class Checklist implements Serializable, Mappable {
     }
 
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Issue> findAllUnwaivedIssues( CommunityService communityService ) {
         Analyst analyst = communityService.getAnalyst();
-        return (List<Issue>)CollectionUtils.select(
+        return (List<Issue>) CollectionUtils.select(
                 analyst.getDoctor().listIssues( communityService, part, true, false ), // do not count waived issues
                 new Predicate() {
                     @Override

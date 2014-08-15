@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.model.InfoNeed;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -17,11 +16,10 @@ import java.util.Set;
  * Date: 7/25/13
  * Time: 11:17 AM
  */
-@XmlType(name = "infoNeed", propOrder = {"info", "sourceSpec", "maxDelay"})
+@XmlType(name = "infoNeed", propOrder = {"info", "maxDelay"})
 public class InfoNeedData implements Serializable {
 
     private InformationData info;
-    private ResourceSpecData sourceSpec;
     private TimeDelayData maxDelay;
 
     public InfoNeedData() {
@@ -32,7 +30,6 @@ public class InfoNeedData implements Serializable {
                          InfoNeed infoNeed,
                          CommunityService communityService ) {
         info = new InformationData( serverUrl, infoNeed.getInformation(), communityService );
-        sourceSpec = new ResourceSpecData( serverUrl,infoNeed.getSourceSpec(), communityService );
         maxDelay = new TimeDelayData( infoNeed.getMaxDelay() );
     }
 
@@ -54,28 +51,4 @@ public class InfoNeedData implements Serializable {
         this.maxDelay = maxDelay;
     }
 
-    @XmlElement
-    public ResourceSpecData getSourceSpec() {
-        return sourceSpec;
-    }
-
-    public void setSourceSpec( ResourceSpecData sourceSpec ) {
-        this.sourceSpec = sourceSpec;
-    }
-
-    public Set<Long> allActorIds() {
-        return sourceSpec.allActorIds();
-    }
-
-    public Set<Long> allOrganizationIds() {
-        return sourceSpec.allOrganizationIds();
-    }
-
-    public Set<Long> allPlaceIds() {
-        return sourceSpec.allPlaceIds();
-    }
-
-    public Set<Long> allRoleIds() {
-        return sourceSpec.allRoleIds();
-    }
 }

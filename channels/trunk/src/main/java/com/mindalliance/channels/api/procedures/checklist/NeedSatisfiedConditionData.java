@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.model.checklist.NeedSatisfiedCondition;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -56,23 +55,4 @@ public class NeedSatisfiedConditionData extends ConditionData {
         return infoNeed;
     }
 
-    @Override
-    public Set<Long> allActorIds() {
-        return infoNeed.allActorIds();
-    }
-
-    @Override
-    public Set<Long> allOrganizationIds() {
-        return infoNeed.allOrganizationIds();
-    }
-
-    @Override
-    public Set<Long> allPlaceIds() {
-        return infoNeed.allPlaceIds();
-    }
-
-    @Override
-    public Set<Long> allRoleIds() {
-        return infoNeed.allRoleIds();
-    }
-}
+  }

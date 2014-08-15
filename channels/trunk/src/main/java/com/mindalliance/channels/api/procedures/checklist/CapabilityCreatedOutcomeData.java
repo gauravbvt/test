@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.model.checklist.Outcome;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -54,26 +53,6 @@ public class CapabilityCreatedOutcomeData extends OutcomeData {
     @XmlElement
     public InfoCapabilityData getInfoCapability() {
         return infoCapability;
-    }
-
-    @Override
-    public Set<Long> allActorIds() {
-        return infoCapability.allActorIds();
-    }
-
-    @Override
-    public Set<Long> allOrganizationIds() {
-        return infoCapability.allOrganizationIds();
-    }
-
-    @Override
-    public Set<Long> allPlaceIds() {
-        return infoCapability.allPlaceIds();
-    }
-
-    @Override
-    public Set<Long> allRoleIds() {
-        return infoCapability.allRoleIds();
     }
 
 

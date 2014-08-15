@@ -66,9 +66,7 @@ public class CapabilityCreatedOutcome extends Outcome {
     @Override
     public String getRef() {
         return REF_PREFIX
-                + getShareableInfo()
-                + "|"
-                + infoCapability.getTargetSpec();
+                + getShareableInfo();
     }
 
     @Override

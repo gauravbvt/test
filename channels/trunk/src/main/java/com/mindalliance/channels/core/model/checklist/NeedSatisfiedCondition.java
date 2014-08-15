@@ -33,9 +33,7 @@ public class NeedSatisfiedCondition extends Condition {
     @Override
     public String getRef() {
         return REF_PREFIX
-                +  getNeededInfo()
-                + "|"
-                + infoNeed.getSourceSpec();
+                +  getNeededInfo();
     }
 
     @Override

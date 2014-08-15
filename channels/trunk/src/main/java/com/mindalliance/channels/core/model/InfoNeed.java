@@ -16,12 +16,10 @@ import java.io.Serializable;
 public class InfoNeed implements Serializable {
 
     private Information information;
-    private ResourceSpec sourceSpec;
     private Delay maxDelay;
 
     public InfoNeed( Flow receive ) {
         information = new Information( receive );
-        sourceSpec = receive.getSourceResourceSpec();
         maxDelay = receive.getMaxDelay();
     }
 
@@ -41,14 +39,6 @@ public class InfoNeed implements Serializable {
         this.maxDelay = maxDelay;
     }
 
-    public ResourceSpec getSourceSpec() {
-        return sourceSpec;
-    }
-
-    public void setSourceSpec( ResourceSpec sourceSpec ) {
-        this.sourceSpec = sourceSpec;
-    }
-
     public String getStepConditionLabel() {
         // The info is needed if a step condition
         Information info = getInformation();
@@ -62,11 +52,6 @@ public class InfoNeed implements Serializable {
             sb.append( " with element " )
                     .append( ChannelsUtils.listToString( info.getEffectiveEoiNames(), ", ", " and " ) );
         }
-        ResourceSpec sourceSpec = getSourceSpec();
-        if ( !sourceSpec.isAnyone() ) {
-            sb.append( " from ")
-                    .append( sourceSpec.getLabel() );
-        }
         sb.append( " is satisfied" );
         return sb.toString();
     }
@@ -74,7 +59,6 @@ public class InfoNeed implements Serializable {
 
     public boolean narrowsOrEquals( InfoNeed other ) {
         return information.narrowsOrEquals( other.getInformation() )
-                && ( other.getSourceSpec().isAnyone() || sourceSpec.narrowsOrEquals( other.getSourceSpec(), Place.UNKNOWN ) )
                 && maxDelay.compareTo( other.getMaxDelay() ) <= 0;
     }
 
@@ -83,8 +67,7 @@ public class InfoNeed implements Serializable {
         if ( obj instanceof  InfoNeed ) {
             InfoNeed other = (InfoNeed)obj;
             return information.equals( other.getInformation() )
-                    && maxDelay.equals( other.getMaxDelay() )
-                    && sourceSpec.equals( other.getSourceSpec() );
+                    && maxDelay.equals( other.getMaxDelay() );
         } else {
             return false;
         }
@@ -95,7 +78,6 @@ public class InfoNeed implements Serializable {
         int hash = 1;
         hash = hash + 31 * information.hashCode();
         hash = hash + 31 * maxDelay.hashCode();
-        hash = hash + 31 * sourceSpec.hashCode();
         return hash;
     }
 
@@ -103,8 +85,7 @@ public class InfoNeed implements Serializable {
     public String toString() {
         return "\""
                 + information
-                + "\" needed from "
-                + sourceSpec
+                + "\" needed"
                 + (maxDelay.isImmediate() ? " " : " within ")
                 + maxDelay;
     }

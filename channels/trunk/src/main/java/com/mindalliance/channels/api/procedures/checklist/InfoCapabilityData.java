@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.model.InfoCapability;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -17,11 +16,10 @@ import java.util.Set;
  * Date: 7/25/13
  * Time: 2:52 PM
  */
-@XmlType(name = "infoCapability", propOrder = {"info", "targetSpec", "maxDelay"})
+@XmlType(name = "infoCapability", propOrder = {"info", "maxDelay"})
 public class InfoCapabilityData implements Serializable {
 
     private InformationData info;
-    private ResourceSpecData targetSpec;
     private TimeDelayData maxDelay;
 
 
@@ -33,7 +31,6 @@ public class InfoCapabilityData implements Serializable {
                                InfoCapability infoCapability,
                                CommunityService communityService ) {
         info = new InformationData( serverUrl, infoCapability.getInformation(), communityService );
-        targetSpec = new ResourceSpecData( serverUrl,infoCapability.getTargetSpec(), communityService );
         maxDelay = new TimeDelayData( infoCapability.getMaxDelay() );
     }
 
@@ -53,31 +50,6 @@ public class InfoCapabilityData implements Serializable {
 
     public void setMaxDelay( TimeDelayData maxDelay ) {
         this.maxDelay = maxDelay;
-    }
-
-    @XmlElement
-    public ResourceSpecData getTargetSpec() {
-        return targetSpec;
-    }
-
-    public void setTargetSpec( ResourceSpecData targetSpec ) {
-        this.targetSpec = targetSpec;
-    }
-
-    public Set<Long> allActorIds() {
-        return targetSpec.allActorIds();
-    }
-
-    public Set<Long> allOrganizationIds() {
-        return targetSpec.allOrganizationIds();
-    }
-
-    public Set<Long> allPlaceIds() {
-        return targetSpec.allPlaceIds();
-    }
-
-    public Set<Long> allRoleIds() {
-        return targetSpec.allRoleIds();
     }
 
 

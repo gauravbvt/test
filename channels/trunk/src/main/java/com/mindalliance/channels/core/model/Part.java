@@ -149,7 +149,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
 
     @Override
     public String getTitle() {
-        return MessageFormat.format( "{0} - {1}", getName(), task );
+        return MessageFormat.format( "{0} doing {1}", getName(), task );
     }
 
     @Override
@@ -1476,14 +1476,13 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         );
     }
 
-    public List<InfoNeed> getNonTriggeringInfoNeeds() {
-        List<InfoNeed> explicitNeeds = new ArrayList<InfoNeed>();
+    public List<InfoNeed> getExplicitAndImpliedInfoNeeds() {
+        Set<InfoNeed> explicitNeeds = new HashSet<InfoNeed>();
         for ( Flow need : getNeeds() ) {
             explicitNeeds.add( new InfoNeed( need ) );
         }
         Set<InfoNeed> sharedInfoList = new HashSet<InfoNeed>();
         for ( Flow sharing : getAllSharingReceives() ) {
-            if ( !sharing.isTriggeringToTarget() ) {
                 final InfoNeed sharedInfo = new InfoNeed( sharing );
                 if ( !CollectionUtils.exists(
                         explicitNeeds,
@@ -1496,14 +1495,13 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
                 ) ) {
                     sharedInfoList.add( sharedInfo );
                 }
-            }
         }
-        List<InfoNeed> neededInfoList = new ArrayList<InfoNeed>( explicitNeeds );
+        Set<InfoNeed> neededInfoList = new HashSet<InfoNeed>( explicitNeeds );
         neededInfoList.addAll( sharedInfoList );
-        return neededInfoList;
+        return new ArrayList<InfoNeed>( neededInfoList );
     }
 
-    public List<InfoCapability> getInformationCapabilities() {
+ /*   public List<InfoCapability> getInformationCapabilities() {
         List<InfoCapability> explicitCapabilities = new ArrayList<InfoCapability>();
         for ( Flow capability : getCapabilities() ) {
             explicitCapabilities.add( new InfoCapability( capability ) );
@@ -1527,6 +1525,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable, 
         infoCapabilities.addAll( sharedInfoList );
         return infoCapabilities;
     }
+
+*/
 
     public boolean isInitiatiorOfEvent( Event event ) {
         return initiatedEvent != null && initiatedEvent.equals( event );

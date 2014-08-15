@@ -119,7 +119,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Whether the need, capability or implied commitments (if sharing flow) can be made visible to third parties.
      */
-    private boolean published = false;
+    private boolean published = true;
 
     /**
      * Whether the info product is time sensitive.
@@ -564,6 +564,19 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return result;
     }
 
+    public String getPartName( Part part ) {
+        String result = "somebody";
+
+        if ( part != null ) {
+            String sourceName = part.getLabel();
+            if ( sourceName != null && !sourceName.trim().isEmpty() ) {
+                result = sourceName;
+            }
+        }
+        return result;
+    }
+
+
     /**
      * Provide a out-of-context description of the flow.
      *
@@ -604,7 +617,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         .append( message )
                         .append( "\"" )
                         .append( " to " )
-                        .append( getShortName( getTarget(), false ) );
+                        .append( getPartName( (Part)getTarget() ) );
 
             } else {
                 sb.append( prerequisite ? "Asking for " : "Ask for " )
@@ -613,7 +626,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         .append( message )
                         .append( "\"" )
                         .append( " from " )
-                        .append( getShortName( getSource(), false ) );
+                        .append( getPartName( (Part)getSource() ) );
                 if ( !getAssetConnections().isEmpty() ) {
                     sb.append( ", " )
                             .append( getAssetConnections().getStepLabel() );
@@ -626,7 +639,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     .append( message )
                     .append( "\"" )
                     .append( " to " )
-                    .append( getShortName( getTarget(), false ) );
+                    .append( getPartName( (Part)getTarget() ) );
             if ( !getAssetConnections().isEmpty() ) {
                 sb.append( ", " )
                         .append( getAssetConnections().getStepLabel() );
