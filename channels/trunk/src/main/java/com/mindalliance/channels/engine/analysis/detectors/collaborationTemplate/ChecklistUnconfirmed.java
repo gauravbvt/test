@@ -36,7 +36,7 @@ public class ChecklistUnconfirmed extends AbstractIssueDetector {
         Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();
         if ( !checklist.isEmpty() && !checklist.isConfirmed() ) {
-            Issue issue = makeIssue( communityService, Issue.COMPLETENESS, part );
+            Issue issue = makeIssue( communityService, Issue.VALIDITY, part );
             issue.setDescription( "The checklist is not confirmed." );
             issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
             issue.setRemediation( "Confirm the checklist once deemed satisfactory." );

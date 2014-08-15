@@ -335,12 +335,12 @@ public class ModelChecklistsPanel extends AbstractUpdatablePanel {
                     ChecklistsTable.this ) );
             columns.add( makeColumn( "Issues", "checklistIssueCount", EMPTY ) );
             columns.add( makeColumn( "Confirmed", "confirmed", EMPTY ) );
-            columns.add( makeColumn( "Asignments", "assignmentCount", EMPTY ) );
+            columns.add( makeColumn( "Assignments", "assignmentCount", EMPTY ) );
             columns.add( makeColumn( "Starts", "canBeStarted", EMPTY ) );
             columns.add( makeColumn( "Uncommitted flows", "uncommittedCount", EMPTY ) );
             columns.add( makeActionLinkColumn(
                     "",
-                    "Diagram",
+                    "Steps",
                     "showFlow",
                     null,
                     "part",

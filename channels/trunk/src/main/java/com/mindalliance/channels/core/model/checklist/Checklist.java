@@ -16,9 +16,7 @@ import com.mindalliance.channels.core.model.asset.AssetConnection;
 import com.mindalliance.channels.core.model.asset.MaterialAsset;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.ModelService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.sun.xml.ws.util.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -1035,24 +1033,24 @@ public class Checklist implements Serializable, Mappable {
                 && findAllUnwaivedIssues( communityService ).isEmpty();
     }
 
-    public String getConfirmationBlockage( CommunityService communityService ) {
+    public List<String> getConfirmationBlockages( CommunityService communityService ) {
         List<String> causes = new ArrayList<String>(  );
         if ( listEffectiveSteps().isEmpty() ) {
-            causes.add("it has no steps");
+            causes.add("the checklist has no steps");
         }
         if ( !isStarted() ) {
-            causes.add("it is never started");
+            causes.add("the task is never started");
         }
         if ( !isAssigned( communityService )) {
-            causes.add("it is not assigned");
+            causes.add("the task is not assigned");
         }
         if ( !findAllUncommittedSharingFlows( communityService ).isEmpty()) {
-            causes.add("there are flows without commitments");
+            causes.add("the task has flows without commitments");
         }
         if ( !findAllUnwaivedIssues( communityService ).isEmpty() ) {
-            causes.add("there are unwaived issues");
+            causes.add("there are unwaived checklist issues");
         }
-        return StringUtils.capitalize( ChannelsUtils.listToString( causes, ", ", ", and ") ) + ".";
+        return causes;
     }
 
     public List<Flow> findAllUncommittedSharingFlows( CommunityService communityService ) {

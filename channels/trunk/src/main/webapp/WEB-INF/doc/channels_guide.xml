@@ -2995,6 +2995,15 @@
                         A checklist must be confirmed to be deployed to participants as such. Any change to the implied
                         communication steps or to the action steps requires a re-confirmation.
 
+                        A checklist can *not* be confirmed if it has any of the following problems:
+
+                        * It has unwaived issues
+                        * Its associated task is never started
+                        * Its task is not assigned to any agent
+                        * Its task participates in flows for which there are not commitments
+
+                        [[File:model_checklist_unconfirmed.png|Unconfirmed checklist]]
+
                         A process flow describing the execution of the checklist is accessed by clicking on the flow
                         icon next to the name of the task. The process flow shows all steps, their pre-conditions and outcomes
                         as icons set between a start and stop icons. The process diagram shows when steps can be executed in no
@@ -3899,13 +3908,25 @@
             <topic id="all-checklists">
                 <name>All checklists</name>
                 <item>
-                    <description>All the checklists (one for each task in the model) are listed, to be sorted on the
-                        task names, segment names and their confirmation status.
+                    <description>The "All checklists" panel is an essential tool for managing the production readiness
+                        of a collaboration model.
 
-                        Checklists can be filtered to see only the ones confirmed or not confirmed, or to see only the
-                        checklists in a given segment.
+                        [[File:model_all_checklists.png|The All Checklists panel]]
 
-                        Clicking on the name of a tasks or a segment, takes you to it.
+                        Keep in mind that the principal deliverable of a collaboration model
+                        are the checklist that will be assigned to members of collaboration communities adopting the model.
+
+                        All the checklists in the model (one for each task in the model) are listed. They can be sorted on
+                        the names of their associated tasks, on segment names, on how many issues they have, on their
+                        confirmation status, on how many agents
+                        are assigned a checklist, and on whether the task starts, and the number of uncommitted flow there are.
+
+                        Checklists can be filtered to see only the ones confirmed or not confirmed, which ones have
+                        unconfirmed issues, are not assigned, are never started and/or have uncommitted flows. Note that
+                        only checklists without any of these problems can be confirmed.
+
+                        Clicking on the name of a tasks or a segment, takes you to it. Clicking on "Steps" opens a process
+                        flow diagram showing how the steps of the checklist ought ot be executed.
                     </description>
                 </item>
                 <next section="info-sharing" topic="edit-checklist"/>

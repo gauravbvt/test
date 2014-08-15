@@ -10298,6 +10298,19 @@
                     <entry><para>No</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>Task checklist is not confirmed</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Confirm the checklist once deemed satisfactory</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
 
             </tbody>
           </tgroup>
@@ -11079,20 +11092,6 @@
                 </itemizedlist></entry>
                 
                 <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Task checklist is not confirmed</para></entry>
-                
-                <entry><para>Depends on impacted tasks</para></entry>
-                
-                <entry><itemizedlist>
-                  <listitem>
-                    <para>Confirm the checklist once deemed satisfactory</para>
-                  </listitem>
-                 </itemizedlist></entry>
-                
-                <entry><para>No</para></entry>
               </row>
 
               <row>

@@ -3998,8 +3998,8 @@ ul.attach li.controls {
 }
 
 .checklist .confirm {
-    float:right;
-    margin: 20px 10px 5px 0;
+    text-align:right;
+    margin: 12px 10px 5px 0;
     font-size: 1.5em;
 }
 
@@ -4025,6 +4025,15 @@ ul.attach li.controls {
 .checklist .assetConnections {
     padding-left: 25px;
     display: block;
+}
+
+.checklist .note {
+    background: url("../images/warning.png") no-repeat 5px 4px #FEF2B0;
+    border: 1px solid #C5B351;
+    color: #2B2B2B;
+    font-size: 12px;
+    margin: 15px 0 15px 0;
+    padding: 5px 0px 5px 25px;
 }
 
 /* Segment scenario */

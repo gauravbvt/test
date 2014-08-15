@@ -17,6 +17,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -39,6 +40,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     private TextField<String> actionStepText;
     private WebMarkupContainer stepsContainer;
     private WebMarkupContainer confirmationContainer;
+    private WebMarkupContainer blockagesContainer;
 
     public ChecklistEditorPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
@@ -49,6 +51,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         addStepPanels();
         addNewStep();
         addConfirmation();
+        addBlockages();
     }
 
     private void addStepPanels() {
@@ -147,7 +150,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         confirmedCheckBox.setEnabled( canBeConfirmed );
         confirmationContainer.add( confirmedCheckBox );
         if (!canBeConfirmed ) {
-            addTipTitle( confirmationContainer, "The checklist can't be confirmed because: " + getChecklist().getConfirmationBlockage( getCommunityService() ) );
+            addTipTitle( confirmationContainer, "The checklist can't be confirmed" );
         }
         // label
         WebMarkupContainer confirmedLabel = new WebMarkupContainer( "confirmedLabel");
@@ -155,6 +158,21 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
             confirmedLabel.add( new AttributeModifier( "style", "text-decoration:line-through" ));
         }
         confirmationContainer.add( confirmedLabel );
+    }
+
+    private void addBlockages() {
+        List<String> blockagesList = getChecklist().getConfirmationBlockages( getCommunityService() );
+        String blockages = blockagesList.isEmpty()
+                ? ""
+                : ("The checklist can't be confirmed because "
+                    + ChannelsUtils.listToString( blockagesList, ", ", ", and " )
+                    + ".");
+        blockagesContainer = new WebMarkupContainer( "blockagesContainer" );
+        blockagesContainer.setOutputMarkupId( true );
+        makeVisible( blockagesContainer, !blockages.isEmpty() );
+        addOrReplace( blockagesContainer );
+        Label blockagesLabel = new Label( "blockages", blockages );
+        blockagesContainer.add( blockagesLabel );
     }
 
     public boolean isConfirmed() {
