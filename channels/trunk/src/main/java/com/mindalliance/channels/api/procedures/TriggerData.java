@@ -26,7 +26,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "onFollowUp", "onResearch", "requestingTask", "ongoing", "repeating"} )
+@XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "onFollowUp", "onResearch", "requestingTask", "ongoing", "repeating", "repeatCycle"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     public static final String WHENEVER = "Whenever";
@@ -44,6 +44,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private ResearchData researchData;
     private SituationData situationData;
     private String serverUrl;
+    private CycleData cycleData;
 
     public TriggerData() {
         // required
@@ -87,9 +88,17 @@ public class TriggerData extends AbstractProcedureElementData {
         if (ongoing) repeating = false;
     }
 
-    public void setRepeating( boolean repeating) {
+    public boolean isOngoing() {
+        return ongoing;
+    }
+
+    public void setRepeating( boolean repeating ) {
         this.repeating = repeating;
         if (repeating) ongoing = false;
+    }
+
+    public boolean isRepeating() {
+        return repeating;
     }
 
     public void setNotificationFromOther( Flow notificationFromOther ) {
@@ -128,11 +137,20 @@ public class TriggerData extends AbstractProcedureElementData {
 
     // Called after nature of trigger is set.
     public void initTrigger( CommunityService communityService ) {
+        initCycleData( communityService );
         initFollowUpData( communityService );
         initResearchData( communityService );
         initOnNotification( communityService );
         initOnRequest( communityService );
         initSituationData( communityService );
+    }
+
+    private void initCycleData( CommunityService communityService ) {
+        if ( isRepeating() ) {
+            cycleData = new CycleData( getAssignment().getPart().getRepeatsEvery() );
+        } else {
+            cycleData = null;
+        }
     }
 
     private void initSituationData( CommunityService communityService) {
@@ -246,6 +264,11 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public SituationData getSituation() {
         return situationData;
+    }
+
+    @XmlElement
+    public CycleData getRepeatCycle() {
+        return cycleData;
     }
 
     ////////////////////

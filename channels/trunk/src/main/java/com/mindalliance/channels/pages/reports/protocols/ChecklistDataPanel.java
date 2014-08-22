@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.PlaceData;
-import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.GoalData;
 import com.mindalliance.channels.api.procedures.TaskData;
@@ -99,7 +98,6 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         add( taskDetailsContainer );
         taskDetailsContainer.add( makeAttributeContainer( "instructions", getTask().getInstructions() ) );
         taskDetailsContainer.add( makeAttributeContainer( "category", getTask().getCategory() ) );
-        addCycle();
         addLocation();
         addGoals();
         addTeammates();
@@ -133,18 +131,6 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         failureImpactContainer.add( failureImpact );
         Label severityLabel = new Label( "severity", severityText );
         failureImpact.add( severityLabel );
-    }
-
-    private void addCycle() {
-        CycleData cycleData = getTask().getCycle();
-        WebMarkupContainer cycleContainer = new WebMarkupContainer( "cycle" );
-        cycleContainer.setVisible( cycleData != null );
-        taskDetailsContainer.add( cycleContainer );
-        cycleContainer.add(
-                cycleData == null
-                        ? new Label( "cycleLabel", "" )
-                        : new Label( "cycleLabel", StringUtils.capitalize( cycleData.getLabel() ) )
-        );
     }
 
     private void addLocation() {

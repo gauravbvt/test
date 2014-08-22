@@ -71,7 +71,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private ChannelsUser protocolsUser;
     private boolean allExpanded;
 
-    @SpringBean( name = "planCommunityEndPoint" )
+    @SpringBean(name = "planCommunityEndPoint")
     private PlanCommunityEndPoint planCommunityEndPoint;
 
     @SpringBean
@@ -223,7 +223,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     }
 
     private void addExpandCollapseAll() {
-        expandCollapseAllLink = new AjaxLink<String>( "expandCollapseAll") {
+        expandCollapseAllLink = new AjaxLink<String>( "expandCollapseAll" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 allExpanded = !allExpanded;
@@ -278,7 +278,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         for ( int i = 0; i < count; i++ ) {
             sb.append( employments.get( i ).getLabel() );
             if ( i == count - 2 ) {
-                sb.append( " and " );
+                sb.append( ", and " );
             } else if ( i != count - 1 && count > 1 ) {
                 sb.append( ", " );
             }
@@ -319,7 +319,28 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         WebMarkupContainer repeatingToc = new WebMarkupContainer( "repeating-toc" );
         finderContainer.add( repeatingToc );
         repeatingToc.setVisible( !checklists.isEmpty() );
-        repeatingToc.add( makeChecklistLinks( "repeatingLinks", checklists ) );
+        repeatingToc.add( makeRepeatingChecklistLinks( "repeatingLinks", checklists ) );
+    }
+
+    private ListView<ChecklistData> makeRepeatingChecklistLinks( String id, List<ChecklistData> checklistDataList ) {
+        List<ChecklistData> sortedChecklistDataList = new ArrayList<ChecklistData>( checklistDataList );
+        Collections.sort( sortedChecklistDataList, new Comparator<ChecklistData>() {
+            @Override
+            public int compare( ChecklistData pd1, ChecklistData pd2 ) {
+                return pd1.getLabel().compareTo( pd2.getLabel() );
+            }
+        } );
+        return new ListView<ChecklistData>(
+                id,
+                sortedChecklistDataList
+        ) {
+            @Override
+            protected void populateItem( ListItem<ChecklistData> item ) {
+                ChecklistData checklistData = item.getModelObject();
+                item.add( new Label( "cycle", checklistData.getCycleData().getLabel() ) );
+                item.add( new ChecklistDataLinkPanel( "checklistLink", checklistData, finder ) );
+            }
+        };
     }
 
 
@@ -412,7 +433,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         Set<String> infoList = requestsInContext == null ? new HashSet<String>() : requestsInContext.keySet();
         ListView<String> askedInContextListView = new ListView<String>(
                 "tocRequests",
-                new ArrayList<String>( infoList)
+                new ArrayList<String>( infoList )
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
@@ -444,17 +465,17 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     private Component makeTriggeringContactsListView(
             final Map<ContactData, Map<TriggerData, List<ChecklistData>>> triggeringContacts ) {
-         ListView<ContactData> initiationsListView = new ListView<ContactData>(
+        ListView<ContactData> initiationsListView = new ListView<ContactData>(
                 "initiations",
-                 new ArrayList<ContactData>( triggeringContacts.keySet() )
+                new ArrayList<ContactData>( triggeringContacts.keySet() )
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
                 item.add( new ContactLinkPanel( "contact", contactData, finder ) );
-                List<ChecklistData> checklistsDataSet = new ArrayList<ChecklistData>(  );
-                for ( TriggerData triggerData : triggeringContacts.get(contactData).keySet() ) {
-                    checklistsDataSet.addAll(triggeringContacts.get(contactData).get(triggerData) );
+                List<ChecklistData> checklistsDataSet = new ArrayList<ChecklistData>();
+                for ( TriggerData triggerData : triggeringContacts.get( contactData ).keySet() ) {
+                    checklistsDataSet.addAll( triggeringContacts.get( contactData ).get( triggerData ) );
                 }
                 item.add( makeChecklistLinks( "checklistLinks", checklistsDataSet ) );
             }
@@ -462,7 +483,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         return initiationsListView;
     }
 
-     // Expected queries (non-triggering requests)
+    // Expected queries (non-triggering requests)
 
     private void addExpectedQueries() {
         queriesContainer = new WebMarkupContainer( "expectedQueries" );
@@ -477,126 +498,46 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         protocolsContainer = new WebMarkupContainer( "protocols" );
         protocolsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( protocolsContainer );
-        addOngoingChecklists();
-        addRepeatingChecklists();
-        addOnObservationChecklists();
-        addOnRequestChecklists();
-        addOnNotificationChecklists();
-        addOnFollowUpChecklists();
-        addOnResearchChecklists();
-
+        addTriggeredChecklists();
     }
 
-
-    private void addOngoingChecklists() {
-        List<ChecklistData> sortedChecklists = new ArrayList<ChecklistData>( finder.getOngoingProcedures() );
-        Collections.sort(
-                sortedChecklists,
-                new Comparator<ChecklistData>() {
-                    @Override
-                    public int compare( ChecklistData pd1, ChecklistData pd2 ) {
-                        return pd1.getLabel().compareTo( pd2.getLabel() );
-                    }
-                } );
-        WebMarkupContainer ongoingContainer = new WebMarkupContainer( "ongoing" );
-        protocolsContainer.add( ongoingContainer );
-        ongoingContainer.setVisible( !sortedChecklists.isEmpty() );
-        ListView<ChecklistData> ongoingChecklistsListView = new ListView<ChecklistData>(
-                "ongoingProcedures",
-                sortedChecklists
-        ) {
-            @Override
-            protected void populateItem( ListItem<ChecklistData> item ) {
-                ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
-            }
-        };
-        ongoingContainer.add( ongoingChecklistsListView );
-    }
-
-    private void addRepeatingChecklists() {
-        List<ChecklistData> sortedChecklists = new ArrayList<ChecklistData>( finder.getRepeatingProcedures() );
-        Collections.sort(
-                sortedChecklists,
-                new Comparator<ChecklistData>() {
-                    @Override
-                    public int compare( ChecklistData pd1, ChecklistData pd2 ) {
-                        return pd1.getLabel().compareTo( pd2.getLabel() );
-                    }
-                } );
-        WebMarkupContainer repeatingContainer = new WebMarkupContainer( "repeating" );
-        protocolsContainer.add( repeatingContainer );
-        repeatingContainer.setVisible( !sortedChecklists.isEmpty() );
-        ListView<ChecklistData> repeatingChecklistsListView = new ListView<ChecklistData>(
-                "repeatingProcedures",
-                sortedChecklists
-        ) {
-            @Override
-            protected void populateItem( ListItem<ChecklistData> item ) {
-                ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
-            }
-        };
-        repeatingContainer.add( repeatingChecklistsListView );
-    }
-
-
-    private void addOnObservationChecklists() {
-        protocolsContainer.add( makeEventTriggeredChecklistsContainer(
-                "onObservations",
-                finder.getOnObservationChecklists() ) );
-    }
-
-
-    private void addOnRequestChecklists() {
-        protocolsContainer.add( makeTriggeredChecklistContainer(
-                "onRequests",
-                finder.getOnRequestChecklists() ) );
-    }
-
-    private void addOnNotificationChecklists() {
-        protocolsContainer.add( makeTriggeredChecklistContainer(
-                "onNotifications",
-                finder.getOnNotificationChecklists() ) );
-    }
-
-    private void addOnFollowUpChecklists() {
-        protocolsContainer.add( makeTriggeredChecklistContainer(
-                "onFollowUps",
-                finder.getOnFollowUpChecklists() ) );
-    }
-
-    private void addOnResearchChecklists() {
-        protocolsContainer.add( makeTriggeredChecklistContainer(
-                "onResearches",
-                finder.getOnResearchChecklists() ) );
-    }
-
-
-    private WebMarkupContainer makeTriggeredChecklistContainer(
-            String procsContainerId,
-            final Map<TriggerData, List<ChecklistData>> checklistDataMap
-    ) {
-        WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
-        procsContainer.setVisible( !checklistDataMap.isEmpty() );
-        protocolsContainer.add( procsContainer );
-        List<TriggerData> triggers = finder.sortTriggerData( checklistDataMap.keySet() );
-        procsContainer.add( new ListView<TriggerData>(
+    private void addTriggeredChecklists() {
+        List<ChecklistData> triggeredChecklists = finder.getTriggeredChecklists();
+        WebMarkupContainer triggeredChecklistsContainer = new WebMarkupContainer( "triggeredChecklists" );
+        triggeredChecklistsContainer.setVisible( !triggeredChecklists.isEmpty() );
+        ListView<ChecklistData> triggeredChecklistsListView = new ListView<ChecklistData>(
                 "triggered",
-                triggers
-        ) {
+                triggeredChecklists ) {
             @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
-                TriggerData trigger = item.getModelObject();
-                item.add( makeChecklistPanels( "checklists", checklistDataMap.get( trigger ), trigger ) );
+            protected void populateItem( ListItem<ChecklistData> item ) {
+                ChecklistData checklistData = item.getModelObject();
+                ListView<TriggerData> triggersListView = new ListView<TriggerData>(
+                        "triggers",
+                        finder.getChecklistTriggers( checklistData )
+                ) {
+                    @Override
+                    protected void populateItem( ListItem<TriggerData> item ) {
+                        TriggerData triggerData = item.getModelObject();
+                        item.add( makeTriggerDataPanel( "trigger", triggerData ) );
+                    }
+                };
+                item.add( triggersListView );
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
             }
-        }
-        );
-        return procsContainer;
+        };
+        triggeredChecklistsContainer.add( triggeredChecklistsListView );
+        protocolsContainer.add( triggeredChecklistsContainer );
     }
+
 
     private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
-        if ( triggerData.isOnNotificationFromOther() )
+        if ( triggerData.isOngoing() )
+            return new OngoingTriggerDataPanel( id, finder );
+        else if ( triggerData.isRepeating() )
+            return new RepeatingTriggerDataPanel( id, triggerData, finder );
+        else if ( triggerData.isOnObserving() )
+            return new ObservationTriggerDataPanel( id, triggerData.getOnObservation(), finder );
+        else if ( triggerData.isOnNotificationFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnRequestFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
@@ -606,34 +547,6 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             return new SelfTriggerDataPanel( id, triggerData, finder );
         else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
 
-    }
-
-    private WebMarkupContainer makeEventTriggeredChecklistsContainer(
-            String procsContainerId,
-            final Map<ObservationData,
-                    List<ChecklistData>> checklistDataMap ) {
-        WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
-        procsContainer.setVisible( !checklistDataMap.isEmpty() );
-        protocolsContainer.add( procsContainer );
-        List<ObservationData> triggers = new ArrayList<ObservationData>( checklistDataMap.keySet() );
-        finder.sortObservations( triggers );
-        procsContainer.add( new ListView<ObservationData>(
-                "triggered",
-                triggers
-        ) {
-            @Override
-            protected void populateItem( ListItem<ObservationData> item ) {
-                ObservationData observationData = item.getModelObject();
-                item.add(
-                        makeChecklistPanels(
-                                "checklists",
-                                checklistDataMap.get( observationData ),
-                                observationData )
-                );
-            }
-        }
-        );
-        return procsContainer;
     }
 
     private ListView<ChecklistData> makeChecklistPanels(
@@ -647,23 +560,6 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
-                ChecklistData checklistData = item.getModelObject();
-                item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
-            }
-        };
-    }
-
-    private ListView<ChecklistData> makeChecklistPanels(
-            String id,
-            List<ChecklistData> checklistDataList,
-            final TriggerData triggerData ) {
-        return new ListView<ChecklistData>(
-                id,
-                checklistDataList
-        ) {
-            @Override
-            protected void populateItem( ListItem<ChecklistData> item ) {
-                item.add( makeTriggerDataPanel( "trigger", triggerData ) );
                 ChecklistData checklistData = item.getModelObject();
                 item.add( new ChecklistDataPanel( "checklist", checklistData, finder, allExpanded, getCommunityService() ) );
             }

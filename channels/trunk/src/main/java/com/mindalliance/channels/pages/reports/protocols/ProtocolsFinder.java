@@ -7,7 +7,6 @@ import com.mindalliance.channels.api.plan.ModelScopeData;
 import com.mindalliance.channels.api.procedures.ChecklistsData;
 import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.RequestData;
-import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.community.Agent;
@@ -19,7 +18,6 @@ import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -61,6 +59,8 @@ public class ProtocolsFinder implements Serializable {
     private List<String> sortedTabs;
     private Map<String, List<ContactData>> alphabetizedTriggerRolodex;
 
+    private Map<ChecklistData, List<TriggerData>> checklistsWithTriggers;
+
     public ProtocolsFinder(
             String serverUrl,
             ChecklistsData checklistsData,
@@ -94,6 +94,7 @@ public class ProtocolsFinder implements Serializable {
         onResearches = new HashMap<TriggerData, List<ChecklistData>>();
         expectedQueries = new ArrayList<RequestData>();
         rolodex = new HashSet<ContactData>();
+        checklistsWithTriggers = new HashMap<ChecklistData, List<TriggerData>>();
         for ( ChecklistData checklistData : checklistsData.getChecklists() ) {
             processChecklistData( checklistData, communityService, user );
         }
@@ -104,6 +105,7 @@ public class ProtocolsFinder implements Serializable {
             ChecklistData checklistData,
             CommunityService communityService,
             ChannelsUser user ) {
+        checklistsWithTriggers.put( checklistData, checklistData.getTriggers() );
         if ( checklistData.isOngoing() ) {
             ongoingProcedures.add( checklistData );
         } else if ( checklistData.isRepeating() ) {
@@ -200,18 +202,6 @@ public class ProtocolsFinder implements Serializable {
         if ( !list.contains( checklistData ) ) list.add( checklistData );
     }
 
-    private void addTo(
-            Map<TaskData, List<TriggerData>> map,
-            TaskData taskData,
-            TriggerData triggerData ) {
-        List<TriggerData> list = map.get( taskData );
-        if ( list == null ) {
-            list = new ArrayList<TriggerData>();
-            map.put( taskData, list );
-        }
-        if ( !list.contains( triggerData ) ) list.add( triggerData );
-    }
-
     public Set<String> getCommunicationContexts() {
         return communicationContexts;
     }
@@ -230,22 +220,6 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<ObservationData, List<ChecklistData>> getOnObservationChecklists() {
         return onObservations;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getOnRequestChecklists() {
-        return onRequests;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getOnNotificationChecklists() {
-        return onNotifications;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getOnFollowUpChecklists() {
-        return onFollowUps;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getOnResearchChecklists() {
-        return onResearches;
     }
 
     @SuppressWarnings("unchecked")
@@ -300,17 +274,6 @@ public class ProtocolsFinder implements Serializable {
         return new ArrayList<ContactData>( contacts );
     }
 
-    public List<TriggerData> sortTriggerData( Collection<TriggerData> triggerDataList ) {
-        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggerDataList );
-        Collections.sort( sortedTriggers, new Comparator<TriggerData>() {
-            @Override
-            public int compare( TriggerData t1, TriggerData t2 ) {
-                return t1.getLabel().compareTo( t2.getLabel() );
-            }
-        } );
-        return sortedTriggers;
-    }
-
     public List<String> getSortedTriggerRolodexTabs() {
         if ( sortedTabs == null ) {
             Set<String> firstLetters = new HashSet<String>();
@@ -332,31 +295,6 @@ public class ProtocolsFinder implements Serializable {
             Collections.sort( sortedTabs );
         }
         return sortedTabs;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getTriggeringNotificationsFrom( String communicationContext, String info, ContactData contactData ) {
-        Map<ContactData, Map<TriggerData, List<ChecklistData>>> contactTriggers =
-                onNotificationsInContextWithInfoByContact.get( communicationContext ).get( info );
-        if ( contactTriggers != null )
-            return retrieveTriggeredProcedures( contactTriggers, contactData );
-        else
-            return null;
-    }
-
-    public Map<TriggerData, List<ChecklistData>> getTriggeringRequestsFrom( String communicationContext, String info, ContactData contactData ) {
-        Map<ContactData, Map<TriggerData, List<ChecklistData>>> contactTriggers =
-                onRequestsInContextForInfoByContact.get( communicationContext ).get( info );
-        if ( contactTriggers != null )
-            return retrieveTriggeredProcedures( contactTriggers, contactData );
-        else
-            return new HashMap<TriggerData, List<ChecklistData>>();
-    }
-
-    private Map<TriggerData, List<ChecklistData>> retrieveTriggeredProcedures( Map<ContactData, Map<TriggerData, List<ChecklistData>>> map, ContactData contactData ) {
-        Map<TriggerData, List<ChecklistData>> results = map.get( contactData );
-        return results == null
-                ? new HashMap<TriggerData, List<ChecklistData>>()
-                : results;
     }
 
     public List<String> getSortedAgencyNames() {
@@ -423,6 +361,38 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<String, Map<ContactData, Map<TriggerData, List<ChecklistData>>>> getNotificationsInContext( String communicationContext ) {
         return onNotificationsInContextWithInfoByContact.get( communicationContext );
+    }
+
+    public List<ChecklistData> getTriggeredChecklists() {
+        List<ChecklistData> triggeredChecklists = new ArrayList<ChecklistData>( checklistsWithTriggers.keySet() );
+        Collections.sort( triggeredChecklists, new Comparator<ChecklistData>() {
+            @Override
+            public int compare( ChecklistData cd1, ChecklistData cd2 ) {
+                return cd1.getTaskLabel().compareTo( cd2.getTaskLabel() );
+            }
+        } );
+        return triggeredChecklists;
+    }
+
+    public List<TriggerData> getChecklistTriggers( ChecklistData checklistData ) {
+        List<TriggerData> triggerDataList = checklistsWithTriggers.get( checklistData );
+        Collections.sort( triggerDataList, new Comparator<TriggerData>() {
+            @Override
+            public int compare( TriggerData td1, TriggerData td2 ) {
+                if ( td1.isOngoing() ) return -1;
+                if ( td2.isOngoing() ) return 1;
+                if ( td1.isRepeating() ) return -1;
+                if ( td2.isRepeating() ) return 1;
+                if ( td1.isOnObserving() ) return -1;
+                if ( td2.isOnObserving() ) return 1;
+                if ( td1.isOnResearching() ) return -1;
+                if ( td2.isOnResearching() ) return 1;
+                if ( td1.isOnFollowingUp() ) return -1;
+                if ( td2.isOnFollowingUp() ) return 1;
+                return td1.getLabel().compareTo( td2.getLabel() );
+            }
+        } );
+        return triggerDataList;
     }
 
 }

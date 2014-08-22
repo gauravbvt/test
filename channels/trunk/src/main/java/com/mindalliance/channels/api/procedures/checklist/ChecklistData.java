@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.procedures.checklist;
 import com.mindalliance.channels.api.community.AgencyData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.CycleData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -537,6 +538,18 @@ public class ChecklistData implements Serializable {
         );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getRepeatingTriggers() {
+        return (List<TriggerData>) CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).isRepeating();
+                    }
+                }
+        );
+    }
 
 
     public String getTaskLabel() {
@@ -570,4 +583,13 @@ public class ChecklistData implements Serializable {
         return confirmed;
     }
 
+    public CycleData getCycleData() {
+        CycleData cycleData = null;
+        List<TriggerData> triggerDataList = getRepeatingTriggers();
+        if ( !triggerDataList.isEmpty() ) {
+            TriggerData triggerData = triggerDataList.get(0);
+            cycleData = triggerData.getRepeatCycle();
+        }
+        return cycleData;
+    }
 }

@@ -98,7 +98,9 @@ public class ChecklistsData implements Serializable {
         for ( Agent agent : agents )
             for ( CommunityEmployment employment :
                     communityService.getParticipationManager().findAllEmploymentsForAgent( agent, communityService ) ) {
-                employments.add( new EmploymentData( employment ) );
+                EmploymentData employmentData = new EmploymentData( employment );
+                if ( !employments.contains( employmentData ) )
+                    employments.add( employmentData );
             }
     }
 

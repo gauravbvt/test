@@ -95,8 +95,10 @@ public class CommunityEmployment implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+/*
         sb.append( agent.getName() );
         sb.append( ", " );
+*/
         sb.append( getTitle() );
         sb.append( " at " );
         sb.append( getEmployer().getName() );
