@@ -372,7 +372,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         : outcome.isAssetProducedOutcome()
                         ? ASSET_PRODUCED_OUTCOME_ICON
                         : outcome.isGoalAchievedOutcome()
-                        ? getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part )
+                        ? getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal() )
                         : outcome.isAssetProvisionedOutcome()
                         ? ASSET_PROVISIONED_ICON
                         : null;
@@ -400,7 +400,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             return "";
     }
 
-    private String getGoalIcon( Goal goal, Part part ) {
+    private String getGoalIcon( Goal goal ) {
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
                 case Low:
