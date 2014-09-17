@@ -287,7 +287,7 @@ public abstract class AbstractIssueTablePanel extends AbstractCommandablePanel i
             if ( getPlanCommunity().isModelCommunity() ) {
                 columns.add( makeFilterableLinkColumn( "About",
                         "about",
-                        "about.name",
+                        "about.label",
                         EMPTY,
                         AbstractIssueTablePanel.this ) );
             } else {

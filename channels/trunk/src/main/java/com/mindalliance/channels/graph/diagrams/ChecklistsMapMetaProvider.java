@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -82,6 +81,11 @@ public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, 
      */
     protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
 
+    /**
+     * Edge color.
+     */
+    protected static final String EDGE_COLOR = "#666666";
+
     private Segment segment;
 
     // Extra arguments MUST start with '_'
@@ -115,7 +119,7 @@ public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, 
             @Override
             public String getGraphURL( Assignment node ) {
                 // Plan id = 0 since there is only one plan
-                Object[] args = { segment == null ? 0 : segment.getId() };
+                Object[] args = {segment == null ? 0 : segment.getId()};
                 return MessageFormat.format( GRAPH_URL_FORMAT, args );
             }
 
@@ -254,8 +258,8 @@ public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, 
                 // assuming a bitmap format
             } else {
                 list.add( new DOTAttribute( "image",
-                                            getIcon( communityService, ChecklistsMapMetaProvider.this.getAnalyst().getImagingService(),
-                                                     assignment ) ) );
+                        getIcon( communityService, ChecklistsMapMetaProvider.this.getAnalyst().getImagingService(),
+                                assignment ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
@@ -279,6 +283,7 @@ public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, 
         public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Commitment edge, boolean highlighted ) {
             Flow flow = edge.getSharing();
             List<DOTAttribute> list = DOTAttribute.emptyList();
+            list.add( new DOTAttribute( "color", EDGE_COLOR ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             if ( highlighted ) {

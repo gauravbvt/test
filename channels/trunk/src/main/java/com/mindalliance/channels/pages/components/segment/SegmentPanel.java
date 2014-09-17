@@ -490,8 +490,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addTipTitle(
                 icon,
                 new Model<String>( isShowingIssues()
-                        ? "Hide issues"
-                        : "Show issues" ) );
+                        ? "Hide issues table"
+                        : "Show issues table" ) );
         displayFlowMapIssues.add( icon );
     }
 

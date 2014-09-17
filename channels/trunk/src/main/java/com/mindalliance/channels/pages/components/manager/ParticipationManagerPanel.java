@@ -7,7 +7,6 @@ import com.mindalliance.channels.db.services.communities.UserParticipationServic
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -147,7 +146,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     public String getToConfirmTitle() {
         int toConfirmCount = participationManager
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
-        return "Confirmations (" + toConfirmCount + " pending)";
+        return "Confirmations (" + toConfirmCount + ")";
     }
 
     public String getIssuesTitle() {
