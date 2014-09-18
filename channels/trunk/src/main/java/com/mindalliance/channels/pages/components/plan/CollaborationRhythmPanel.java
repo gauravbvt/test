@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
@@ -12,9 +14,11 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -47,6 +51,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
     private TimeUnit timeUnit = TimeUnit.Day;
     private Phase phase = Phase.UNKNOWN;
     private Event event = Event.UNKNOWN;
+    private boolean showAssigned = false;
     private WebMarkupContainer rhythmTable;
     private List<Part> repeatingParts;
     private WebMarkupContainer noRepeatingTasks;
@@ -75,6 +80,7 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         addTimeUnitChoice();
         addPhasesChoice();
         addEventsChoice();
+        addShowAssigned();
     }
 
     private void addNoRepeatingTasks() {
@@ -184,6 +190,20 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         filtersContainer.add( eventChoice );
     }
 
+
+    private void addShowAssigned() {
+        AjaxCheckBox showAgentsCheckBox = new AjaxCheckBox(
+                "showAssigned",
+                new PropertyModel<Boolean>( this, "showAssigned" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                refreshPanel( target );
+            }
+        };
+        filtersContainer.add( showAgentsCheckBox );
+    }
+
     private void addRhythmTable() {
         rhythmTable = new WebMarkupContainer( "rhythmTable" );
         rhythmTable.setOutputMarkupId( true );
@@ -236,14 +256,39 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
+                Part part = item.getModelObject();
                 item.add( new ModelObjectLink(
                         "taskLink",
                         item.getModel(),
-                        new Model<String>( textFor( item.getModelObject() ) ) ) );
-                addTipTitle( item, item.getModelObject().getName() );
+                        new Model<String>( textFor( part ) ) ) );
+                item.add( makeAssignedList( part ) );
+                addTipTitle( item, part.getName() );
             }
         };
         anytimeTasksContainer.add( anytimePartsListView );
+    }
+
+    private Component makeAssignedList( Part part ) {
+        WebMarkupContainer assignedContainer = new WebMarkupContainer( "assigned" );
+        List<Assignment> assignments = isShowAssigned()
+                ? getQueryService().findAllAssignments( part, false )
+                : new ArrayList<Assignment>();
+        assignedContainer.setVisible( !assignments.isEmpty() );
+        ListView<Assignment> assignedListView = new ListView<Assignment>(
+                "assignedActors",
+                assignments ) {
+            @Override
+            protected void populateItem( ListItem<Assignment> item ) {
+                Actor actor = item.getModelObject().getActor();
+                ModelObjectLink actorLink = new ModelObjectLink(
+                        "actorLink",
+                        new Model<Actor>( actor ),
+                        new Model<String>( actor.getLabel() ) );
+                item.add( actorLink );
+            }
+        };
+        assignedContainer.add( assignedListView );
+        return assignedContainer;
     }
 
     private String textFor( Part part ) {
@@ -288,10 +333,12 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         ) {
             @Override
             protected void populateItem( ListItem<Part> item ) {
+                Part part = item.getModelObject();
                 item.add( new ModelObjectLink(
                         "taskLink",
                         item.getModel(),
                         new Model<String>( textFor( item.getModelObject() ) ) ) );
+                item.add( makeAssignedList( part ) );
                 addTipTitle( item, item.getModelObject().getName() );
             }
         };
@@ -351,6 +398,14 @@ public class CollaborationRhythmPanel extends AbstractUpdatablePanel {
         results.add( Event.UNKNOWN );
         results.addAll( events );
         return results;
+    }
+
+    public boolean isShowAssigned() {
+        return showAssigned;
+    }
+
+    public void setShowAssigned( boolean showAssigned ) {
+        this.showAssigned = showAssigned;
     }
 
     @SuppressWarnings("unchecked")

@@ -3944,7 +3944,9 @@
                         The tasks shown can be further filtered by the phases and/or events of the segments to which the tasks
                         belong.
 
-                        You can navigate to any of the tasks listed in the panel by clicking on their names.
+                        You can show, or not, the agents assigned to the tasks.
+
+                        You can navigate to any of the tasks listed in the panel, and the agents if shown, by clicking on their names.
                     </description>
                 </item>
             </topic>

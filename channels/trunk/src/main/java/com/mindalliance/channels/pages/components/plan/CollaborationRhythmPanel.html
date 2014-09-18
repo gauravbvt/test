@@ -16,6 +16,7 @@
             <option>EVENT</option>
             <option>Bomb threat</option>
         </select>
+        <input type="checkbox" wicket:id="showAssigned"/> Show assigned
 		<ul class="date">
 			<li wicket:id="timeUnits"> <!-- repeated -->
 				<a href="#" wicket:id="timeUnitLink"><span wicket:id="timeUnit">Hourly</span></a> <!-- class="active" when selected-->
@@ -49,6 +50,13 @@
     	                <ul>
         	                <li wicket:id="anytimeTasks"> <!-- repeated -->
             	                <span wicket:id="taskLink">[link to task]</span>
+                                <span wicket:id="assigned" class="assigned">
+                                    <ul>
+                                        <li wicket:id="assignedActors">
+                                            <span wicket:id="actorLink">[link to actor]</span>
+                                        </li> <!-- repeated -->
+                                    </ul>
+                                </span>
                 	        </li>
                     	</ul>
 	                </td>
@@ -57,6 +65,13 @@
                             <ul>
                                 <li wicket:id="trancheTasks"><!-- repeated -->
                                     <span wicket:id="taskLink">[link to task]</span>
+                                 <span wicket:id="assigned" class="assigned">
+                                    <ul>
+                                        <li wicket:id="assignedActors">
+                                            <span wicket:id="actorLink">[link to actor]</span>
+                                        </li> <!-- repeated -->
+                                    </ul>
+                                </span>
                                 </li>
                             </ul>
     	                </td>

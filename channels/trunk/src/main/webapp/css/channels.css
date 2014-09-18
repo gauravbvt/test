@@ -4136,7 +4136,7 @@ div.collab-rhythm.controls {
 div.collab-rhythm.controls select.phase {
     margin: 0 10px 0 0;
     padding: 5px;
-    width: 100px;
+    width: 110px;
 }
 
 div.collab-rhythm.controls select.event {
@@ -4261,4 +4261,14 @@ table.data-table.collab-rhythm tr td ul li {
     margin: 7px 0 0 0;
     padding: 7px 0 0 0;
 	display: block;
+}
+
+table.data-table.collab-rhythm tr td .assigned ul li {
+    margin: 0;
+    padding: 0;
+    display: block;
+    border: none;
+    margin-top: 3px;
+    padding-top: 3px;
+    font-size: xx-small;
 }
