@@ -100,7 +100,7 @@ public class ActionStep extends Step implements Mappable {
     @Override
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( isRequired() ? "(Required) " : "" )
+        sb.append( isRequired() ? "(Expected) " : "" )
                 .append( action );
         return sb.toString();
     }

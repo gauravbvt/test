@@ -59,7 +59,7 @@ public class CommunicationStep extends Step {
 
     @Override
     public String getLabel() {
-        return ( isRequired() ? "(Required) " : "" ) + getSharing().getStepTitle( false, answer );
+        return ( isRequired() ? "(Expected) " : "" ) + getSharing().getStepTitle( false, answer );
     }
 
     @Override

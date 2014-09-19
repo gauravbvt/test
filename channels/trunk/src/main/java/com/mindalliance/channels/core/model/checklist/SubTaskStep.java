@@ -52,7 +52,7 @@ public class SubTaskStep extends Step {
         String subTask = getSubTask().getTask();
         String label = isResearch()
                 ? ( "Research \"" + sharing.getName() + "\" by doing \"" + subTask + "\"" )
-                : ( "(Required) Follow up with \"" + sharing.getName() + "\" by doing \"" + subTask + "\"" );
+                : ( "(Expected) Follow up with \"" + sharing.getName() + "\" by doing \"" + subTask + "\"" );
         if ( getSharing().isTerminatingToSource() )
             label += " - and stop";
         return label;

@@ -80,7 +80,7 @@ public abstract class ChecklistStepDataPanel extends AbstractDataPanel {
         actLabel = new Label( "act", getStepAct() );
         actLabel.setOutputMarkupId( true );
         actLabel.add( new AttributeModifier( "class", getActCss() ) );
-        addTipTitle( actLabel, getStep().isRequired() ? "Required" : "Optional" );
+        addTipTitle( actLabel, getStep().isRequired() ? "Expected" : "Optional" );
         stepContainer.addOrReplace( actLabel );
     }
 
