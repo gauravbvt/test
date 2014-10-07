@@ -334,7 +334,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 List<Commitment> commitments =
                         modelService.findAllCommitments( flow, false, modelService.getAssignments( false ) );
                 if ( commitments.isEmpty() ) {
-                    causes.add( "there are no communication commitments between any pair of agents" );
+                    causes.add( "there are no communication commitments between any pair of distinct agents" );
                 } else {
                     StringBuilder sb = new StringBuilder();
                     CollaborationModel collaborationModel = communityService.getPlan();

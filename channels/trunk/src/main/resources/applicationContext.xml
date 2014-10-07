@@ -294,7 +294,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.UselessActor"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InvalidEntityTyping"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowDeclassifies"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.SharingWithoutCommitments"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.InsufficientClearance"/>
                 <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>-->
                 <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>-->
@@ -373,6 +372,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.TaskRepeatedlyTerminated"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.RepeatedTaskDoesNotInitiateFlows"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.OrganizationsHasJobsWithSameTitle"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.collaborationTemplate.FlowCanNotBeRealized"/>
             </list>
         </property>
     </bean>

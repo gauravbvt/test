@@ -10714,23 +10714,39 @@
               </row>
 
               <row>
-                <entry><para>Sharing flow implies no commitments</para></entry>
+                <entry><para>Flow can not be realized</para></entry>
 
-                <entry><para>Medium</para></entry>
+                <entry><para>Depends on impacted tasks</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Modify the specifications for source and target tasks so that they both
-                        imply assignments or add or redefine participating agents to match source
-                        and target specifications.</para>
+                      <para>Remove the prohibition if the flow is prohibited</para>
                     </listitem>
 
                     <listitem>
-                      <para>If inadequate clearances are at fault, declassify elements of
-                        information or make sure otherwise-committed agents have the required
-                        clearances.</para>
+                      <para>Make both source and recipient tasks executable</para>
                     </listitem>
-                  </itemizedlist></entry>
+                    <listitem>
+                        <para>Identify at least one channel for the flow</para>
+                    </listitem>
+                    <listitem>
+                        <para>Make both source and recipient tasks assignable</para>
+                    </listitem>
+                    <listitem>
+                        <para>Make sure both source and recipient agents are available together if the communication is synchronous</para>
+                    </listitem>
+                    <listitem>
+                        <para>Make sure both source and recipient agents have contact information</para>
+                    </listitem>
+                    <listitem>
+                        <para>Make sure both source and recipient agents speak a common language</para>
+                    </listitem>
+                    <listitem>
+                        <para>Make sure both source and recipient agents are qualified to use an identified communication medium, if required</para>
+                    </listitem>
+
+
+                </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
               </row>
